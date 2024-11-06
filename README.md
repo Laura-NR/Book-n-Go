@@ -2,10 +2,10 @@
 ## SAE 3.D.01
 
 - Dalmayrac-Belascain Gorka
-- Dartigue Yoann 
+- Dartigue Yoann (Allternant)
 - Hamchouche Kamelia 
-- Lucas Liam 
+- Lucas Liam (Allternant)
 - Mahssini Imane 
 - Nunez Rodriguez Laura Elena 
 - Gomes Yoann 
-- Marsan Louis 
+- Marsan Louis (Allternant)
