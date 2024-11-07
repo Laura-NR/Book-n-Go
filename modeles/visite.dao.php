@@ -16,28 +16,21 @@ class VisiteDao{
           $this->pdo = $pdo;
 
      }
-
-     public function findAsoc(?int $id): ?array
+    //  obtenir toutes les informations de la table `visite`
+     public function findAll(): ?array
      {
         $sql="SELECT * FROM ".PREFIXE_TABLE."visite";
-        $pdostatement= $this->pdo->prepare($sql);
-        $pdostatement->execute();
+        $pdostatement= $this->pdo->prepare($sql);// Préparation de la requête SQL
+        $pdostatement->execute();// Exécution de la requête
+        //Définir le mode de récupération des résultats comme un tableau associatif
         $pdostatement->setFetchMode(PDO::FETCH_ASSOC);
-        $visite=$pdostatement->fetch();
+        //Récupération de toutes les lignes de résultats sous forme de tableau
+        $visite=$pdostatement->fetchAll();
         return $visite;
-
-
-
      }
-     public function findAll(){
-        $sql="SELECT * FROM ".PREFIXE_TABLE."visite";
-        $pdostatement= $this->pdo->prepare($sql);
-        $pdostatement->execute();
-        $pdostatement->setFetchMode(PDO::FETCH_ASSOC);
-        $categorie=$pdostatement->fetchAll();
-        return $categorie;
-}
 
+
+//permet de remplir la nvl instance de Visite avec les données recup dans la bd 
 public function hydrate($tableauAssoc): ?Visite
 {
  $visite=new Visite();
@@ -51,15 +44,6 @@ public function hydrate($tableauAssoc): ?Visite
  $visite->setId_guide($tableauAssoc['id_guide']);
  return $visite;
 
-}
-public function hydrateAll($tableau): ?array
-{
- $visite=[];
-foreach($tableau as $tableauAssoc){
-    $visite=$this->hydrate($tableauAssoc);
-    $visite[]=$visite;
-}
- return $visite;
 
 }
 }
