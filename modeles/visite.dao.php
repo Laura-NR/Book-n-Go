@@ -16,10 +16,20 @@ class VisiteDao{
           $this->pdo = $pdo;
 
      }
+     //  obtenir les informations concernant une visites en particulier
+     public function find(?int $id): ?Visite
+     {
+         $sql = "SELECT * FROM visite WHERE id = :id";
+         $pdoStatement = $this->pdo->prepare($sql);
+         $pdoStatement->execute(array(':id' => $id));
+         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+         $visite = $pdoStatement->fetch();
+         return $visite;
+     }
     //  obtenir toutes les informations de la table `visite`
      public function findAll(): ?array
      {
-        $sql="SELECT * FROM ".PREFIXE_TABLE."visite";
+        $sql="SELECT * FROM visite";
         $pdostatement= $this->pdo->prepare($sql);// Préparation de la requête SQL
         $pdostatement->execute();// Exécution de la requête
         //Définir le mode de récupération des résultats comme un tableau associatif
@@ -40,10 +50,19 @@ public function hydrate($tableauAssoc): ?Visite
  $visite->setCheminImage($tableauAssoc['image']);
  $visite->setDate_visite($tableauAssoc['date_visite']);
  $visite->setDescription($tableauAssoc['description']);
- $visite->setPrive($tableauAssoc['prive']);
+ $visite->setPublic($tableauAssoc['prive']);
  $visite->setId_guide($tableauAssoc['id_guide']);
  return $visite;
 
-
+}
+public function hydrateAll(array $tableauAssoc): ?array
+{
+    $visites = [];
+    foreach ($tableauAssoc as $ligne) {
+        $visite = new Visite();
+        $visite = $this->hydrate($ligne);
+        $visites[] = $visite;
+    }
+    return $visites;
 }
 }
