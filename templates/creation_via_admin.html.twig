@@ -1,0 +1,63 @@
+{% extends "base_template.html.twig" %}
+
+{% block navbar_items %}
+    <li class="nav-item">
+    <a class="nav-link" aria-current="page" href="">Candidatures</a>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" href="">Comptes</a>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" href="">Se déconnecter</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+<form>
+<div class="row">
+    <div class="col-8">
+        <h2>Informations générales</h2>
+        <ul>
+            <li>
+                <label>Nom :</label>
+                <input type="text" name="nom" placeholder="NOM">
+            </li>
+            <li>
+                <label>Prenom :</label>
+                <input type="text" name="nom" placeholder="Prenom">
+            </li>
+            <li>
+                <label>Date de naissance :</label>
+                <input type="date" name="nom" placeholder="Date de naissance">
+            </li>
+            <li>
+                <label>Mot de passe :</label>
+                <input type="text" name="nom" placeholder="Mot de passe">
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-4">
+        <h2>Informations facultatives</h2>
+        <label>Certification guide :</label>
+        <input type="file" name="certification_guide">
+    </div>
+
+    <div class="">
+        <h2>Contact</h2>
+        <ul>
+            <li>
+                <label>Numero de téléphone :</label>
+                <input type="text" name="telephone" placeholder="0000000000">
+            </li>
+            <li>
+                <label>Addresse mail :</label>
+                <input type="text" name="mail" placeholder="">
+            </li>
+        </ul>
+    </div>
+</div>
+    <input type="submit" value="Créer le Compte Guide">
+
+</form>
+{% endblock %}
