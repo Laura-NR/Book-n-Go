@@ -11,6 +11,8 @@ require_once 'config/twig.php';
 
 //Ajout du modèle de connexion à la base de données
 require_once 'modeles/bd.class.php';
+require_once 'modeles/guide.class.php';
+
 
 //Ajout des modèles
 require_once 'modeles/carnet_voyage.class.php';
