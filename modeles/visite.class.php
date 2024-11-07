@@ -8,7 +8,7 @@ class Visite
     private ?DateTime $date_visite;
     private ?string $description;
     private ?string $chemin_image;
-    private ?bool $prive ;
+    private ?bool $public ;
     private ?int $id_guide;
 
     // creer constructeur de visite
@@ -19,7 +19,7 @@ class Visite
         ?DateTime $date_visite,
         ?string $description,
         ?string $chemin_image,
-        ?bool $prive,
+        ?bool $public,
         ?int $id_guide)
     {
 
@@ -29,7 +29,7 @@ class Visite
         $this-> $date_visite;
         $this->$description;
         $this->$chemin_image;
-        $this-> $prive;
+        $this-> $public;
         $this-> $id_guide;
 
     }
@@ -114,17 +114,17 @@ class Visite
 
     }
 
-    //variable prive
+    //variable public
 
-    public function getPrive() : ?bool
+    public function getPublic() : ?bool
     {
-        return $this->prive;
+        return $this->$public;
     }
 
  
-    public function setPrive($prive):void
+    public function setPublic($public):void
     {
-        $this->prive = $prive;
+        $this->public = $public;
 
     }
 
