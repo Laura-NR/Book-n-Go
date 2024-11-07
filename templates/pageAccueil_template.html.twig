@@ -1,0 +1,35 @@
+{% extends "base_template.html.twig" %}
+    {% block title %}{{constant('WEBSITE_TITRE')}} Page d'accueil</title> {% endblock %}
+        {% block content %}
+        <main>
+        {# image de paysage d'arrivé sur le site A COMPLETER #}
+        <img src="image/{{recupererimage}}"  alt="">
+        {# texte descriptif d'un carnet de voyage  #}
+        <div class="carnet de voyage">
+            <p>
+            Grâce à votre carnet de voyage, voyager sans perdre vos souvenirs.
+            En publiant sur votre carnet vous aurez la possibilité de  partager vos meilleurs moments avec vos proches, les passionés de voyages comme vous
+            et même devenir une source d'inspiration. Alors n'attend plus et alimente le!
+            </p>
+            {# bouton vers le carnet de voyage #}
+            <a href="#" class="btn btn-primary" title="Consulter votre carnet de voyage">
+            Consulter votre carnet de voyage
+            </a>
+        </div>
+            {# texte descriptif des visites  #}
+        <div class="visites">
+            <p>
+            Visites....
+            </p>
+            {# bouton vers les visites disponibles #}
+            <a href="#" class="btn btn-primary" title="Consulter les visites disponibles">
+            Consulter les visites disponibles
+            </a>
+        </div>
+        </main>
+        {% endblock %}
+
+            {% block script %} 
+
+
+            {% endblock %}
