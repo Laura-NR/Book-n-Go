@@ -1,10 +1,20 @@
-{{% extends "base_template.html.twig" %}}
-{% block title %} Connexion {% endblock %}
+{% extends "base_template.html.twig" %}
+{% block title %}
+
+{% endblock %}
 
 {% block content %}
-    <main>
-        <h1> Connexion </h1>
-        <div 
-
-    </main>
-
+<main>
+	<h1>
+		Connexion
+	</h1>
+	<div class="form_connexion">
+		<form action="connexion.php" method="POST">
+			<label for="username" class="form-label">Nom d'utilisateur :</label>
+			<input type="text" name="username" class="form-control" required>
+			<label for="mdp" class="form-label">Mot de passe :</label>
+			<input type="mdp" name="mdp" class="form-control" required>
+			<button type="submit">Se connecter</button>
+		</form>
+	</div>
+</main>
