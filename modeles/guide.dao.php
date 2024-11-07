@@ -26,7 +26,7 @@ class GuideDao{
     
     public function find(?int $id): ?Guide
     {
-        $sql="SELECT * FROM ".PREFIXE_TABLE."guide WHERE id= :id";
+        $sql="SELECT * FROM guide WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute(array("id"=>$id));
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Guide');
@@ -35,7 +35,7 @@ class GuideDao{
     }
 
     public function findAll(){
-        $sql="SELECT * FROM ".PREFIXE_TABLE."guide";
+        $sql="SELECT * FROM  guide";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Guide');
@@ -45,7 +45,7 @@ class GuideDao{
 
     public function findAssoc(?int $id): ?array
     {
-        $sql="SELECT * FROM ".PREFIXE_TABLE."guide WHERE id= :id";
+        $sql="SELECT * FROM guide WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute(array("id"=>$id));
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
@@ -54,7 +54,7 @@ class GuideDao{
     }
 
     public function findAllAssoc(){
-        $sql="SELECT * FROM ".PREFIXE_TABLE."guide";
+        $sql="SELECT * FROM guide";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
