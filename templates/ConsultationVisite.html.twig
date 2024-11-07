@@ -1,0 +1,14 @@
+{% extends 'base_template.html.twig' %}
+    {% block title %} {{categorie.nom}} {{constant('WEBSITE_TITRE')}} Visite: {{Visite.nom}}{% endblock %}
+
+    {% block content %}
+        <main>
+            <h1>La visite séléctionnée : {{Visite.nom}}</h1>
+{# AFFICHAGE DES VISITES DISPONIBLES ET DE LEURS IMAGES #}
+            <div class="row">
+                <div class="col-md-9">
+                    <img src="image/{{Visite.chemin_image}}"  alt="">
+                </div>            
+            </div>            
+        </main>
+    {% endblock %}
