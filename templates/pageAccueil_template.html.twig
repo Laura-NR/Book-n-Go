@@ -1,31 +1,40 @@
 {% extends "base_template.html.twig" %}
-    {% block title %}{{constant('WEBSITE_TITRE')}} Page d'accueil</title> {% endblock %}
+    {% block title %}{{constant('WEBSITE_TITLE')}} Page d'accueil</title> {% endblock %}
         {% block content %}
         <main>
         {# image de paysage d'arrivé sur le site A COMPLETER #}
-        <img src="image/{{recupererimage}}"  alt="">
+        <div class="text-center">
+            <img src="images/imageAccueil.jpg"  alt="">
         {# texte descriptif d'un carnet de voyage  #}
-        <div class="carnet de voyage">
-            <p>
-            Grâce à votre carnet de voyage, voyager sans perdre vos souvenirs.
-            En publiant sur votre carnet vous aurez la possibilité de  partager vos meilleurs moments avec vos proches, les passionés de voyages comme vous
-            et même devenir une source d'inspiration. Alors n'attend plus et alimente le!
-            </p>
-            {# bouton vers le carnet de voyage #}
-            <a href="#" class="btn btn-primary" title="Consulter votre carnet de voyage">
-            Consulter votre carnet de voyage
-            </a>
-        </div>
+        <div class="container mt-4">  {#mise en place de boostrap pour les colonnes #}
+           <div class="row">
+    
+                <div class="col-12 col-md-6">
+                    <div class="carnet de voyage">
+                        <p>
+                            Grâce à votre carnet de voyage, voyagez sans perdre vos souvenirs.
+                            En publiant dans votre carnet, vous aurez la possibilité de partager vos meilleurs moments avec vos proches, les passionnés de voyages comme vous,
+                            et même de devenir une source d'inspiration. Alors n'attendez plus et alimentez-le !
+                        </p>
+                        {# bouton vers le carnet de voyage #}
+                        <a href="#" class="btn btn-primary" title="Consulter votre carnet de voyage">
+                            Consulter votre carnet de voyage
+                        </a>
+                    </div>
+                </div>
             {# texte descriptif des visites  #}
-        <div class="visites">
-            <p>
-            Visites....
-            </p>
-            {# bouton vers les visites disponibles #}
-            <a href="#" class="btn btn-primary" title="Consulter les visites disponibles">
-            Consulter les visites disponibles
-            </a>
-        </div>
+                <div class="col-12 col-md-6">
+                    <div class="visites">
+                        <p>
+                            Profitez de nos visites gratuites, ouvertes à tous, avec un large choix adapté à tous les goûts.
+                            Inscrivez-vous dès maintenant à la visite de vos rêves en consultant les visites disponibles.
+                        </p>
+                        {# bouton vers les visites disponibles #}
+                        <a href="#" class="btn btn-primary" title="Consulter les visites disponibles">
+                            Consulter les visites disponibles
+                        </a>
+                    </div>
+                </div>
         </main>
         {% endblock %}
 
