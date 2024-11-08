@@ -34,7 +34,7 @@ class ParticiperDAO
         $this->pdo = $pdo;
     }
 
-    public function findAssoc(?int $id_participation): ?Post
+    /* public function findAssoc(?int $id_participation): ?Post
     {
         $sql = "SELECT * FROM participer WHERE id_participation = :id_participation";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -52,12 +52,11 @@ class ParticiperDAO
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Participer');
         $participation = $pdoStatement->fetch();
         return $participation;
-    }
+    } */
 
     public function hydrate(array $tableauAssoc): ?Participer
     {
         $participation = new Participer();
-        $participation->setId_participation($tableauAssoc['id_participation']);
         $participation->setDate_debut($tableauAssoc['date_debut_dispo']);
         $participation->setDate_fin($tableauAssoc['date_fin_dispo']);
         $participation->setVisite($tableauAssoc['id_visite']);

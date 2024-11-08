@@ -1,37 +1,18 @@
 <?php 
 
 class Participer {
-    private int|null $id_participation;
     private DateTime|null $date_debut;
     private DateTime|null $date_fin;
     private Visite $visite;
     private Guide $guide;
+    private Reservation $reservation;
 
-    public function __construct(?int $id_participation = null, ?DateTime $date_debut = null, ?DateTime $date_fin = null, ?Visite $visite = null, ?Guide $guide = null) {
-        $this->id_participation = $id_participation;
+    public function __construct(?DateTime $date_debut = null, ?DateTime $date_fin = null, ?Visite $visite = null, ?Guide $guide = null, ?Reservation $reservation = null) {
         $this->date_debut = $date_debut;
         $this->date_fin = $date_fin;
         $this->visite = $visite;
         $this->guide = $guide;
-    }
-
-    
-
-    /**
-     * Get the value of id_participer
-     */ 
-    public function getId_participation(): ?int
-    {
-        return $this->id_participation;
-    }
-
-    /**
-     * Set the value of id_participer
-     *
-     */ 
-    public function setId_participation($id_participation): void
-    {
-        $this->id_participation = $id_participation;
+        $this->reservation = $reservation;
     }
 
     /**
