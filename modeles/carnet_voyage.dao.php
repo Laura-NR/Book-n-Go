@@ -34,7 +34,7 @@ class CarnetVoyageDAO
         $this->pdo = $pdo;
     }
 
-    public function find(?int $id): ?CarnetVoyage
+    public function findAssoc(?int $id): ?CarnetVoyage
     {
         $sql = "SELECT * FROM carnet_voyage WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -44,12 +44,12 @@ class CarnetVoyageDAO
         return $carnet;
     }
 
-    public function find1(?int $id): ?CarnetVoyage
+    public function find(?int $id): ?CarnetVoyage
     {
         $sql = "SELECT * FROM carnet_voyage WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute(array(':id' => $id));
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Categorie');
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'CarnetVoyage');
         $carnet = $pdoStatement->fetch();
         return $carnet;
     }
@@ -61,7 +61,7 @@ class CarnetVoyageDAO
         $carnet->setTitre($tableauAssoc['titre']);
         $carnet->setChemin_img($tableauAssoc['chemin_img']);
         $carnet->setDescription($tableauAssoc['description']);
-        $carnet->setVoyageur($tableauAssoc['voyageur']);
+        $carnet->setVoyageur($tableauAssoc['id_voyageur']);
         return $carnet;
     }
 

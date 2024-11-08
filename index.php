@@ -18,4 +18,15 @@ try {
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
+
+try {
+
+    $pdo = bd::getInstance()->getPdo();
+    $managerCommentaire = new CommentaireDao($pdo);
+    $commentaire = $managerCommentaire->findAll();
+
+    var_dump($commentaire);
+}
+catch(Exception $e2){}
+
 ?>

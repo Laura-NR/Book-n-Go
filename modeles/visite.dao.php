@@ -47,7 +47,7 @@ public function hydrate($tableauAssoc): ?Visite
  $visite->setId($tableauAssoc['id']);
  $visite->setcapacite($tableauAssoc['capacite']);
  $visite->setNom($tableauAssoc['nom']);
- $visite->setCheminImage($tableauAssoc['image']);
+ $visite->setChemin_Image($tableauAssoc['chemin_image']);
  $visite->setDate_visite($tableauAssoc['date_visite']);
  $visite->setDescription($tableauAssoc['description']);
  $visite->setPublic($tableauAssoc['prive']);
