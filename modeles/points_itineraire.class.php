@@ -31,19 +31,19 @@ class PointItineraire{
     }
 
     //Setteur
-    public function setId(?int $id){
+    public function setId(?int $id): void{
         $this->id = $id;
     }
 
-    public function setAddress(?string $address){
+    public function setAddress(?string $address): void{
         $this->address = $address;
     }
 
-    public function setDescription(?string $description){
+    public function setDescription(?string $description): void{
         $this->description = $description;
     }
 
-    public function setTitre(){
+    public function setTitre(?string $titre): void{
         $this->titre = $titre;
     }
 }
