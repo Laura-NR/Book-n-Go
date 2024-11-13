@@ -5,14 +5,16 @@ class Post {
     private string|null $titre;
     private string|null $chemin_img;
     private string|null $contenu;
+    public Date|null $date_heure_publication;
     private Voyageur $voyageur;
     private PointItineraire $point;
 
-    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?Voyageur $voyageur = null, ?PointItineraire $point = null) {
+    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?Date $date_heure_publication = null, ?Voyageur $voyageur = null, ?PointItineraire $point = null) {
         $this->id = $id;
         $this->titre = $titre;
         $this->chemin_img = $chemin_img;
         $this->contenu = $contenu;
+        $this->date_heure_publication = $date_heure_publication;
         $this->voyageur = $voyageur;
         $this->point = $point;
     }
@@ -83,6 +85,22 @@ class Post {
     public function setContenu($contenu): void
     {
         $this->contenu = $contenu;
+    }
+
+    /**
+     * Get the value of the date of publication
+     */
+    public function getDateHeurePublication(): ?Date
+    {
+        return $this->date_heure_publication;
+    }
+
+    /**
+     * Set the value of the date of publication
+     */
+    public function setDateHeurePublication($date_heure_publication): void 
+    {
+        $this->date_heure_publication = $date_heure_publication;
     }
 
     /**
