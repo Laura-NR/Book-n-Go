@@ -57,6 +57,8 @@ class PointItineraireDao{
         $pointItineraire = new PointItineraire();
         $pointItineraire->setId($tableauAssoc["id"]);
         $pointItineraire->setAddress($tableauAssoc["address"]);
+        $pointItineraire->setVille($tableauAssoc["ville"]);
+        $pointItineraire->setCodePostal($tableauAssoc["code_postal"]);
         $pointItineraire->setDescription($tableauAssoc["description"]);
         $pointItineraire->setTitre($tableauAssoc["titre"]);
         return $pointItineraire;
