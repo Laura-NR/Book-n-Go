@@ -1,119 +1,100 @@
-<?php 
+<?php
 
-class Controller {
-    private ?PDO $pdo;
-    private  \Twig\Loader\FilesystemLoader $loader;
+abstract class BaseController {
+    private PDO $pdo;
+    private \Twig\Environment $twig;
+    private ?array $get;
+    private ?array $post;
 
-    private \TWIG\Environment $twig;
-    private ?array $get = null;
-    private ?array $post = null;
-
-    public function __construct(\TWIG\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
-    {
-        $db = bd::getInstance();
-        $this->pdo = $db->getPdo();
+    public function __construct(\Twig\Environment $twig) 
+    // Initialise la connexion à la base de données via un singleton ou une autre classe
+     {        $db = Bd::getInstance();
+        $this->pdo = $db->getConnection();
 
         $this->loader = $loader;
         $this->twig = $twig;
 
-        if (isset($_GET) && !empty($_GET)) {
+        if (isset($_GET) && !empty($_GET))
+        {
             $this->get = $_GET;
-        } 
-        if (isset($_POST) && !empty($_POST)) {
+        }
+
+        if (isset($_POST) && !empty($_POST))
+        {
             $this->post = $_POST;
         }
     }
 
-    public function call(string $methode): mixed {
-
-        if (!method_exists($this, $methode)) {
-            throw new Exception("La méthode $methode n'existe pas dans le contrôleur __CLASS__");
-        }
-        return $this->$methode();
-
+    //Pour appeler une méthode d’un contrôleur spécifique
+    public function callMethode(string $method): mixed {
+    //test si la methode existe
+    if (!method_exists($this, $methode))
+    {
+        throw new Exception("La methode $methode n'existe pas dans la controleur __CLASS__");
     }
 
-    /**
-     * Get the value of pdo
-     */ 
+    return $this->$methode();
+}
+
+    // // Rendu d'une vue Twig avec les données
+    // protected function render(string $template, array $data = []): void {
+    //     echo $this->twig->render($template, $data);
+    // }
+
+    // // Redirection vers une URL
+    // protected function redirect(string $url): void {
+    //     header("Location: $url");
+    //     exit;
+    // }
+
     public function getPdo(): ?PDO
     {
         return $this->pdo;
     }
 
-    /**
-     * Set the value of pdo
-     */ 
     public function setPdo(?PDO $pdo): void
     {
         $this->pdo = $pdo;
     }
 
-    /**
-     * Get the value of loader
-     */ 
     public function getLoader(): \Twig\Loader\FilesystemLoader
     {
         return $this->loader;
     }
 
-    /**
-     * Set the value of loader
-     *
-     */ 
     public function setLoader(\Twig\Loader\FilesystemLoader $loader): void
     {
         $this->loader = $loader;
     }
 
-    /**
-     * Get the value of twig
-     */ 
-    public function getTwig(): \TWIG\Environment 
+    public function getTwig(): \Twig\Environment
     {
         return $this->twig;
     }
 
-    /**
-     * Set the value of twig
-     *
-     */ 
-    public function setTwig(\TWIG\Environment $twig): void
+    public function setTwig(\Twig\Environment $twig): void
     {
         $this->twig = $twig;
     }
 
-    /**
-     * Get the value of get
-     */ 
-    public function getGet(): ?array
+    public function getGet(): array
     {
         return $this->get;
     }
 
-    /**
-     * Set the value of get
-     *
-     */ 
-    public function setGet(?array $get): void
+    public function setGet(array $get): void
     {
         $this->get = $get;
     }
 
-    /**
-     * Get the value of post
-     */ 
-    public function getPost(): ?array
+    public function getPost(): array
     {
         return $this->post;
     }
 
-    /**
-     * Set the value of post
-     *
-     */ 
-    public function setPost(?array $post): void
+    public function setPost(array $post): void
     {
         $this->post = $post;
     }
 }
+
