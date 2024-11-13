@@ -17,10 +17,10 @@ class ComposerDao{
         $this->pdo = $pdo;
     }
 
-    public function find(?int $id): ?Composer{
-        $sql ="SELECT * FROM composer WHERE id= :id";
+    public function find(?int $id_visite, ?int $id_point): ?Composer{
+        $sql ="SELECT * FROM composer WHERE id_visite=:id_visite AND id_point=:id_point";
         $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array("id"=>$id));
+        $pdoStatement->execute(array("id_visite"=>$id_visite, "id_point"=>$id_point));
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE,"Composer");
         $composer = $pdoStatement->fetch();
         return $composer;
@@ -36,9 +36,9 @@ class ComposerDao{
     }
 
     public function findAssoc(?int $id): ?array{
-        $sql ="SELECT * FROM composer WHERE id= :id";
+        $sql ="SELECT * FROM composer WHERE id_visite=:id_visite AND id_point=:id_point";
         $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array("id"=>$id));
+        $pdoStatement->execute(array("id_visite"=>$id_visite, "id_point"=>$id_point));
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $composer = $pdoStatement->fetch();
         return $composer;
@@ -55,10 +55,10 @@ class ComposerDao{
 
     public function hydrate($tableauAssoc): ?Composer{
         $composer = new Composer();
-        $composer->setId($tableauAssoc["id"]);
-        $composer->setAddress($tableauAssoc["id"]);
-        $composer->setDescription($tableauAssoc["id"]);
-        $composer->setTitre($tableauAssoc["id"]);
+        $composer->setHeureArr($tableauAssoc["heure_arrivee"]);
+        $composer->setTempsSurPlace($tableauAssoc["temps_sur_place"]);
+        $composer->setVisite($tableauAssoc["id_visite"]);
+        $composer->setPoint($tableauAssoc["id_point"]);
         return $composer;
     }
 
