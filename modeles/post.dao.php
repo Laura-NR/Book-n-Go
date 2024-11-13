@@ -61,6 +61,7 @@ class PostDAO
         $post->setTitre($tableauAssoc['titre']);
         $post->setChemin_img($tableauAssoc['chemin_img']);
         $post->setContenu($tableauAssoc['contenu']);
+        $post->setDateHeurePublication($tableauAssoc['date_heure_publication']);
         $post->setVoyageur($tableauAssoc['id_voyageur']);
         $post->setpoint($tableauAssoc['id_point']);
         return $post;
