@@ -13,14 +13,14 @@ class Visite
 
     // creer constructeur de visite
     public function __construct(
-        ?int $id,
-        ?int $capacite ,
-        ?string $nom,
-        ?DateTime $date_visite,
-        ?string $description,
-        ?string $chemin_image,
-        ?bool $public,
-        ?int $id_guide)
+        ?int $id= null,
+        ?int $capacite = null,
+        ?string $nom= null,
+        ?DateTime $date_visite= null,
+        ?string $description= null,
+        ?string $chemin_image= null,
+        ?bool $public= null,
+        ?int $id_guide= null)
     {
 
         $this->$id;
@@ -118,7 +118,7 @@ class Visite
 
     public function getPublic() : ?bool
     {
-        return $this->$public;
+        return $this->public;
     }
 
  
