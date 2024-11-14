@@ -2,14 +2,15 @@
 
 abstract class BaseController {
     private PDO $pdo;
+    private \Twig\Loader\FilesystemLoader $loader;
     private \Twig\Environment $twig;
     private ?array $get;
     private ?array $post;
 
-    public function __construct(\Twig\Environment $twig) 
+    public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) 
     // Initialise la connexion à la base de données via un singleton ou une autre classe
      {        $db = Bd::getInstance();
-        $this->pdo = $db->getConnection();
+        $this->pdo = $db->getPdo();
 
         $this->loader = $loader;
         $this->twig = $twig;
@@ -26,7 +27,7 @@ abstract class BaseController {
     }
 
     //Pour appeler une méthode d’un contrôleur spécifique
-    public function callMethode(string $method): mixed {
+    public function callMethode(string $methode): mixed {
     //test si la methode existe
     if (!method_exists($this, $methode))
     {

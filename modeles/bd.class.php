@@ -28,6 +28,7 @@ class bd{
         return $this->pdo;
     }
 
+
     //Empecher le clonage de l'instance
     private function __clone()
     {

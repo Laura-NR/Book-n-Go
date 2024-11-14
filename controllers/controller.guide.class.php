@@ -1,6 +1,6 @@
 <?php
 
-class ControllerGuide extends Controller {
+class ControllerGuide extends BaseController {
     public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) {
         parent::__construct($loader, $twig);
     }
