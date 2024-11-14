@@ -1,86 +1,63 @@
 <?php
-class VoyageurDao{
+
+class VoyageurDao {
     private ?PDO $pdo;
 
-    public function __construct(?PDO $pdo=null){
+    public function __construct(?PDO $pdo = null) {
         $this->pdo = $pdo;
     }
 
-        /**
-     * Get the value of pdo
-     */ 
-    public function getPdo(): ?PDO
-    {
+    public function getPdo(): ?PDO {
         return $this->pdo;
     }
 
-    /**
-     * Set the value of pdo
-     *
-     */ 
-    public function setPdo($pdo): void
-    {
+    public function setPdo($pdo): void {
         $this->pdo = $pdo;
     }
 
-    
-    public function find(?int $id): ?Voyageur
-    {
-        $sql="SELECT * FROM voyageur WHERE id= :id";
+    public function find(?int $id): ?Voyageur {
+        $sql = "SELECT * FROM voyageur WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array("id"=>$id));
+        $pdoStatement->execute(['id' => $id]);
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Voyageur');
-        $guide = $pdoStatement->fetch();
-        return $guide;
+        return $pdoStatement->fetch() ?: null;
     }
 
-    public function findAll(){
-        $sql="SELECT * FROM  guide";
+    public function findAll(): array {
+        $sql = "SELECT * FROM voyageur";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Voyageur');
-        $guide = $pdoStatement->fetchAll();
-        return $guide;
+        return $pdoStatement->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Voyageur');
     }
 
-    public function findAssoc(?int $id): ?array
-    {
-        $sql="SELECT * FROM voyageur WHERE id= :id";
+    public function creer(Voyageur $voyageur): bool {
+        $sql = "INSERT INTO voyageur (nom, prenom, numero_tel, mail, mdp) VALUES (:nom, :prenom, :numero_tel, :mail, :mdp)";
         $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array("id"=>$id));
-        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
-        $guide = $pdoStatement->fetch();
-        return $guide;
+        return $pdoStatement->execute([
+            'nom' => $voyageur->getNom(),
+            'prenom' => $voyageur->getPrenom(),
+            'numero_tel' => $voyageur->getNumeroTel(),
+            'mail' => $voyageur->getMail(),
+            'mdp' => $voyageur->getMdp()
+        ]);
     }
 
-    public function findAllAssoc(){
-        $sql="SELECT * FROM voyageur";
+    public function maj(Voyageur $voyageur): bool {
+        $sql = "UPDATE voyageur SET nom = :nom, prenom = :prenom, numero_tel = :numero_tel, mail = :mail, mdp = :mdp WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute();
-        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
-        $guide = $pdoStatement->fetchAll();
-        return $guide;
+        return $pdoStatement->execute([
+            'nom' => $voyageur->getNom(),
+            'prenom' => $voyageur->getPrenom(),
+            'numero_tel' => $voyageur->getNumeroTel(),
+            'mail' => $voyageur->getMail(),
+            'mdp' => $voyageur->getMdp(),
+            'id' => $voyageur->getId()
+        ]);
     }
 
-    public function hydrate($tableauAssoc): ?Voyageur
-    {
-        $guide = new Voyageur();
-        $guide->setId($tableauAssoc['id']);
-        $guide->setNom($tableauAssoc['nom']);
-        $guide->setPrenom($tableauAssoc['prenom']);
-        $guide->setNumeroTel($tableauAssoc['mail']);
-        $guide->setMail($tableauAssoc['numero_tel']);
-        $guide->setMdp($tableauAssoc['mdp']);
-        return $guide;
+    public function supprimer(int $id): bool {
+        $sql = "DELETE FROM voyageur WHERE id = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        return $pdoStatement->execute(['id' => $id]);
     }
-
-    public function hydrateAll($tableau): ?array{
-        $guides = [];
-        foreach($tableau as $tableauAssoc){
-            $guide = $this->hydrate($tableauAssoc);
-            $guides[] = $guide;
-        }
-        return $guides;
-    }
-
 }
