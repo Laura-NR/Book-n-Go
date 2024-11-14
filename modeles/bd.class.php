@@ -39,4 +39,8 @@ class bd{
     {
         throw new Exception("Un singleton ne doit pas être déserialisé.");
     }
+    public function getConnection(): PDO
+    {
+        return $this->pdo;
+    }
 }

@@ -40,29 +40,75 @@ class VisiteDao{
      }
 
 
-//permet de remplir la nvl instance de Visite avec les données recup dans la bd 
-public function hydrate($tableauAssoc): ?Visite
-{
- $visite=new Visite();
- $visite->setId($tableauAssoc['id']);
- $visite->setcapacite($tableauAssoc['capacite']);
- $visite->setNom($tableauAssoc['nom']);
- $visite->setChemin_Image($tableauAssoc['chemin_image']);
- $visite->setDate_visite($tableauAssoc['date_visite']);
- $visite->setDescription($tableauAssoc['description']);
- $visite->setPublic($tableauAssoc['prive']);
- $visite->setId_guide($tableauAssoc['id_guide']);
- return $visite;
 
+ // Créer une nouvelle visite
+ public function creer(array $data): ?Visite {
+    $sql = "INSERT INTO visite (capacite, nom, chemin_image, date_visite, description, public, id_guide)
+            VALUES (:capacite, :nom, :chemin_image, :date_visite, :description, :public, :id_guide)";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([
+        ':capacite' => $data['capacite'],
+        ':nom' => $data['nom'],
+        ':chemin_image' => $data['chemin_image'],
+        ':date_visite' => $data['date_visite'],
+        ':description' => $data['description'],
+        ':public' => $data['public'],
+        ':id_guide' => $data['id_guide']
+    ]);
+
+    // Récupère l'id de la nouvelle visite insérée et retourne l'objet Visite hydraté
+    return $this->find($this->pdo->lastInsertId());
 }
-public function hydrateAll(array $tableauAssoc): ?array
-{
+
+// Sauvegarde une visite existante en la mettant à jour
+public function sauvegarder(Visite $visite): bool {
+    $sql = "UPDATE visite SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, date_visite = :date_visite,
+            description = :description, public = :public, id_guide = :id_guide WHERE id = :id";
+    $stmt = $this->pdo->prepare($sql);
+
+    return $stmt->execute([
+        ':id' => $visite->getId(),
+        ':capacite' => $visite->getCapacite(),
+        ':nom' => $visite->getNom(),
+        ':chemin_image' => $visite->getCheminImage(),
+        ':date_visite' => $visite->getDateVisite(),
+        ':description' => $visite->getDescription(),
+        ':public' => $visite->getPublic(),
+        ':id_guide' => $visite->getIdGuide()
+    ]);
+}
+
+// Supprime une visite en fonction de son identifiant
+public function supprimer(int $id): bool {
+    $sql = "DELETE FROM visite WHERE id = :id";
+    $stmt = $this->pdo->prepare($sql);
+    
+    return $stmt->execute([':id' => $id]);
+}
+//permet de remplir la nvl instance de Visite avec les données recup dans la bd 
+// Crée une instance de Visite avec les données récupérées
+public function hydrate(array $tableauAssoc): ?Visite {
+    $visite = new Visite();
+    $visite->setId($tableauAssoc['id']);
+    $visite->setCapacite($tableauAssoc['capacite']);
+    $visite->setNom($tableauAssoc['nom']);
+    $visite->setCheminImage($tableauAssoc['chemin_image']);
+    $visite->setDateVisite($tableauAssoc['date_visite']);
+    $visite->setDescription($tableauAssoc['description']);
+    $visite->setPublic($tableauAssoc['public']);
+    $visite->setIdGuide($tableauAssoc['id_guide']);
+    
+    return $visite;
+}
+
+// Hydrate une liste d'instances de Visite
+public function hydrateAll(array $tableauAssoc): ?array {
     $visites = [];
     foreach ($tableauAssoc as $ligne) {
-        $visite = new Visite();
-        $visite = $this->hydrate($ligne);
-        $visites[] = $visite;
+        $visites[] = $this->hydrate($ligne);
     }
     return $visites;
 }
 }
+?>
+

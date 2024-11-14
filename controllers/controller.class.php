@@ -8,7 +8,7 @@ abstract class BaseController {
 
     public function __construct(\Twig\Environment $twig) 
     // Initialise la connexion à la base de données via un singleton ou une autre classe
-     {        $db = Bd::getInstance();
+     {       $db = Bd::getInstance();
         $this->pdo = $db->getConnection();
 
         $this->loader = $loader;
