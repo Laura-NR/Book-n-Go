@@ -2,20 +2,20 @@
 class Composer {
     private ?DateTime $heureArr;
     private ?DateTime $tempsSurPlace;
+    private Excursion $excursion;
     private Visite $visite;
-    private PointItineraire $point;
 
     //Constructeur
     public function __construct(
-        ?DateTime $heureArr = null,
-        ?DateTime $tempsSurPlace = null,
-        ?Visite $visite = null,
-        ?PointItineraire $point = null)
+        ?DateTime  $heureArr = null,
+        ?DateTime  $tempsSurPlace = null,
+        ?Excursion $excursion = null,
+        ?Visite    $visite = null)
         {
-            $this->heureArr = $heurreArr;
+            $this->heureArr = $heureArr;
             $this->tempsSurPlace = $tempsSurPlace;
+            $this->excursion = $excursion;
             $this->visite = $visite;
-            $this->point = $point;
         }
 
 
@@ -52,6 +52,22 @@ class Composer {
     }
 
     /**
+     * Get the value of excursion
+     */ 
+    public function getExcursion()
+    {
+        return $this->excursion;
+    }
+
+    /**
+     * Set the value of excursion
+     */ 
+    public function setExcursion(?Excursion $excursion): void
+    {
+        $this->excursion = $excursion;
+    }
+
+    /**
      * Get the value of visite
      */ 
     public function getVisite()
@@ -65,21 +81,5 @@ class Composer {
     public function setVisite(?Visite $visite): void
     {
         $this->visite = $visite;
-    }
-
-    /**
-     * Get the value of point
-     */ 
-    public function getPoint()
-    {
-        return $this->point;
-    }
-
-    /**
-     * Set the value of point
-     */ 
-    public function setPoint(?PointItineraire $point): void
-    {
-        $this->point = $point;
     }
 }

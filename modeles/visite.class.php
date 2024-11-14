@@ -1,144 +1,71 @@
 <?php
+class Visite{
+    private int|null $id;
+    private string|null $address;
+    private string|null $ville;
+    private int|null $code_postal;
+    private string|null $description;
+    private string|null $titre;
 
-class Visite
-{
-    private ?int $id;
-    private ?int $capacite ;
-    private ?string $nom;
-    private ?DateTime $date_visite;
-    private ?string $description;
-    private ?string $chemin_image;
-    private ?bool $public ;
-    private ?int $id_guide;
-
-    // creer constructeur de visite
-    public function __construct(
-        ?int $id= null,
-        ?int $capacite = null,
-        ?string $nom= null,
-        ?DateTime $date_visite= null,
-        ?string $description= null,
-        ?string $chemin_image= null,
-        ?bool $public= null,
-        ?int $id_guide= null)
-    {
-
-        $this->$id;
-        $this-> $capacite;
-        $this-> $nom;
-        $this-> $date_visite;
-        $this->$description;
-        $this->$chemin_image;
-        $this-> $public;
-        $this-> $id_guide;
-
+    //Constructeur
+    public function __construct(?int $id = null, ?string $address = null, ?string $ville, ?int $code_postal, ?string $description = null, ?string $titre = null){
+        $this->id = $id;
+        $this->address = $address;
+        $this->ville = $ville;
+        $this->code_postal = $code_postal;
+        $this->description = $description;
+        $this->titre = $titre;
     }
 
-    //ENCAPSULTATION GETTER ET SETTER
-    //variable id 
-
-    public function getId(): ?int
-    {
+    //Getteur
+    public function getId(){
         return $this->id;
     }
 
-    public function setId($id): void
-    {
-        $this->id = $id;
-
+    public function getAddress(){
+        return $this->address;
     }
 
-    //variable capacite
-
-     public function getCapacite() : ?int
-    {
-        return $this->capacite;
+    public function getVille(){
+        return $this->ville;
     }
 
-    public function setCapacite($capacite): void
-    {
-        $this->capacite = $capacite;
+    public function getCodePostal(){
+        return $this->code_postal;
     }
 
-    //variable nom
-
-    public function getNom() : ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom($nom):void
-    {
-        $this->nom = $nom;
-
-    }
-
-    //variable date_visite
-
-    public function getDate_visite() : ?DateTime
-    {
-        return $this->date_visite;
-    }
-
-    public function setDate_visite($date_visite):void
-    {
-        $this->date_visite = $date_visite;
-
-    }
-
-    //variable description
-    public function getDescription() : ?string
-    {
+    public function getDescription(){
         return $this->description;
     }
 
-
-    public function setDescription($description):void
-    {
-        $this->description = $description;
-
-
+    public function getTitre(){
+        return $this->titre;
     }
-
-    //variable chemin_image
     
-    public function getChemin_image() : ?string
-    {
-        return $this->chemin_image;
+
+    //Setteur
+    public function setId(?int $id): void{
+        $this->id = $id;
     }
 
-    public function setChemin_image($chemin_image):void
-    {
-        $this->chemin_image = $chemin_image;
-
-
+    public function setAddress(?string $address): void{
+        $this->address = $address;
     }
 
-    //variable public
-
-    public function getPublic() : ?bool
-    {
-        return $this->public;
+    public function setVille(?string $ville): void{
+        $this->ville = $ville;
     }
 
- 
-    public function setPublic($public):void
-    {
-        $this->public = $public;
-
+    public function setCodePostal(?int $code_postal): void{
+        $this->code_postal = $code_postal;
     }
 
-    //variable id_guide
-
-    public function getId_guide() : ?int
-    {
-        return $this->id_guide;
+    public function setDescription(?string $description): void{
+        $this->description = $description;
     }
- 
-    public function setId_guide($id_guide):void
-    {
-        $this->id_guide = $id_guide;
 
-
+    public function setTitre(?string $titre): void{
+        $this->titre = $titre;
     }
 }
+?>

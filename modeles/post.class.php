@@ -7,16 +7,16 @@ class Post {
     private string|null $contenu;
     public Date|null $date_heure_publication;
     private Voyageur $voyageur;
-    private PointItineraire $point;
+    private Visite $visite;
 
-    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?Date $date_heure_publication = null, ?Voyageur $voyageur = null, ?PointItineraire $point = null) {
+    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?Date $date_heure_publication = null, ?Voyageur $voyageur = null, ?Visite $visite = null) {
         $this->id = $id;
         $this->titre = $titre;
         $this->chemin_img = $chemin_img;
         $this->contenu = $contenu;
         $this->date_heure_publication = $date_heure_publication;
         $this->voyageur = $voyageur;
-        $this->point = $point;
+        $this->visite = $visite;
     }
 
     /**
@@ -121,19 +121,19 @@ class Post {
     }
 
     /**
-     * Get the value of point
+     * Get the value of visite
      */ 
-    public function getPoint(): ?PointItineraire
+    public function getVisite(): ?Visite
     {
-        return $this->point;
+        return $this->visite;
     }
 
     /**
-     * Set the value of point
+     * Set the value of visite
      *
      */ 
-    public function setPoint($point): void
+    public function setVisite($visite): void
     {
-        $this->point = $point;
+        $this->visite = $visite;
     }
 }

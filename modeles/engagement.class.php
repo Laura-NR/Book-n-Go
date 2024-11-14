@@ -1,17 +1,17 @@
 <?php 
 
-class Disponibilite {
+class Engagement {
     private int|null $id;
     private DateTime|null $date_debut;
     private DateTime|null $date_fin;
-    private Visite $visite;
+    private Excursion $excursion;
     private Guide $guide;
 
-    public function __construct(?int $id = null, ?DateTime $date_debut = null, ?DateTime $date_fin = null, ?Visite $visite = null, ?Guide $guide = null) {
+    public function __construct(?int $id = null, ?DateTime $date_debut = null, ?DateTime $date_fin = null, ?Excursion $excursion = null, ?Guide $guide = null) {
         $this->id = $id;
         $this->date_debut = $date_debut;
         $this->date_fin = $date_fin;
-        $this->visite = $visite;
+        $this->excursion = $excursion;
         $this->guide = $guide;
     }
 
@@ -66,20 +66,20 @@ class Disponibilite {
     }
 
     /**
-     * Get the value of visite
+     * Get the value of excursion
      */ 
-    public function getVisite(): ?Visite
+    public function getExcursion(): ?Excursion
     {
-        return $this->visite;
+        return $this->excursion;
     }
 
     /**
-     * Set the value of visite
+     * Set the value of excursion
      *
      */ 
-    public function setVisite($visite): void
+    public function setExcursion($excursion): void
     {
-        $this->visite = $visite;
+        $this->excursion = $excursion;
     }
 
     /**

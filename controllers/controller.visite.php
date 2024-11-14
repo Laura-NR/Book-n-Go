@@ -5,7 +5,7 @@ class ControllerVisite extends BaseController {
         parent::__construct($loader, $twig);
     }
 
-    // Affiche le formulaire de création de visite et enregistre les données si envoyées
+    // Affiche le formulaire de création d'excursion et enregistre les données si envoyées
     public function creer(): void {
         // Vérifie si le formulaire a été soumis
         if (!empty($this->getPost())) {
@@ -19,31 +19,31 @@ class ControllerVisite extends BaseController {
                 'id_guide' => $this->getPost()['id_guide'] ?? ''
             ];
 
-            // Utilisation de VisiteDao pour créer une nouvelle visite
-            $visiteDao = new VisiteDao($this->getPdo());
-            $nouvelleVisite = $visiteDao->creer($data);
+            // Utilisation de ExcursionDao pour créer une nouvelle excursion
+            $excursionDao = new ExcursionDao($this->getPdo());
+            $nouvelleExcursion = $excursionDao->creer($data);
 
-            // Redirige vers la liste des visites après création réussie
-            if ($nouvelleVisite) {
-                $this->redirect('ListesVisites.php');
+            // Redirige vers la liste des excursions après création réussie
+            if ($nouvelleExcursion) {
+                $this->redirect('ListesExcursions.php');
             } else {
-                echo "Erreur lors de la création de la visite.";
+                echo "Erreur lors de la création de l'excursion.";
             }
         } else {
             // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('creerVisite.twig');
+            echo $this->getTwig()->render('creerExcursion.twig');
         }
     }
 
-    // Supprime une visite en fonction de son ID
+    // Supprime une excursion en fonction de son ID
     public function supprimer(int $id): void {
-        $visiteDao = new VisiteDao($this->getPdo());
+        $excursionDao = new ExcursionDao($this->getPdo());
 
         // Si la suppression réussit, redirection vers la liste
-        if ($visiteDao->supprimer($id)) {
-            $this->redirect('ListesVisites.php');
+        if ($excursionDao->supprimer($id)) {
+            $this->redirect('ListesExcursions.php');
         } else {
-            echo "Erreur lors de la suppression de la visite.";
+            echo "Erreur lors de la suppression de l'excursion.";
         }
     }
 }
