@@ -31,7 +31,7 @@ class ControllerVisite extends BaseController {
             }
         } else {
             // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('creerExcursion.twig');
+            echo $this->getTwig()->render('creation_excursion.html.twig');
         }
     }
 

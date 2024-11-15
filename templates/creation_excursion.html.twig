@@ -9,9 +9,21 @@ Création d'une Excursion
 <main class="container">
     <h1>Informations de l'excursion :</h1>
     <form>
-        <label for="nom">Titre :</label>
-        <input type="text">
-        
+        <div>
+            <label for="nom">Titre :</label>
+            <input type="text" id="nom" name="nom">
+            <label for="capacite">Capacite :</label>
+            <input type="number" id="capacite" name="capacite">
+            <label for="itineraire">Itineraire :</label>
+            <select name="itineraire" id="itineraire"></select>
+            <label for="image">Image :</label>
+            <input type="file" id="image" name="image">
+            <label for="description">Description :</label>
+            <input type="text" id="description" name="description">
+            <input type="checkbox" name="public" id="public">
+            <label for="public">Je veux que d’autres guides puissent participer dans cette excursion</label>
+        </div>
+        <input type="submit" value="Créer">
     </form>
 </main>
 {% endblock %}
