@@ -75,6 +75,15 @@ class VoyageurDao {
         $requete = $this->pdo->prepare($sql); // Préparation de la requête
         return $requete->execute(['id' => $id]); // Exécution de la requête pour supprimer le voyageur
     }
+    // Liste tous les voyageurs
+    public function listerTousVoyageurs(): array {
+        // Requête SELECT pour récupérer tous les voyageurs
+        $sql = "SELECT * FROM voyageur";
+        $requete = $this->pdo->prepare($sql); // Préparation de la requête
+        $requete->execute(); // Exécution de la requête
+        return $requete->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Voyageur'); // Récupère tous les voyageurs sous forme d'objets
+    }
+
 }
 
 ?>

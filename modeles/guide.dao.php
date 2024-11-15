@@ -84,4 +84,13 @@ class GuideDao{
         return $guides;
     }
 
+    // creer 
+
+    // maj
+
+    //supp
+
+    //lister 
+
+    //afficher 
 }
