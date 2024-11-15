@@ -8,6 +8,7 @@ Création d'une Excursion
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     Informations de l'excursion :
   </h1>
+  {{ dump(visites) }}
   <form class="mx-auto p-5" style="width: 80%" method="post" action="controller.excursion.php?action=creer">
     <div
       style="
@@ -39,7 +40,7 @@ Création d'une Excursion
             <select name="itineraire" id="itineraire" class="form-select">
                 <option selected>Composez l'itineraire de votre excursion</option>
                 {% for visite in visites %}
-                <option value="{{ visite.getId() }}">
+                <option value={{ visite.getId() }}>
                 {{ visite.getTitre() ~ ' - ' ~ visite.getVille() }}
                 </option>
                 {% endfor %}

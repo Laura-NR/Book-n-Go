@@ -53,7 +53,7 @@ class VisiteDao{
         $visite = $pdoStatement->fetchAll();
 
         print_r($visite);
-        return $this->hydrateAll($visite);
+        return $visite;
     }
 
     public function hydrate($tableauAssoc): ?Visite{

@@ -1,7 +1,7 @@
 <?php
 
 class ControllerExcursion extends BaseController {
-    public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) {
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($loader, $twig);
     }
 
@@ -56,7 +56,7 @@ class ControllerExcursion extends BaseController {
             //Récuperation des toutes les visites pour les afficher dans le menu déroulant
             $visiteDao = new VisiteDao($this->getPdo());
             $visites = $visiteDao->findAllAssoc();
-            var_dump($visites);
+            print_r($visites);
 
             // Chargement du formulaire de création 
             echo $this->getTwig()->render('creation_excursion.html.twig', [
