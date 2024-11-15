@@ -61,7 +61,7 @@ class ControllerVoyageur extends BaseController {
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
         }
     }
-    
+
     // Suppression d'un voyageur
     public function supprimerVoyageur(int $id): void {
         try {
