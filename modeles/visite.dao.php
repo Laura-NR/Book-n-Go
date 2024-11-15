@@ -27,7 +27,7 @@ class VisiteDao{
     }
 
     public function findAll(){
-        $sql ="SELECT * FROM point_itineraire";
+        $sql ="SELECT * FROM visite";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE,"visite");
