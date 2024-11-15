@@ -1,5 +1,9 @@
-{% extends "base_template.html.twig" %} {% block title %} Création d'une
-Excursion {% endblock %} {% block content %}
+{% extends "base_template.html.twig" %} 
+
+{% block title %} 
+Création d'une Excursion 
+{% endblock %} 
+{% block content %}
 <main class="container">
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     Informations de l'excursion :
@@ -36,7 +40,7 @@ Excursion {% endblock %} {% block content %}
                 <option selected>Composez l'itineraire de votre excursion</option>
                 {% for visite in visites %}
                 <option value="{{ visite.getId() }}">
-                {{ visite.getTitre() - visite.getVille() }}
+                {{ visite.getTitre() ~ ' - ' ~ visite.getVille() }}
                 </option>
                 {% endfor %}
                 <option href="">

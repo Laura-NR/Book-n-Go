@@ -1,4 +1,4 @@
-<?
+<?php
 // inclure les fichier dont nous avons besoins
 require_once 'include.php';
 // Préparer les variables spécifiques à la page

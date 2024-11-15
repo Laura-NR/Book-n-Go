@@ -63,7 +63,7 @@ class PostDAO
         $post->setContenu($tableauAssoc['contenu']);
         $post->setDateHeurePublication($tableauAssoc['date_heure_publication']);
         $post->setVoyageur($tableauAssoc['id_voyageur']);
-        $post->setpoint($tableauAssoc['id_point']);
+        $post->setVisite($tableauAssoc['id_point']);
         return $post;
     }
 

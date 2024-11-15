@@ -21,11 +21,14 @@ try {
 
 try {
 
-    $pdo = bd::getInstance()->getPdo();
-    $managerCommentaire = new CommentaireDao($pdo);
-    $commentaire = $managerCommentaire->findAll();
+    $sql ="SELECT * FROM visite";
+        $newVisite = new VisiteDao();
+        $pdoStatement = $newVisite->getPdo()->prepare($sql);
+        $pdoStatement->execute();
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $visite = $pdoStatement->fetchAll();
 
-    var_dump($commentaire);
+    var_dump($visite);
 }
 catch(Exception $e2){}
 
