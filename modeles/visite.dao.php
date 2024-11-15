@@ -4,7 +4,8 @@ class VisiteDao{
 
     //Constructeur
     public function __construct(?PDO $pdo = null){
-        $this->pdo = $pdo;
+        $this->pdo = bd::getInstance()->getPdo();
+        var_dump($this->pdo);
     }
 
     //Getteur
@@ -50,7 +51,9 @@ class VisiteDao{
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $visite = $pdoStatement->fetchAll();
-        return $visite;
+
+        print_r($visite);
+        return $this->hydrateAll($visite);
     }
 
     public function hydrate($tableauAssoc): ?Visite{
@@ -68,6 +71,7 @@ class VisiteDao{
         $visiteTab = [];
         foreach ($tab as $tableauAssoc) {
             $visite = $this->hydrate($tableauAssoc);
+            print_r($visite);
             $visiteTab[] = $visite;
         }
         return $visiteTab;

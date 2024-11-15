@@ -23,14 +23,14 @@ class Excursion
         ?int $id_guide= null)
     {
 
-        $this->$id;
-        $this-> $capacite;
-        $this-> $nom;
-        $this-> $date_visite;
-        $this->$description;
-        $this->$chemin_image;
-        $this-> $public;
-        $this-> $id_guide;
+        $this->id = $id;
+        $this->capacite = $capacite;
+        $this->nom = $nom;
+        $this->date_visite = $date_visite;
+        $this->description = $description;
+        $this->chemin_image = $chemin_image;
+        $this->public = $public;
+        $this->id_guide = $id_guide;
 
     }
 

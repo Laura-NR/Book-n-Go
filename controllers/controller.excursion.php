@@ -55,18 +55,14 @@ class ControllerExcursion extends BaseController {
         } else {
             //Récuperation des toutes les visites pour les afficher dans le menu déroulant
             $visiteDao = new VisiteDao($this->getPdo());
-            $visites = $visiteDao->findAll();
+            $visites = $visiteDao->findAllAssoc();
+            var_dump($visites);
 
             // Chargement du formulaire de création 
             echo $this->getTwig()->render('creation_excursion.html.twig', [
                 'visites' => $visites
             ]);
         }
-    }
-
-    public function insertComposer(int $excursionId, array $visites) 
-    {
-
     }
 
     // Supprime une excursion en fonction de son ID

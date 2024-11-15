@@ -8,7 +8,7 @@ class Visite{
     private string|null $titre;
 
     //Constructeur
-    public function __construct(?int $id = null, ?string $address = null, ?string $ville, ?int $code_postal, ?string $description = null, ?string $titre = null){
+    public function __construct(?int $id = null, ?string $address = null, ?string $ville = null, ?int $code_postal = null, ?string $description = null, ?string $titre = null){
         $this->id = $id;
         $this->address = $address;
         $this->ville = $ville;

@@ -4,14 +4,14 @@ class CommentaireDao{
     private ?PDO $pdo;
 
     public function __construct(?PDO $pdo = null) {
-        $this->pdo = $pdo;
+        $this->pdo = bd::getInstance()->getPdo();
     }
 
     public function getPdo(): ?PDO {
         return $this->pdo;
     }
 
-    public function setPdo(): void {
+    public function setPdo(?PDO $pdo): void {
         $this->pdo = $pdo;
     }
 

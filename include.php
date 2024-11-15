@@ -35,9 +35,8 @@ require_once 'modeles/voyageur.dao.php';
 
 //Ajout des contrôleurs
 require_once 'controllers/controller.class.php';
-require_once 'controllers/controller.guide.php';
+require_once 'controllers/controller.guide.class.php';
 require_once 'controllers/controller.excursion.php';
-require_once 'controllers/controller.visite.php';
 require_once 'controllers/controller.voyageur.php';
 
 ?>

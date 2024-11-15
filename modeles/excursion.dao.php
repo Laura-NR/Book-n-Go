@@ -3,7 +3,8 @@ class ExcursionDao {
     private ?PDO $pdo;
 
     public function __construct(PDO $pdo = null) {
-        $this->pdo = $pdo;
+        $this->pdo = bd::getInstance()->getPdo();
+        var_dump($this->pdo);
     }
 
     // Créer une nouvelle visite
@@ -35,11 +36,11 @@ class ExcursionDao {
             ':id' => $excursion->getId(),
             ':capacite' => $excursion->getCapacite(),
             ':nom' => $excursion->getNom(),
-            ':chemin_image' => $excursion->getCheminImage(),
-            ':date_excursion' => $excursion->getDateVisite(),
+            ':chemin_image' => $excursion->getChemin_Image(),
+            ':date_excursion' => $excursion->getDate_Visite(),
             ':description' => $excursion->getDescription(),
             ':public' => $excursion->getPublic(),
-            ':id_guide' => $excursion->getIdGuide()
+            ':id_guide' => $excursion->getId_Guide()
         ]);
     }
 
@@ -78,11 +79,11 @@ class ExcursionDao {
         $excursion->setId($tableauAssoc['id']);
         $excursion->setCapacite($tableauAssoc['capacite']);
         $excursion->setNom($tableauAssoc['nom']);
-        $excursion->setCheminImage($tableauAssoc['chemin_image']);
-        $excursion->setDateVisite($tableauAssoc['date_visite']);
+        $excursion->setChemin_Image($tableauAssoc['chemin_image']);
+        $excursion->setDate_Visite($tableauAssoc['date_visite']);
         $excursion->setDescription($tableauAssoc['description']);
         $excursion->setPublic($tableauAssoc['public']);
-        $excursion->setIdGuide($tableauAssoc['id_guide']);
+        $excursion->setId_Guide($tableauAssoc['id_guide']);
         
         return $excursion;
     }

@@ -1,52 +1,53 @@
 <?php
 
-abstract class BaseController {
+abstract class BaseController
+{
     private PDO $pdo;
     private \Twig\Loader\FilesystemLoader $loader;
     private \Twig\Environment $twig;
     private ?array $get;
     private ?array $post;
 
-    public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) 
+    public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig)
     // Initialise la connexion à la base de données via un singleton ou une autre classe
-     {        $db = Bd::getInstance();
+    {
+        $db = Bd::getInstance();
         $this->pdo = $db->getPdo();
 
         $this->loader = $loader;
         $this->twig = $twig;
 
-        if (isset($_GET) && !empty($_GET))
-        {
+        if (isset($_GET) && !empty($_GET)) {
             $this->get = $_GET;
         }
 
-        if (isset($_POST) && !empty($_POST))
-        {
+        if (isset($_POST) && !empty($_POST)) {
             $this->post = $_POST;
         }
     }
 
     //Pour appeler une méthode d’un contrôleur spécifique
-    public function callMethode(string $methode): mixed {
-    //test si la methode existe
-    if (!method_exists($this, $methode))
+    public function callMethode(string $methode): mixed
     {
-        throw new Exception("La methode $methode n'existe pas dans la controleur __CLASS__");
-    }
+        //test si la methode existe
+        if (!method_exists($this, $methode)) {
+            throw new Exception("La methode $methode n'existe pas dans la controleur __CLASS__");
+        }
 
-    return $this->$methode();
-}
+        return $this->$methode();
+    }
 
     // // Rendu d'une vue Twig avec les données
     // protected function render(string $template, array $data = []): void {
     //     echo $this->twig->render($template, $data);
     // }
 
-    // // Redirection vers une URL
-    // protected function redirect(string $url): void {
-    //     header("Location: $url");
-    //     exit;
-    // }
+    //Redirection vers une URL
+    function redirect(string $url): void
+    {
+        header("Location: $url");
+        exit;
+    }
 
     public function getPdo(): ?PDO
     {
@@ -98,4 +99,3 @@ abstract class BaseController {
         $this->post = $post;
     }
 }
-
