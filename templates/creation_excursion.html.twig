@@ -115,6 +115,7 @@ Excursion {% endblock %} {% block content %}
     const addVisitButton = document.getElementById('addVisit');
     const itineraireSelect = document.getElementById('itineraire');
     const selectedVisits = document.getElementById('selectedVisits');
+    const selectedVisitsTitle = document.getElementById('selectedVisitsTitle');
 
     addVisitButton.addEventListener("click", () => {
         const selectedVisit = itineraireSelect.options[itineraireSelect.selectedIndex];
@@ -162,10 +163,18 @@ Excursion {% endblock %} {% block content %}
             </div>
         `;
 
+        selectedVisits.style.display = 'block';
+        selectedVisitsTitle.style.display = 'block';
+
         selectedVisits.appendChild(listItem);
         listItem.querySelector('.remove-visit').addEventListener('click', () => {
             listItem.remove();
         });
+
+        if (selectedVisits.children.length === 0) {
+            selectedVisits.style.display = 'none';
+            selectedVisitsTitle.style.display = 'none';
+        }
 
     });
 </script>

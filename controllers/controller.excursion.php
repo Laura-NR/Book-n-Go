@@ -48,7 +48,7 @@ class ControllerExcursion extends BaseController {
                     }
                 }
 
-                $this->redirect('ListesExcursions.php');
+                $this->redirect('liste_excursions.php');
             } else {
                 echo "Erreur lors de la création de l'excursion.";
             }
