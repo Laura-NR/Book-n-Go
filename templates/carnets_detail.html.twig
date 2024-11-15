@@ -1,0 +1,23 @@
+{% extends "base_template.html.twig" %}
+{% block title %}{{constant('WEBSITE_TITLE')}} Page d'accueil{% endblock %}
+
+{% block navbar_items %}
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Devenir guide</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Déconnexion</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    A CHANGER
+        <div class="container text-center">
+            <img src="./images/carnet/{{ carnet.chemin_img }}" alt="carnet voyage">
+            <h5>{{ carnet.titre }}</h5>
+            <p>{{ carnet.description }}</p>
+
+            <!-- retourner à la liste des carnets -->
+            <a href="#" class="btn btn-secondary mt-3">Retour à la liste</a>
+        </div>
+{% endblock %}

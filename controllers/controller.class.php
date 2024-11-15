@@ -27,7 +27,7 @@ abstract class BaseController {
     }
 
     //Pour appeler une méthode d’un contrôleur spécifique
-    public function callMethode(string $methode): mixed {
+    public function call(string $methode): mixed {
     //test si la methode existe
     if (!method_exists($this, $methode))
     {
