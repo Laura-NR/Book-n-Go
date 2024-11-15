@@ -1,6 +1,6 @@
 <?php
 
-class ControllerVisite extends BaseController {
+class ControllerExcursion extends BaseController {
     public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) {
         parent::__construct($loader, $twig);
     }
@@ -16,8 +16,15 @@ class ControllerVisite extends BaseController {
                 'date_visite' => $this->getPost()['date_visite'] ?? '',
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 1, // 1 pour public, 0 pour privé
-                'id_guide' => $this->getPost()['id_guide'] ?? ''
             ];
+
+            $id_guide = $_SESSION['id_guide'] ?? null;
+            if ($id_guide) {
+                $data['id_guide'] = $id_guide;
+            } else {
+                echo "Erreur : L'identifiant du guide est manquant.";
+                return;
+            }
 
             // Utilisation de ExcursionDao pour créer une nouvelle excursion
             $excursionDao = new ExcursionDao($this->getPdo());
@@ -25,14 +32,41 @@ class ControllerVisite extends BaseController {
 
             // Redirige vers la liste des excursions après création réussie
             if ($nouvelleExcursion) {
+                $visites = $this->getPost()['visites'] ?? [];
+                $composerDAO = new ComposerDao($this->getPdo());
+
+                foreach ($visites as $visiteId) {
+                    $composer = new Composer(
+                        new DateTime($this->getPost()['heure_arrivee'][$visiteId] ?? null),
+                        new DateTime($this->getPost()['temps_sur_place'][$visiteId] ?? null),
+                        $nouvelleExcursion,
+                        (new VisiteDao($this->getPdo()))->find($visiteId)
+                    );
+
+                    if ($composerDAO->creer($composer)) {
+                        echo "Erreur : Impossible de créer le composer.";
+                    }
+                }
+
                 $this->redirect('ListesExcursions.php');
             } else {
                 echo "Erreur lors de la création de l'excursion.";
             }
         } else {
-            // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('creation_excursion.html.twig');
+            //Récuperation des toutes les visites pour les afficher dans le menu déroulant
+            $visiteDao = new VisiteDao($this->getPdo());
+            $visites = $visiteDao->findAll();
+
+            // Chargement du formulaire de création 
+            echo $this->getTwig()->render('creation_excursion.html.twig', [
+                'visites' => $visites
+            ]);
         }
+    }
+
+    public function insertComposer(int $excursionId, array $visites) 
+    {
+
     }
 
     // Supprime une excursion en fonction de son ID

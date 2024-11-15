@@ -4,7 +4,7 @@ Excursion {% endblock %} {% block content %}
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     Informations de l'excursion :
   </h1>
-  <form class="mx-auto p-5" style="width: 80%">
+  <form class="mx-auto p-5" style="width: 80%" method="post" action="controller.excursion.php?action=creer">
     <div
       style="
         background-color: #b2708f;
@@ -31,17 +31,42 @@ Excursion {% endblock %} {% block content %}
       <div class="row mb-4">
         <div class="col">
           <label for="itineraire" class="form-label">Itineraire :</label>
-          <select
-            name="itineraire"
-            id="itineraire"
-            class="form-select"
-          ></select>
+          <div class="input-group">
+            <select name="itineraire" id="itineraire" class="form-select">
+                <option selected>Composez l'itineraire de votre excursion</option>
+                {% for visite in visites %}
+                <option value="{{ visite.getId() }}">
+                {{ visite.getTitre() - visite.getVille() }}
+                </option>
+                {% endfor %}
+                <option href="">
+                Ajouter une nouvelle visite dans l'itineraire
+                </option>
+            </select>
+            <button type="button" id="addVisit" class="btn btn-outline-secondary">
+                Ajouter
+            </button>
+          </div>
         </div>
         <div class="col">
-          <label for="image" class="form-label">Image :</label>
-          <input type="file" id="image" name="image" class="form-control" />
-        </div>
+            <label for="chemin_image" class="form-label">Image :</label>
+            <input
+              type="file"
+              id="chemin_image"
+              name="chemin_image"
+              class="form-control"
+            />
+          </div>
       </div>
+      <div class="col">
+        <div class="mb-4">
+            <h5>Visites sélectionnées :</h5>
+            <ul id="selectedVisits">
+                
+            </ul>
+          </div>
+      </div>
+  </div>
       <div class="row mb-4">
         <div class="col">
           <label for="description" class="form-label">Description :</label>
@@ -49,7 +74,7 @@ Excursion {% endblock %} {% block content %}
             name="description"
             id="description"
             class="form-control"
-            rows="8"
+            rows="5"
           ></textarea>
         </div>
       </div>
@@ -73,9 +98,75 @@ Excursion {% endblock %} {% block content %}
         type="submit"
         value="Créer"
         class="btn"
-        style="background-color: #b2708f; color: #fff; border-radius: 30px; padding: 10px 40px"
+        style="
+          background-color: #b2708f;
+          color: #fff;
+          border-radius: 30px;
+          padding: 10px 40px;
+        "
       />
     </div>
   </form>
 </main>
+{% endblock %}
+
+{% block script %} 
+<script>
+    const addVisitButton = document.getElementById('addVisit');
+    const itineraireSelect = document.getElementById('itineraire');
+    const selectedVisits = document.getElementById('selectedVisits');
+
+    addVisitButton.addEventListener("click", () => {
+        const selectedVisit = itineraireSelect.options[itineraireSelect.selectedIndex];
+        const visitId = selectedVisit.value;
+        const visitTitle = selectedVisit.text;
+
+        if (!visitId) {
+            return;
+        }
+
+        if (document.querySelector(`#visit-${visitId}`)) {
+            alert('Cette visite est déjà sélectionnée');
+            return;
+        }
+
+        const listItem = document.createElement('li');
+        listItem.id = `visit-${visitId}`;
+        listItem.classList.add('mb-2');
+        listItem.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <strong>${visitTitle}</strong>
+            </div>
+            <div class="d-flex gap-3">
+                <div>
+                <label for="heure_arrivee_${visitId}" class="form-label mb-0">Heure d'arrivée :</label>
+                <input
+                    type="time"
+                    id="heure_arrivee_${visitId}"
+                    name="heure_arrivee_${visitId}"
+                    class="form-control form-control-sm"
+                />
+                </div>
+                <div>
+                <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
+                <input
+                    type="time"
+                    id="temps_sur_place_${visitId}"
+                    name="temps_sur_place_${visitId}"
+                    class="form-control form-control-sm"
+                />
+                </div>
+                <button type="button" class="btn btn-danger btn-sm remove-visit">Supprimer</button>
+            </div>
+            </div>
+        `;
+
+        selectedVisits.appendChild(listItem);
+        listItem.querySelector('.remove-visit').addEventListener('click', () => {
+            listItem.remove();
+        });
+
+    });
+</script>
 {% endblock %}

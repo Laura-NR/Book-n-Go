@@ -72,5 +72,15 @@ class VisiteDao{
         }
         return $visiteTab;
     }
+
+    public function findByVille(string $ville): array
+    {
+        $sql = "SELECT * FROM visite WHERE ville = :ville";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(["ville" => $ville]);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "visite");
+        $visite = $pdoStatement->fetchAll();
+        return $visite;
+    }
 }
 ?>
