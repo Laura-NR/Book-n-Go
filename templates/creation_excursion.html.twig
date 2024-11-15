@@ -3,8 +3,8 @@ Excursion {% endblock %} {% block content %}
 <main class="container">
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="ms-5">Informations de l'excursion :</h1>
   <form class="mx-auto p-5" style="width : 80%">
-    <div style="background-color: #b2708f; color: #000; border-radius: 30px">
-    <div class="row">
+    <div style="background-color: #b2708f; color: #000; border-radius: 30px; padding: 20px">
+    <div class="row mb-4">
       <div class="col">
         <label for="nom" class="form-label">Titre :</label>
         <input type="text" id="nom" name="nom" class="form-control" />
@@ -19,7 +19,7 @@ Excursion {% endblock %} {% block content %}
         />
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-4">
       <div class="col">
         <label for="itineraire" class="form-label">Itineraire :</label>
         <select name="itineraire" id="itineraire" class="form-select"></select>
@@ -29,7 +29,7 @@ Excursion {% endblock %} {% block content %}
         <input type="file" id="image" name="image" class="form-control" />
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-4">
       <label for="description" class="form-label">Description :</label>
       <textarea
         name="description"
@@ -37,7 +37,7 @@ Excursion {% endblock %} {% block content %}
         class="form-control"
       ></textarea>
     </div>
-    <div class="row">
+    <div class="row mb-4">
       <input
         type="checkbox"
         name="public"
@@ -51,7 +51,14 @@ Excursion {% endblock %} {% block content %}
     </div>
     </div>
 
-    <input type="submit" value="Créer" class="btn" style="background-color: #b2708f; color: #fff; border-radius: 30px" />
+    <div class="text-center mt-4">
+        <input
+          type="submit"
+          value="Créer"
+          class="btn"
+          style="background-color: #b2708f; color: #fff; border-radius: 30px"
+        />
+      </div>
   </form>
 </main>
 {% endblock %}
