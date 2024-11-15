@@ -43,7 +43,7 @@ Excursion {% endblock %} {% block content %}
                 Ajouter une nouvelle visite dans l'itineraire
                 </option>
             </select>
-            <button type="button" id="addVisit" class="btn btn-outline-secondary">
+            <button type="button" id="addVisit" class="btn btn-light">
                 Ajouter
             </button>
           </div>
@@ -60,13 +60,12 @@ Excursion {% endblock %} {% block content %}
       </div>
       <div class="col">
         <div class="mb-4">
-            <h5>Visites sélectionnées :</h5>
-            <ul id="selectedVisits">
+            <h5 id="selectedVisitsTitle" style="display: none;">Visites sélectionnées :</h5>
+            <ul id="selectedVisits" style="display: none;">
                 
             </ul>
           </div>
       </div>
-  </div>
       <div class="row mb-4">
         <div class="col">
           <label for="description" class="form-label">Description :</label>

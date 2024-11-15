@@ -5,3 +5,5 @@ require_once 'include.php';
 // Charger et afficher le template
 // je veux charger le template de la page d'accueil 
 $template=$twig->load('creation_excursion.html.twig');
+
+echo $template->render();
