@@ -1,12 +1,44 @@
 <?php
 
-class ControllerExcursion extends BaseController {
-    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
-        parent::__construct($loader, $twig);
+class ControllerExcursion extends BaseController
+{
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
+    {
+        parent::__construct($twig, $loader);
+    }
+
+    public function recupererVisites()
+    {
+        $visiteDao = new VisiteDao($this->getPdo());
+        $visites = $visiteDao->findAllAssoc();
+
+        array_walk_recursive($visites, function (&$value) {
+            if (is_string($value)) {
+                $value = utf8_encode($value);   
+            }
+        });
+
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            header('Content-Type: application/json; charset=utf-8'); 
+            
+            
+            $jsonVisites = json_encode($visites, JSON_UNESCAPED_UNICODE);
+            if ($jsonVisites === false) {
+                print_r('JSON encoding failed: ' . json_last_error_msg());
+            }
+    
+            echo $jsonVisites; 
+            exit;
+        }
+        
+        echo $this->getTwig()->render('creation_excursion.html.twig', [
+            'visites' => $visites
+        ]);
     }
 
     // Affiche le formulaire de création d'excursion et enregistre les données si envoyées
-    public function creer(): void {
+    public function creer(): void
+    {
         // Vérifie si le formulaire a été soumis
         if (!empty($this->getPost())) {
             $data = [
@@ -53,20 +85,13 @@ class ControllerExcursion extends BaseController {
                 echo "Erreur lors de la création de l'excursion.";
             }
         } else {
-            //Récuperation des toutes les visites pour les afficher dans le menu déroulant
-            $visiteDao = new VisiteDao($this->getPdo());
-            $visites = $visiteDao->findAllAssoc();
-            print_r($visites);
-
-            // Chargement du formulaire de création 
-            echo $this->getTwig()->render('creation_excursion.html.twig', [
-                'visites' => $visites
-            ]);
+            echo "Erreur : Formulaire vide";
         }
     }
 
     // Supprime une excursion en fonction de son ID
-    public function supprimer(int $id): void {
+    public function supprimer(int $id): void
+    {
         $excursionDao = new ExcursionDao($this->getPdo());
 
         // Si la suppression réussit, redirection vers la liste
@@ -77,4 +102,3 @@ class ControllerExcursion extends BaseController {
         }
     }
 }
-?>

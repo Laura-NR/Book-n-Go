@@ -8,7 +8,6 @@ Création d'une Excursion
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     Informations de l'excursion :
   </h1>
-  {{ dump(visites) }}
   <form class="mx-auto p-5" style="width: 80%" method="post" action="controller.excursion.php?action=creer">
     <div
       style="
@@ -38,15 +37,8 @@ Création d'une Excursion
           <label for="itineraire" class="form-label">Itineraire :</label>
           <div class="input-group">
             <select name="itineraire" id="itineraire" class="form-select">
-                <option selected>Composez l'itineraire de votre excursion</option>
-                {% for visite in visites %}
-                <option value={{ visite.getId() }}>
-                {{ visite.getTitre() ~ ' - ' ~ visite.getVille() }}
-                </option>
-                {% endfor %}
-                <option href="">
-                Ajouter une nouvelle visite dans l'itineraire
-                </option>
+                <option value="" selected disabled>Composez l'itineraire de votre excursion</option>
+                <option href="" value="add-new">Ajouter une nouvelle visite dans l'itineraire</option>
             </select>
             <button type="button" id="addVisit" class="btn btn-light">
                 Ajouter
@@ -116,6 +108,59 @@ Création d'une Excursion
 
 {% block script %} 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const itineraireSelect = document.getElementById('itineraire');
+
+      itineraireSelect.addEventListener('focus', () => {
+        // Avoid multiple fetches (optional, depending on your needs)
+        if (itineraireSelect.querySelector('[data-fetched]')) {
+          return;
+        };
+
+        fetch('index.php?controlleur=excursion&methode=recupererVisites', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'  // Make sure this header is set
+            }
+        }).then(
+          response => {
+            console.log('Response status:', response.status);
+            console.log('Response content-type:', response.headers.get('Content-Type')); // Check content type
+            // Check if the response is okay
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            //return response.json();
+            console.log('Response: ', response);
+            return response.text()
+          }
+        ).then(responseText => {
+            console.log('Response Text:', responseText); // Log raw response
+
+            try {
+              const data = JSON.parse(responseText); // Try parsing manually
+              console.log('Fetched visits:', data);
+
+              const addNewOption = itineraireSelect.querySelector('option[value="add-new"]');
+
+              data.forEach(visit => {
+                const option = document.createElement('option');
+                option.value = visit.id;
+                option.textContent = `${visit.titre} - ${visit.ville}`;
+                option.setAttribute('data-fetched', true);
+                itineraireSelect.insertBefore(option, addNewOption);
+              });
+            } catch (error) {
+              console.error('Failed to parse JSON:', error);  // Log any JSON parsing errors
+            }
+        }).catch(error => {
+          console.error('Erreur à l\'heure de récupérer les visites:', error);
+          alert('Pas possible de récupérer les visites, ressayez plus tard');
+        });
+      });
+    });
+
+
     const addVisitButton = document.getElementById('addVisit');
     const itineraireSelect = document.getElementById('itineraire');
     const selectedVisits = document.getElementById('selectedVisits');
@@ -123,6 +168,12 @@ Création d'une Excursion
 
     addVisitButton.addEventListener("click", () => {
         const selectedVisit = itineraireSelect.options[itineraireSelect.selectedIndex];
+
+        if (!selectedVisit || selectedVisit.value === "" || selectedVisit.value === "add-new") {
+          alert('Veuillez sélectionner une visite valide.');
+          return;
+        }
+
         const visitId = selectedVisit.value;
         const visitTitle = selectedVisit.text;
 

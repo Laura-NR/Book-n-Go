@@ -8,7 +8,7 @@ abstract class BaseController
     private ?array $get;
     private ?array $post;
 
-    public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig)
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     // Initialise la connexion à la base de données via un singleton ou une autre classe
     {
         $db = Bd::getInstance();
