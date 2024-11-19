@@ -1,5 +1,5 @@
 <?php
-class Utilisateur {
+abstract class Utilisateur {
 //attributs   
 private int|null $id;
 private string $nom;
