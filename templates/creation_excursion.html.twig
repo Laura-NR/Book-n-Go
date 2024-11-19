@@ -8,7 +8,7 @@ Création d'une Excursion
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     Informations de l'excursion :
   </h1>
-  <form class="mx-auto p-5" style="width: 80%" method="post" action="controller.excursion.php?action=creer">
+  <form class="mx-auto p-5" style="width: 80%" method="post" action="controllers/controller.excursion.php?action=creer">
     <div
       style="
         background-color: #b2708f;
@@ -61,7 +61,7 @@ Création d'une Excursion
             <ul id="selectedVisits" style="display: none;">
                 
             </ul>
-          </div>
+        </div>
       </div>
       <div class="row mb-4">
         <div class="col">
@@ -190,12 +190,12 @@ Création d'une Excursion
         listItem.id = `visit-${visitId}`;
         listItem.classList.add('mb-2');
         listItem.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex justify-content-between align-items-center">
             <div>
                 <strong>${visitTitle}</strong>
             </div>
             <div class="d-flex gap-3">
-                <div>
+              <div>
                 <label for="heure_arrivee_${visitId}" class="form-label mb-0">Heure d'arrivée :</label>
                 <input
                     type="time"
@@ -203,8 +203,8 @@ Création d'une Excursion
                     name="heure_arrivee_${visitId}"
                     class="form-control form-control-sm"
                 />
-                </div>
-                <div>
+              </div>
+              <div>
                 <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
                 <input
                     type="time"
@@ -212,10 +212,10 @@ Création d'une Excursion
                     name="temps_sur_place_${visitId}"
                     class="form-control form-control-sm"
                 />
-                </div>
-                <button type="button" class="btn btn-danger btn-sm remove-visit">Supprimer</button>
+              </div>
+              <button type="button" class="btn btn-danger remove-visit" style="height: 20px, font-size: 12px; padding: 3px 10px; display: flex; align-items: center; justify-content: center">Supprimer</button>
             </div>
-            </div>
+          </div>
         `;
 
         selectedVisits.style.display = 'block';

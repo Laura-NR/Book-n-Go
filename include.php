@@ -12,6 +12,12 @@ require_once 'config/twig.php';
 //Ajout du modèle de connexion à la base de données
 require_once 'modeles/bd.class.php';
 
+//Ajout des contrôlleurs
+require_once 'controllers/controller.class.php';
+require_once 'controllers/controller_factory.class.php';
+require_once 'controllers/controller.guide.class.php';
+require_once 'controllers/controller.excursion.php';
+require_once 'controllers/controller.voyageur.php';
 
 //Ajout des modèles
 require_once 'modeles/carnet_voyage.class.php';
@@ -33,11 +39,6 @@ require_once 'modeles/post.dao.php';
 require_once 'modeles/voyageur.class.php';
 require_once 'modeles/voyageur.dao.php';
 
-//Ajout des contrôleurs
-require_once 'controllers/controller.class.php';
-require_once 'controllers/controller_factory.class.php';
-require_once 'controllers/controller.guide.class.php';
-require_once 'controllers/controller.excursion.php';
-require_once 'controllers/controller.voyageur.php';
+
 
 ?>
