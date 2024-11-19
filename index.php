@@ -19,14 +19,42 @@ try {
     echo 'Error: ' . $e->getMessage();
 }
 
-try {
 
-    $pdo = bd::getInstance()->getPdo();
-    $managerCommentaire = new CommentaireDao($pdo);
-    $commentaire = $managerCommentaire->findAll();
+try  {
+    if (isset($_GET['controleur'])){
+        $controllerName=$_GET['controleur'];
+    }else{
+        $controllerName='';
+    }
 
-    var_dump($commentaire);
+    if (isset($_GET['methode'])){
+        $methode=$_GET['methode'];
+    }else{
+        $methode='';
+    }
+
+    //Gestion de la page d'accueil par défaut
+    // POUR L'INSTANT PAR DEFAUT ON AFFICHE LA LISTE DES CARNETS DE VOYAGE --- A CHANGER
+    if ($controllerName == '' && $methode ==''){
+        $controllerName='carnetVoyage';
+        $methode='lister';
+    }
+
+    if ($controllerName == '' ){
+        throw new Exception('Le controleur n\'est pas défini');
+    }
+
+    if ($methode == '' ){
+        throw new Exception('La méthode n\'est pas définie');
+    }
+
+    $controller="Controller".ucfirst($controllerName);
+    $controllerNEW = new $controller($twig, $loader);
+    $controllerNEW->call($methode);
+
 }
-catch(Exception $e2){}
 
+catch (Exception $e) {
+    die('Erreur : ' . $e->getMessage());
+}
 ?>

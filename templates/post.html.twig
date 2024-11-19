@@ -1,0 +1,19 @@
+{% extends "base_template.html.twig" %}
+{% block title %}{{constant('WEBSITE_TITLE')}} Page d'accueil{% endblock %}
+
+{% block navbar_items %}
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Devenir guide</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Déconnexion</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ post.titre }}</h1>
+    <p>{{ post.contenu }}</p>
+    {% if post.chemin_img %}
+        <img src="{{ post.chemin_img }}" alt="Image du carnet">
+    {% endif %}
+{% endblock %}
