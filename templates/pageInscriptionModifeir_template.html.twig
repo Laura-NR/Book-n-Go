@@ -1,0 +1,102 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+        {# On adapte le titre selon le mode #}
+        <h1>{% if mode == 'modification' %}Mes informations{% else %}Inscription{% endif %}</h1>
+        
+        <form method="POST" action="{{ mode == 'modification' ? path('sauvegarder_modifications') : path('enregistrer_inscription') }}" class="form-card">
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="nom">Nom</label>
+                    <input type="text" 
+                           id="nom" 
+                           name="nom" 
+                           {% if mode == 'modification' and utilisateur is defined %}
+                           value="{{ utilisateur.nom }}"
+                           {% endif %}
+                           required>
+                </div>
+
+                <div class="form-field">
+                    <label for="prenom">Prénom</label>
+                    <input type="text" 
+                           id="prenom" 
+                           name="prenom"
+                           {% if mode == 'modification' and utilisateur is defined %}
+                           value="{{ utilisateur.prenom }}"
+                           {% endif %}
+                           required>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="numero_tel">Numéro de téléphone</label>
+                <input type="tel" 
+                       id="numero_tel" 
+                       name="numero_tel"
+                       {% if mode == 'modification' and utilisateur is defined %}
+                       value="{{ utilisateur.numero_tel }}"
+                       {% endif %}
+                       required>
+            </div>
+
+            {% if type == 'guide' %}
+                <div class="form-field">
+                    <label for="certification">Certification</label>
+                    <input type="text" 
+                           id="certification" 
+                           name="certification"
+                           {% if mode == 'modification' and utilisateur is defined %}
+                           value="{{ utilisateur.chemin_certif }}"
+                           {% endif %}
+                           required>
+                </div>
+            {% endif %}
+
+            <div class="form-field">
+                <label for="mail">Adresse Mail</label>
+                <input type="email" 
+                       id="mail" 
+                       name="mail"
+                       {% if mode == 'modification' and utilisateur is defined %}
+                       value="{{ utilisateur.mail }}"
+                       {% endif %}
+                       required>
+            </div>
+
+            <div class="form-field">
+                <label for="mdp">Mot de passe</label>
+                <input type="password" 
+                       id="mdp" 
+                       name="mdp"
+                       {% if mode == 'modification' %}
+                       placeholder="Laissez vide pour conserver l'actuel"
+                       {% else %}
+                       required
+                       {% endif %}>
+            </div>
+
+            {% if mode == 'inscription' %}
+                <div class="form-field checkbox-field">
+                    <input type="checkbox" 
+                           id="cgu" 
+                           name="cgu" 
+                           required>
+                    <label for="cgu">Je certifie avoir lu et accepté les Conditions Générales d'Utilisation</label>
+                </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn-valider">
+                    {% if mode == 'modification' %}Valider{% else %}S'inscrire{% endif %}
+                </button>
+                {% if mode == 'modification' %}
+                    <a href="{{ path('mes_informations') }}" class="btn-annuler">Annuler</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

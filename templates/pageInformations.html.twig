@@ -1,0 +1,25 @@
+{% extends "base_template.html.twig" %}
+{% block title %}{{constant('WEBSITE_TITLE')}} Mon compte</title> {% endblock %}
+    {% block content %}
+<div class="conteneur-info-utilisateur">
+    <h2>Mes informations:</h2>
+    <div class="boite-info-utilisateur">
+        <p><strong>Nom:</strong> <span id="nom-utilisateur">{{ utilisateur.nom }}</span></p>
+        <p><strong>Prénom:</strong> <span id="prenom-utilisateur">{{ utilisateur.prenom }}</span></p>
+        <p><strong>Mail:</strong> <span id="email-utilisateur">{{ utilisateur.mail }}</span></p>
+        <p><strong>Numéro de téléphone:</strong> <span id="telephone-utilisateur">{{ utilisateur.numéro }}</span></p>
+        {# si c'est un guide ceci s'affiche sinon il ne s'affiche pas  #}
+        {# voircertif a faire dans le controleur de guide pour recup la certif selon son id #}
+        {% if utilisateur.chemin_certif is defined %}{#  VOIR COMMENT GERER LES ROLES #}
+       <a href="/controller_voyageur/voirCertification?id={{ utilisateur.id }}" class="lien-certification" id="lien-certification">Voir ma certification</a>
+        {% endif %}
+    </div>
+    <div class="actions-utilisateur">
+    {# les methodes se trouvent dans les controller voyageur/guide #}
+        <button href="pageModificationInformations.php" onclick="modifierVoyageur()">Modifier les informations </button>
+        {#envoi sur la page de modification avec ses données A REVOIR #}
+        <button onclick="supprimerVoyageur()">Supprimer le compte</button>
+    </div>
+</div>
+
+    {% endblock %}
