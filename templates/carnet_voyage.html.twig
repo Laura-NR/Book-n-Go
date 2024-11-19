@@ -19,7 +19,7 @@
                 <img src="./images/carnet/{{ carnet.chemin_img }}" class="card-img-top" alt="#">
                 <div class="card-body">
                     <h5 class="card-title">{{ carnet.titre }}</h5>
-                    <a href="/carnet/{{ carnet.id }}" class="btn btn-primary">Consulter</a>
+                    <a href="?controleur=carnetVoyage&methode=afficher&id={{ carnet.id }}" class="btn btn-primary">Consulter</a>
                 </div>
             </div>
     {% endfor %}

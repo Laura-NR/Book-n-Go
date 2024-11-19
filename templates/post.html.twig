@@ -11,13 +11,9 @@
 {% endblock %}
 
 {% block content %}
-    A CHANGER
-        <div class="container text-center">
-            <img src="./images/carnet/{{ carnet.chemin_img }}" alt="carnet voyage">
-            <h5>{{ carnet.titre }}</h5>
-            <p>{{ carnet.description }}</p>
-
-            <!-- retourner à la liste des carnets -->
-            <a href="#" class="btn btn-secondary mt-3">Retour à la liste</a>
-        </div>
+    <h1>{{ post.titre }}</h1>
+    <p>{{ post.contenu }}</p>
+    {% if post.chemin_img %}
+        <img src="{{ post.chemin_img }}" alt="Image du carnet">
+    {% endif %}
 {% endblock %}

@@ -36,4 +36,7 @@ require_once 'controllers/controller.carnet.class.php';
 require_once 'controllers/controller.guide.class.php';
 require_once 'controllers/controller.visite.php';
 require_once 'controllers/controller.voyageur.php';
+require_once 'controllers/controller.post.class.php';
+//require_once 'controllers/controller.voyageur.php';
+
 
