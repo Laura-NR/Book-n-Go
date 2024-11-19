@@ -46,10 +46,6 @@ class ControllerGuide extends UtilisateurController {
 
     // Modification d'un guide
     public function modifierGuide(int $id): void {
-        if (!$this->isAdmin()) {
-            echo "Accès non autorisé. Vous devez être administrateur pour modifier un guide.";
-            return;
-        }
 
         try {
             $guideDao = new GuideDao($this->getPdo());
@@ -79,11 +75,7 @@ class ControllerGuide extends UtilisateurController {
 
     // Suppression d'un guide
     public function supprimerGuide(int $id): void {
-        if (!$this->isAdmin()) {
-            echo "Accès non autorisé. Vous devez être administrateur pour supprimer un guide.";
-            return;
-        }
-
+        
         try {
             $guideDao = new GuideDao($this->getPdo());
             if ($guideDao->supprimer($id)) {
