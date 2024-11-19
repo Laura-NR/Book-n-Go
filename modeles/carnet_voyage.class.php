@@ -5,7 +5,7 @@ class CarnetVoyage {
     private string|null $titre;
     private string|null $chemin_img;
     private string|null $description;
-    private Voyageur $voyageur;
+    private Voyageur|null $voyageur;
 
     public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $description = null, ?Voyageur $voyageur = null) {
         $this->id = $id;
@@ -44,7 +44,7 @@ class CarnetVoyage {
      * Set the value of titre
      *
      */ 
-    public function setTitre(?int $titre):void
+    public function setTitre(?string $titre):void
     {
         $this->titre = $titre;
     }
@@ -61,7 +61,7 @@ class CarnetVoyage {
      * Set the value of chemin_img
      *
      */ 
-    public function setChemin_img(?int $chemin_img):void
+    public function setChemin_img(?string $chemin_img):void
     {
         $this->chemin_img = $chemin_img;
     }
@@ -78,7 +78,7 @@ class CarnetVoyage {
      * Set the value of description
      *
      */ 
-    public function setDescription(?int $description):void
+    public function setDescription(?string $description):void
     {
         $this->description = $description;
     }

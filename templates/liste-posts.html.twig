@@ -1,0 +1,28 @@
+{% extends "base_template.html.twig" %}
+{% block title %}{{constant('WEBSITE_TITLE')}} Page d'accueil{% endblock %}
+
+{% block navbar_items %}
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Devenir guide</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Déconnexion</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    {{ dump(posts) }}
+    <div class="container text-center">
+        <div class="row row-cols-4 align-items-center">
+            {% for post in posts %}
+                <div class="card col mb-3 mx-1">
+                    <img src="./images/post/{{ post.chemin_img }}" class="card-img-top" alt="#">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.titre }}</h5>
+                        <p class="card-text">{{ post.date_publication }}</p>
+                        <a href="?controleur=post&methode=afficher&{{ post.id }}" class="btn btn-primary">Consulter</a>
+                    </div>id=
+                </div>
+            {% endfor %}
+        </div>
+        {% endblock %}

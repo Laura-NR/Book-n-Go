@@ -5,9 +5,12 @@ class Post {
     private string|null $titre;
     private string|null $chemin_img;
     private string|null $contenu;
-    public Date|null $date_heure_publication;
-    private Voyageur $voyageur;
-    private Visite $visite;
+    /**
+     * date('Y-m-d H:i:s', strtotime(str_replace('-', '/', $date))) pourra permettre la conversion de date php en DATETIME MySQL
+     */
+    public DateTime|null $date_heure_publication;
+    private Voyageur|null $voyageur;
+    private Visite|null $visite;
 
     public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?Date $date_heure_publication = null, ?Voyageur $voyageur = null, ?Visite $visite = null) {
         $this->id = $id;
