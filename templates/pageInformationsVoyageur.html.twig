@@ -1,4 +1,4 @@
- {% extends "base_template.html.twig" %}
+{% extends "base_template.html.twig" %}
 {% block title %}{{ constant('WEBSITE_TITLE') }} - Mon compte{% endblock %}
 {% block content %}
 <div class="container my-5">
@@ -12,10 +12,6 @@
                 <p><strong>Mail:</strong> <span id="email-utilisateur">{{ utilisateur.mail }}</span></p>
                 <p><strong>Numéro de téléphone:</strong> <span id="telephone-utilisateur">{{ utilisateur.numéro }}</span></p>
             </div>
-            //si l'utilisateur est un guide on affiche sa certif sinon on affiche rien 
-            {% if utilisateur.chemin_certif is defined %}
-            <a href="/controller_voyageur/voirCertification?id={{ utilisateur.id }}" class="btn btn-outline-primary" id="lien-certification">Voir ma certification</a>
-            {% endif %}
         </div>
     </div>
     <div class="d-flex justify-content-center mt-3">//centrer au centre de ma carte des informations
