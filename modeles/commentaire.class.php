@@ -2,12 +2,12 @@
 
 class Commentaire{
     private ?int $id;
-    private ?date $date_heure_publication;
+    private ?DateTime $date_heure_publication;
     private ?string $contenu;
     private ?int $id_voyageur;
     private ?int $id_post;
 
-    public function __construct(?int $id = null, ?date $date_heure = null, ?string $contenu = null, ?int $id_post = null, ?int $id_voyageur = null){
+    public function __construct(?int $id = null, ?DateTime $date_heure = null, ?string $contenu = null, ?int $id_post = null, ?int $id_voyageur = null){
         $this->id = $id;
         $this->date_heure_publication = $date_heure;
         $this->contenu = $contenu;
@@ -34,7 +34,7 @@ class Commentaire{
     /**
      * Get the value of date_heure_publication
      */
-    public function getDateHeurePublication(): ?date
+    public function getDateHeurePublication(): ?DateTime
     {
         return $this->date_heure_publication;
     }
@@ -42,7 +42,7 @@ class Commentaire{
     /**
      * Set the value of date_heure_publication
      */
-    public function setDateHeurePublication(?date $date_heure_publication): void
+    public function setDateHeurePublication(?DateTime $date_heure_publication): void
     {
         $this->date_heure_publication = $date_heure_publication;
     }

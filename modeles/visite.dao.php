@@ -4,7 +4,7 @@ class VisiteDao{
 
     //Constructeur
     public function __construct(?PDO $pdo = null){
-        $this->pdo = $pdo;
+        $this->pdo = bd::getInstance()->getPdo();
     }
 
     //Getteur
@@ -50,13 +50,14 @@ class VisiteDao{
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $visite = $pdoStatement->fetchAll();
+
         return $visite;
     }
 
     public function hydrate($tableauAssoc): ?Visite{
         $visite = new Visite();
         $visite->setId($tableauAssoc["id"]);
-        $visite->setAddress($tableauAssoc["address"]);
+        $visite->setAddress($tableauAssoc["adresse"]);
         $visite->setVille($tableauAssoc["ville"]);
         $visite->setCodePostal($tableauAssoc["code_postal"]);
         $visite->setDescription($tableauAssoc["description"]);
@@ -68,9 +69,20 @@ class VisiteDao{
         $visiteTab = [];
         foreach ($tab as $tableauAssoc) {
             $visite = $this->hydrate($tableauAssoc);
+            print_r($visite);
             $visiteTab[] = $visite;
         }
         return $visiteTab;
+    }
+
+    public function findByVille(string $ville): array
+    {
+        $sql = "SELECT * FROM visite WHERE ville = :ville";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(["ville" => $ville]);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "visite");
+        $visite = $pdoStatement->fetchAll();
+        return $visite;
     }
 }
 ?>

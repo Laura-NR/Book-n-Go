@@ -2,6 +2,39 @@
 require_once "include.php";
 
 try {
+    if (isset($_GET['controlleur'])) {
+        $controllerName = $_GET['controlleur'];
+    } else {
+        $controllerName = '';
+    }
+
+    if (isset($_GET['methode'])) {
+        $methode = $_GET['methode'];
+    } else {
+        $methode = '';
+    }
+
+    if ($controllerName == '' && $methode == '') {
+        $controllerName = 'excursion';
+        $methode = 'recupererVisites';
+    }
+
+    if ($controllerName == '') {
+        throw new Exception('Le controleur n\'est pas défini');
+    }
+
+    if ($methode == '') {
+        throw new Exception('La méthode n\'est pas définie');
+    }
+
+    $controller = ControllerFactory::getController($controllerName, $twig, $loader);
+
+    $controller->callMethode($methode);
+} catch (Exception $e) {
+    die('Erreur : ' . $e->getMessage());
+}
+
+/* try {
     // Get the instance of the singleton database connection
     $db = bd::getInstance();
 
@@ -56,5 +89,5 @@ try  {
 
 catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
-}
+} */
 ?>

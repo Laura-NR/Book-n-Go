@@ -6,7 +6,7 @@ class CarnetVoyageDAO
 
     public function __construct(PDO $pdo=null)
     {
-        $this->pdo = $pdo;
+        $this->pdo = bd::getInstance()->getPdo();
     }
 
     public function findAll(): array

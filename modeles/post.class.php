@@ -12,7 +12,7 @@ class Post {
     private Voyageur|null $voyageur;
     private Visite|null $visite;
 
-    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?Date $date_heure_publication = null, ?Voyageur $voyageur = null, ?Visite $visite = null) {
+    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?DateTime $date_heure_publication = null, ?Voyageur $voyageur = null, ?Visite $visite = null) {
         $this->id = $id;
         $this->titre = $titre;
         $this->chemin_img = $chemin_img;
@@ -93,7 +93,7 @@ class Post {
     /**
      * Get the value of the date of publication
      */
-    public function getDateHeurePublication(): ?Date
+    public function getDateHeurePublication(): ?DateTime
     {
         return $this->date_heure_publication;
     }
