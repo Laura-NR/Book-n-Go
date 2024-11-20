@@ -7,12 +7,12 @@
     <div class="card">
         <div class="card-body d-flex justify-content-between align-items-center">
             <div>
-                <p><strong>Nom:</strong> <span id="nom-utilisateur">{{ utilisateur.nom }}</span></p>
-                <p><strong>Prénom:</strong> <span id="prenom-utilisateur">{{ utilisateur.prenom }}</span></p>
-                <p><strong>Mail:</strong> <span id="email-utilisateur">{{ utilisateur.mail }}</span></p>
-                <p><strong>Numéro de téléphone:</strong> <span id="telephone-utilisateur">{{ utilisateur.numéro }}</span></p>
+                <p><strong>Nom:</strong> <span id="nom-utilisateur">{{ Guide.nom }}</span></p>
+                <p><strong>Prénom:</strong> <span id="prenom-utilisateur">{{ Guide.prenom }}</span></p>
+                <p><strong>Mail:</strong> <span id="email-utilisateur">{{ Guide.mail }}</span></p>
+                <p><strong>Numéro de téléphone:</strong> <span id="telephone-utilisateur">{{ Guide.numéro }}</span></p>
             </div>
-            <a href="/controller_voyageur/voirCertification?id={{ utilisateur.id }}" class="btn btn-outline-primary" id="lien-certification">Voir ma certification</a>
+            <a href="/controller_voyageur/voirCertification?id={{ Guide.id }}" class="btn btn-outline-primary" id="lien-certification">Voir ma certification</a>
         </div>
     </div>
     <div class="d-flex justify-content-center mt-3">//centrer au centre de ma carte des informations
