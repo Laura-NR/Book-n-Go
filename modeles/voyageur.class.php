@@ -1,5 +1,5 @@
 <?php
-
+require_once 'utilisateur.class.php';
 class Voyageur extends Utilisateur {
 
 //constructeur et destruteurs 
