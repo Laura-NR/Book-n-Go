@@ -13,11 +13,11 @@ class ControllerExcursion extends BaseController
         $visiteDao = new VisiteDao($this->getPdo());
         $visites = $visiteDao->findAllAssoc();
 
-        array_walk_recursive($visites, function (&$value) {
+        /* array_walk_recursive($visites, function (&$value) {
             if (is_string($value)) {
                 $value = utf8_encode($value);
             }
-        });
+        }); */
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             header('Content-Type: application/json; charset=utf-8');
@@ -40,6 +40,9 @@ class ControllerExcursion extends BaseController
     // Affiche le formulaire de création d'excursion et enregistre les données si envoyées
     public function creer(): void
     {
+        //Vérifier si la requête est une requête ajax
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
         // Vérifie si le formulaire a été soumis
         if (!empty($this->getPost())) {
             $data = [
@@ -67,6 +70,10 @@ class ControllerExcursion extends BaseController
                 if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
                     $data['chemin_image'] = $fileName;
                 } else {
+                    if ($isAjax) {
+                        echo json_encode(['success' => false, 'message' => 'Image upload failed']);
+                        exit;
+                    }
                     echo "Erreur: Echec du téléchargement de l'image.";
                     return;
                 }
@@ -80,11 +87,24 @@ class ControllerExcursion extends BaseController
             if ($nouvelleExcursion) {
                 $this->handleVisits($nouvelleExcursion->getId(), $_POST);
 
+                if ($isAjax) {
+                    echo json_encode(['success' => true, 'message' => 'Excursion created successfully']);
+                    exit;
+                }
+
                 //$this->redirect('liste_excursions.php');
             } else {
+                if ($isAjax) {
+                    echo json_encode(['success' => false, 'message' => 'Error creating excursion']);
+                    exit;
+                }
                 echo "Erreur lors de la création de l'excursion.";
             }
         } else {
+            if ($isAjax) {
+                echo json_encode(['success' => false, 'message' => 'Form data is missing']);
+                exit;
+            }
             echo "Erreur : Formulaire vide";
         }
     }
