@@ -29,6 +29,8 @@ require_once 'modeles/guide.class.php';
 require_once 'modeles/guide.dao.php';
 require_once 'modeles/post.class.php';
 require_once 'modeles/post.dao.php';
+require_once 'modeles/utilisateur.dao.php';
+require_once 'modeles/utilisateur.class.php';
 
 //ajout des controllers
 require_once 'controllers/controller.class.php';

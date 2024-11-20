@@ -1,12 +1,12 @@
 <?php
 class Utilisateur {
 //attributs   
-private int|null $id;
-private string $nom;
-private string $prenom;   
-private string|null $numeroTel;
-private string $mail;   
-private string $mdp;   
+private ?int $id;
+private ?string $nom;
+private ?string $prenom;   
+private ?string $numeroTel;
+private ?string $mail;   
+private ?string $mdp;   
 
 //constructeur et destruteurs 
 public function __construct(?int $id = null, ?string $nom = null,?string $prenom = null, ?string $numeroTel = null,?string $mail = null, ?string $mdp = null,?string $cheminCertification = null) {

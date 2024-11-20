@@ -1,5 +1,5 @@
 <?php 
-
+require_once 'include.php';
 class Guide extends Utilisateur {
     // Attribut spécifique à Guide
     private ?string $cheminCertification;
