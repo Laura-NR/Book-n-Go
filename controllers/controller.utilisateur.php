@@ -36,7 +36,7 @@ class UtilisateurController extends BaseController {
         }
     }
     
-    // Afficher un utilisateur par ID
+    // Afficher un utilisateur par ID  
     public function afficherUtilisateur(int $id): void {
         $utilisateur = $this->utilisateurDao->trouver($id);
         if ($utilisateur) {
