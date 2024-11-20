@@ -5,7 +5,7 @@ class UtilisateurDao {
 
     // Constructeur de la classe qui initialise la connexion PDO
     public function __construct(?PDO $pdo = null) {
-        $this->pdo = $pdo;
+        $this->pdo = bd::getInstance()->getPdo();
     }
 
     // Getter pour l'objet PDO
