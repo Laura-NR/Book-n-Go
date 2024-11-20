@@ -1,0 +1,11 @@
+database: # Informations de connexion à la BDD
+  host: "lakartxela.iutbayonne.univ-pau.fr"
+  name: #DB NAME
+  user: #DB USER
+  pass: #DB PASSWORD
+
+website: # Informations sur le site
+  title: "Book\'n\'Go"
+  version: "2.5"
+  description: "Book\'n\'Go : application de carnets de voyage"
+  lang: "fr"
