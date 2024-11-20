@@ -5,8 +5,6 @@ define('DB_NAME', 'gdbelascain_pro');
 define('DB_USER', 'gdbelascain_pro');
 define('DB_PASS', 'gdbelascain_pro');
 
-define('PREFIXE_TABLE', 'bookngo_');
-
 // Constante de la partie vue
 define('WEBSITE_TITLE', 'Book\'n\'Go');
 define('WEBSITE_VERSION', '2.5');
