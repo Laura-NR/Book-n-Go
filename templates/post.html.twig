@@ -11,9 +11,12 @@
 {% endblock %}
 
 {% block content %}
+    {{ dump(post) }}
+    {{ dump(visite) }}
     <h1>{{ post.titre }}</h1>
-    <p>{{ post.contenu }}</p>
     {% if post.chemin_img %}
-        <img src="{{ post.chemin_img }}" alt="Image du carnet">
+        <img src="/images/post/{{ post.chemin_img }}" alt="Image du post">
     {% endif %}
+    <p>{{ post.contenu }}</p>
+    <p></p>
 {% endblock %}

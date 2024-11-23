@@ -18,6 +18,15 @@ class PostDAO
         return $posts;
     }
 
+    public function findAllByCarnetId(int $carnetId): array
+    {
+        $sql = "SELECT * FROM post WHERE id_carnet = :carnetId";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(array(':carnetId' => $carnetId));
+        $posts = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+        return $posts;
+    }
+
     /**
      * Get the value of pdo
      */ 

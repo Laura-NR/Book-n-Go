@@ -1,8 +1,7 @@
 <?php
-class ControllerGuide extends UtilisateurController {
-
+class ControllerGuide extends BaseController {
     public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) {
-        parent::__construct($loader, $twig);
+        parent::__construct($twig, $loader);
     }
 
     // Vérifier si l'utilisateur est un administrateur

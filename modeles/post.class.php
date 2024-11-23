@@ -5,20 +5,24 @@ class Post {
     private string|null $titre;
     private string|null $chemin_img;
     private string|null $contenu;
+    private int|null $id_visite; // Stocke l'ID de la visite
+    private int|null $id_guide; // Stocke l'ID du guide
+    private int|null $id_carnet; // Stocke l'ID du guide
+    private string|null $date_publication; // Stocke l'ID du guide
     /**
      * date('Y-m-d H:i:s', strtotime(str_replace('-', '/', $date))) pourra permettre la conversion de date php en DATETIME MySQL
      */
-    public DateTime|null $date_heure_publication;
-    private Voyageur|null $voyageur;
+    //public DateTime|null $date_heure_publication;
+    private CarnetVoyage|null $carnetVoyage;
     private Visite|null $visite;
 
-    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?DateTime $date_heure_publication = null, ?Voyageur $voyageur = null, ?Visite $visite = null) {
+    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?string $date_publication = null, ?CarnetVoyage $carnetVoyage = null, ?Visite $visite = null) {
         $this->id = $id;
         $this->titre = $titre;
         $this->chemin_img = $chemin_img;
         $this->contenu = $contenu;
-        $this->date_heure_publication = $date_heure_publication;
-        $this->voyageur = $voyageur;
+        $this->date_publication = $date_publication;
+        $this->carnetVoyage = $carnetVoyage;
         $this->visite = $visite;
     }
 
@@ -109,18 +113,18 @@ class Post {
     /**
      * Get the value of voyageur
      */ 
-    public function getVoyageur(): ?Voyageur
+    public function getCarnetVoyage(): ?CarnetVoyage
     {
-        return $this->voyageur;
+        return $this->carnetVoyage;
     }
 
     /**
      * Set the value of voyageur
      *
      */ 
-    public function setVoyageur($voyageur): void
+    public function setCarnetVoyage($carnet): void
     {
-        $this->voyageur = $voyageur;
+        $this->carnetVoyage = $carnet;
     }
 
     /**

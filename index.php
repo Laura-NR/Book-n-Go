@@ -1,9 +1,10 @@
 <?php
 require_once "include.php";
 
+
 try {
-    if (isset($_GET['controlleur'])) {
-        $controllerName = $_GET['controlleur'];
+    if (isset($_GET['controleur'])) {
+        $controllerName = $_GET['controleur'];
     } else {
         $controllerName = '';
     }
@@ -29,12 +30,13 @@ try {
 
     $controller = ControllerFactory::getController($controllerName, $twig, $loader);
 
-    $controller->callMethode($methode);
+    $controller->call($methode);
 } catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
 }
 
-/* try {
+/*
+ try {
     // Get the instance of the singleton database connection
     $db = bd::getInstance();
 
@@ -51,8 +53,8 @@ try {
 } catch (Exception $e) {
     echo 'Error: ' . $e->getMessage();
 }
-
-
+*/
+/*
 try  {
     if (isset($_GET['controleur'])){
         $controllerName=$_GET['controleur'];
@@ -89,5 +91,6 @@ try  {
 
 catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
-} */
+}
+*/
 ?>
