@@ -3,6 +3,16 @@
 
 {% block navbar_items %}
     <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Mes Informations</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Mon Planning</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Carnets de Voyage</a>
+    </li>
+
+    <li class="nav-item btn btn-primary rounded-pill me-2">
         <a class="nav-link" href="#">Devenir guide</a>
     </li>
     <li class="nav-item btn btn-primary rounded-pill me-2">
@@ -11,12 +21,36 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container mt-5">
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>{{ post.titre }}</h2>
+            </div>
+            <a href="?controleur=visite&methode=afficher&id={{ post.id_visite }}">Visite concernée : {{ post.titre_visite }}</a>
+            <img src="/images/post/{{ post.chemin_img }}" class="card-img-top" alt="Image du Point d'intérêt associé">
+            <div class="card-body">
+                <p class="card-text">{{ post.contenu }}</p>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h3>Commentaires</h3>
+            </div>
+            <div class="card-body">
+                {% for commentaire in commentaires %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ commentaire.prenom }} {{ commentaire.nom }}</h6>
+                            <p class="card-text">{{ commentaire.contenu }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
     {{ dump(post) }}
     {{ dump(visite) }}
-    <h1>{{ post.titre }}</h1>
-    {% if post.chemin_img %}
-        <img src="/images/post/{{ post.chemin_img }}" alt="Image du post">
-    {% endif %}
-    <p>{{ post.contenu }}</p>
-    <p></p>
+    {{ dump(commentaires) }}
 {% endblock %}

@@ -59,6 +59,7 @@ class CommentaireDao{
         $commentaire->setContenu($tableauAssoc['contenu']);
         $commentaire->setIdVoyageur($tableauAssoc['id_voyageur']);
         $commentaire->setIdPost($tableauAssoc['id_post']);
+        return $commentaire;
     }
 
     public function hydrateAll($tableau): ?array {
@@ -68,6 +69,16 @@ class CommentaireDao{
             $commentaires[] = $commentaire;
         }
         return $commentaires;
+    }
+
+    public function findAllWithIdPost($idPost)
+    {
+        $sql = "SELECT C.*, V.nom, V.prenom FROM commentaire C JOIN post P ON P.id = C.id_post JOIN voyageur V on V.id = C.id_voyageur WHERE id_post = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(array("id"=>$idPost));
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $commentaire = $pdoStatement->fetchAll();
+        return $commentaire;
     }
 
 

@@ -1,6 +1,7 @@
 {% extends "base_template.html.twig" %}
 {% block title %}{{ constant('WEBSITE_TITLE') }} - Mon compte{% endblock %}
 {% block content %}
+{{ dump(voyageur) }}
 <div class="container my-5">
     <h2>Mes informations:</h2>
     {# //bloc avec les informations de l'utilisateur connecté #}

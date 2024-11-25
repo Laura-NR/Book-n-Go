@@ -47,27 +47,23 @@ class ControllerPost extends BaseController
         // Affichage du template avec les posts du carnet
         echo $template->render(array(
             'posts' => $posts,
-            'carnetId' => $id, // Optionnel, au cas où vous voulez afficher des infos sur le carnet
         ));
     }
 
     public function afficher($id): void
     {
         $postDao = new PostDAO($this->getPdo());
-        $visiteDao = new VisiteDAO($this->getPdo());
+        $commentaireDao = new CommentaireDao($this->getPdo());
 
         // On récupère un post par son ID
         $post = $postDao->find($id);
-        $visite = $visiteDao->find($post->getVisite());
-        //$visite = $visiteDao->find();
-
+        $commentaires = $commentaireDao->findAllWithIdPost($id);
         if ($post) {
             // Chargement du template pour afficher un post
             $template = $this->getTwig()->load('post.html.twig');
             echo $template->render(array(
                 'post' => $post,
-                'visite' => $visite,
-
+                'commentaires' => $commentaires,
             ));
         } else {
             // Si le post n'existe pas, afficher une erreur ou rediriger

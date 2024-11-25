@@ -12,18 +12,13 @@ class Post {
     /**
      * date('Y-m-d H:i:s', strtotime(str_replace('-', '/', $date))) pourra permettre la conversion de date php en DATETIME MySQL
      */
-    //public DateTime|null $date_heure_publication;
-    private CarnetVoyage|null $carnetVoyage;
-    private Visite|null $visite;
 
-    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?string $date_publication = null, ?CarnetVoyage $carnetVoyage = null, ?Visite $visite = null) {
+    public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $contenu = null, ?string $date_publication = null) {
         $this->id = $id;
         $this->titre = $titre;
         $this->chemin_img = $chemin_img;
         $this->contenu = $contenu;
         $this->date_publication = $date_publication;
-        $this->carnetVoyage = $carnetVoyage;
-        $this->visite = $visite;
     }
 
     /**
@@ -112,35 +107,9 @@ class Post {
 
     /**
      * Get the value of voyageur
-     */ 
-    public function getCarnetVoyage(): ?CarnetVoyage
-    {
-        return $this->carnetVoyage;
-    }
-
-    /**
-     * Set the value of voyageur
-     *
-     */ 
-    public function setCarnetVoyage($carnet): void
-    {
-        $this->carnetVoyage = $carnet;
-    }
+     */
 
     /**
      * Get the value of visite
-     */ 
-    public function getVisite(): ?Visite
-    {
-        return $this->visite;
-    }
-
-    /**
-     * Set the value of visite
-     *
-     */ 
-    public function setVisite($visite): void
-    {
-        $this->visite = $visite;
-    }
+     */
 }

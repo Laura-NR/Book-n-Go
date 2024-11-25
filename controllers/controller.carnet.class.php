@@ -35,21 +35,21 @@ class ControllerCarnetVoyage extends BaseController
             'carnets' => $carnets,
         ));
     }
-    public function afficher($id): void
-    {
-        $carnetDao = new CarnetVoyageDAO($this->getPdo());
-        // On récupère un carnet par son ID
-        $carnet = $carnetDao->find($id);
-
-        if ($carnet) {
-            // Chargement du template pour afficher un carnet
-            $template = $this->getTwig()->load('carnets_detail.html.twig');
-            echo $template->render(array(
-                'carnet' => $carnet,
-            ));
-        } else {
-            // Si le carnet n'existe pas, afficher une erreur ou rediriger
-            echo "Carnet non trouvé.";
-        }
-    }
+//    public function afficher($id): void
+//    {
+//        $carnetDao = new CarnetVoyageDAO($this->getPdo());
+//        // On récupère un carnet par son ID
+//        $carnet = $carnetDao->find($id);
+//
+//        if ($carnet) {
+//            // Chargement du template pour afficher un carnet
+//            $template = $this->getTwig()->load('carnets_detail.html.twig');
+//            echo $template->render(array(
+//                'carnet' => $carnet,
+//            ));
+//        } else {
+//            // Si le carnet n'existe pas, afficher une erreur ou rediriger
+//            echo "Carnet non trouvé.";
+//        }
+//    }
 }
