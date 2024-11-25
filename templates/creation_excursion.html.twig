@@ -1,4 +1,4 @@
-{% extends "base_template.html.twig" %} 
+{% extends "base_template.html.twig" %}
 
 {% block title %} 
 Création d'une Excursion 
@@ -8,7 +8,7 @@ Création d'une Excursion
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     Informations de l'excursion :
   </h1>
-  <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" style="width: 80%" method="post" action="controllers/controller.excursion.php?action=creer">
+  <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" style="width: 80%" method="post">
     <div
       style="
         background-color: #b2708f;
@@ -241,7 +241,7 @@ Création d'une Excursion
            console.log(key, value);
         });
 
-        fetch(form.action, {
+        fetch('index.php?controlleur=excursion&methode=creer', {
             method: 'POST',
             headers: {
             'X-Requested-With': 'XMLHttpRequest'

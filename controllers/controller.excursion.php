@@ -43,6 +43,10 @@ class ControllerExcursion extends BaseController
         //Vérifier si la requête est une requête ajax
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
+        if ($isAjax) {
+            header('Content-Type: application/json; charset=utf-8');
+        }
+
         // Vérifie si le formulaire a été soumis
         if (!empty($this->getPost())) {
             $data = [
@@ -110,55 +114,67 @@ class ControllerExcursion extends BaseController
     }
 
     public function handleVisits(int $excursionId, array $postData): void
-    {
-        if (empty($postData['heure_arrive']) || empty($postData['temps_sur_place'])) {
-            echo "Erreur: Données manquantes pour les visites";
-            return;
-        }
+{
+    // Initialize DAOs
+    $composerDao = new ComposerDao($this->getPdo());
+    $visiteDao = new VisiteDao($this->getPdo());
 
-        $composerDao = new ComposerDao($this->getPdo());
-        $visiteDao = new VisiteDao($this->getPdo());
-        $excursionDao = new ExcursionDao($this->getPdo());
+    // Loop through each dynamically created input field
+    foreach ($postData as $key => $value) {
+        // Check if the key is a 'heure_arrivee' field (i.e., starts with 'heure_arrivee_')
+        if (strpos($key, 'heure_arrivee_') === 0) {
+            // Extract visit ID from the key
+            $visiteId = str_replace('heure_arrivee_', '', $key);
+            $tempsSurPlaceKey = 'temps_sur_place_' . $visiteId;
 
-        $excursion = $excursionDao->find($excursionId);
-        if (!$excursion) {
-            echo "Erreur : Excursion introuvable pour ID " . $excursionId;
-            return;
-        }
+            // Ensure corresponding 'temps_sur_place' field exists
+            if (!isset($postData[$tempsSurPlaceKey])) {
+                echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (temps sur place).";
+                continue;
+            }
 
-        foreach ($postData['heure_arrive'] as $visiteId => $heureArr) {
-            $tempsSurPlace = $postData['temps_sur_place'][$visiteId] ?? null;
+            $heureArr = $value;  // Arrival time
+            $tempsSurPlace = $postData[$tempsSurPlaceKey];  // Time spent at the site
 
-            if (!$heureArr || !$tempsSurPlace) {
-                echo "Erreur: Données manquantes pour la visite ID" . $visiteId;
+            // Validate required fields
+            if (empty($heureArr) || empty($tempsSurPlace)) {
+                echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (heure d'arrivée ou temps sur place).";
                 continue;
             }
 
             try {
-                $heureArrObj = new DateTime($heureArr);
-                $tempsSurPlaceObj = new DateTime($tempsSurPlace);
+                $dateToday = (new DateTime())->format('Y-m-d');
 
-                $visite = $visiteDao->find($visiteId);
+                // Convert input strings to DateTime objects
+                $heureArrObj = new DateTime($dateToday . ' ' . $heureArr);
+                $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
+
+                // Ensure the visit exists in the database
+                $visite = $visiteDao->findAllAssoc($visiteId);
                 if (!$visite) {
-                    echo "Erreur : Visite introuvable";
+                    echo "Erreur : Visite introuvable pour ID " . $visiteId;
                     continue;
                 }
 
+                // Create a new Composer instance
                 $composer = new Composer(
-                    $heureArrObj,
-                    $tempsSurPlaceObj,
-                    $excursion,
-                    $visite
+                    $heureArrObj,     // Arrival time
+                    $tempsSurPlaceObj, // Time spent
+                    $excursionId,     // Excursion ID
+                    $visiteId         // Visit ID
                 );
 
+                // Persist the composer to the database
                 if (!$composerDao->creer($composer)) {
-                    echo "Erreur: Échec de l'ajout de la visite ID" . $visiteId;
+                    echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
                 }
             } catch (Exception $e) {
-                echo "Erreur lors de l'ajout de la visite ID " . $visiteId . ":"  . $e->getMessage();
+                // Handle unexpected errors
+                echo "Erreur lors de l'ajout de la visite ID " . $visiteId . ": " . $e->getMessage();
             }
         }
     }
+}
 
     // Supprime une excursion en fonction de son ID
     public function supprimer(int $id): void
@@ -167,7 +183,7 @@ class ControllerExcursion extends BaseController
 
         // Si la suppression réussit, redirection vers la liste
         if ($excursionDao->supprimer($id)) {
-            $this->redirect('ListesExcursions.php');
+            $this->redirect('listes_excursions.php');
         } else {
             echo "Erreur lors de la suppression de l'excursion.";
         }
