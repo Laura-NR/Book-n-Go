@@ -80,7 +80,7 @@ class Excursion
         return $this->date_visite;
     }
 
-    public function setDate_visite($date_visite):void
+    public function setDate_visite(?DateTime $date_visite):void
     {
         $this->date_visite = $date_visite;
 
