@@ -13,12 +13,6 @@ class ControllerExcursion extends BaseController
         $visiteDao = new VisiteDao($this->getPdo());
         $visites = $visiteDao->findAllAssoc();
 
-        /* array_walk_recursive($visites, function (&$value) {
-            if (is_string($value)) {
-                $value = utf8_encode($value);
-            }
-        }); */
-
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             header('Content-Type: application/json; charset=utf-8');
 
@@ -72,7 +66,7 @@ class ControllerExcursion extends BaseController
                 $targetPath = $uploadDirectory . $fileName;
 
                 if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
-                    $data['chemin_image'] = $fileName;
+                    $data['chemin_image'] = $targetPath;
                 } else {
                     if ($isAjax) {
                         echo json_encode(['success' => false, 'message' => 'Image upload failed']);
@@ -115,28 +109,27 @@ class ControllerExcursion extends BaseController
 
     public function handleVisits(int $excursionId, array $postData): void
 {
-    // Initialize DAOs
+    // Initialisation des classes DAO
     $composerDao = new ComposerDao($this->getPdo());
     $visiteDao = new VisiteDao($this->getPdo());
 
-    // Loop through each dynamically created input field
+    // Boucle pour parcourir les champs qui ont été crées de façon dynamique dans le front
     foreach ($postData as $key => $value) {
-        // Check if the key is a 'heure_arrivee' field (i.e., starts with 'heure_arrivee_')
         if (strpos($key, 'heure_arrivee_') === 0) {
-            // Extract visit ID from the key
+            // Récuperer l'id de la visite
             $visiteId = str_replace('heure_arrivee_', '', $key);
             $tempsSurPlaceKey = 'temps_sur_place_' . $visiteId;
 
-            // Ensure corresponding 'temps_sur_place' field exists
+            // Vérifier que 'temps_sur_place' existe
             if (!isset($postData[$tempsSurPlaceKey])) {
                 echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (temps sur place).";
                 continue;
             }
 
-            $heureArr = $value;  // Arrival time
-            $tempsSurPlace = $postData[$tempsSurPlaceKey];  // Time spent at the site
+            $heureArr = $value;  // Heure arrivée
+            $tempsSurPlace = $postData[$tempsSurPlaceKey];  // Temps passé sur la visite
 
-            // Validate required fields
+            // Validation des champs
             if (empty($heureArr) || empty($tempsSurPlace)) {
                 echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (heure d'arrivée ou temps sur place).";
                 continue;
@@ -145,31 +138,29 @@ class ControllerExcursion extends BaseController
             try {
                 $dateToday = (new DateTime())->format('Y-m-d');
 
-                // Convert input strings to DateTime objects
+                // Convertir input strings à des objets DateTime 
                 $heureArrObj = new DateTime($dateToday . ' ' . $heureArr);
                 $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
 
-                // Ensure the visit exists in the database
+                // Vérifier que la visite existe dans la base de données
                 $visite = $visiteDao->findAllAssoc($visiteId);
                 if (!$visite) {
                     echo "Erreur : Visite introuvable pour ID " . $visiteId;
                     continue;
                 }
 
-                // Create a new Composer instance
+                // Création d'une instance de composer
                 $composer = new Composer(
-                    $heureArrObj,     // Arrival time
-                    $tempsSurPlaceObj, // Time spent
-                    $excursionId,     // Excursion ID
-                    $visiteId         // Visit ID
+                    $heureArrObj,     
+                    $tempsSurPlaceObj, 
+                    $excursionId,     
+                    $visiteId        
                 );
 
-                // Persist the composer to the database
                 if (!$composerDao->creer($composer)) {
                     echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
                 }
             } catch (Exception $e) {
-                // Handle unexpected errors
                 echo "Erreur lors de l'ajout de la visite ID " . $visiteId . ": " . $e->getMessage();
             }
         }
@@ -183,7 +174,7 @@ class ControllerExcursion extends BaseController
 
         // Si la suppression réussit, redirection vers la liste
         if ($excursionDao->supprimer($id)) {
-            $this->redirect('listes_excursions.php');
+            $this->redirect('lister_excursions.php');
         } else {
             echo "Erreur lors de la suppression de l'excursion.";
         }

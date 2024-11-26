@@ -6,7 +6,6 @@ class ExcursionDao
     public function __construct(PDO $pdo = null)
     {
         $this->pdo = bd::getInstance()->getPdo();
-        var_dump($this->pdo);
     }
 
     // Créer une nouvelle visite
