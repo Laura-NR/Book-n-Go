@@ -29,7 +29,7 @@ try {
 
     $controller = ControllerFactory::getController($controllerName, $twig, $loader);
 
-    $controller->callMethode($methode);
+    $controller->call($methode);
 } catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
 }
@@ -90,4 +90,3 @@ try  {
 catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
 } */
-?>

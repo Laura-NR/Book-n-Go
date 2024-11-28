@@ -2,20 +2,20 @@
 class Composer {
     private ?DateTime $heureArr;
     private ?DateTime $tempsSurPlace;
-    private Excursion $excursion;
-    private Visite $visite;
+    private ?int $excursionId;
+    private ?int $visiteId;
 
     //Constructeur
     public function __construct(
         ?DateTime  $heureArr = null,
         ?DateTime  $tempsSurPlace = null,
-        ?Excursion $excursion = null,
-        ?Visite    $visite = null)
+        ?int $excursionId = null,
+        ?int    $visiteId = null)
         {
             $this->heureArr = $heureArr;
             $this->tempsSurPlace = $tempsSurPlace;
-            $this->excursion = $excursion;
-            $this->visite = $visite;
+            $this->excursionId = $excursionId;
+            $this->visiteId = $visiteId;
         }
 
 
@@ -56,15 +56,15 @@ class Composer {
      */ 
     public function getExcursion()
     {
-        return $this->excursion;
+        return $this->excursionId;
     }
 
     /**
      * Set the value of excursion
      */ 
-    public function setExcursion(?Excursion $excursion): void
+    public function setExcursion(?int $excursionId): void
     {
-        $this->excursion = $excursion;
+        $this->excursionId = $excursionId;
     }
 
     /**
@@ -72,14 +72,14 @@ class Composer {
      */ 
     public function getVisite()
     {
-        return $this->visite;
+        return $this->visiteId;
     }
 
     /**
      * Set the value of visite
      */ 
-    public function setVisite(?Visite $visite): void
+    public function setVisite(?Visite $visiteId): void
     {
-        $this->visite = $visite;
+        $this->visiteId = $visiteId;
     }
 }
