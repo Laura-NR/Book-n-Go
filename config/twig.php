@@ -1,4 +1,7 @@
 <?php
+//ajout de la classe Yaml et creation de l’alias Yaml
+use Symfony\Component\Yaml\Yaml;
+
 //ajout de la classe IntlExtension et creation de l’alias IntlExtension
 use Twig\Extra\Intl\IntlExtension;
 
@@ -22,3 +25,5 @@ $twig->addExtension(new \Twig\Extension\DebugExtension());
 
 //Ajout de l'extension d'internationalisation qui permet d'utiliser les filtres de date dans twig
 //$twig->addExtension(new IntlExtension());
+
+//ajouter les données du fichier de config pour le twig
