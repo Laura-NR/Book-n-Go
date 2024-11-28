@@ -25,7 +25,6 @@ class VisiteDao{
         $visite = $pdoStatement->fetch();
         return $visite;
     }
-
     public function findAll(){
         $sql ="SELECT * FROM visite";
         $pdoStatement = $this->pdo->prepare($sql);
