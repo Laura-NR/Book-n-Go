@@ -1,4 +1,4 @@
-{% extends "base_template.html.twig" %} 
+{% extends "base_template.html.twig" %}
 
 {% block title %} 
 Création d'une Excursion 
@@ -8,7 +8,7 @@ Création d'une Excursion
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     Informations de l'excursion :
   </h1>
-  <form class="mx-auto p-5" style="width: 80%" method="post" action="controllers/controller.excursion.php?action=creer">
+  <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" style="width: 80%" method="post">
     <div
       style="
         background-color: #b2708f;
@@ -106,13 +106,12 @@ Création d'une Excursion
 </main>
 {% endblock %}
 
-{% block script %} 
+{% block script %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
       const itineraireSelect = document.getElementById('itineraire');
 
       itineraireSelect.addEventListener('focus', () => {
-        // Avoid multiple fetches (optional, depending on your needs)
         if (itineraireSelect.querySelector('[data-fetched]')) {
           return;
         };
@@ -120,13 +119,13 @@ Création d'une Excursion
         fetch('index.php?controlleur=excursion&methode=recupererVisites', {
             method: 'GET',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'  // Make sure this header is set
+                'X-Requested-With': 'XMLHttpRequest'  
             }
         }).then(
           response => {
             console.log('Response status:', response.status);
-            console.log('Response content-type:', response.headers.get('Content-Type')); // Check content type
-            // Check if the response is okay
+            console.log('Response content-type:', response.headers.get('Content-Type')); 
+            
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -135,10 +134,10 @@ Création d'une Excursion
             return response.text()
           }
         ).then(responseText => {
-            console.log('Response Text:', responseText); // Log raw response
+            console.log('Response Text:', responseText); 
 
             try {
-              const data = JSON.parse(responseText); // Try parsing manually
+              const data = JSON.parse(responseText); 
               console.log('Fetched visits:', data);
 
               const addNewOption = itineraireSelect.querySelector('option[value="add-new"]');
@@ -151,7 +150,7 @@ Création d'une Excursion
                 itineraireSelect.insertBefore(option, addNewOption);
               });
             } catch (error) {
-              console.error('Failed to parse JSON:', error);  // Log any JSON parsing errors
+              console.error('Failed to parse JSON:', error);  
             }
         }).catch(error => {
           console.error('Erreur à l\'heure de récupérer les visites:', error);
@@ -159,7 +158,6 @@ Création d'une Excursion
         });
       });
     });
-
 
     const addVisitButton = document.getElementById('addVisit');
     const itineraireSelect = document.getElementById('itineraire');
@@ -230,7 +228,41 @@ Création d'une Excursion
             selectedVisits.style.display = 'none';
             selectedVisitsTitle.style.display = 'none';
         }
+    });
 
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('excursionForm');
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        formData.forEach(function(value, key) {
+           console.log(key, value);
+        });
+
+        fetch('index.php?controlleur=excursion&methode=creer', {
+            method: 'POST',
+            headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: formData
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+            console.log('Form submitted successfully:', data);
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error submitting form:', error);
+            alert('Error occurred while submitting the form. Please try again.');
+        });
+      })
     });
 </script>
 {% endblock %}
