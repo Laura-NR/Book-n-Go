@@ -1,14 +1,13 @@
 <?php
 use Symfony\Component\Yaml\Yaml;
-#define
-class config{  #WIP
+class config{
     private static ?config $instance = null;
 
     private ?array $conf = null;
 
     private function __construct()
     {
-        $this->conf = yaml::parseFile('config.yaml');
+        $this->conf = yaml::parseFile('./config/config.yaml');
         // parser le fichier YAML avec symfony/yaml
     }
 
