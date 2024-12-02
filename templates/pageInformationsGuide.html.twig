@@ -1,3 +1,4 @@
+session_start();
 {% extends "base_template.html.twig" %}
 {% block title %}{{ constant('WEBSITE_TITLE') }} - Mon compte{% endblock %}
 {% block content %}
@@ -22,3 +23,7 @@
     </div>
 </div>
 {% endblock %}
+            {% block script %} 
+
+
+            {% endblock %}

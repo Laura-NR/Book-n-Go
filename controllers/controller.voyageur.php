@@ -1,4 +1,5 @@
 <?php
+require_once 'controller.class.php';
 
 class ControllerVoyageur extends BaseController {
 
@@ -99,19 +100,23 @@ class ControllerVoyageur extends BaseController {
 
 
     // Afficher les détails d'un voyageur spécifique
-    public function afficher(int $id): void {
+    public function afficher(): void {
         try {
             $voyageurDao = new VoyageurDao($this->getPdo());
-            $voyageur = $voyageurDao->find($id);
+            $voyageur = $voyageurDao->find(1);
+            var_dump($voyageur);
 
             // Chargement du template pour afficher les détails du voyageur
-            $template = $this->getTwig()->load('voyageurDetail.twig');
+            echo $template = $this->getTwig()->render('pageInformationsVoyageur.html.twig', [
+                'voyageur' => $voyageur,
+                // 'menu' => "voyageur_detail"
+            ]);
 
             // Affichage du template avec les données du voyageur
-            echo $template->render([
+            /* echo $template->render([
                 'voyageur' => $voyageur,
                 'menu' => "voyageur_detail"
-            ]);
+            ]); */
         } catch (Exception $e) {
             echo "Erreur lors de l'affichage du voyageur : " . $e->getMessage();
         }
