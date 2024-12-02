@@ -81,5 +81,17 @@ class CommentaireDao{
         return $commentaire;
     }
 
+    public function inserer(Commentaire $commentaire)
+    {
+        $sql = "INSERT INTO commentaire (date_heure_publication, contenu, id_voyageur, id_post) VALUES (:date_heure_publication, :contenu, :id_voyageur, :id_post)";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(array(
+            "date_heure_publication" => $commentaire->getDateHeurePublication(),
+            "contenu" => $commentaire->getContenu(),
+            "id_voyageur" => $commentaire->getIdVoyageur(),
+            "id_post" => $commentaire->getIdPost()
+        ));
+    }
+
 
 }

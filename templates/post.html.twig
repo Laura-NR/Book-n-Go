@@ -37,6 +37,17 @@
                 <h3>Commentaires</h3>
             </div>
             <div class="card-body">
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ session.id }}</h6>
+                        <form class="card-text" method="post">
+                                <textarea name="contenu" class="form-control mb-2"></textarea>
+{#                            passage d'une valeur invisible en post afin de pouvoir lier le commentaire créé au post#}
+                            <input type="hidden" value="{{ post.id }}" name="id_post" />
+                            <input type="submit" class="btn btn-primary" value="Publier" formaction="?controleur=commentaire&methode=inserer">
+                        </form>
+                    </div>
+                </div>
                 {% for commentaire in commentaires %}
                     <div class="card mb-2">
                         <div class="card-body">
