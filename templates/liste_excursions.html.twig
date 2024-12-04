@@ -1,0 +1,28 @@
+{% extends "base_template.html.twig" %}
+
+{% block title %} 
+    Liste des Excursions
+{% endblock title %}
+
+{% block content %}
+    {% if excursion is defined and excursion is not empty %}
+    {{ dump(excursion) }}
+    {% else %}
+    <p>Aucune excursion disponible.</p>   
+    {% endif %}
+
+    <div class="container text-center">
+        <div class="row row-cols-4 align-items-center">
+            {% for post in posts %}
+                <div class="card col mb-3 mx-1">
+                    <img src="./images/post/{{ excursion.chemin_img }}" class="card-img-top" alt="{{ excursion.nom }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{excursion.nom }}</h5>
+                        <p class="card-text">{{ excursion.date_visite }}</p>
+                        <a href="?controleur=excursion&methode=afficher&id={{ post.id }}" class="btn btn-primary">Consulter</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
