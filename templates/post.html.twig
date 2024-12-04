@@ -41,10 +41,10 @@
                     <div class="card-body">
                         <h6 class="card-title">{{ session.id }}</h6>
                         <form class="card-text" method="post">
-                                <textarea name="contenu" class="form-control mb-2"></textarea>
+                                <textarea name="contenu" max="2000" class="form-control mb-2"></textarea>
 {#                            passage d'une valeur invisible en post afin de pouvoir lier le commentaire créé au post#}
                             <input type="hidden" value="{{ post.id }}" name="id_post" />
-                            <input type="submit" class="btn btn-primary" value="Publier" formaction="?controleur=commentaire&methode=inserer">
+                            <input type="submit" class="btn btn-primary" value="Publier" formaction="?controleur=commentaire&methode=ajouter">
                         </form>
                     </div>
                 </div>
@@ -53,6 +53,13 @@
                         <div class="card-body">
                             <h6 class="card-title">{{ commentaire.prenom }} {{ commentaire.nom }}</h6>
                             <p class="card-text">{{ commentaire.contenu }}</p>
+
+{#                            Pour plus tard quand on aura récupéré les infos de l'utilisateur connecté#}
+
+{#                            {{ if commentaire.id_voyageur == session.id }}#}
+{#                                <a href="?controleur=commentaire&methode=supprimer&id={{ commentaire.id }}" class="btn btn-danger">Supprimer</a>#}
+{#                            {% endif %}#}
+
                         </div>
                     </div>
                 {% endfor %}

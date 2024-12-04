@@ -70,7 +70,7 @@ class ControllerCommentaire extends BaseController
 //            echo "post non trouvé.";
 //        }
 //    }
-    public function ajouter(): bool
+    public function ajouter(): void
     {
         if (isset($_POST["contenu"]) && !ctype_space($_POST["contenu"])) {
             $contenu = $_POST["contenu"];
@@ -86,13 +86,14 @@ class ControllerCommentaire extends BaseController
             $commentaire->setDateHeurePublication(new DateTime());
             $commentaire->setContenu($contenu);
 
-            $idVoyageur = $_SESSION['id_voyageur'];
-            $commentaire->setIdVoyageur($idVoyageur);
+            //$idVoyageur = $_SESSION['id_voyageur'];
+            //$commentaire->setIdVoyageur($idVoyageur);
 
             $idPost = $_POST["id_post"];
             $commentaire->setIdPost($idPost);
             $commentaireDao->inserer($commentaire);
-            return true;
+            header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
+            exit();
         } else {
             throw new Exception("Le contenu du commentaire est vide.");
         }
