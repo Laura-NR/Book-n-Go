@@ -179,4 +179,19 @@ class ControllerExcursion extends BaseController
             echo "Erreur lors de la suppression de l'excursion.";
         }
     }
+
+    // Liste toutes les excurion
+    public function lister(): void
+    {
+        $carnetDao = new CarnetVoyageDAO($this->getPdo());
+        $carnets = $carnetDao->findAll();
+
+    // Chargement du template pour lister les carnets de voyage
+        $template = $this->getTwig()->load('liste_excursion.html.twig');
+
+    // Affichage du template avec carnets de voyage
+        echo $template->render(array(
+            'carnets' => $carnets,
+        ));
+    }
 }
