@@ -141,4 +141,13 @@ class Excursion
 
 
     }
+
+    public function setDateVisite(?DateTime $date_visite): void
+{
+    if ($date_visite < new DateTime()) {
+        throw new InvalidArgumentException("La date de visite ne peut pas être dans le passé.");
+    }
+    $this->date_visite = $date_visite;
+}
+
 }

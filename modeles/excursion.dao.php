@@ -130,4 +130,27 @@ class ExcursionDao
         }
         return $excursions;
     }
+
+    public function findAll(): array
+{
+    $sql = "SELECT * FROM excursion ORDER BY date_visite DESC";
+    $stmt = $this->pdo->query($sql);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $excursions = [];
+    foreach ($result as $row) {
+        $excursions[] = new Excursion(
+            $row['id'],
+            $row['capacite'],
+            $row['nom'],
+            new DateTime($row['date_visite']),
+            $row['description'],
+            $row['chemin_image'],
+            $row['public'],
+            $row['id_guide']
+        );
+    }
+    return $excursions;
+}
+
 }

@@ -181,26 +181,7 @@ class ControllerExcursion extends BaseController
     }
 
     // Liste toutes les excurion
-    public function lister(): void
-    {
-        $excursionDao = new Excursion($this->getPdo());
-        $excursionDao = $excursionDao->findAllAssoc();
-
-    // Chargement du template pour lister les carnets de voyage
-        echo $this->getTwig()->render('liste_excursion.html.twig', [
-            'excursions' => $excursions,
-        ]);
-
-    // Affichage du template avec carnets de voyage
-        /* echo $template->render(array(
-            'excursions' => $excursions,
-        ));
- */
-        /* echo $this->getTwig()->render('creation_excursion.html.twig', [
-            'visites' => $visites
-        ]); */
-    }
-
+    
     public function afficher($id): void
     {
         $excursionDao = new Excursion($this->getPdo());
@@ -218,4 +199,24 @@ class ControllerExcursion extends BaseController
             echo "Excursion non trouvé.";
         }
     }
+    public function lister()
+    {
+        $excursionDao = new ExcursionDao($this->getPdo());
+        $excursions = $excursionDao->findAll(); // Récupération des données
+        
+        echo $this->getTwig()->render('liste_excursions.html.twig', [
+            'excursions' => $excursions
+        ]);
+    }
+    
+    public function afficherExcursions()
+{
+    $excursionDao = new ExcursionDao($this->getPdo());
+    $excursions = $excursionDao->findAll();
+
+    echo $this->getTwig()->render('liste_excursions.html.twig', [
+        'excursions' => $excursions
+    ]);
+}
+
 }
