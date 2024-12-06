@@ -98,7 +98,7 @@ class ExcursionDao
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $result = $pdoStatement->fetchAll();
 
-        return $this->hydrateAll($result);
+        return $result;
     }
 
     // Crée une instance de Excursion avec les données récupérées

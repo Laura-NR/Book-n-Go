@@ -3,7 +3,7 @@ class ControllerCarnetVoyage extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
     {
-        parent::__construct($loader, $twig);
+        parent::__construct($twig, $loader);
     }
 
     public function call($methode): mixed

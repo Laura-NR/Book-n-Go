@@ -183,15 +183,39 @@ class ControllerExcursion extends BaseController
     // Liste toutes les excurion
     public function lister(): void
     {
-        $carnetDao = new CarnetVoyageDAO($this->getPdo());
-        $carnets = $carnetDao->findAll();
+        $excursionDao = new Excursion($this->getPdo());
+        $excursionDao = $excursionDao->findAllAssoc();
 
     // Chargement du template pour lister les carnets de voyage
-        $template = $this->getTwig()->load('liste_excursion.html.twig');
+        echo $this->getTwig()->render('liste_excursion.html.twig', [
+            'excursions' => $excursions,
+        ]);
 
     // Affichage du template avec carnets de voyage
-        echo $template->render(array(
-            'carnets' => $carnets,
+        /* echo $template->render(array(
+            'excursions' => $excursions,
         ));
+ */
+        /* echo $this->getTwig()->render('creation_excursion.html.twig', [
+            'visites' => $visites
+        ]); */
+    }
+
+    public function afficher($id): void
+    {
+        $excursionDao = new Excursion($this->getPdo());
+        // On récupère une excursion par son ID
+        $carnet = $carnetDao->find($id);
+
+        if ($carnet) {
+            // Chargement du template pour afficher un carnet
+            $template = $this->getTwig()->load('liste_excursion.html.twig');
+            echo $template->render(array(
+                'excursion' => $excursion,
+            ));
+        } else {
+            // Si l'excursion n'existe pas, afficher une erreur ou rediriger
+            echo "Excursion non trouvé.";
+        }
     }
 }
