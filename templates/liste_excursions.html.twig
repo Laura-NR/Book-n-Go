@@ -1,3 +1,23 @@
+/**
+ * @file list_excursions.twig
+ * @brief Template pour afficher la liste des excursions disponibles.
+ *
+ * Ce template affiche une carte pour chaque excursion. Chaque carte contient :
+ * - Une image de l'excursion (si disponible) ou une image par défaut.
+ * - Le nom et la date de la visite.
+ * - Une description courte (si disponible).
+ * - Un bouton pour consulter les détails de l'excursion.
+ *
+ * Si aucune excursion n'est disponible, un message d'alerte est affiché.
+ *
+ * @section sections Sections du template
+ * - **title** : Titre de la page "Liste des Excursions".
+ * - **content** : Contenu principal contenant la liste des excursions sous forme de cartes.
+ *     - Si les excursions sont disponibles, elles sont affichées dans une grille responsive.
+ *     - Si aucune excursion n'est trouvée, un message d'avertissement est affiché.
+ */
+
+
 {% extends "base_template.html.twig" %}
 
 {% block title %} 
