@@ -1,4 +1,5 @@
 <?php
+require_once 'controller.class.php';
 
 class ControllerVoyageur extends BaseController {
 
