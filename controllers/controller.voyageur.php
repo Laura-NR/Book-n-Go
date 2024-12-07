@@ -2,8 +2,8 @@
 
 class ControllerVoyageur extends BaseController {
 
-    public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) {
-        parent::__construct($loader, $twig);
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
+        parent::__construct($twig, $loader);
     }
 
     // Création d'un voyageur
@@ -99,16 +99,13 @@ class ControllerVoyageur extends BaseController {
 
 
     // Afficher les détails d'un voyageur spécifique
-    public function afficher(int $id): void {
+    public function afficher(int $id = 1): void {
         try {
             $voyageurDao = new VoyageurDao($this->getPdo());
-            $voyageur = $voyageurDao->find($id);
+            $voyageur = $voyageurDao->findAssoc($id);
 
             // Chargement du template pour afficher les détails du voyageur
-            $template = $this->getTwig()->load('voyageurDetail.twig');
-
-            // Affichage du template avec les données du voyageur
-            echo $template->render([
+            echo $this->getTwig()->render('pageInformationsVoyageur.html.twig', [
                 'voyageur' => $voyageur,
                 'menu' => "voyageur_detail"
             ]);

@@ -116,7 +116,7 @@ Création d'une Excursion
           return;
         };
 
-        fetch('index.php?controlleur=excursion&methode=recupererVisites', {
+        fetch('index.php?controleur=excursion&methode=recupererVisites', {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'  
@@ -241,7 +241,7 @@ Création d'une Excursion
            console.log(key, value);
         });
 
-        fetch('index.php?controlleur=excursion&methode=creer', {
+        fetch('index.php?controleur=excursion&methode=creer', {
             method: 'POST',
             headers: {
             'X-Requested-With': 'XMLHttpRequest'

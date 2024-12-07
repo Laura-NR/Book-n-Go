@@ -2,8 +2,8 @@
 class UtilisateurController extends BaseController {
     private UtilisateurDao $utilisateurDao;
 
-    public function __construct(UtilisateurDao $utilisateurDao) {
-        $this->utilisateurDao = $utilisateurDao;
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
+        parent::__construct($twig, $loader);
     }
 
     // Créer un utilisateur (Guide ou Voyageur)
@@ -38,7 +38,7 @@ class UtilisateurController extends BaseController {
     
     // Afficher un utilisateur par ID  
     public function afficherUtilisateur(int $id): void {
-        $utilisateur = $this->utilisateurDao->trouver($id);
+        $utilisateur = $this->utilisateurDao->find($id);
         if ($utilisateur) {
             echo "Nom: " . $utilisateur->getNom() . "<br>";
             echo "Prénom: " . $utilisateur->getPrenom() . "<br>";
@@ -46,9 +46,9 @@ class UtilisateurController extends BaseController {
             echo "Email: " . $utilisateur->getMail() . "<br>";
 
             // Si c'est un guide, afficher son certificat
-            if ($utilisateur instanceof Guide) {
+            /* if ($utilisateur instanceof Guide) {
                 echo $utilisateur->consulterCertificat();
-            }
+            } */
         } else {
             echo "Utilisateur non trouvé.";
         }
@@ -57,7 +57,7 @@ class UtilisateurController extends BaseController {
     // Modifier un utilisateur
     public function modifierUtilisateur(int $id): void {
         if ($_POST) {
-            $utilisateur = $this->utilisateurDao->trouver($id);
+            $utilisateur = $this->utilisateurDao->find($id);
             if ($utilisateur) {
                 $utilisateur->setNom($_POST['nom']);
                 $utilisateur->setPrenom($_POST['prenom']);
