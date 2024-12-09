@@ -3,7 +3,7 @@ class ControllerPost extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
     {
-        parent::__construct($loader, $twig);
+        parent::__construct($twig, $loader);
     }
 
     public function call($methode): mixed
@@ -35,17 +35,35 @@ class ControllerPost extends BaseController
             'posts' => $posts,
         ));
     }
+
+    public function listerParCarnet(int $id): void
+    {
+        $postDao = new PostDAO($this->getPdo());
+        $posts = $postDao->findAllByCarnetId($id);
+
+        // Chargement du template pour lister les posts du carnet
+        $template = $this->getTwig()->load('liste-posts.html.twig');
+
+        // Affichage du template avec les posts du carnet
+        echo $template->render(array(
+            'posts' => $posts,
+        ));
+    }
+
     public function afficher($id): void
     {
         $postDao = new PostDAO($this->getPdo());
+        $commentaireDao = new CommentaireDao($this->getPdo());
+
         // On récupère un post par son ID
         $post = $postDao->find($id);
-
+        $commentaires = $commentaireDao->findAllWithIdPost($id);
         if ($post) {
             // Chargement du template pour afficher un post
             $template = $this->getTwig()->load('post.html.twig');
             echo $template->render(array(
                 'post' => $post,
+                'commentaires' => $commentaires,
             ));
         } else {
             // Si le post n'existe pas, afficher une erreur ou rediriger

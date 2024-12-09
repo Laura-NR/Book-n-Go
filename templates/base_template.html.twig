@@ -9,7 +9,9 @@
     {% block css %} {% endblock %}
     <title>{% block title %}{{ constant('WEBSITE_TITLE')}}{% endblock %}</title>
 </head>
-<body>
+
+{# faire en sorte que le contenu prenne toute la fenetre en empilant le contenu de body sur 100% de l'ecran #}
+<body class="d-flex flex-column min-vh-100">
     <header class="bg-body-tertiary">
 
         <nav class="navbar navbar-expand-lg container">
@@ -38,8 +40,11 @@
         </nav>
     </header>
 
-    {% block content %}
-    {% endblock %}
+    {# faire en sorte que le contenu du main s'étende sur toute la place disponible #}
+    <main class="flex-grow-1">
+        {% block content %}
+        {% endblock %}
+    </main>
    
     <footer class="bg-body-tertiary py-5">
         <div class="container text-center">

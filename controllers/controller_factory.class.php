@@ -2,9 +2,9 @@
 
 class ControllerFactory
 {
-    public static function getController($controlleur, \Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
+    public static function getController($controller, \Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     {
-        $controllerName="Controller".ucfirst($controlleur);
+        $controllerName="Controller".ucfirst($controller);
         if (!class_exists($controllerName)) {
             throw new Exception("Le controlleur $controllerName n'existe pas");
         }
