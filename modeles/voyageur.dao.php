@@ -5,7 +5,6 @@ class VoyageurDao {
     // Constructeur de la classe qui initialise la connexion PDO
     public function __construct(?PDO $pdo = null) {
         $this->pdo = bd::getInstance()->getPdo();
-        var_dump($this->pdo = bd::getInstance()->getPdo());
     }
 
     //Getteur

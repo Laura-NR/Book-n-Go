@@ -1,6 +1,6 @@
 <?php
-require_once 'controller.utilisateur.php';
-class ControllerGuide extends UtilisateurController
+require_once 'controller.voyageur.php';
+class ControllerGuide extends ControllerVoyageur
 {
 
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
