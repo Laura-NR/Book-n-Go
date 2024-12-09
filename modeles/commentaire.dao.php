@@ -99,5 +99,15 @@ class CommentaireDao{
         ));
     }
 
+    public function retirer($idCommentaire)
+    {
+        $sql = "DELETE FROM commentaire WHERE id = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(array(
+            //ID DE VOYAGEUR TEMPORAIRE POUR TEST IL SERA PLUS TARD RECUPERE DE SESSION
+            "id" => $idCommentaire,
+        ));
+    }
+
 
 }

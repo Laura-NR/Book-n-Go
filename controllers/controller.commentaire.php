@@ -6,20 +6,20 @@ class ControllerCommentaire extends BaseController
         parent::__construct($twig, $loader);
     }
 
-//    public function call($methode): mixed
-//    {
-//        if (method_exists($this, $methode)) {
-//            // Récupère l'ID si disponible
-//            if (isset($_GET['id'])) {
-//                $id = $_GET['id'];
-//                return $this->$methode($id); // Appelle la méthode avec l'ID si disponible
-//            } else {
-//                return $this->$methode(); // Appelle la méthode sans ID
-//            }
-//        } else {
-//            throw new Exception("Méthode $methode non trouvée dans le contrôleur.");
-//        }
-//    }
+    public function call($methode): mixed
+    {
+        if (method_exists($this, $methode)) {
+            // Récupère l'ID si disponible
+            if (isset($_GET['id'])) {
+                $id = $_GET['id'];
+                return $this->$methode($id); // Appelle la méthode avec l'ID si disponible
+            } else {
+                return $this->$methode(); // Appelle la méthode sans ID
+            }
+        } else {
+            throw new Exception("Méthode $methode non trouvée dans le contrôleur.");
+        }
+    }
 
 // Liste tous les posts
 //    public function lister(): void
@@ -96,6 +96,20 @@ class ControllerCommentaire extends BaseController
             exit();
         } else {
             throw new Exception("Le contenu du commentaire est vide.");
+        }
+    }
+
+    public function supprimer(): void
+    {
+        if (isset($_POST["id_commentaire"])) {
+            $commentaireDao = new CommentaireDao($this->getPdo());
+            $idPost = $_POST["id_post"];
+            $idCommentaire = $_POST["id_commentaire"];
+            $commentaireDao->retirer($idCommentaire);
+            header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
+            exit();
+        } else {
+            throw new Exception("");
         }
     }
 }

@@ -52,13 +52,20 @@
                     <div class="card mb-2">
                         <div class="card-body">
                             <h6 class="card-title">{{ commentaire.prenom }} {{ commentaire.nom }}</h6>
+                            <p class="card-subtitle mb-2 text-body-secondary">{{ commentaire.date_heure_publication }}</p>
                             <p class="card-text">{{ commentaire.contenu }}</p>
 
 {#                            Pour plus tard quand on aura récupéré les infos de l'utilisateur connecté#}
 
 {#                            {{ if commentaire.id_voyageur == session.id }}#}
-{#                                <a href="?controleur=commentaire&methode=supprimer&id={{ commentaire.id }}" class="btn btn-danger">Supprimer</a>#}
-{#                            {% endif %}#}
+                            {% if commentaire.id_voyageur == 1 %}
+                                <form class="card-text" method="post">
+                                    {#passage d'une valeur invisible en post afin de pouvoir lier le commentaire créé au post#}
+                                    <input type="hidden" value="{{ post.id }}" name="id_post" />
+                                    <input type="hidden" value="{{ commentaire.id }}" name="id_commentaire" />
+                                    <input type="submit" class="btn btn-danger" value="Supprimer" formaction="?controleur=commentaire&methode=supprimer&id={{ commentaire.id }}">
+                                </form>
+                            {% endif %}
 
                         </div>
                     </div>
