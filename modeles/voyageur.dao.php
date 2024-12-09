@@ -29,6 +29,20 @@ class VoyageurDao {
         return $requete->fetch() ?: null; // Retourne le résultat ou null si pas trouvé
     }
 
+    // Trouver un voyageur par ID en mode associatif (retourne un tableau associatif ou null)
+    public function findAssoc(?int $id): ?array
+    {
+        $sql = "SELECT * FROM voyageur WHERE id = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(['id' => $id]);
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $pdoStatement->fetch();
+        if (!$result) {
+            echo "Aucun voyageur trové avec l'id $id";
+        }
+        return $result ?: null;
+    }
+
     // Récupère tous les voyageurs
     public function findAll(): array {
         // Requête SELECT pour récupérer tous les voyageurs

@@ -1,10 +1,15 @@
 <?
 // inclure les fichier dont nous avons besoins
 require_once 'include.php';
-echo"<h1> test de la page d'informations des voyageur</h1>";
+echo"<h1> test de la page d'informations des voyageurs</h1>";
 
 // Charger et afficher le template
 // je veux charger le template de la page d'accueil 
-$template=$twig->load('pageInformationsVoyageur.html.twig');
+/* $template=$twig->load('pageInformationsGuide.html.twig');
 
-echo $template->render();
+echo $template->render(); */
+
+// Test pour appeler la méthode directement après chargement du template
+$controller = new ControllerVoyageur($twig, $loader);
+
+$controller->afficher(1); 

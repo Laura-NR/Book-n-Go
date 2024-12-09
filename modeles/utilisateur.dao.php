@@ -71,9 +71,9 @@ class UtilisateurDao {
 
         // Vérifier si l'utilisateur est un Guide en fonction de la présence de chemin_certif
         $cheminCertif = null;
-        if (!empty($utilisateur->getCheminCertification())) {
+        /* if (!empty($utilisateur->getCheminCertification())) {
             $cheminCertif = $utilisateur->getCheminCertification();
-        }
+        } */
 
         return $stmt->execute([
             'nom' => $utilisateur->getNom(),
@@ -92,9 +92,9 @@ class UtilisateurDao {
 
         // Vérifier si l'utilisateur est un Guide en fonction de la présence de chemin_certif
         $cheminCertif = null;
-        if (!empty($utilisateur->getCheminCertification())) {
+        /* if (!empty($utilisateur->getCheminCertification())) {
             $cheminCertif = $utilisateur->getCheminCertification();
-        }
+        } */
 
         return $stmt->execute([
             'id' => $utilisateur->getId(),
