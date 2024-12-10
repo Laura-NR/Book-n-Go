@@ -90,7 +90,7 @@ class ControllerExcursion extends BaseController
                     exit;
                 }
 
-                //$this->redirect('liste_excursions.php');
+                $this->redirect('excursion', 'lister');
             } else {
                 if ($isAjax) {
                     echo json_encode(['success' => false, 'message' => 'Error creating excursion']);
@@ -174,7 +174,7 @@ class ControllerExcursion extends BaseController
 
         // Si la suppression réussit, redirection vers la liste
         if ($excursionDao->supprimer($id)) {
-            $this->redirect('lister_excursions.php');
+            $this->redirect('excursion', 'lister');
         } else {
             echo "Erreur lors de la suppression de l'excursion.";
         }
