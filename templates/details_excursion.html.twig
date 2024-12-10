@@ -1,0 +1,37 @@
+{% extends "base_template.html.twig" %}
+
+{% block title %}
+Détails de l'Excursion
+{% endblock %}
+
+{% block content %}
+<main class="container">
+    <h1 class="text-center mt-5">{{ excursion.nom }}</h1>
+    <div class="text-center my-4">
+        <img src="./images/excursion/{{ excursion.chemin_img }}" alt="{{ excursion.nom }}" style="max-width: 100%; border-radius: 10px;">
+    </div>
+    <p><strong>Capacité :</strong> {{ excursion.capacite }}</p>
+    <p><strong>Description :</strong> {{ excursion.description }}</p>
+    <p><strong>Posts associés :</strong></p>
+    
+    {% if posts is not empty %}
+    <ul>
+        {% for post in posts %}
+        <li>
+            <strong>{{ post.titre }}</strong> - {{ post.date_publication }}
+            <a href="?controleur=post&methode=afficher&id={{ post.id }}" class="btn btn-sm btn-primary">Consulter</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Aucun post disponible pour cette excursion.</p>
+    {% endif %}
+    
+    <div class="mt-4">
+        <a href="?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
+            Supprimer l'Excursion
+        </a>
+        <a href="?controleur=excursion&methode=lister" class="btn btn-secondary">Retour à la liste des Excursions</a>
+    </div>
+</main>
+{% endblock %}

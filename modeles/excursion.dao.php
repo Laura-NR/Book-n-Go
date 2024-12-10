@@ -1,14 +1,38 @@
 <?php
+/**
+ * @file ExcursionDao.php
+ * @brief Classe DAO pour la gestion des excursions dans la base de données.
+ *
+ * Cette classe gère les opérations CRUD pour les excursions. Elle permet de créer, lire, mettre à jour et supprimer des excursions. 
+ * Elle fournit également des méthodes pour récupérer une excursion spécifique ou toutes les excursions.
+ *
+ * @class ExcursionDao
+ * @brief Classe d'accès aux données (DAO) pour les excursions.
+ */
 class ExcursionDao
 {
-    private ?PDO $pdo;
+    private ?PDO $pdo; ///< Instance PDO pour interagir avec la base de données.
 
+    /**
+     * Constructeur de la classe ExcursionDao.
+     * 
+     * @param PDO|null $pdo Objet PDO pour la connexion à la base de données.
+     */
     public function __construct(PDO $pdo = null)
     {
         $this->pdo = bd::getInstance()->getPdo();
     }
 
-    // Créer une nouvelle visite
+    /**
+     * Crée une nouvelle excursion dans la base de données.
+     * 
+     * Cette méthode insère les informations d'une excursion dans la table `excursion`.
+     * Elle retourne un objet `Excursion` avec les données de la nouvelle excursion, ou null en cas d'échec.
+     *
+     * @param array $data Données de l'excursion à insérer.
+     * @return Excursion|null L'objet Excursion créé ou null si l'insertion échoue.
+     * @throws PDOException Si une erreur de base de données se produit.
+     */
     public function creer(array $data): ?Excursion
     {
         if ($data['date_visite'] instanceof DateTime) {
@@ -31,15 +55,20 @@ class ExcursionDao
                 ':id_guide' => $data['id_guide']
             ]);
 
-            // Récupère l'id de la nouvelle excursion insérée et retourne l'objet Excursion hydraté
+            // Retourne l'objet Excursion correspondant à la nouvelle excursion insérée
             return $this->findAssoc($this->pdo->lastInsertId());
         } catch (PDOException $e) {
             error_log('Database error: ' . $e->getMessage());
-            throw $e; // Optionally rethrow the exception
+            throw $e; // Relance l'exception
         }
     }
 
-    // Sauvegarde une excursion existante (mise à jour)
+    /**
+     * Sauvegarde une excursion existante (mise à jour dans la base de données).
+     * 
+     * @param Excursion $excursion L'objet Excursion à sauvegarder.
+     * @return bool True si la mise à jour a réussi, false sinon.
+     */
     public function sauvegarder(Excursion $excursion): bool
     {
         $sql = "UPDATE excursion SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, date_visite = :date_visite,
@@ -58,7 +87,12 @@ class ExcursionDao
         ]);
     }
 
-    // Supprime une excursion par ID
+    /**
+     * Supprime une excursion en fonction de son ID.
+     * 
+     * @param int $id L'ID de l'excursion à supprimer.
+     * @return bool True si la suppression a réussi, false sinon.
+     */
     public function supprimer(int $id): bool
     {
         $sql = "DELETE FROM excursion WHERE id = :id";
@@ -66,7 +100,12 @@ class ExcursionDao
         return $stmt->execute([':id' => $id]);
     }
 
-    // Récupère une excursion par ID
+    /**
+     * Récupère une excursion par son ID.
+     * 
+     * @param int|null $id L'ID de l'excursion à récupérer.
+     * @return Excursion|null L'objet Excursion correspondant à l'ID, ou null si l'excursion n'existe pas.
+     */
     public function find(?int $id): ?Excursion
     {
         $sql = "SELECT * FROM excursion WHERE id = :id";
@@ -78,6 +117,12 @@ class ExcursionDao
         return $result ? $this->hydrate($result) : null;
     }
 
+    /**
+     * Récupère une excursion par son ID et la retourne sous forme de tableau associatif.
+     * 
+     * @param int|null $id L'ID de l'excursion.
+     * @return Excursion|null L'objet Excursion ou null si l'ID est introuvable.
+     */
     public function findAssoc(?int $id): ?Excursion
     {
         $sql = "SELECT * FROM excursion WHERE id = :id";
@@ -89,7 +134,11 @@ class ExcursionDao
         return $result ? $this->hydrate($result) : null;
     }
 
-    // Récupère toutes les excursions
+    /**
+     * Récupère toutes les excursions sous forme de tableau associatif.
+     * 
+     * @return array|null Un tableau de toutes les excursions ou null si aucune excursion n'est trouvée.
+     */
     public function findAllAssoc(): ?array
     {
         $sql = "SELECT * FROM excursion";
@@ -98,10 +147,15 @@ class ExcursionDao
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $result = $pdoStatement->fetchAll();
 
-        return $this->hydrateAll($result);
+        return $result;
     }
 
-    // Crée une instance de Excursion avec les données récupérées
+    /**
+     * Crée une instance de Excursion à partir des données récupérées.
+     * 
+     * @param array $tableauAssoc Tableau associatif contenant les données de l'excursion.
+     * @return Excursion L'objet Excursion créé.
+     */
     public function hydrate(array $tableauAssoc): ?Excursion
     {
         $excursion = new Excursion();
@@ -121,12 +175,44 @@ class ExcursionDao
         return $excursion;
     }
 
-    // Hydrate une liste d'instances de Excursion
+    /**
+     * Hydrate une liste d'instances de Excursion à partir d'un tableau associatif.
+     * 
+     * @param array $tableauAssoc Tableau associatif contenant les données.
+     * @return array Un tableau d'objets Excursion.
+     */
     public function hydrateAll(array $tableauAssoc): ?array
     {
         $excursions = [];
         foreach ($tableauAssoc as $ligne) {
             $excursions[] = $this->hydrate($ligne);
+        }
+        return $excursions;
+    }
+
+    /**
+     * Récupère toutes les excursions, triées par date de visite.
+     * 
+     * @return array Tableau des excursions triées.
+     */
+    public function findAll(): array
+    {
+        $sql = "SELECT * FROM excursion ORDER BY date_visite DESC";
+        $stmt = $this->pdo->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $excursions = [];
+        foreach ($result as $row) {
+            $excursions[] = new Excursion(
+                $row['id'],
+                $row['capacite'],
+                $row['nom'],
+                new DateTime($row['date_visite']),
+                $row['description'],
+                $row['chemin_image'],
+                $row['public'],
+                $row['id_guide']
+            );
         }
         return $excursions;
     }
