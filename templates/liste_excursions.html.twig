@@ -1,3 +1,4 @@
+{# list_excursions.twig 
 /**
  * @file list_excursions.twig
  * @brief Template pour afficher la liste des excursions disponibles.
@@ -15,14 +16,13 @@
  * - **content** : Contenu principal contenant la liste des excursions sous forme de cartes.
  *     - Si les excursions sont disponibles, elles sont affichées dans une grille responsive.
  *     - Si aucune excursion n'est trouvée, un message d'avertissement est affiché.
- */
-
+ */#}
 
 {% extends "base_template.html.twig" %}
 
 {% block title %} 
     Liste des Excursions
-{% endblock title %}
+{% endblock %}
 
 {% block content %}
 <div class="container my-5">
@@ -38,7 +38,7 @@
                                 src="./images/excursion/{{ excursion.chemin_img }}" 
                                 class="card-img-top img-fluid" 
                                 alt="{{ excursion.nom }}">
-                        {% else %}
+                        {% else %}z
                             <img 
                                 src="./images/default-placeholder.png" 
                                 class="card-img-top img-fluid" 
