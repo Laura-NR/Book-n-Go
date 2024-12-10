@@ -33,9 +33,9 @@
             {% for excursion in excursions %}
                 <div class="col">
                     <div class="card h-100">
-                        {% if excursion.chemin_img %}
+                        {% if excursion.chemin_image %}
                             <img 
-                                src="./images/excursion/{{ excursion.chemin_img }}" 
+                                src="{{ excursion.chemin_image }}" 
                                 class="card-img-top img-fluid" 
                                 alt="{{ excursion.nom }}">
                         {% else %}z
