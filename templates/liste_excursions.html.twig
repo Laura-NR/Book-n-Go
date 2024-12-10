@@ -1,0 +1,69 @@
+{# list_excursions.twig 
+/**
+ * @file list_excursions.twig
+ * @brief Template pour afficher la liste des excursions disponibles.
+ *
+ * Ce template affiche une carte pour chaque excursion. Chaque carte contient :
+ * - Une image de l'excursion (si disponible) ou une image par défaut.
+ * - Le nom et la date de la visite.
+ * - Une description courte (si disponible).
+ * - Un bouton pour consulter les détails de l'excursion.
+ *
+ * Si aucune excursion n'est disponible, un message d'alerte est affiché.
+ *
+ * @section sections Sections du template
+ * - **title** : Titre de la page "Liste des Excursions".
+ * - **content** : Contenu principal contenant la liste des excursions sous forme de cartes.
+ *     - Si les excursions sont disponibles, elles sont affichées dans une grille responsive.
+ *     - Si aucune excursion n'est trouvée, un message d'avertissement est affiché.
+ */#}
+
+{% extends "base_template.html.twig" %}
+
+{% block title %} 
+    Liste des Excursions
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Liste des Excursions</h1>
+    
+    {% if excursions is defined and excursions is not empty %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for excursion in excursions %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if excursion.chemin_img %}
+                            <img 
+                                src="./images/excursion/{{ excursion.chemin_img }}" 
+                                class="card-img-top img-fluid" 
+                                alt="{{ excursion.nom }}">
+                        {% else %}z
+                            <img 
+                                src="./images/default-placeholder.png" 
+                                class="card-img-top img-fluid" 
+                                alt="Image par défaut">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ excursion.nom }}</h5>
+                            <p class="card-text">
+                                <strong>Date de visite : </strong> {{ excursion.date_visite | date("d/m/Y") }}
+                            </p>
+                            {% if excursion.description %}
+                                <p class="card-text text-truncate">{{ excursion.description }}</p>
+                            {% endif %}
+                            <a href="?controleur=excursion&methode=afficher&id={{ excursion.id }}" class="btn btn-primary w-100">
+                                Consulter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">
+            <p>Aucune excursion disponible.</p>   
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
