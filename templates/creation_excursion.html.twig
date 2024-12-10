@@ -255,12 +255,20 @@ Création d'une Excursion
           return response.json();
         })
         .then(data => {
-            console.log('Form submitted successfully:', data);
-            window.location.reload();
+            console.log('Formulaire soumis avec succèss:', data);
+            if (data.success) {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.message || 'Excursion créée avec succèss!');
+                }
+            } else {
+                alert(data.message || 'Une erreur a apparu lors de la création de l\'excursion.');
+            }
         })
         .catch(error => {
-            console.error('Error submitting form:', error);
-            alert('Error occurred while submitting the form. Please try again.');
+            console.error('Erreur lors de la validation du formulaire:', error);
+            alert('Une erreur a apparu lors de la validation du formulaire.');
         });
       })
     });
