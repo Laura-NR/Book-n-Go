@@ -40,7 +40,7 @@ class ControllerExcursion extends BaseController
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             header('Content-Type: application/json; charset=utf-8');
             $jsonVisites = json_encode($visites, JSON_UNESCAPED_UNICODE);
-            
+
             if ($jsonVisites === false) {
                 print_r('JSON encoding failed: ' . json_last_error_msg());
             }
@@ -170,14 +170,13 @@ class ControllerExcursion extends BaseController
 
                 if ($isAjax) {
                     echo json_encode([
-                        'success' => true, 
+                        'success' => true,
                         'message' => 'Excursion created successfully',
                         'redirect' => 'index.php?controleur=excursion&methode=lister'
                     ]);
                 } else {
                     if ($isAjax) {
                         echo json_encode(['success' => false, 'message' => 'Error creating excursion']);
-                        
                     }
                 }
                 exit;
@@ -272,12 +271,30 @@ class ControllerExcursion extends BaseController
     {
         $excursionDao = new ExcursionDao($this->getPdo());
 
+        if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            header('Content-Type: application/json');
+
+            if ($excursionDao->supprimer($id)) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Excursion deleted successfully.',
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Error occurred while deleting the excursion.',
+                ]);
+            }
+            exit;
+        }
+
         if ($excursionDao->supprimer($id)) {
             $this->redirect('excursion', 'lister');
         } else {
             echo "Erreur lors de la suppression de l'excursion.";
         }
     }
+
 
     /**
      * @brief Affiche les détails d'une excursion.
