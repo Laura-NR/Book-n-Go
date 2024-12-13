@@ -1,4 +1,5 @@
 <?php 
+require_once 'utilisateur.class.php';
 
 class Guide extends Utilisateur {
     // Attribut spécifique à Guide

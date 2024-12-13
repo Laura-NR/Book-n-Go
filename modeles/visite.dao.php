@@ -17,6 +17,19 @@ class VisiteDao{
         $this->pdo = $pdo;
     }
 
+    public function insert(array $data){
+        $sql = "INSERT INTO visite (adresse, ville, code_postal, description, titre)
+        VALUES (:adresse,:ville,:code_postal,:description,:titre)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(array(
+            "adresse" => $data["adresse"],
+            "ville" => $data["ville"],
+            "code_postal" => $data["code_postal"],
+            "description" => $data["description"],
+            "titre" => $data["titre"],
+        ));
+    }
+
     public function find(?int $id): ?Visite{
         $sql ="SELECT * FROM visite WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);

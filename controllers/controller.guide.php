@@ -1,4 +1,5 @@
 <?php
+require_once 'controller.utilisateur.php';
 class ControllerGuide extends UtilisateurController {
 
     public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) {

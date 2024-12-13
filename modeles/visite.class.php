@@ -1,16 +1,16 @@
 <?php
 class Visite{
     private int|null $id;
-    private string|null $address;
+    private string|null $adresse;
     private string|null $ville;
     private int|null $code_postal;
     private string|null $description;
     private string|null $titre;
 
     //Constructeur
-    public function __construct(?int $id = null, ?string $address = null, ?string $ville = null, ?int $code_postal = null, ?string $description = null, ?string $titre = null){
+    public function __construct(?int $id = null, ?string $adresse = null, ?string $ville = null, ?int $code_postal = null, ?string $description = null, ?string $titre = null){
         $this->id = $id;
-        $this->address = $address;
+        $this->adresse = $adresse;
         $this->ville = $ville;
         $this->code_postal = $code_postal;
         $this->description = $description;
@@ -22,8 +22,8 @@ class Visite{
         return $this->id;
     }
 
-    public function getAddress(){
-        return $this->address;
+    public function getAdresse(){
+        return $this->adresse;
     }
 
     public function getVille(){
@@ -48,8 +48,8 @@ class Visite{
         $this->id = $id;
     }
 
-    public function setAddress(?string $address): void{
-        $this->address = $address;
+    public function setAdresse(?string $adresse): void{
+        $this->adresse = $adresse;
     }
 
     public function setVille(?string $ville): void{
