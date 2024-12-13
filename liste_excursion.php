@@ -1,10 +1,9 @@
-<?
+<?php
 // inclure les fichier dont nous avons besoins
 require_once 'include.php';
-echo"<h1> test de la page d'informations</h1>";
-
+// Préparer les variables spécifiques à la page
 // Charger et afficher le template
 // je veux charger le template de la page d'accueil 
-$template=$twig->load('pageInformations.html.twig');
+$template=$twig->load('liste_excursions.html.twig');
 
 echo $template->render();

@@ -1,106 +1,76 @@
 <?php
-
-class Voyageur{
+abstract class Voyageur {
 //attributs   
-    private int|null $id;
-    private string $nom;
-    private string $prenom;   
-    private string|null $numeroTel;
-    private string $mail;   
-    private string $mdp;   
+private ?int $id;
+private ?string $nom;
+private ?string $prenom;   
+private ?string $numeroTel;
+private ?string $mail;   
+private ?string $mdp;   
 
 //constructeur et destruteurs 
-    public function __construct(?int $id = null, ?string $nom = null,?string $prenom = null, ?string $numeroTel = null,?string $mail = null, ?string $mdp = null,?string $cheminCertification = null) {
+public function __construct(?int $id = null, ?string $nom = null,?string $prenom = null, ?string $numeroTel = null,?string $mail = null, ?string $mdp = null,?string $cheminCertification = null) {
+    $this->id = $id;
+    $this-> nom =$nom ;
+    $this->prenom = $prenom;   
+    $this-> numeroTel = $numeroTel;
+    $this->mail = $mail;   
+    $this->mdp = $mdp;   
+}
+
+    // Getters et Setters
+    public function getId(): int 
+    { 
+        return $this->id; 
+    }
+    public function setId(int $id): void 
+    { 
         $this->id = $id;
-        $this-> nom =$nom ;
-        $this->prenom = $prenom;   
-        $this-> numeroTel = $numeroTel;
-        $this->mail = $mail;   
-        $this->mdp = $mdp;   
+     }
+
+    public function getNom(): string 
+    {
+         return $this->nom; 
+        }
+    public function setNom(string $nom): void 
+    { 
+        $this->nom = $nom; 
     }
 
-// Encapsulation
-
-    public function getId()
-    {
-        return $this->id;
+    public function getPrenom(): string
+    { 
+        return $this->prenom; 
+    }
+    public function setPrenom(string $prenom): void 
+    { 
+        $this->prenom = $prenom; 
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
+    public function getNumeroTel(): string 
+    { 
+        return $this->numeroTel; 
+    }
+    public function setNumeroTel(string $numeroTel): void
+    { 
+        $this->numeroTel = $numeroTel; 
     }
 
-    public function getNom()
-    {
-        return $this->nom;
-    }
-    public function setNom($nom)
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-
-    public function getNumeroTel()
-    {
-        return $this->numeroTel;
-    }
-
-    public function setNumeroTel($numeroTel)
-    {
-        $this->numeroTel = $numeroTel;
-
-        return $this;
-    }
-
-    public function getMail()
-    {
+    public function getMail(): string 
+    { 
         return $this->mail;
     }
-
-
-    public function setMail($mail)
-    {
-        $this->mail = $mail;
-
-        return $this;
+    public function setMail(string $mail): void 
+    { 
+        $this->mail = $mail; 
     }
 
-
-    public function getMdp()
-    {
-        return $this->mdp;
+    public function getMdp(): string
+    { 
+        return $this->mdp; 
     }
-
-    public function setMdp($mdp)
+    public function setMdp(string $mdp): void 
     {
-        $this->mdp = $mdp;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of prenom
-     */ 
-    public function getPrenom()
-    {
-        return $this->prenom;
-    }
-
-    /**
-     * Set the value of prenom
-     *
-     * @return  self
-     */ 
-    public function setPrenom($prenom)
-    {
-        $this->prenom = $prenom;
-
-        return $this;
+         $this->mdp = $mdp;
     }
 }
 

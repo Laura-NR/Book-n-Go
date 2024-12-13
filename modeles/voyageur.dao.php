@@ -4,18 +4,19 @@ class VoyageurDao {
 
     // Constructeur de la classe qui initialise la connexion PDO
     public function __construct(?PDO $pdo = null) {
-        $this->pdo = $pdo;
+        $this->pdo = bd::getInstance()->getPdo();
     }
 
-    // Getter pour l'objet PDO
-    public function getPdo(): ?PDO {
+    //Getteur
+    public function getPdo(){
         return $this->pdo;
     }
 
-    // Setter pour l'objet PDO
-    public function setPdo($pdo): void {
+    //Setteur
+    public function setPdo(?PDO $pdo = null){
         $this->pdo = $pdo;
     }
+
 
     // Recherche un voyageur par son ID
     public function find(?int $id): ?Voyageur {
@@ -25,6 +26,20 @@ class VoyageurDao {
         $requete->execute(['id' => $id]); // Exécution avec le paramètre 'id'
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Voyageur'); // Récupération du résultat sous forme d'objet Voyageur
         return $requete->fetch() ?: null; // Retourne le résultat ou null si pas trouvé
+    }
+
+    // Trouver un voyageur par ID en mode associatif (retourne un tableau associatif ou null)
+    public function findAssoc(?int $id): ?array
+    {
+        $sql = "SELECT * FROM voyageur WHERE id = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(['id' => $id]);
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $pdoStatement->fetch();
+        if (!$result) {
+            echo "Aucun voyageur trové avec l'id $id";
+        }
+        return $result ?: null;
     }
 
     // Récupère tous les voyageurs

@@ -1,33 +1,76 @@
 <?php
-class ExcursionDao {
-    private ?PDO $pdo;
+/**
+ * @file ExcursionDao.php
+ * @brief Classe DAO pour la gestion des excursions dans la base de données.
+ *
+ * Cette classe gère les opérations CRUD pour les excursions. Elle permet de créer, lire, mettre à jour et supprimer des excursions. 
+ * Elle fournit également des méthodes pour récupérer une excursion spécifique ou toutes les excursions.
+ *
+ * @class ExcursionDao
+ * @brief Classe d'accès aux données (DAO) pour les excursions.
+ */
+class ExcursionDao
+{
+    private ?PDO $pdo; ///< Instance PDO pour interagir avec la base de données.
 
-    public function __construct(PDO $pdo = null) {
+    /**
+     * Constructeur de la classe ExcursionDao.
+     * 
+     * @param PDO|null $pdo Objet PDO pour la connexion à la base de données.
+     */
+    public function __construct(PDO $pdo = null)
+    {
         $this->pdo = bd::getInstance()->getPdo();
-        var_dump($this->pdo);
     }
 
-    // Créer une nouvelle visite
-    public function creer(array $data): ?Excursion {
-        $sql = "INSERT INTO excursion (capacite, nom, chemin_image, date_visite, description, public, id_guide)
+    /**
+     * Crée une nouvelle excursion dans la base de données.
+     * 
+     * Cette méthode insère les informations d'une excursion dans la table `excursion`.
+     * Elle retourne un objet `Excursion` avec les données de la nouvelle excursion, ou null en cas d'échec.
+     *
+     * @param array $data Données de l'excursion à insérer.
+     * @return Excursion|null L'objet Excursion créé ou null si l'insertion échoue.
+     * @throws PDOException Si une erreur de base de données se produit.
+     */
+    public function creer(array $data): ?Excursion
+    {
+        if ($data['date_visite'] instanceof DateTime) {
+            $data['date_visite'] = $data['date_visite']->format('Y-m-d H:i:s');
+        }
+
+        $data['public'] = isset($data['public']) && $data['public'] === 'on' ? 1 : 0;
+
+        try {
+            $sql = "INSERT INTO excursion (capacite, nom, chemin_image, date_visite, description, public, id_guide)
                 VALUES (:capacite, :nom, :chemin_image, :date_visite, :description, :public, :id_guide)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':capacite' => $data['capacite'],
-            ':nom' => $data['nom'],
-            ':chemin_image' => $data['chemin_image'],
-            ':date_visite' => $data['date_visite'],
-            ':description' => $data['description'],
-            ':public' => $data['public'],
-            ':id_guide' => $data['id_guide']
-        ]);
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':capacite' => $data['capacite'],
+                ':nom' => $data['nom'],
+                ':chemin_image' => $data['chemin_image'],
+                ':date_visite' => $data['date_visite'],
+                ':description' => $data['description'],
+                ':public' => $data['public'],
+                ':id_guide' => $data['id_guide']
+            ]);
 
-        // Récupère l'id de la nouvelle excursion insérée et retourne l'objet Excursion hydraté
-        return $this->find($this->pdo->lastInsertId());
+            // Retourne l'objet Excursion correspondant à la nouvelle excursion insérée
+            return $this->findAssoc($this->pdo->lastInsertId());
+        } catch (PDOException $e) {
+            error_log('Database error: ' . $e->getMessage());
+            throw $e; // Relance l'exception
+        }
     }
 
-    // Sauvegarde une excursion existante (mise à jour)
-    public function sauvegarder(Excursion $excursion): bool {
+    /**
+     * Sauvegarde une excursion existante (mise à jour dans la base de données).
+     * 
+     * @param Excursion $excursion L'objet Excursion à sauvegarder.
+     * @return bool True si la mise à jour a réussi, false sinon.
+     */
+    public function sauvegarder(Excursion $excursion): bool
+    {
         $sql = "UPDATE excursion SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, date_visite = :date_visite,
                 description = :description, public = :public, id_guide = :id_guide WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
@@ -44,15 +87,44 @@ class ExcursionDao {
         ]);
     }
 
-    // Supprime une excursion par ID
-    public function supprimer(int $id): bool {
+    /**
+     * Supprime une excursion en fonction de son ID.
+     * 
+     * @param int $id L'ID de l'excursion à supprimer.
+     * @return bool True si la suppression a réussi, false sinon.
+     */
+    public function supprimer(int $id): bool
+    {
         $sql = "DELETE FROM excursion WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
 
-    // Récupère une excursion par ID
-    public function find(?int $id): ?Excursion {
+    /**
+     * Récupère une excursion par son ID.
+     * 
+     * @param int|null $id L'ID de l'excursion à récupérer.
+     * @return Excursion|null L'objet Excursion correspondant à l'ID, ou null si l'excursion n'existe pas.
+     */
+    public function find(?int $id): ?Excursion
+    {
+        $sql = "SELECT * FROM excursion WHERE id = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute([':id' => $id]);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS| PDO::FETCH_PROPS_LATE,"excursion");
+        $result = $pdoStatement->fetch();
+
+        return $result ? $this->hydrate($result) : null;
+    }
+
+    /**
+     * Récupère une excursion par son ID et la retourne sous forme de tableau associatif.
+     * 
+     * @param int|null $id L'ID de l'excursion.
+     * @return Excursion|null L'objet Excursion ou null si l'ID est introuvable.
+     */
+    public function findAssoc(?int $id): ?Excursion
+    {
         $sql = "SELECT * FROM excursion WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute([':id' => $id]);
@@ -62,39 +134,86 @@ class ExcursionDao {
         return $result ? $this->hydrate($result) : null;
     }
 
-    // Récupère toutes les excursions
-    public function findAll(): ?array {
+    /**
+     * Récupère toutes les excursions sous forme de tableau associatif.
+     * 
+     * @return array|null Un tableau de toutes les excursions ou null si aucune excursion n'est trouvée.
+     */
+    public function findAllAssoc(): ?array
+    {
         $sql = "SELECT * FROM excursion";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $result = $pdoStatement->fetchAll();
 
-        return $this->hydrateAll($result);
+        return $result;
     }
 
-    // Crée une instance de Excursion avec les données récupérées
-    public function hydrate(array $tableauAssoc): ?Excursion {
+    /**
+     * Crée une instance de Excursion à partir des données récupérées.
+     * 
+     * @param array $tableauAssoc Tableau associatif contenant les données de l'excursion.
+     * @return Excursion L'objet Excursion créé.
+     */
+    public function hydrate(array $tableauAssoc): ?Excursion
+    {
         $excursion = new Excursion();
         $excursion->setId($tableauAssoc['id']);
         $excursion->setCapacite($tableauAssoc['capacite']);
         $excursion->setNom($tableauAssoc['nom']);
         $excursion->setChemin_Image($tableauAssoc['chemin_image']);
-        $excursion->setDate_Visite($tableauAssoc['date_visite']);
+        $excursion->setDate_Visite(
+            !empty($tableauAssoc['date_visite']) 
+                ? new DateTime($tableauAssoc['date_visite']) 
+                : null
+        );
         $excursion->setDescription($tableauAssoc['description']);
         $excursion->setPublic($tableauAssoc['public']);
         $excursion->setId_Guide($tableauAssoc['id_guide']);
-        
+
         return $excursion;
     }
 
-    // Hydrate une liste d'instances de Excursion
-    public function hydrateAll(array $tableauAssoc): ?array {
+    /**
+     * Hydrate une liste d'instances de Excursion à partir d'un tableau associatif.
+     * 
+     * @param array $tableauAssoc Tableau associatif contenant les données.
+     * @return array Un tableau d'objets Excursion.
+     */
+    public function hydrateAll(array $tableauAssoc): ?array
+    {
         $excursions = [];
         foreach ($tableauAssoc as $ligne) {
             $excursions[] = $this->hydrate($ligne);
         }
         return $excursions;
     }
+
+    /**
+     * Récupère toutes les excursions, triées par date de visite.
+     * 
+     * @return array Tableau des excursions triées.
+     */
+    public function findAll(): array
+    {
+        $sql = "SELECT * FROM excursion ORDER BY date_visite DESC";
+        $stmt = $this->pdo->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $excursions = [];
+        foreach ($result as $row) {
+            $excursions[] = new Excursion(
+                $row['id'],
+                $row['capacite'],
+                $row['nom'],
+                new DateTime($row['date_visite']),
+                $row['description'],
+                $row['chemin_image'],
+                $row['public'],
+                $row['id_guide']
+            );
+        }
+        return $excursions;
+    }
 }
-?>

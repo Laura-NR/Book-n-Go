@@ -36,9 +36,12 @@ class VisiteDao{
         $pdoStatement->execute(array("id"=>$id));
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE,"visite");
         $visite = $pdoStatement->fetch();
+
+        if ($visite === false) {
+            return null;
+        }
         return $visite;
     }
-
     public function findAll(){
         $sql ="SELECT * FROM visite";
         $pdoStatement = $this->pdo->prepare($sql);

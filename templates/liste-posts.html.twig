@@ -3,6 +3,16 @@
 
 {% block navbar_items %}
     <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Mes Informations</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Mon Planning</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Carnets de Voyage</a>
+    </li>
+
+    <li class="nav-item btn btn-primary rounded-pill me-2">
         <a class="nav-link" href="#">Devenir guide</a>
     </li>
     <li class="nav-item btn btn-primary rounded-pill me-2">
@@ -16,12 +26,12 @@
         <div class="row row-cols-4 align-items-center">
             {% for post in posts %}
                 <div class="card col mb-3 mx-1">
-                    <img src="./images/post/{{ post.chemin_img }}" class="card-img-top" alt="#">
+                    <img src="./images/post/{{ post.chemin_img }}" class="card-img-top" alt="Image du post {{ post.titre }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ post.titre }}</h5>
                         <p class="card-text">{{ post.date_publication }}</p>
-                        <a href="?controleur=post&methode=afficher&{{ post.id }}" class="btn btn-primary">Consulter</a>
-                    </div>id=
+                        <a href="?controleur=post&methode=afficher&id={{ post.id }}" class="btn btn-primary">Consulter</a>
+                    </div>
                 </div>
             {% endfor %}
         </div>

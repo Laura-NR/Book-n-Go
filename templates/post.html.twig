@@ -3,6 +3,16 @@
 
 {% block navbar_items %}
     <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Mes Informations</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Mon Planning</a>
+    </li>
+    <li class="nav-item btn btn-primary rounded-pill me-2">
+        <a class="nav-link" href="#">Carnets de Voyage</a>
+    </li>
+
+    <li class="nav-item btn btn-primary rounded-pill me-2">
         <a class="nav-link" href="#">Devenir guide</a>
     </li>
     <li class="nav-item btn btn-primary rounded-pill me-2">
@@ -11,9 +21,61 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ post.titre }}</h1>
-    <p>{{ post.contenu }}</p>
-    {% if post.chemin_img %}
-        <img src="{{ post.chemin_img }}" alt="Image du carnet">
-    {% endif %}
+    <div class="container mt-5">
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>{{ post.titre }}</h2>
+            </div>
+            <a href="?controleur=visite&methode=afficher&id={{ post.id_visite }}">Visite concernée : {{ post.titre_visite }}</a>
+            <img src="/images/post/{{ post.chemin_img }}" class="card-img-top" alt="Image du Point d'intérêt associé">
+            <div class="card-body">
+                <p class="card-text">{{ post.contenu }}</p>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h3>Commentaires</h3>
+            </div>
+            <div class="card-body">
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ session.id }}</h6>
+                        <form class="card-text" method="post">
+                                <textarea name="contenu" max="2000" class="form-control mb-2"></textarea>
+{#                            passage d'une valeur invisible en post afin de pouvoir lier le commentaire créé au post#}
+                            <input type="hidden" value="{{ post.id }}" name="id_post" />
+                            <input type="submit" class="btn btn-primary" value="Publier" formaction="?controleur=commentaire&methode=ajouter">
+                        </form>
+                    </div>
+                </div>
+                {% for commentaire in commentaires %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ commentaire.prenom }} {{ commentaire.nom }}</h6>
+                            <p class="card-subtitle mb-2 text-body-secondary">{{ commentaire.date_heure_publication }}</p>
+                            <p class="card-text">{{ commentaire.contenu }}</p>
+
+{#                            Pour plus tard quand on aura récupéré les infos de l'utilisateur connecté#}
+
+{#                            {{ if commentaire.id_voyageur == session.id }}#}
+                            {% if commentaire.id_voyageur == 1 %}
+                                <form class="card-text" method="post">
+                                    {#passage d'une valeur invisible en post afin de pouvoir lier le commentaire créé au post#}
+                                    <input type="hidden" value="{{ post.id }}" name="id_post" />
+                                    <input type="hidden" value="{{ commentaire.id }}" name="id_commentaire" />
+                                    <input type="submit" class="btn btn-danger" value="Supprimer" formaction="?controleur=commentaire&methode=supprimer&id={{ commentaire.id }}">
+                                </form>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    {{ dump(post) }}
+    {{ dump(visite) }}
+    {{ dump(commentaires) }}
 {% endblock %}

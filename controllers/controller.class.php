@@ -43,11 +43,19 @@ abstract class BaseController
     // }
 
     //Redirection vers une URL
-    function redirect(string $url): void
-    {
-        header("Location: $url");
-        exit;
+    function redirect(string $controller, string $method, array $params = []): void
+{
+    // Construction de l'URL de base
+    $url = 'index.php?controleur=' . urlencode($controller) . '&methode=' . urlencode($method);
+    // Ajout des paramètres
+    if (!empty($params)) {
+        $url .= '&' . http_build_query($params);
     }
+    // Redirection à l'URL qui a étéée contruite
+    header("Location: $url");
+    exit;
+}
+
 
     public function getPdo(): ?PDO
     {

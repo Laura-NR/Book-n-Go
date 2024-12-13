@@ -1,7 +1,7 @@
 <?php 
 require_once 'utilisateur.class.php';
 
-class Guide extends Utilisateur {
+class Guide extends Voyageur {
     // Attribut spécifique à Guide
     private ?string $cheminCertification;
 

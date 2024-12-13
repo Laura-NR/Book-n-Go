@@ -1,26 +1,32 @@
 <?php
-require_once 'controller.utilisateur.php';
-class ControllerGuide extends UtilisateurController {
+require_once 'controller.voyageur.php';
+class ControllerGuide extends ControllerVoyageur
+{
 
-    public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) {
-        parent::__construct($loader, $twig);
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
+    {
+        parent::__construct($twig, $loader);
     }
 
     // Vérifier si l'utilisateur est un administrateur
-    private function isAdmin(): bool {
+    private function isAdmin(): bool
+    {
         return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
     }
 
     // Création d'un guide
-    public function creerGuide(): void {
+    public function creerGuide(): void
+    {
         if (!$this->isAdmin()) {
             echo "Accès non autorisé. Vous devez être administrateur pour créer un guide.";
             return;
         }
 
         $postData = $this->getPost();
-        if (empty($postData) || 
-            !isset($postData['nom'], $postData['prenom'], $postData['numero_tel'], $postData['mail'], $postData['mdp'], $postData['chemin_certif'])) {
+        if (
+            empty($postData) ||
+            !isset($postData['nom'], $postData['prenom'], $postData['numero_tel'], $postData['mail'], $postData['mdp'], $postData['chemin_certif'])
+        ) {
             echo "Données manquantes pour créer le guide.";
             return;
         }
@@ -46,7 +52,8 @@ class ControllerGuide extends UtilisateurController {
     }
 
     // Modification d'un guide
-    public function modifierGuide(int $id): void {
+    public function modifierGuide(int $id): void
+    {
 
         try {
             $guideDao = new GuideDao($this->getPdo());
@@ -61,7 +68,7 @@ class ControllerGuide extends UtilisateurController {
                 if (isset($postData['mdp'])) $guide->setMdp($postData['mdp']);
                 if (isset($postData['chemin_certif'])) $guide->setCheminCertification($postData['chemin_certif']);
 
-                if ($guideDao->mettreAJour($guide)) {
+                if ($guideDao->maj($guide)) {
                     echo "La mise à jour du guide est effectuée.";
                 } else {
                     echo "Erreur lors de la mise à jour du guide.";
@@ -75,8 +82,9 @@ class ControllerGuide extends UtilisateurController {
     }
 
     // Suppression d'un guide
-    public function supprimerGuide(int $id): void {
-        
+    public function supprimerGuide(int $id): void
+    {
+
         try {
             $guideDao = new GuideDao($this->getPdo());
             if ($guideDao->supprimer($id)) {
@@ -90,7 +98,8 @@ class ControllerGuide extends UtilisateurController {
     }
 
     // Lister tous les guides (accessible par tous les utilisateurs)
-    public function lister(): void {
+    public function lister(): void
+    {
         try {
             $guideDao = new GuideDao($this->getPdo());
             $guides = $guideDao->findAll();
@@ -106,13 +115,18 @@ class ControllerGuide extends UtilisateurController {
     }
 
     // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
-    public function afficher(int $id): void {
+    public function afficher(int $id = 1): void
+    {
         try {
             $guideDao = new GuideDao($this->getPdo());
-            $guide = $guideDao->find($id);
+            $guide = $guideDao->findAssoc($id);
 
-            $template = $this->getTwig()->load('guideDetail.html.twig');
-            echo $template->render([
+            if (!$guide) {
+                echo "Guide avec id $id pas trouvé.";
+                return;
+            }
+
+            echo $this->getTwig()->render('pageInformationsGuide.html.twig', [
                 'guide' => $guide,
                 'menu' => "guide_detail"
             ]);
@@ -122,7 +136,8 @@ class ControllerGuide extends UtilisateurController {
     }
 
     // Voir le certificat du guide (accessible uniquement aux administrateurs)
-    public function voirCertification(int $id): void {
+    public function voirCertification(int $id): void
+    {
         if (!$this->isAdmin()) {
             echo "Accès non autorisé. Vous devez être administrateur pour voir le certificat.";
             return;
@@ -135,7 +150,7 @@ class ControllerGuide extends UtilisateurController {
             if ($guide) {
                 $cheminCertificat = $guideDao->getCheminCertificatParId($id);
                 if ($cheminCertificat && file_exists($cheminCertificat)) {
-                    header('Content-Type: bookngo/pdf');  
+                    header('Content-Type: bookngo/pdf');
                     header('Content-Disposition: attachment; filename="' . basename($cheminCertificat) . '"');
                     readfile($cheminCertificat);
                     exit;
@@ -150,4 +165,3 @@ class ControllerGuide extends UtilisateurController {
         }
     }
 }
-?>
