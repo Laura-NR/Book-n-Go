@@ -11,12 +11,13 @@ class ControllerVisite extends BaseController {
         
         if (!empty($_POST)) {
             $data = [
-                'adresse' => $_POST['adresse'] ?? '',
-                'ville' => $_POST['ville'] ?? '',
-                'code_postal' => $_POST['code_postal'] ?? '',
-                'description' => $_POST['description'] ?? '',
-                'titre' => $_POST['titre'] ?? '',
+                'adresse' => $_POST['adresse'],
+                'ville' => $_POST['ville'],
+                'code_postal' => $_POST['code_postal'],
+                'description' => $_POST['description'],
+                'titre' => $_POST['titre'],
             ];
+            var_dump($data);
 
             // Utilisation de VisiteDao pour créer une nouvelle Visite
             $visiteDao = new VisiteDao($this->getPdo());
@@ -24,7 +25,8 @@ class ControllerVisite extends BaseController {
             // Redirige vers la liste des visite après création réussie
             /*$nouvelleVisite*/
             if ($nouvelleVisite) {
-                $this->redirect('ListesVisites.php');
+                // REDIRECTION A CHANGER POUR LA LISTE DES VISITES
+                $this->redirect('#');
             } else {
                 echo "Erreur lors de la création de la visite.";
             }

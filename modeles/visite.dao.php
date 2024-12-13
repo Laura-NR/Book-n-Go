@@ -17,11 +17,11 @@ class VisiteDao{
         $this->pdo = $pdo;
     }
 
-    public function insert(array $data){
+    public function insert(array $data) : bool {
         $sql = "INSERT INTO visite (adresse, ville, code_postal, description, titre)
         VALUES (:adresse,:ville,:code_postal,:description,:titre)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(array(
+        return $stmt->execute(array(
             "adresse" => $data["adresse"],
             "ville" => $data["ville"],
             "code_postal" => $data["code_postal"],

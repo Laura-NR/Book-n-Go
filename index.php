@@ -2,8 +2,8 @@
 require_once "include.php";
 
 try {
-    if (isset($_GET['controlleur'])) {
-        $controllerName = $_GET['controlleur'];
+    if (isset($_GET['controleur'])) {
+        $controllerName = $_GET['controleur'];
     } else {
         $controllerName = '';
     }
@@ -29,7 +29,7 @@ try {
 
     $controller = ControllerFactory::getController($controllerName, $twig, $loader);
 
-    $controller->callMethode($methode);
+    $controller->call($methode);
 } catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
 }
