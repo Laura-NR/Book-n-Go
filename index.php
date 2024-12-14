@@ -2,6 +2,12 @@
 require_once "include.php";
 
 try {
+    if (empty($_GET['controleur']) && empty($_GET['methode'])) {
+        // Aucun contrôleur/méthode spécifiés, affiche le template d'accueil
+        echo $twig->render('pageAccueil_template.html.twig'); // Charge directement le fichier Twig
+        exit;
+    }
+
     if (isset($_GET['controleur'])) {
         $controllerName = $_GET['controleur'];
     } else {
@@ -14,11 +20,6 @@ try {
         $methode = '';
     }
 
-    if ($controllerName == '' && $methode == '') {
-        $controllerName = 'excursion';
-        $methode = 'recupererVisites';
-    }
-
     if ($controllerName == '') {
         throw new Exception('Le controleur n\'est pas défini');
     }
@@ -28,7 +29,6 @@ try {
     }
 
     $controller = ControllerFactory::getController($controllerName, $twig, $loader);
-
     $controller->call($methode);
 } catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
