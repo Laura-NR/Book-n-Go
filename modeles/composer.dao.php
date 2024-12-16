@@ -23,13 +23,15 @@ class ComposerDao
 
     public function creer(Composer $composer): bool
     {
-        $sql = "INSERT INTO composer (temps_sur_place, id_excursion, id_visite)
-                VALUES (:temps_sur_place, :id_excursion, :id_visite)";
+        $sql = "INSERT INTO composer (heure_arrivee, temps_sur_place, id_excursion, id_visite)
+                VALUES (:heure_arrivee, :temps_sur_place, :id_excursion, :id_visite)";
         $stmt = $this->pdo->prepare($sql);
 
+        $heureArr = $composer->getHeureArr() ? $composer->getHeureArr()->format('Y-m-d H:i:s') : null;
         $tempsSurPlace = $composer->getTempsSurPlace() ? $composer->getTempsSurPlace()->format('Y-m-d H:i:s') : null;
 
         return $stmt->execute([
+            ':heure_arrivee' => $heureArr,
             ':temps_sur_place' => $tempsSurPlace,
             ':id_excursion' => $composer->getExcursion(),
             ':id_visite' => $composer->getVisite()
@@ -79,6 +81,7 @@ class ComposerDao
     public function hydrate($tableauAssoc): ?Composer
     {
         $composer = new Composer();
+        $composer->setHeureArr($tableauAssoc["heure_arrivee"]);
         $composer->setTempsSurPlace($tableauAssoc["temps_sur_place"]);
         $composer->setExcursion($tableauAssoc["id_excursion"]);
         $composer->setVisite($tableauAssoc["id_visite"]);

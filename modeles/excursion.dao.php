@@ -42,8 +42,8 @@ class ExcursionDao
         $data['public'] = isset($data['public']) && $data['public'] === 'on' ? 1 : 0;
 
         try {
-            $sql = "INSERT INTO excursion (capacite, nom, chemin_image, date_creation, description, public, id_utilisateur)
-                VALUES (:capacite, :nom, :chemin_image, :date_creation, :description, :public, :id_utilisateur)";
+            $sql = "INSERT INTO excursion (capacite, nom, chemin_image, date_creation, description, public, id_guide)
+                VALUES (:capacite, :nom, :chemin_image, :date_creation, :description, :public, :id_guide)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 ':capacite' => $data['capacite'],
@@ -52,7 +52,7 @@ class ExcursionDao
                 ':date_creation' => $data['date_creation'],
                 ':description' => $data['description'],
                 ':public' => $data['public'],
-                ':id_utilisateur' => $data['id_utilisateur']
+                ':id_guide' => $data['id_guide']
             ]);
 
             // Retourne l'objet Excursion correspondant à la nouvelle excursion insérée
@@ -72,7 +72,7 @@ class ExcursionDao
     public function sauvegarder(Excursion $excursion): bool
     {
         $sql = "UPDATE excursion SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, date_creation = :date_creation,
-                description = :description, public = :public, id_utilisateur = :id_utilisateur WHERE id = :id";
+                description = :description, public = :public, id_guide = :id_guide WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
 
         return $stmt->execute([
@@ -83,7 +83,7 @@ class ExcursionDao
             ':date_creation' => $excursion->getDate_creation(),
             ':description' => $excursion->getDescription(),
             ':public' => $excursion->getPublic(),
-            ':id_utilisateur' => $excursion->getId_utilisateur()
+            ':id_guide' => $excursion->getId_Guide()
         ]);
     }
 
@@ -170,7 +170,7 @@ class ExcursionDao
         );
         $excursion->setDescription($tableauAssoc['description']);
         $excursion->setPublic($tableauAssoc['public']);
-        $excursion->setId_utilisateur($tableauAssoc['id_utilisateur']);
+        $excursion->setId_Guide($tableauAssoc['id_guide']);
 
         return $excursion;
     }
@@ -211,7 +211,7 @@ class ExcursionDao
                 $row['description'],
                 $row['chemin_image'],
                 $row['public'],
-                $row['id_utilisateur']
+                $row['id_guide']
             );
         }
         return $excursions;
