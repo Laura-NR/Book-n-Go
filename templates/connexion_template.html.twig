@@ -10,8 +10,10 @@ Connexion
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card p-4 shadow-sm">
-                <!-- Route vers le contrôleur de connexion -->
-                <form action="{{ path('connexion') }}" method="POST">
+                {% if error_message %}
+                    <div class="alert alert-danger">{{ error_message }}</div>
+                {% endif %}
+                <form action="index.php?controleur=utilisateur&action=connexion" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">E-mail :</label>
                         <input type="text" name="username" id="username" class="form-control" placeholder="Veuillez entrer votre mail" required>
@@ -24,11 +26,8 @@ Connexion
                         <button type="submit" class="btn btn-primary">Se connecter</button>
                     </div>
                 </form>
-                <!-- Lien vers la page d'inscription -->
                 <div class="text-center mt-3">
-                    <p class="mb-0">Pas encore de compte ? 
-                        <a href="{{ path('inscription') }}" class="text-primary">Inscrivez-vous ici</a>.
-                    </p>
+                    <p class="mb-0">Pas encore de compte ? <a href="?controleur=utilisateur&action=afficherInscription" class="text-primary">Inscrivez-vous ici</a>.</p>
                 </div>
             </div>
         </div>
