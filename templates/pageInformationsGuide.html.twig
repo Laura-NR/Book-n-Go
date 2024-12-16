@@ -35,8 +35,28 @@
 		<div class="d-flex justify-content-center mt-3">
 			{#centrer au centre de ma carte des informations #}
 			{# //renvoi sur les pages #}<button class="btn btn-outline-secondary mr-2" onclick="modifierVoyageur()"> Modifier les informations</button>
-			<button class="btn btn-outline-danger" onclick="supprimerVoyageur()">Supprimer le compte</button>
+			 <button type="button" data-bs-toggle="modal" data-bs-target="#fenetreModale" class="btn btn-danger">Supprimer mon compte</button>{#//mettre en rouge plutot car c'est un danger #}
 			{# //mettre en rouge plutot car c'est un danger #}
 		</div>
 	</div>
+	<div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="pageInformationGuide.php?controleur=guide&methode=supprimerGuide&id={{ guide.getId }}" method="POST">
+                <div class="modal-body">
+                    <div class="container mt-2">
+                        <div class="justify-content-center">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Supprimer mon compte</h1>
+                            <p class="fs-5">Voulez vous confirmer la suppression? Cela entrainera la suppression de vos excursions actives et vos commentaires</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="submit" class="btn btn-danger" name="update_article">Supprimer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

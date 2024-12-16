@@ -5,7 +5,6 @@ class VoyageurDao {
     // Constructeur de la classe qui initialise la connexion PDO
     public function __construct(?PDO $pdo = null) {
         $this->pdo = bd::getInstance()->getPdo();
-        var_dump($this->pdo = bd::getInstance()->getPdo());
     }
 
     //Getteur
@@ -85,7 +84,7 @@ class VoyageurDao {
     }
 
     // Supprime un voyageur par son ID
-    public function supprimer(int $id): bool {
+    public function supprimer(int $id): int {
         // Requête DELETE pour supprimer un voyageur
         $sql = "DELETE FROM voyageur WHERE id = :id";
         $requete = $this->pdo->prepare($sql); // Préparation de la requête
