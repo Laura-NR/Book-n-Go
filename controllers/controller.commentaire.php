@@ -80,7 +80,7 @@ class ControllerCommentaire extends BaseController
             //ancienne version sans validation
             //$contenu = $_POST["contenu"];
             $donnees = $_POST;
-
+            $idPost = $_POST["id_post"];
 
             //faire la validation de contenu avec Validator
             if ($this->validator->valider($donnees)) {
@@ -96,7 +96,7 @@ class ControllerCommentaire extends BaseController
                 $commentaire->setContenu($contenu);
                 //$idVoyageur = $_SESSION['id_voyageur'];
                 //$commentaire->setIdVoyageur($idVoyageur);
-                $idPost = $_POST["id_post"];
+
                 $commentaire->setIdPost($idPost);
                 $commentaireDao->inserer($commentaire);
 
@@ -105,10 +105,12 @@ class ControllerCommentaire extends BaseController
                 exit();
             } else {
                 $erreurs = $this->validator->getMessagesErreurs();
+                //var_dump($erreurs);
                 $_SESSION['erreurs_commentaire'] = $erreurs;
+                //var_dump($_SESSION['erreurs_commentaire']);
                 $_SESSION['donnees_commentaire'] = $donnees;
                 // Rediriger pour éviter le double traitement du formulaire en cas de rafraîchissement de la page
-                $this->redirect('post', 'afficher', ['id' => $_POST['id_post']]);
+                header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
             }
         }
     }

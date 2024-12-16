@@ -13,7 +13,8 @@ $reglesValidation = [
     'contenu' => [
         'obligatoire' => true,
         'type' => 'string',
-        'longueur_min' => 2
+        'longueur_min' => 2,
+        'longueur_max' => 1000
     ],
     // ... autres champs
 ];
