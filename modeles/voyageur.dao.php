@@ -84,7 +84,7 @@ class VoyageurDao {
     }
 
     // Supprime un voyageur par son ID
-    public function supprimer(int $id): bool {
+    public function supprimer(int $id): int {
         // Requête DELETE pour supprimer un voyageur
         $sql = "DELETE FROM voyageur WHERE id = :id";
         $requete = $this->pdo->prepare($sql); // Préparation de la requête
