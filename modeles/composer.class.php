@@ -1,39 +1,20 @@
 <?php
 class Composer {
-    private ?DateTime $heureArr;
     private ?DateTime $tempsSurPlace;
     private ?int $excursionId;
     private ?int $visiteId;
 
     //Constructeur
     public function __construct(
-        ?DateTime  $heureArr = null,
         ?DateTime  $tempsSurPlace = null,
         ?int $excursionId = null,
         ?int    $visiteId = null)
-        {
-            $this->heureArr = $heureArr;
-            $this->tempsSurPlace = $tempsSurPlace;
-            $this->excursionId = $excursionId;
-            $this->visiteId = $visiteId;
-        }
-
-
-    /**
-     * Get the value of heureArr
-     */ 
-    public function getHeureArr()
     {
-        return $this->heureArr;
+        $this->tempsSurPlace = $tempsSurPlace;
+        $this->excursionId = $excursionId;
+        $this->visiteId = $visiteId;
     }
 
-    /**
-     * Set the value of heureArr
-     */ 
-    public function setHeureArr(?DateTime $heureArr): void
-    {
-        $this->heureArr = $heureArr;
-    }
 
     /**
      * Get the value of tempsSurPlace
