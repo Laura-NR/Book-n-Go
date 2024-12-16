@@ -1,9 +1,13 @@
 <?php
+
+require_once 'validation/ajout_commentaire.php';
 class ControllerCommentaire extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
     {
         parent::__construct($twig, $loader);
+        global $reglesValidation;
+        $this->validator = new Validator($reglesValidation);
     }
 
     public function call($methode): mixed
@@ -73,29 +77,39 @@ class ControllerCommentaire extends BaseController
     public function ajouter(): void
     {
         if (isset($_POST["contenu"]) && !ctype_space($_POST["contenu"])) {
-            $contenu = $_POST["contenu"];
+            //ancienne version sans validation
+            //$contenu = $_POST["contenu"];
+            $donnees = $_POST;
+
+
             //faire la validation de contenu avec Validator
+            if ($this->validator->valider($donnees)) {
+                // Traitement des données valides (envoi au modèle, etc.)
+                $contenu = $_POST["contenu"];
+                // Utiliser la variable $contenu pour insérer les données dans la BD
+                // en utilisant le modèle Commentaire et le DAO CommentaireDao
 
+                $commentaire = new Commentaire();
+                $commentaireDao = new CommentaireDao($this->getPdo());
 
+                $commentaire->setDateHeurePublication(new DateTime());
+                $commentaire->setContenu($contenu);
+                //$idVoyageur = $_SESSION['id_voyageur'];
+                //$commentaire->setIdVoyageur($idVoyageur);
+                $idPost = $_POST["id_post"];
+                $commentaire->setIdPost($idPost);
+                $commentaireDao->inserer($commentaire);
 
-
-            // Utiliser la variable $contenu pour insérer les données dans la BD
-            // en utilisant le modèle Commentaire et le DAO CommentaireDao
-            $commentaire = new Commentaire();
-            $commentaireDao = new CommentaireDao($this->getPdo());
-            $commentaire->setDateHeurePublication(new DateTime());
-            $commentaire->setContenu($contenu);
-
-            //$idVoyageur = $_SESSION['id_voyageur'];
-            //$commentaire->setIdVoyageur($idVoyageur);
-
-            $idPost = $_POST["id_post"];
-            $commentaire->setIdPost($idPost);
-            $commentaireDao->inserer($commentaire);
-            header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
-            exit();
-        } else {
-            throw new Exception("Le contenu du commentaire est vide.");
+                // Redirection après traitement réussi
+                header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
+                exit();
+            } else {
+                $erreurs = $this->validator->getMessagesErreurs();
+                $_SESSION['erreurs_commentaire'] = $erreurs;
+                $_SESSION['donnees_commentaire'] = $donnees;
+                // Rediriger pour éviter le double traitement du formulaire en cas de rafraîchissement de la page
+                $this->redirect('post', 'afficher', ['id' => $_POST['id_post']]);
+            }
         }
     }
 
