@@ -7,7 +7,20 @@ class ControllerGuide extends ControllerVoyageur
     {
         parent::__construct($twig, $loader);
     }
-
+    public function call($methode): mixed
+    {
+        if (method_exists($this, $methode)) {
+            // Récupère l'ID si disponible
+            if (isset($_GET['id'])) {
+                $id = $_GET['id'];
+                return $this->$methode($id); // Appelle la méthode avec l'ID si disponible
+            } else {
+                return $this->$methode(); // Appelle la méthode sans ID
+            }
+        } else {
+            throw new Exception("Méthode $methode non trouvée dans le contrôleur.");
+        }
+    }
     // Vérifier si l'utilisateur est un administrateur
     private function isAdmin(): bool
     {
@@ -82,13 +95,13 @@ class ControllerGuide extends ControllerVoyageur
     }
 
     // Suppression d'un guide
-    public function supprimerGuide(int $id): void
+    public function supprimerGuide(int $id=1): void
     {
-
         try {
             $guideDao = new GuideDao($this->getPdo());
             if ($guideDao->supprimer($id)) {
                 echo "Guide supprimé avec succès.";
+                $this->redirect('index.php');
             } else {
                 echo "Erreur lors de la suppression du guide ou guide non trouvé.";
             }

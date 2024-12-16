@@ -18,7 +18,10 @@ try {
         $controllerName = 'excursion';
         $methode = 'recupererVisites';
     }
-
+    if ($controllerName == '' && $methode == '') {
+        $controllerName = 'voyageur';
+        $methode = 'afficher';
+    }
     if ($controllerName == '') {
         throw new Exception('Le controleur n\'est pas défini');
     }
