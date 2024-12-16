@@ -136,7 +136,7 @@ class ControllerExcursion extends BaseController
             $data = [
                 'capacite' => $this->getPost()['capacite'] ?? '',
                 'nom' => $this->getPost()['nom'] ?? '',
-                'date_visite' => new DateTime(),
+                'date_creation' => new DateTime(),
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
                 'id_guide' => 1, // Guide par défaut

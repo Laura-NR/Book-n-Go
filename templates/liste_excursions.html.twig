@@ -49,7 +49,7 @@
 								<p class="card-text">
 									<strong>Date de visite :
 									</strong>
-									{{ excursion.date_visite | date("d/m/Y") }}
+									{{ excursion.date_creation | date("d/m/Y") }}
 								</p>
 								{% if excursion.description %}
 									<p class="card-text text-truncate">{{ excursion.description }}</p>
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     if (data.success) {
                         alert(data.message || 'Excursion supprimée avec succèss.');
-                        icon.closest('.d-flex').remove();
+                        icon.closest('.col').remove();
                     } else {
                         alert(data.message || 'Erreur lors de la suppression de l\'excursion.');
                     }
