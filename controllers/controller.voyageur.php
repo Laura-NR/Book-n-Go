@@ -63,7 +63,7 @@ class ControllerVoyageur extends BaseController {
         }
     }
 
-    // Suppression d'un voyageur
+  // Suppression d'un voyageur
     public function supprimerVoyageur(int $id): void {
         try {
             $voyageurDao = new VoyageurDao($this->getPdo());
@@ -76,7 +76,6 @@ class ControllerVoyageur extends BaseController {
             echo "Erreur lors de la suppression : " . $e->getMessage();
         }
     }
-
     // Lister tous les voyageurs
 
     public function lister(): void {

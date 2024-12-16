@@ -18,6 +18,15 @@ class PostDAO
         return $posts;
     }
 
+    public function findAllByCarnetId(int $carnetId): array
+    {
+        $sql = "SELECT P.*, V.titre AS titre_visite FROM post P JOIN visite V ON V.id = P.id_visite WHERE id_carnet = :carnetId";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(array(':carnetId' => $carnetId));
+        $posts = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+        return $posts;
+    }
+
     /**
      * Get the value of pdo
      */ 
@@ -46,7 +55,7 @@ class PostDAO
 
     public function find(?int $id): ?Post
     {
-        $sql = "SELECT * FROM post WHERE id = :id";
+        $sql = "SELECT P.*, V.titre AS titre_visite FROM post P JOIN visite V ON V.id = P.id_visite WHERE P.id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute(array(':id' => $id));
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Post');

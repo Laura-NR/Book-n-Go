@@ -40,7 +40,7 @@ class ControllerExcursion extends BaseController
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             header('Content-Type: application/json; charset=utf-8');
             $jsonVisites = json_encode($visites, JSON_UNESCAPED_UNICODE);
-            
+
             if ($jsonVisites === false) {
                 print_r('JSON encoding failed: ' . json_last_error_msg());
             }
@@ -127,69 +127,68 @@ class ControllerExcursion extends BaseController
     // }
 
     public function creer(): void
-{
-    // Vérifie si la requête est une requête AJAX
-    $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    {
+        // Vérifie si la requête est une requête AJAX
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
-    // Vérifie si le formulaire a été soumis
-    if (!empty($this->getPost())) {
-        $data = [
-            'capacite' => $this->getPost()['capacite'] ?? '',
-            'nom' => $this->getPost()['nom'] ?? '',
-            'date_visite' => new DateTime(),
-            'description' => $this->getPost()['description'] ?? '',
-            'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
-            'id_guide' => 1, // Guide par défaut
-        ];
+        // Vérifie si le formulaire a été soumis
+        if (!empty($this->getPost())) {
+            $data = [
+                'capacite' => $this->getPost()['capacite'] ?? '',
+                'nom' => $this->getPost()['nom'] ?? '',
+                'date_creation' => new DateTime(),
+                'description' => $this->getPost()['description'] ?? '',
+                'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
+                'id_guide' => 1, // Guide par défaut
+            ];
 
-        // Si un fichier image est téléchargé, l'ajouter aux données
-        if (!empty($_FILES['chemin_image']['name'])) {
-            $uploadDirectory = './images/';
-            $fileName = basename($_FILES['chemin_image']['name']);
-            $targetPath = $uploadDirectory . $fileName;
+            // Si un fichier image est téléchargé, l'ajouter aux données
+            if (!empty($_FILES['chemin_image']['name'])) {
+                $uploadDirectory = './images/';
+                $fileName = basename($_FILES['chemin_image']['name']);
+                $targetPath = $uploadDirectory . $fileName;
 
-            if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
-                $data['chemin_image'] = $targetPath;
+                if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
+                    $data['chemin_image'] = $targetPath;
+                } else {
+                    if ($isAjax) {
+                        echo json_encode(['success' => false, 'message' => 'Image upload failed']);
+                        exit;
+                    }
+                    echo "Erreur: Echec du téléchargement de l'image.";
+                    return;
+                }
+            }
+
+            // Crée une nouvelle excursion via ExcursionDao
+            $excursionDao = new ExcursionDao($this->getPdo());
+            $nouvelleExcursion = $excursionDao->creer($data);
+
+            // Si la création est réussie, gérer les visites associées
+            if ($nouvelleExcursion) {
+                $this->handleVisits($nouvelleExcursion->getId(), $_POST);
+
+                if ($isAjax) {
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Excursion created successfully',
+                        'redirect' => 'index.php?controleur=excursion&methode=lister'
+                    ]);
+                } else {
+                    if ($isAjax) {
+                        echo json_encode(['success' => false, 'message' => 'Error creating excursion']);
+                    }
+                }
+                exit;
             } else {
                 if ($isAjax) {
-                    echo json_encode(['success' => false, 'message' => 'Image upload failed']);
+                    echo json_encode(['success' => false, 'message' => 'Form data is missing']);
                     exit;
                 }
-                echo "Erreur: Echec du téléchargement de l'image.";
-                return;
+                echo "Erreur : Formulaire vide";
             }
         }
-
-        // Crée une nouvelle excursion via ExcursionDao
-        $excursionDao = new ExcursionDao($this->getPdo());
-        $nouvelleExcursion = $excursionDao->creer($data);
-
-        // Si la création est réussie, gérer les visites associées
-        if ($nouvelleExcursion) {
-            $this->handleVisits($nouvelleExcursion->getId(), $_POST);
-
-            if ($isAjax) {
-                echo json_encode(['success' => true, 'message' => 'Excursion created successfully']);
-                exit;
-            }
-
-            // Redirige vers la liste des excursions après la création réussie
-            $this->redirect('controleur=excursion&methode=lister');
-        } else {
-            if ($isAjax) {
-                echo json_encode(['success' => false, 'message' => 'Error creating excursion']);
-                exit;
-            }
-            echo "Erreur lors de la création de l'excursion.";
-        }
-    } else {
-        if ($isAjax) {
-            echo json_encode(['success' => false, 'message' => 'Form data is missing']);
-            exit;
-        }
-        echo "Erreur : Formulaire vide";
     }
-}
 
     /**
      * @brief Gère les visites associées à une excursion.
@@ -272,12 +271,30 @@ class ControllerExcursion extends BaseController
     {
         $excursionDao = new ExcursionDao($this->getPdo());
 
+        if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            header('Content-Type: application/json');
+
+            if ($excursionDao->supprimer($id)) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Excursion deleted successfully.',
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Error occurred while deleting the excursion.',
+                ]);
+            }
+            exit;
+        }
+
         if ($excursionDao->supprimer($id)) {
-            $this->redirect('lister_excursions.php');
+            $this->redirect('excursion', 'lister');
         } else {
             echo "Erreur lors de la suppression de l'excursion.";
         }
     }
+
 
     /**
      * @brief Affiche les détails d'une excursion.

@@ -15,7 +15,7 @@ class Excursion
     private ?int $id; ///< ID de l'excursion.
     private ?int $capacite; ///< Capacité de l'excursion (nombre de participants).
     private ?string $nom; ///< Nom de l'excursion.
-    private ?DateTime $date_visite; ///< Date et heure de la visite.
+    private ?DateTime $date_creation; ///< Date et heure de la visite.
     private ?string $description; ///< Description de l'excursion.
     private ?string $chemin_image; ///< Chemin de l'image associée à l'excursion.
     private ?bool $public; ///< Indique si l'excursion est publique ou non.
@@ -37,7 +37,7 @@ class Excursion
         ?int $id = null,
         ?int $capacite = null,
         ?string $nom = null,
-        ?DateTime $date_visite = null,
+        ?DateTime $date_creation = null,
         ?string $description = null,
         ?string $chemin_image = null,
         ?bool $public = null,
@@ -46,7 +46,7 @@ class Excursion
         $this->id = $id;
         $this->capacite = $capacite;
         $this->nom = $nom;
-        $this->date_visite = $date_visite;
+        $this->date_creation = $date_creation;
         $this->description = $description;
         $this->chemin_image = $chemin_image;
         $this->public = $public;
@@ -120,9 +120,9 @@ class Excursion
      * 
      * @return DateTime|null La date et l'heure de la visite.
      */
-    public function getDate_visite(): ?DateTime
+    public function getDate_creation(): ?DateTime
     {
-        return $this->date_visite;
+        return $this->date_creation;
     }
 
     /**
@@ -130,9 +130,9 @@ class Excursion
      *
      * @param DateTime|null $date_visite La date et l'heure de la visite.
      */
-    public function setDate_visite(?DateTime $date_visite): void
+    public function setDate_creation(?DateTime $date_creation): void
     {
-        $this->date_visite = $date_visite;
+        $this->date_creation = $date_creation;
     }
 
     /**
