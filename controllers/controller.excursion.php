@@ -254,6 +254,22 @@ class ControllerExcursion extends BaseController
         }
     }
 
+
+    /**
+     * @brief Modifier les informations d'une excursion existante.
+     * 
+     * Cette méthode modifie les informations d'une excursion dans la base de données en fonction de son ID.
+     * Si la modification échoue, un message d'erreur est affiché.
+     * 
+     * @param int $id L'ID de l'excursion à modifier.
+     * 
+     * @return void
+     */
+    public function modifier(int $id): void 
+    {
+        
+    }
+
     /**
      * @brief Supprime une excursion.
      * 
@@ -305,7 +321,7 @@ class ControllerExcursion extends BaseController
     public function afficher(int $id): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());
-        $excursion = $excursionDao->find($id);
+        $excursion = $excursionDao->findAssoc($id);
 
         if ($excursion) {
             echo $this->getTwig()->render('details_excursion.html.twig', [
