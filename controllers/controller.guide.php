@@ -67,49 +67,54 @@ class ControllerGuide extends ControllerVoyageur
     // Modification d'un guide
     public function modifierGuide(int $id): void
     {
-
         try {
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->find($id);
-
-            if ($guide && !empty($this->getPost())) {
+    
+            if (!$guide) {
+                echo "Erreur : guide non trouvé.";
+                return;
+            }
+    
+            // Si la méthode est POST, traiter la soumission du formulaire
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $postData = $this->getPost();
-                if (isset($postData['nom'])) $guide->setNom($postData['nom']);
-                if (isset($postData['prenom'])) $guide->setPrenom($postData['prenom']);
-                if (isset($postData['numero_tel'])) $guide->setNumeroTel($postData['numero_tel']);
-                if (isset($postData['mail'])) $guide->setMail($postData['mail']);
-                if (isset($postData['mdp'])) $guide->setMdp($postData['mdp']);
-                if (isset($postData['chemin_certif'])) $guide->setCheminCertification($postData['chemin_certif']);
-
-                if ($guideDao->maj($guide)) {
-                    echo "La mise à jour du guide est effectuée.";
-                } else {
-                    echo "Erreur lors de la mise à jour du guide.";
+                if (isset($postData['action'])) {
+                    if ($postData['action'] === 'supprimer') {
+                        // Suppression
+                        if ($guideDao->supprimer($id)) {
+                            echo "Guide supprimé avec succès.";
+                            //$this->redirect('pageAccueil', 'afficher');
+                            return;
+                        } else {
+                            echo "Erreur lors de la suppression du guide.";
+                        }
+                    } elseif ($postData['action'] === 'modifier') {
+                        // Modification
+                        // Traiter la modification des données
+                        if (!empty($postData)) {
+                            // Mise à jour des données du guide
+                            if (isset($postData['nom'])) $guide->setNom($postData['nom']);
+                            if (isset($postData['prenom'])) $guide->setPrenom($postData['prenom']);
+                            if (isset($postData['numero_tel'])) $guide->setNumeroTel($postData['numero_tel']);
+                            if (isset($postData['mail'])) $guide->setMail($postData['mail']);
+                            
+                            if ($guideDao->maj($guide)) {
+                                echo "Guide modifié avec succès.";
+                                //$this->redirect('index.php');
+                                return;
+                            } else {
+                                echo "Erreur lors de la mise à jour du guide.";
+                            }
+                        }
+                    }
                 }
-            } else {
-                echo "Erreur : guide non trouvé ou données manquantes.";
             }
         } catch (Exception $e) {
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
         }
     }
-
-    // Suppression d'un guide
-    public function supprimerGuide(int $id=1): void
-    {
-        try {
-            $guideDao = new GuideDao($this->getPdo());
-            if ($guideDao->supprimer($id)) {
-                echo "Guide supprimé avec succès.";
-                $this->redirect('index.php');
-            } else {
-                echo "Erreur lors de la suppression du guide ou guide non trouvé.";
-            }
-        } catch (Exception $e) {
-            echo "Erreur lors de la suppression : " . $e->getMessage();
-        }
-    }
-
+    
     // Lister tous les guides (accessible par tous les utilisateurs)
     public function lister(): void
     {
@@ -133,20 +138,24 @@ class ControllerGuide extends ControllerVoyageur
         try {
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->findAssoc($id);
-
+    
             if (!$guide) {
                 echo "Guide avec id $id pas trouvé.";
                 return;
             }
-
+    
+            $editMode = isset($_GET['editMode']) && $_GET['editMode'] === 'true';
+    
             echo $this->getTwig()->render('pageInformationsGuide.html.twig', [
                 'guide' => $guide,
-                'menu' => "guide_detail"
+                'menu' => "guide_detail",
+                'editMode' => $editMode, // Mode d'édition
             ]);
         } catch (Exception $e) {
             echo "Erreur lors de l'affichage du guide : " . $e->getMessage();
         }
     }
+    
 
     // Voir le certificat du guide (accessible uniquement aux administrateurs)
     public function voirCertification(int $id): void
