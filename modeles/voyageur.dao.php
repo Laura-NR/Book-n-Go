@@ -64,44 +64,6 @@ class VoyageurDao {
          $requete->execute(); // Exécution de la requête
          return $requete->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Voyageur'); // Récupération de tous les résultats sous forme d'objets Voyageur
      }
-    // Connexion d'un voyageur ou d'un guide
-    public function seConnecter($email, $motdepasse) {
-        // Vérification dans la table voyageur
-        $sqlVoyageur = "SELECT * FROM voyageur WHERE mail = :mail";
-        $requeteVoyageur = $this->pdo->prepare($sqlVoyageur);
-        $requeteVoyageur->execute(['mail' => $email]);
-        $voyageur = $requeteVoyageur->fetch(PDO::FETCH_ASSOC);
-
-        if ($voyageur && password_verify($motdepasse, $voyageur['mdp'])) {
-            // Hydrater l'objet Voyageur avec les données récupérées
-            $voyageurObj = new Voyageur();
-            $this->hydrate($voyageurObj, $voyageur);
-
-            // Récupération réussie, rôle attribué dynamique : 'voyageur'
-            $_SESSION['role'] = 'voyageur';
-            $_SESSION['user_id'] = $voyageurObj->getId();
-            return true;
-        }
-
-        // Vérification dans la table guide
-        $sqlGuide = "SELECT * FROM guide WHERE mail = :mail";
-        $requeteGuide = $this->pdo->prepare($sqlGuide);
-        $requeteGuide->execute(['mail' => $email]);
-        $guide = $requeteGuide->fetch(PDO::FETCH_ASSOC);
-
-        if ($guide && password_verify($motdepasse, $guide['mdp'])) {
-            // Hydrater l'objet Guide avec les données récupérées
-            $guideObj = new Guide();
-            $this->hydrate($guideObj, $guide);
-
-            // Récupération réussie, rôle attribué dynamique : 'guide'
-            $_SESSION['role'] = 'guide';
-            $_SESSION['user_id'] = $guideObj->getId();
-            return true;
-        }
-
-        return false; // Aucun utilisateur trouvé ou mot de passe incorrect
-    }
 
     // Crée un nouveau voyageur
     public function creer(Voyageur $voyageur): bool {

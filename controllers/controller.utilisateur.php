@@ -45,6 +45,28 @@ class ControllerUtilisateur extends BaseController {
     // Inscription d'un utilisateur
     public function inscription(): void {
 
+        var_dump($_POST);
+
+        $nom = $_POST['nom'];
+        $prenom = $_POST['prenom'];
+        $numeroTel = $_POST['numeroTel'];
+        $email = $_POST['mail'];
+        $motDePasse = $_POST['mdp'];
+        $role = $_POST['profil'];
+        $certif = $POST['certification'];
+
+        if ($role === "voyageur"){
+            // appeler la methode creer de voyageur 
+            // attention mettre le mdp hacher 
+           // $utilisateur = new Voyageur($nom, $prenom, $numeroTel, $email, $motDePasse);
+            $utilisateur->creerVoyageur();
+        }
+        else{
+            // appeler la methode creer de guide
+            // attention mettre le mdp hacher  
+            $utilisateur->creerGuide();
+        }
+
     }
 
     // Déconnexion de l'utilisateur
