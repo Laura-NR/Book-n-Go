@@ -30,12 +30,13 @@ class ControllerUtilisateur extends BaseController {
         $utilisateurDao = new UtilisateurDao($this->getPdo());
         // Vérification de l'utilisateur
         $utilisateur = $utilisateurDao->findByEmail($email);
-        if ($utilisateur && password_verify($motDePasse, password_hash($utilisateur->getMdp(), PASSWORD_DEFAULT))) {
+        if ($utilisateur && password_verify($motDePasse, $utilisateur->getMdp())) {
             $_SESSION['role'] = $utilisateur instanceof Guide ? 'guide' : 'voyageur';
             $_SESSION['user_id'] = $utilisateur->getId();
             //$_SESSION['role'] = $role;
+            var_dump($_SESSION);
 
-            echo "Connexion réussie ! Rôle : " /*.ucfirst($role)*/;
+            echo "Connexion réussie ! Rôle : " . $_SESSION['role'];
         } else {
             echo "Erreur : Email ou mot de passe incorrect.";
         }

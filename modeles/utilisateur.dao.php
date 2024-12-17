@@ -51,9 +51,9 @@ class UtilisateurDao {
                     $guide['id'], $guide['nom'], $guide['prenom'], $guide['numero_tel'],
                     $guide['mail'], $guide['mdp'], $guide['chemin_certif']
                 );
-                var_dump($retour);
-                //return $retour;
-                exit;
+                //var_dump($retour);
+                return $retour;
+                //exit;
             }
 
             // Chercher dans les voyageurs
@@ -64,7 +64,7 @@ class UtilisateurDao {
 
             if ($voyageur) {
                 return new Voyageur(
-                    $voyageur['id'], $voyageur['nom'], $voyageur['prenom'], $voyageur['numeroTel'], 
+                    $voyageur['id'], $voyageur['nom'], $voyageur['prenom'], $voyageur['numero_tel'],
                     $voyageur['mail'], $voyageur['mdp']
                 );
             }
