@@ -30,6 +30,30 @@ class VisiteDao{
         ));
     }
 
+    // public function delete(int $id) : bool {
+    //     $sql = "DELETE FROM visite WHERE visite.id = :id";
+    //     $stmt = $this->pdo->prepare($sql);
+    //     return $stmt->execute(array(
+    //         "id" => $id,
+    //     ));
+    // }
+
+    public function modify(array $data) : bool {
+        $sql = "UPDATE visite 
+        SET adresse = :adresse, ville = :ville, code_postal = :code_postal, description = :description, titre = :titre 
+        WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute(array(
+            "id" => $data["id"],
+            "adresse" => $data["adresse"],
+            "ville" => $data["ville"],
+            "code_postal" => $data["code_postal"],
+            "description" => $data["description"],
+            "titre" => $data["titre"],
+
+        ));
+    }
+
     public function find(?int $id): ?Visite{
         $sql ="SELECT * FROM visite WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
