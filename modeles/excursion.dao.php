@@ -69,7 +69,7 @@ class ExcursionDao
      * @param Excursion $excursion L'objet Excursion à sauvegarder.
      * @return bool True si la mise à jour a réussi, false sinon.
      */
-    public function sauvegarder(Excursion $excursion): bool
+    public function modifier(array $excursion): bool
     {
         $sql = "UPDATE excursion SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, date_creation = :date_creation,
                 description = :description, public = :public, id_guide = :id_guide WHERE id = :id";

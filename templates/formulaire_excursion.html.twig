@@ -1,0 +1,246 @@
+{% extends "base_template.html.twig" %}
+
+{% block title %}
+	{{ excursion ? 'Modification de l\'Excursion' : 'Création d\'une Excursion' }}
+{% endblock %}
+{% block content %}
+	<main class="container">
+		<h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
+			{{ excursion ? 'Modifier les informations de l\'excursion :' : 'Informations de l\'excursion :' }}
+		</h1>
+		<form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" style="width: 80%" method="post">
+			<div style="
+					        background-color: #b2708f;
+					        color: #000;
+					        border-radius: 30px;
+					        padding: 40px;
+					      ">
+				<div class="row mb-4">
+					<div class="col">
+						<label for="nom" class="form-label">Titre :</label>
+						<input type="text" id="nom" name="nom" class="form-control" value="{{ excursion.nom | default('') }}"/>
+					</div>
+					<div class="col">
+						<label for="capacite" class="form-label">Capacite :</label>
+						<input type="number" id="capacite" name="capacite" class="form-control" value="{{ excursion.capacite | default('') }}"/>
+					</div>
+				</div>
+				<div class="row mb-4">
+					<div class="col">
+						<label for="itineraire" class="form-label">Itineraire :</label>
+						<div class="input-group">
+							<select name="itineraire" id="itineraire" class="form-select">
+								<option value="" selected disabled>Composez l'itineraire de votre excursion</option>
+								<option href="" value="add-new">Ajouter une nouvelle visite dans l'itineraire</option>
+							</select>
+							<button type="button" id="addVisit" class="btn btn-light">
+								Ajouter
+							</button>
+						</div>
+					</div>
+					<div class="col">
+						<label for="chemin_image" class="form-label">Image :</label>
+						<input type="file" id="chemin_image" name="chemin_image" class="form-control" {{ excursion.chemin_image | split('/') | last }}/>
+						{% if excursion and excursion.chemin_image %}
+							<p class="mt-3">Fichier actuel :
+								{{ excursion.chemin_image | split('/') | last }}
+							</p>
+						{% endif %}
+					</div>
+				</div>
+				<div class="col">
+					<div class="mb-4">
+						<h5 id="selectedVisitsTitle" style="display: none;">Visites sélectionnées :</h5>
+						<ul id="selectedVisits" style="display: none;"></ul>
+					</div>
+				</div>
+				<div class="row mb-4">
+					<div class="col">
+						<label for="description" class="form-label">Description :</label>
+						<textarea name="description" id="description" class="form-control" rows="5">{{ excursion.description | default('') }}</textarea>
+					</div>
+				</div>
+				<div class="row mb-4">
+					<div class="col d-flex align-items-center">
+						<input type="checkbox" name="public" id="public" class="form-check-input me-2" {{ excursion and excursion.public ? 'checked' : '' }}/>
+						<label for="public" class="form-check-label">
+							Je veux que d’autres guides puissent participer dans cette excursion
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="text-center mt-4">
+				<input type="submit" value="Créer" class="btn" style="
+				          background-color: #b2708f;
+				          color: #fff;
+				          border-radius: 30px;
+				          padding: 10px 40px;
+				        "/>
+			</div>
+		</form>
+	</main>
+{% endblock %}
+
+{% block script %}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+const itineraireSelect = document.getElementById('itineraire');
+
+itineraireSelect.addEventListener('focus', () => {
+if (itineraireSelect.querySelector('[data-fetched]')) {
+return;
+};
+
+fetch('index.php?controleur=excursion&methode=afficherCreer', {
+method: 'GET',
+headers: {
+'X-Requested-With': 'XMLHttpRequest'
+}
+}).then(response => {
+console.log('Response status:', response.status);
+console.log('Response content-type:', response.headers.get('Content-Type'));
+
+if (!response.ok) {
+throw new Error (`HTTP error! status: ${
+response.status
+}`);
+}
+// return response.json();
+console.log('Response: ', response);
+return response.text()
+}).then(responseText => {
+console.log('Response Text:', responseText);
+
+try {
+const data = JSON.parse(responseText);
+console.log('Fetched visits:', data);
+
+const addNewOption = itineraireSelect.querySelector('option[value="add-new"]');
+
+data.forEach(visit => {
+const option = document.createElement('option');
+option.value = visit.id;
+option.textContent = `${
+visit.titre
+} - ${
+visit.ville
+}`;
+option.setAttribute('data-fetched', true);
+itineraireSelect.insertBefore(option, addNewOption);
+});
+} catch (error) {
+console.error('Failed to parse JSON:', error);
+}
+}).catch(error => {
+console.error('Erreur à l\'heure de récupérer les visites:', error);
+alert('Pas possible de récupérer les visites, ressayez plus tard');
+});
+});
+});
+
+const addVisitButton = document.getElementById('addVisit');
+const itineraireSelect = document.getElementById('itineraire');
+const selectedVisits = document.getElementById('selectedVisits');
+const selectedVisitsTitle = document.getElementById('selectedVisitsTitle');
+
+addVisitButton.addEventListener("click", () => {
+const selectedVisit = itineraireSelect.options[itineraireSelect.selectedIndex];
+
+if (! selectedVisit || selectedVisit.value === "" || selectedVisit.value === "add-new") {
+alert('Veuillez sélectionner une visite valide.');
+return;
+}
+
+const visitId = selectedVisit.value;
+const visitTitle = selectedVisit.text;
+
+if (! visitId) {
+return;
+}
+
+if (document.querySelector (`#visit-${visitId}`)) {
+alert('Cette visite est déjà sélectionnée');
+return;
+}
+
+const listItem = document.createElement('li');
+listItem.id = `visit-${visitId}`;
+listItem.classList.add('mb-2');
+listItem.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <strong>${visitTitle}</strong>
+            </div>
+            <div class="d-flex gap-3">
+              <div>
+                <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
+                <input
+                    type="time"
+                    id="temps_sur_place_${visitId}"
+                    name="temps_sur_place_${visitId}"
+                    class="form-control form-control-sm"
+                />
+              </div>
+              <button type="button" class="btn btn-danger remove-visit" style="height: 20px, font-size: 12px; padding: 3px 10px; display: flex; align-items: center; justify-content: center">Supprimer</button>
+            </div>
+          </div>
+        `;
+
+selectedVisits.style.display = 'block';
+selectedVisitsTitle.style.display = 'block';
+
+selectedVisits.appendChild(listItem);
+listItem.querySelector('.remove-visit').addEventListener('click', () => {
+listItem.remove();
+});
+
+if (selectedVisits.children.length === 0) {
+selectedVisits.style.display = 'none';
+selectedVisitsTitle.style.display = 'none';
+}
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+const form = document.getElementById('excursionForm');
+
+form.addEventListener('submit', function (e) {
+e.preventDefault();
+
+const formData = new FormData(form);
+formData.forEach(function (value, key) {
+console.log(key, value);
+});
+
+fetch('index.php?controleur=excursion&methode=creer', {
+method: 'POST',
+headers: {
+'X-Requested-With': 'XMLHttpRequest'
+},
+body: formData
+}).then(response => {
+if (!response.ok) {
+throw new Error (`HTTP error! Status: ${
+response.status
+}`);
+}
+return response.json();
+}).then(data => {
+console.log('Formulaire soumis avec succèss:', data);
+if (data.success) {
+if (data.redirect) {
+window.location.href = data.redirect;
+} else {
+alert(data.message || 'Excursion créée avec succèss!');
+}
+} else {
+alert(data.message || 'Une erreur a apparu lors de la création de l\'excursion.');
+}
+}).catch(error => {
+console.error('Erreur lors de la validation du formulaire:', error);
+alert('Une erreur a apparu lors de la validation du formulaire.');
+});
+})
+});
+	</script>
+{% endblock %}

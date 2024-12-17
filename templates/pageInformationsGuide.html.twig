@@ -5,50 +5,80 @@
 	- Mon compte
 {% endblock %}
 {% block content %}
-	<div class="container my-5">
-		<h2>Mes informations:</h2>
-		{# {{ dump(guide) }} #}
-		{# //bloc avec les informations de l'utilisateur connecté #}
-		<div class="card">
-			<div class="card-body d-flex justify-content-between align-items-center">
-				<div>
-					<p>
-						<strong>Nom:</strong>
-						<span id="nom-utilisateur">{{ guide.nom }}</span>
-					</p>
-					<p>
-						<strong>Prénom:</strong>
-						<span id="prenom-utilisateur">{{ guide.prenom }}</span>
-					</p>
-					<p>
-						<strong>Mail:</strong>
-						<span id="email-utilisateur">{{ guide.mail }}</span>
-					</p>
-					<p>
-						<strong>Numéro de téléphone:</strong>
-						<span id="telephone-utilisateur">{{ guide.numero_tel }}</span>
-					</p>
-				</div>
-				<a href="/controller_voyageur/voirCertification?id={{ guide.id }}" class="btn btn-outline-primary" id="lien-certification">Voir ma certification</a>
-			</div>
-		</div>
-		<div class="d-flex justify-content-center mt-3">
-			{#centrer au centre de ma carte des informations #}
-			{# //renvoi sur les pages #}<button class="btn btn-outline-secondary mr-2" onclick="modifierVoyageur()"> Modifier les informations</button>
-			 <button type="button" data-bs-toggle="modal" data-bs-target="#fenetreModale" class="btn btn-danger">Supprimer mon compte</button>{#//mettre en rouge plutot car c'est un danger #}
-			{# //mettre en rouge plutot car c'est un danger #}
-		</div>
-	</div>
-	<div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form action="pageInformationGuide.php?controleur=guide&methode=supprimerGuide&id={{ guide.getId }}" method="POST">
-                <div class="modal-body">
-                    <div class="container mt-2">
-                        <div class="justify-content-center">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Supprimer mon compte</h1>
-                            <p class="fs-5">Voulez vous confirmer la suppression? Cela entrainera la suppression de vos excursions actives et vos commentaires</p>
-                        </div>
+<div class="container my-5">
+    <h2>Mes informations:</h2>
+    <a href="index.php?controleur=excursion&methode=afficherCreer" class="btn btn-success">Créer une nouvelle excursion</a>
+    <form method="POST" action="/controller_guide/modifierGuide?id={{ guide.id }}" id="form-principal">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3">
+                    {% if editMode %}
+                        <label for="nom-utilisateur" class="form-label"><strong>Nom:</strong></label>
+                        <input type="text" name="nom" id="nom-utilisateur" value="{{ guide.nom }}" class="form-control">
+                    {% else %}
+                        <p><strong>Nom:</strong> <span id="nom-utilisateur">{{ guide.nom }}</span></p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {% if editMode %}
+                        <label for="prenom-utilisateur" class="form-label"><strong>Prénom:</strong></label>
+                        <input type="text" name="prenom" id="prenom-utilisateur" value="{{ guide.prenom }}" class="form-control">
+                    {% else %}
+                        <p><strong>Prénom:</strong> <span id="prenom-utilisateur">{{ guide.prenom }}</span></p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {% if editMode %}
+                        <label for="email-utilisateur" class="form-label"><strong>Mail:</strong></label>
+                        <input type="email" name="mail" id="email-utilisateur" value="{{ guide.mail }}" class="form-control">
+                    {% else %}
+                        <p><strong>Mail:</strong> <span id="email-utilisateur">{{ guide.mail }}</span></p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {% if editMode %}
+                        <label for="telephone-utilisateur" class="form-label"><strong>Numéro de téléphone:</strong></label>
+                        <input type="text" name="numero_tel" id="telephone-utilisateur" value="{{ guide.numero_tel }}" class="form-control">
+                    {% else %}
+                        <p><strong>Numéro de téléphone:</strong> <span id="telephone-utilisateur">{{ guide.numero_tel }}</span></p>
+                    {% endif %}
+                </div>
+				 <div class="mb-3">
+				 {% if not editMode %}
+                    <label for="certification-utilisateur" class="form-label"><strong>Certification:</strong></label>
+                     <a href="{{ guide.chemin_certif }}" target="_blank" class="link-primary">Voir ma certification</a>
+           		 </div>
+				 {% endif %}
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            {% if not editMode %}
+                <a href="?editMode=true" class="btn btn-outline-secondary">Modifier</a>
+            {% else %}
+                <button type="submit" class="btn btn-success" name="action" value="modifier">Enregistrer</button>
+                <a href="?editMode=false" class="btn btn-outline-secondary">Annuler</a>
+            {% endif %}
+            
+            <!-- Bouton pour supprimer -->
+            <button type="button" data-bs-toggle="modal" data-bs-target="#fenetreModale" class="btn btn-danger">Supprimer mon compte</button>
+        </div>
+        
+        <!-- Modale de confirmation pour la suppression -->
+        <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h1 class="modal-title fs-5">Supprimer mon compte</h1>
+                        <p>Voulez-vous confirmer la suppression ? Cela entraînera la suppression de vos excursions actives et commentaires.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Champ caché pour l'action de suppression -->
+                        <input type="hidden" name="action" value="supprimer">
+                        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
