@@ -26,8 +26,14 @@ class GuideDao
         $sql = "SELECT * FROM guide WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute(['id' => $id]);
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Guide');
-        return $pdoStatement->fetch() ?: null; // Retourne null si aucun résultat trouvé
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC); // Fetch as associative array
+        $data = $pdoStatement->fetch();
+
+        if ($data) {
+            return $this->hydrate($data); // Hydrate a Guide object
+        } else {
+            return null;
+        }
     }
 
     // Trouver tous les guides (retourne un tableau d'objets Guide)
@@ -65,15 +71,17 @@ class GuideDao
     }
 
     // Hydrater un guide à partir d'un tableau associatif
-    public function hydrate(array $data): ?Guide
+    public function hydrate(array $data): Guide // No need for nullable return type here
     {
         $guide = new Guide();
+        // Use setters inherited from Voyageur
         $guide->setId($data['id']);
         $guide->setNom($data['nom']);
         $guide->setPrenom($data['prenom']);
         $guide->setNumeroTel($data['numero_tel']);
         $guide->setMail($data['mail']);
         $guide->setMdp($data['mdp']);
+        // Guide-specific property
         $guide->setCheminCertification($data['chemin_certif']);
         return $guide;
     }
@@ -104,19 +112,26 @@ class GuideDao
     public function maj(Guide $guide): bool
     {
         $sql = "UPDATE guide SET nom = :nom, prenom = :prenom, numero_tel = :numero_tel, 
-                mail = :mail, mdp = :mdp, chemin_certif = :chemin_certif 
-                WHERE id = :id";
+                mail = :mail, chemin_certif = :chemin_certif WHERE id = :id";
+    
+        // Préparation de la requête
         $pdoStatement = $this->pdo->prepare($sql);
-        return $pdoStatement->execute([
+    
+        // Paramètres à exécuter
+        $modifications = [
             'id' => $guide->getId(),
             'nom' => $guide->getNom(),
             'prenom' => $guide->getPrenom(),
             'numero_tel' => $guide->getNumeroTel(),
             'mail' => $guide->getMail(),
-            'mdp' => $guide->getMdp(),
-            'chemin_certif' => $guide->getCheminCertification(),
-        ]);
+            'chemin_certif' => "/test/test.png"/*$guide->getCheminCertification()*/ //la certif ne peux pas etre modifier
+        ];
+    
+        // Exécution de la requête
+        return $pdoStatement->execute($modifications);
+        
     }
+    
 
     // Supprimer un guide de la base de données
     public function supprimer(int $id): bool
