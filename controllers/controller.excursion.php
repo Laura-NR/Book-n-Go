@@ -139,7 +139,7 @@ class ControllerExcursion extends BaseController
                 'date_creation' => new DateTime(),
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
-                'id_utilisateur' => 1, // Guide par défaut
+                'id_guide' => 1, // Guide par défaut
             ];
 
             // Si un fichier image est téléchargé, l'ajouter aux données
@@ -254,6 +254,22 @@ class ControllerExcursion extends BaseController
         }
     }
 
+
+    /**
+     * @brief Modifier les informations d'une excursion existante.
+     * 
+     * Cette méthode modifie les informations d'une excursion dans la base de données en fonction de son ID.
+     * Si la modification échoue, un message d'erreur est affiché.
+     * 
+     * @param int $id L'ID de l'excursion à modifier.
+     * 
+     * @return void
+     */
+    public function modifier(int $id): void 
+    {
+        
+    }
+
     /**
      * @brief Supprime une excursion.
      * 
@@ -264,7 +280,7 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function supprimer(int $id): void
+    public function supprimerAjax(int $id): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());
 
@@ -292,6 +308,17 @@ class ControllerExcursion extends BaseController
         }
     }
 
+    public function supprimer(int $id): void
+    {
+        $excursionDao = new ExcursionDao($this->getPdo());
+
+        if ($excursionDao->supprimer($id)) {
+            $this->redirect('excursion', 'lister');
+        } else {
+            echo "Erreur lors de la suppression de l'excursion.";
+        }
+    }
+
 
     /**
      * @brief Affiche les détails d'une excursion.
@@ -305,7 +332,7 @@ class ControllerExcursion extends BaseController
     public function afficher(int $id): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());
-        $excursion = $excursionDao->find($id);
+        $excursion = $excursionDao->findAssoc($id);
 
         if ($excursion) {
             echo $this->getTwig()->render('details_excursion.html.twig', [

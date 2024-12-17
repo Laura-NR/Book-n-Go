@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("excursion", excursionId);
 
             if (confirm('Voulez vous vraiment supprimer cette excursion?')) {
-                fetch(`index.php?controleur=excursion&methode=supprimer&id=${excursionId}`, {
+                fetch(`index.php?controleur=excursion&methode=supprimerAjax&id=${excursionId}`, {
                     method: 'POST',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
