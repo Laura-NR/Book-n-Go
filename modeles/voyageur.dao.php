@@ -67,7 +67,7 @@ class VoyageurDao {
     }
 
     // Met à jour un voyageur existant
-    public function mettreAJour(Voyageur $voyageur): bool {
+    public function maj(Voyageur $voyageur): bool {
         // Requête UPDATE pour modifier un voyageur
         $sql = "UPDATE voyageur 
                 SET nom = :nom, prenom = :prenom, numero_tel = :numero_tel, mail = :mail, mdp = :mdp 
