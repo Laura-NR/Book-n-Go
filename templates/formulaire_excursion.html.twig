@@ -10,11 +10,11 @@
 		</h1>
 		<form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" style="width: 80%" method="post">
 			<div style="
-					        background-color: #b2708f;
-					        color: #000;
-					        border-radius: 30px;
-					        padding: 40px;
-					      ">
+																									        background-color: #b2708f;
+																									        color: #000;
+																									        border-radius: 30px;
+																									        padding: 40px;
+																									      ">
 				<div class="row mb-4">
 					<div class="col">
 						<label for="nom" class="form-label">Titre :</label>
@@ -50,10 +50,30 @@
 				</div>
 				<div class="col">
 					<div class="mb-4">
-						<h5 id="selectedVisitsTitle" style="display: none;">Visites sélectionnées :</h5>
-						<ul id="selectedVisits" style="display: none;"></ul>
+						<h5 id="selectedVisitsTitle" {% if visitesSelectionnees|length > 0 %} style="display: block;" {% else %} style="display: none;" {% endif %}>Visites sélectionnées :</h5>
+						<ul id="selectedVisits" {% if visitesSelectionnees|length > 0 %} style="display: block;" {% else %} style="display: none;" {% endif %}>
+							{% for visite in visitesSelectionnees %}
+								<li id="visit-{{ visite.visite_id }}" class="mb-2">
+									<div class="d-flex justify-content-between align-items-center">
+										<div>
+											<strong>{{ visite.titre }}
+												-
+												{{ visite.ville }}</strong>
+										</div>
+										<div class="d-flex gap-3">
+											<div>
+												<label for="temps_sur_place_{{ visite.visite_id }}" class="form-label mb-0">Temps sur place :</label>
+												<input type="time" id="temps_sur_place_{{ visite.visite_id }}" name="temps_sur_place_{{ visite.visite_id }}" class="form-control form-control-sm" value="{{ visite.temps_sur_place }}"/>
+											</div>
+											<button type="button" class="btn btn-danger remove-visit" style="height: 20px, font-size: 12px; padding: 3px 10px; display: flex; align-items: center; justify-content: center">Supprimer</button>
+										</div>
+									</div>
+								</li>
+							{% endfor %}
+						</ul>
 					</div>
 				</div>
+
 				<div class="row mb-4">
 					<div class="col">
 						<label for="description" class="form-label">Description :</label>
@@ -72,11 +92,11 @@
 
 			<div class="text-center mt-4">
 				<input type="submit" value="Créer" class="btn" style="
-				          background-color: #b2708f;
-				          color: #fff;
-				          border-radius: 30px;
-				          padding: 10px 40px;
-				        "/>
+																				          background-color: #b2708f;
+																				          color: #fff;
+																				          border-radius: 30px;
+																				          padding: 10px 40px;
+																				        "/>
 			</div>
 		</form>
 	</main>

@@ -97,4 +97,21 @@ class ComposerDao
         }
         return $ComposerTab;
     }
+
+    public function findByExcursion(int $idExcursion): ?array
+    {
+        $sql = "
+        SELECT v.id AS visite_id, v.titre, v.ville, c.temps_sur_place
+        FROM visite v
+        INNER JOIN composer c ON v.id = c.id_visite
+        WHERE c.id_excursion = :id_excursion
+        ";
+
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(["id_excursion" => $idExcursion]);
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+
+        $visites = $pdoStatement->fetchAll();
+        return $visites;
+    }
 }

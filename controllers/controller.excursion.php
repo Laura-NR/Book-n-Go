@@ -192,28 +192,32 @@ class ControllerExcursion extends BaseController
 
 
     public function afficherModifier(int $id)
-{
-    $visites = $this->getVisites();
+    {
+        $visites = $this->getVisites();
 
-    $excursionAmodifier = null;
-    if ($id) {
-        $excursionDao = new ExcursionDao($this->getPdo());
-        $excursionAmodifier = $excursionDao->findAssoc($id);
+        $excursionAmodifier = null;
+        if ($id) {
+            $excursionDao = new ExcursionDao($this->getPdo());
+            $composerDao = new ComposerDao($this->getPdo());
 
-        if (!$excursionAmodifier) {
-            echo "Erreur : Excursion introuvable pour ID $id";
+            $excursionAmodifier = $excursionDao->findAssoc($id);
+            $visitesSelectionnees = $composerDao->findByExcursion($id);
+
+            if (!$excursionAmodifier) {
+                echo "Erreur : Excursion introuvable pour ID $id";
+                return;
+            }
+        } else {
+            echo "Erreur : ID d'excursion non spécifié.";
             return;
         }
-    } else {
-        echo "Erreur : ID d'excursion non spécifié.";
-        return;
-    }
 
-    echo $this->getTwig()->render('formulaire_excursion.html.twig', [
-        'visites' => $visites,
-        'excursion' => $excursionAmodifier,
-    ]);
-}
+        echo $this->getTwig()->render('formulaire_excursion.html.twig', [
+            'visites' => $visites,
+            'visitesSelectionnees' => $visitesSelectionnees,
+            'excursion' => $excursionAmodifier,
+        ]);
+    }
 
 
     /**
