@@ -1,43 +1,41 @@
 <?php
-class ControllerUtilisateur{
-    private $utilisateurDao;
-    private $twig;
-
-    public function __construct(\Twig\Environment $twig, UtilisateurDao $utilisateurDao) {
-        $this->twig = $twig;
-        $this->utilisateurDao = $utilisateurDao;
+class ControllerUtilisateur extends BaseController {
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
+        parent::__construct($twig, $loader);
     }
 
     // Affichage de la page de connexion
     public function afficherConnexion(): void {
-        echo $this->twig->render('connexion_template.html.twig');
+        $template = $this->getTwig()->load('connexion_template.html.twig');
+
+        // Affichage du template
+        echo $template->render();
     }
 
     // Affichage de la page d'inscription
     public function afficherInscription(): void {
-        echo $this->twig->render('inscription_template.html.twig');
+        $template = $this->getTwig()->load('inscription_template.html.twig');
+
+        // Affichage du template
+        echo $template->render();
     }
 
     // Connexion de l'utilisateur
     public function connexion(): void {
-        session_start();
+        //session_start();
+        var_dump($_POST);
+        $email = $_POST['username'];
+        $motDePasse = $_POST['mdp'];
 
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-        $motDePasse = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-
-        if (!$email || !$motDePasse) {
-            echo "Erreur : Veuillez remplir tous les champs.";
-            return;
-        }
-
+        $utilisateurDao = new UtilisateurDao($this->getPdo());
         // Vérification de l'utilisateur
-        $utilisateur = $this->utilisateurDao->findByEmail($email);
-        if ($utilisateur && password_verify($motDePasse, $utilisateur->getMdp())) {
-            $role = $utilisateur instanceof Guide ? 'guide' : 'voyageur';
+        $utilisateur = $utilisateurDao->findByEmail($email);
+        if ($utilisateur && password_verify($motDePasse, password_hash($utilisateur->getMdp(), PASSWORD_DEFAULT))) {
+            $_SESSION['role'] = $utilisateur instanceof Guide ? 'guide' : 'voyageur';
             $_SESSION['user_id'] = $utilisateur->getId();
-            $_SESSION['role'] = $role;
+            //$_SESSION['role'] = $role;
 
-            echo "Connexion réussie ! Rôle : " . ucfirst($role);
+            echo "Connexion réussie ! Rôle : " /*.ucfirst($role)*/;
         } else {
             echo "Erreur : Email ou mot de passe incorrect.";
         }
@@ -45,33 +43,7 @@ class ControllerUtilisateur{
 
     // Inscription d'un utilisateur
     public function inscription(): void {
-        $nom = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
-        $prenom = filter_input(INPUT_POST, 'prenom', FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-        $motDePasse = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-        $numeroTel = filter_input(INPUT_POST, 'numeroTel', FILTER_SANITIZE_STRING);
-        $cheminCertification = isset($_FILES['certification']) ? $_FILES['certification']['tmp_name'] : null;
 
-        if (!$nom || !$prenom || !$email || !$motDePasse || !$numeroTel) {
-            echo "Erreur : Veuillez remplir tous les champs.";
-            return;
-        }
-
-        $motDePasseHash = password_hash($motDePasse, PASSWORD_BCRYPT);
-
-        if ($cheminCertification) {
-            // Création d'un guide
-            $utilisateur = new Guide(null, $nom, $prenom, $numeroTel, $email, $motDePasseHash, $cheminCertification);
-        } else {
-            // Création d'un voyageur
-            $utilisateur = new Voyageur(null, $nom, $prenom, $numeroTel, $email, $motDePasseHash);
-        }
-
-        if ($this->utilisateurDao->creer($utilisateur)) {
-            echo "Inscription réussie ! Connectez-vous maintenant.";
-        } else {
-            echo "Erreur : Une erreur est survenue lors de l'inscription.";
-        }
     }
 
     // Déconnexion de l'utilisateur

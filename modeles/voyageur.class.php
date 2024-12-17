@@ -1,5 +1,5 @@
 <?php
-abstract class Voyageur {
+class Voyageur {
 //attributs   
 private ?int $id;
 private ?string $nom;

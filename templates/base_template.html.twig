@@ -26,16 +26,14 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            {# <a class="nav-link" href="index.php?controller=utilisateur&methode=afficherInscription">S'inscrire</a> #}
-                            <a class="nav-link" href="inscription.php">S'inscrire</a>
+                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherInscription">S'inscrire</a>
                         </li>
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            {# <a class="nav-link" href="index.php?controller=utilisateur&methode=afficherConnexion">Connexion</a> #}
-                            <a class="nav-link" href="connexion.php">Connexion</a>
+                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
                         </li>
                         {% if app.session.user_id %}
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link" href="index.php?controller=utilisateur&methode=deconnexion">Déconnexion</a>
+                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
                         </li>
                         {% endif %}
                     </ul>
