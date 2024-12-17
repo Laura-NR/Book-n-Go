@@ -9,12 +9,11 @@ class Composer {
         ?DateTime  $tempsSurPlace = null,
         ?int $excursionId = null,
         ?int    $visiteId = null)
-    {
-        $this->tempsSurPlace = $tempsSurPlace;
-        $this->excursionId = $excursionId;
-        $this->visiteId = $visiteId;
-    }
-
+        {
+            $this->tempsSurPlace = $tempsSurPlace;
+            $this->excursionId = $excursionId;
+            $this->visiteId = $visiteId;
+        }
 
     /**
      * Get the value of tempsSurPlace

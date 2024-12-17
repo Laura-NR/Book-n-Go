@@ -19,7 +19,7 @@ class Excursion
     private ?string $description; ///< Description de l'excursion.
     private ?string $chemin_image; ///< Chemin de l'image associée à l'excursion.
     private ?bool $public; ///< Indique si l'excursion est publique ou non.
-    private ?int $id_utilisateur; ///< ID du guide de l'excursion.
+    private ?int $id_guide; ///< ID du guide de l'excursion.
 
     /**
      * Constructeur de la classe Excursion.
@@ -31,7 +31,7 @@ class Excursion
      * @param string|null $description La description de l'excursion.
      * @param string|null $chemin_image Le chemin de l'image de l'excursion.
      * @param bool|null $public L'état de visibilité publique de l'excursion.
-     * @param int|null $id_utilisateur L'ID du guide de l'excursion.
+     * @param int|null $id_guide L'ID du guide de l'excursion.
      */
     public function __construct(
         ?int $id = null,
@@ -41,7 +41,7 @@ class Excursion
         ?string $description = null,
         ?string $chemin_image = null,
         ?bool $public = null,
-        ?int $id_utilisateur = null
+        ?int $id_guide = null
     ) {
         $this->id = $id;
         $this->capacite = $capacite;
@@ -50,7 +50,7 @@ class Excursion
         $this->description = $description;
         $this->chemin_image = $chemin_image;
         $this->public = $public;
-        $this->id_utilisateur = $id_utilisateur;
+        $this->id_guide = $id_guide;
     }
 
     // Getters et setters (encapsulation) pour les propriétés de la classe
@@ -200,9 +200,9 @@ class Excursion
      * 
      * @return int|null L'ID du guide.
      */
-    public function getId_utilisateur(): ?int
+    public function getId_guide(): ?int
     {
-        return $this->id_utilisateur;
+        return $this->id_guide;
     }
 
     /**
@@ -210,8 +210,8 @@ class Excursion
      *
      * @param int $id_guide L'ID du guide.
      */
-    public function setId_utilisateur($id_utilisateur): void
+    public function setId_guide($id_guide): void
     {
-        $this->id_utilisateur = $id_utilisateur;
+        $this->id_guide = $id_guide;
     }
 }
