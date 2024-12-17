@@ -5,7 +5,7 @@ require_once "include.php";
 try {
     // Si les paramètres 'controleur' et 'methode' sont vides, afficher la page d'accueil par défaut
     if (empty($_GET['controleur']) || empty($_GET['methode'])) {
-        echo $twig->render('connexion_template.html.twig');
+        echo $twig->render('inscription_template.html.twig');
         exit;
     }
 

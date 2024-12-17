@@ -74,4 +74,4 @@ public function __construct(?int $id = null, ?string $nom = null,?string $prenom
     }
 }
 
-?>
+?> 

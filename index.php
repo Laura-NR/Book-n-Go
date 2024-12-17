@@ -1,38 +1,36 @@
 <?php
+
 require_once "include.php";
 
 try {
-    if (empty($_GET['controleur']) && empty($_GET['methode'])) {
-        // Aucun contrôleur/méthode spécifiés, affiche le template d'accueil
-        echo $twig->render('pageAccueil_template.html.twig'); // Charge directement le fichier Twig
+    // Si les paramètres 'controleur' et 'methode' sont vides, afficher la page d'accueil par défaut
+    if (empty($_GET['controleur']) || empty($_GET['methode'])) {
+        echo $twig->render('pageAccueil_template.html.twig');
         exit;
     }
 
-    if (isset($_GET['controleur'])) {
-        $controllerName = $_GET['controleur'];
-    } else {
-        $controllerName = '';
+    $controllerName = $_GET['controleur'] ?? '';
+    $methode = $_GET['methode'] ?? '';
+
+    // Vérifier si les paramètres sont valides
+    if (!$controllerName) {
+        throw new Exception('Le contrôleur est manquant.');
     }
 
-    if (isset($_GET['methode'])) {
-        $methode = $_GET['methode'];
-    } else {
-        $methode = '';
+    if (!$methode) {
+        throw new Exception('La méthode est manquante.');
     }
 
-    if ($controllerName == '') {
-        throw new Exception('Le controleur n\'est pas défini');
-    }
-
-    if ($methode == '') {
-        throw new Exception('La méthode n\'est pas définie');
-    }
-
+    // Instancier le contrôleur via le Factory
     $controller = ControllerFactory::getController($controllerName, $twig, $loader);
     $controller->call($methode);
+
 } catch (Exception $e) {
-    die('Erreur : ' . $e->getMessage());
+    // Afficher une page d'erreur personnalisée
+    echo $twig->render('error_template.html.twig', ['error' => $e->getMessage()]);
 }
+
+
 
 /* try {
     // Get the instance of the singleton database connection

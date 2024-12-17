@@ -20,50 +20,6 @@ class GuideDao
         $this->pdo = $pdo;
     }
 
-    // Trouver un guide par ID (retourne un objet Guide ou null)
-    public function find(?int $id): ?Guide
-    {
-        $sql = "SELECT * FROM guide WHERE id = :id";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(['id' => $id]);
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Guide');
-        return $pdoStatement->fetch() ?: null; // Retourne null si aucun résultat trouvé
-    }
-
-    // Trouver tous les guides (retourne un tableau d'objets Guide)
-    public function findAll(): array
-    {
-        $sql = "SELECT * FROM guide";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute();
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Guide');
-        return $pdoStatement->fetchAll() ?: []; // Retourne un tableau vide si aucun résultat trouvé
-    }
-
-    // Trouver un guide par ID en mode associatif (retourne un tableau associatif ou null)
-    public function findAssoc(?int $id): ?array
-    {
-        $sql = "SELECT * FROM guide WHERE id = :id";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(['id' => $id]);
-        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
-        $result = $pdoStatement->fetch();
-        if (!$result) {
-            echo "Aucun guide trové avec l'id $id";
-        }
-        return $result ?: null;
-    }
-
-    // Trouver tous les guides en mode associatif (retourne un tableau de tableaux associatifs)
-    public function findAllAssoc(): array
-    {
-        $sql = "SELECT * FROM guide";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute();
-        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
-        return $pdoStatement->fetchAll() ?: []; // Retourne un tableau vide si aucun résultat trouvé
-    }
-
     // Hydrater un guide à partir d'un tableau associatif
     public function hydrate(array $data): ?Guide
     {
@@ -84,6 +40,49 @@ class GuideDao
         return array_map([$this, 'hydrate'], $data); // Utilisation de array_map pour simplifier
     }
 
+    // Trouver un guide par ID (retourne un objet Guide ou null)
+    public function find(?int $id): ?Guide
+    {
+        $sql = "SELECT * FROM guide WHERE id = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(['id' => $id]);
+        $data = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $this->hydrate($data); // Hydrate le guide
+        }
+        return null;
+    }
+
+    // Trouver tous les guides (retourne un tableau d'objets Guide)
+    public function findAll(): array
+    {
+        $sql = "SELECT * FROM guide";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute();
+        $data = $pdoStatement->fetchAll(PDO::FETCH_ASSOC); // On récupère les données associatives
+        return $this->hydrateAll($data); // Hydrate tous les guides
+    }
+
+    // Trouver un guide par ID en mode associatif (retourne un tableau associatif ou null)
+    public function findAssoc(?int $id): ?array
+    {
+        $sql = "SELECT * FROM guide WHERE id = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(['id' => $id]);
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        return $pdoStatement->fetch() ?: null;
+    }
+
+    // Trouver tous les guides en mode associatif (retourne un tableau de tableaux associatifs)
+    public function findAllAssoc(): array
+    {
+        $sql = "SELECT * FROM guide";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute();
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        return $pdoStatement->fetchAll() ?: []; // Retourne un tableau vide si aucun résultat trouvé
+    }
+
     // Créer un guide dans la base de données
     public function creer(Guide $guide): bool
     {
@@ -95,7 +94,7 @@ class GuideDao
             'prenom' => $guide->getPrenom(),
             'numero_tel' => $guide->getNumeroTel(),
             'mail' => $guide->getMail(),
-            'mdp' => $guide->getMdp(),
+            'mdp' => password_hash($guide->getMdp(), PASSWORD_BCRYPT), // Hashage du mot de passe
             'chemin_certif' => $guide->getCheminCertification(),
         ]);
     }
@@ -113,7 +112,7 @@ class GuideDao
             'prenom' => $guide->getPrenom(),
             'numero_tel' => $guide->getNumeroTel(),
             'mail' => $guide->getMail(),
-            'mdp' => $guide->getMdp(),
+            'mdp' => password_hash($guide->getMdp(), PASSWORD_BCRYPT), // Hashage du mot de passe
             'chemin_certif' => $guide->getCheminCertification(),
         ]);
     }
