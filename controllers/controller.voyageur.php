@@ -6,7 +6,26 @@ class ControllerVoyageur extends BaseController {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
     }
-
+    public function call($methode): mixed
+    {
+        if (method_exists($this, $methode)) {
+            // Récupère l'ID si disponible
+            if (isset($_GET['id'])) {
+                $id = $_GET['id'];
+                return $this->$methode($id); // Appelle la méthode avec l'ID si disponible
+            } else {
+                return $this->$methode(); // Appelle la méthode sans ID
+            }
+        } else {
+            throw new Exception("Méthode $methode non trouvée dans le contrôleur.");
+        }
+    }
+    // Vérifier si l'utilisateur est un administrateur
+       private function isAdmin(): bool
+        {
+           return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+        }
+    
     // Création d'un voyageur
     public function creerVoyageur(): void {
         // Vérification des données nécessaires
