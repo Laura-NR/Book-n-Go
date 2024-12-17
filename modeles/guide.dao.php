@@ -104,19 +104,26 @@ class GuideDao
     public function maj(Guide $guide): bool
     {
         $sql = "UPDATE guide SET nom = :nom, prenom = :prenom, numero_tel = :numero_tel, 
-                mail = :mail, mdp = :mdp, chemin_certif = :chemin_certif 
-                WHERE id = :id";
+                mail = :mail, chemin_certif = :chemin_certif WHERE id = :id";
+    
+        // Préparation de la requête
         $pdoStatement = $this->pdo->prepare($sql);
-        return $pdoStatement->execute([
+    
+        // Paramètres à exécuter
+        $modifications = [
             'id' => $guide->getId(),
             'nom' => $guide->getNom(),
             'prenom' => $guide->getPrenom(),
             'numero_tel' => $guide->getNumeroTel(),
             'mail' => $guide->getMail(),
-            'mdp' => $guide->getMdp(),
-            'chemin_certif' => $guide->getCheminCertification(),
-        ]);
+            'chemin_certif' => $guide->getCheminCertification() //la certif ne peux pas etre modifier
+        ];
+    
+        // Exécution de la requête
+        return $pdoStatement->execute($modifications);
+        
     }
+    
 
     // Supprimer un guide de la base de données
     public function supprimer(int $id): bool

@@ -65,6 +65,34 @@ class ControllerGuide extends ControllerVoyageur
     }
 
     // Modification d'un guide
+    public function supprimerGuide(int $id): void
+    {
+        try {
+            $guideDao = new GuideDao($this->getPdo());
+            $guide = $guideDao->find($id);
+    
+            if (!$guide) {
+                echo "Erreur : guide non trouvé.";
+                return;
+            }
+    
+            // Vérification de la soumission du formulaire de suppression
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'supprimer') {
+                if ($guideDao->supprimer($id)) {
+                    // Stocke une variable de confirmation dans la session
+                    $_SESSION['suppression_reussie'] = true;
+                    // Redirige vers la page d'accueil après suppression
+                    header("Location: /index.php");
+                    exit;
+                } else {
+                    echo "Erreur lors de la suppression du guide.";
+                }
+            }
+    
+        } catch (Exception $e) {
+            echo "Erreur lors de la suppression : " . $e->getMessage();
+        }
+    }
     public function modifierGuide(int $id): void
     {
         try {
@@ -76,61 +104,40 @@ class ControllerGuide extends ControllerVoyageur
                 return;
             }
     
-            // Si la méthode est POST, traiter la soumission du formulaire
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Vérification de la soumission du formulaire de modification
+            if (isset($_POST['nom']) && isset($_POST['action']) && $_POST['action'] === 'modifier') {
+                var_dump($_POST);
                 $postData = $this->getPost();
-                if (isset($postData['action'])) {
-                    if ($postData['action'] === 'supprimer') {
-                        // Suppression
-                        if ($guideDao->supprimer($id)) {
-                            echo "Guide supprimé avec succès.";
-                            //$this->redirect('pageAccueil', 'afficher');
-                            return;
-                        } else {
-                            echo "Erreur lors de la suppression du guide.";
-                        }
-                    } elseif ($postData['action'] === 'modifier') {
-                        // Modification
-                        // Traiter la modification des données
-                        if (!empty($postData)) {
-                            // Mise à jour des données du guide
-                            if (isset($postData['nom'])) $guide->setNom($postData['nom']);
-                            if (isset($postData['prenom'])) $guide->setPrenom($postData['prenom']);
-                            if (isset($postData['numero_tel'])) $guide->setNumeroTel($postData['numero_tel']);
-                            if (isset($postData['mail'])) $guide->setMail($postData['mail']);
-                            
-                            if ($guideDao->maj($guide)) {
-                                echo "Guide modifié avec succès.";
-                                //$this->redirect('index.php');
-                                return;
-                            } else {
-                                echo "Erreur lors de la mise à jour du guide.";
-                            }
-                        }
+                
+
+
+
+                
+                if (!empty($postData)) {
+                    // Mise à jour des données du guide
+                    if (isset($postData['nom'])) $guide->setNom($postData['nom']);
+                    if (isset($postData['prenom'])) $guide->setPrenom($postData['prenom']);
+                    if (isset($postData['numero_tel'])) $guide->setNumeroTel($postData['numero_tel']);
+                    if (isset($postData['mail'])) $guide->setMail($postData['mail']);
+                    
+                    // Sauvegarde dans la base de données
+                    if ($guideDao->maj($guide)) {
+                        // Stocke une variable de confirmation dans la session
+                        $_SESSION['modification_reussie'] = true;
+                        // Redirige vers la page d'affichage normale après la modification
+                        header("Location: ?controller=guide&action=afficher&id=$id&modification_reussie=true");
+                        exit;
+                    } else {
+                        echo "Erreur lors de la mise à jour du guide.";
                     }
                 }
             }
+    
         } catch (Exception $e) {
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
         }
     }
-    
-    // Lister tous les guides (accessible par tous les utilisateurs)
-    public function lister(): void
-    {
-        try {
-            $guideDao = new GuideDao($this->getPdo());
-            $guides = $guideDao->findAll();
-
-            $template = $this->getTwig()->load('guide.html.twig');
-            echo $template->render([
-                'guides' => $guides,
-                'menu' => "guide"
-            ]);
-        } catch (Exception $e) {
-            echo "Erreur lors de la récupération des guides : " . $e->getMessage();
-        }
-    }
+        
 
     // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
     public function afficher(int $id = 1): void

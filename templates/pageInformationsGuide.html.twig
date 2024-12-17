@@ -7,81 +7,106 @@
 {% block content %}
 <div class="container my-5">
     <h2>Mes informations:</h2>
-    <form method="POST" action="/controller_guide/modifierGuide?id={{ guide.id }}" id="form-principal">
+    <!-- Formulaire principal pour Modifier et Enregistrer -->
+    <form method="POST" action="?controller=guide&action=modifierGuide&id={{ guide.id }}" id="form-modification">
+
         <div class="card">
             <div class="card-body">
+
+                <!-- Nom -->
                 <div class="mb-3">
+                    <label for="nom-utilisateur" class="form-label"><strong>Nom:</strong></label>
                     {% if editMode %}
-                        <label for="nom-utilisateur" class="form-label"><strong>Nom:</strong></label>
                         <input type="text" name="nom" id="nom-utilisateur" value="{{ guide.nom }}" class="form-control">
                     {% else %}
-                        <p><strong>Nom:</strong> <span id="nom-utilisateur">{{ guide.nom }}</span></p>
+                        <p>{{ guide.nom }}</p>
                     {% endif %}
                 </div>
 
+                <!-- Prénom -->
                 <div class="mb-3">
+                    <label for="prenom-utilisateur" class="form-label"><strong>Prénom:</strong></label>
                     {% if editMode %}
-                        <label for="prenom-utilisateur" class="form-label"><strong>Prénom:</strong></label>
                         <input type="text" name="prenom" id="prenom-utilisateur" value="{{ guide.prenom }}" class="form-control">
                     {% else %}
-                        <p><strong>Prénom:</strong> <span id="prenom-utilisateur">{{ guide.prenom }}</span></p>
+                        <p>{{ guide.prenom }}</p>
                     {% endif %}
                 </div>
 
+                <!-- Email -->
                 <div class="mb-3">
+                    <label for="email-utilisateur" class="form-label"><strong>Mail:</strong></label>
                     {% if editMode %}
-                        <label for="email-utilisateur" class="form-label"><strong>Mail:</strong></label>
                         <input type="email" name="mail" id="email-utilisateur" value="{{ guide.mail }}" class="form-control">
                     {% else %}
-                        <p><strong>Mail:</strong> <span id="email-utilisateur">{{ guide.mail }}</span></p>
+                        <p>{{ guide.mail }}</p>
                     {% endif %}
                 </div>
 
+                <!-- Numéro de téléphone -->
                 <div class="mb-3">
+                    <label for="telephone-utilisateur" class="form-label"><strong>Numéro de téléphone:</strong></label>
                     {% if editMode %}
-                        <label for="telephone-utilisateur" class="form-label"><strong>Numéro de téléphone:</strong></label>
                         <input type="text" name="numero_tel" id="telephone-utilisateur" value="{{ guide.numero_tel }}" class="form-control">
                     {% else %}
-                        <p><strong>Numéro de téléphone:</strong> <span id="telephone-utilisateur">{{ guide.numero_tel }}</span></p>
+                        <p>{{ guide.numero_tel }}</p>
                     {% endif %}
                 </div>
-				 <div class="mb-3">
-				 {% if not editMode %}
-                    <label for="certification-utilisateur" class="form-label"><strong>Certification:</strong></label>
-                     <a href="{{ guide.chemin_certif }}" target="_blank" class="link-primary">Voir ma certification</a>
-           		 </div>
-				 {% endif %}
+
+                <!-- Certification -->
+                {% if not editMode %}
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Certification:</strong></label>
+                        <a href="{{ guide.chemin_certif }}" target="_blank" class="link-primary">Voir ma certification</a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
 
+        <!-- Boutons Modifier / Enregistrer / Annuler -->
         <div class="mt-4 d-flex justify-content-between">
-            {% if not editMode %}
-                <a href="?editMode=true" class="btn btn-outline-secondary">Modifier</a>
-            {% else %}
-                <button type="submit" class="btn btn-success" name="action" value="modifier">Enregistrer</button>
-                <a href="?editMode=false" class="btn btn-outline-secondary">Annuler</a>
-            {% endif %}
-            
-            <!-- Bouton pour supprimer -->
-            <button type="button" data-bs-toggle="modal" data-bs-target="#fenetreModale" class="btn btn-danger">Supprimer mon compte</button>
-        </div>
-        
-        <!-- Modale de confirmation pour la suppression -->
-        <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <h1 class="modal-title fs-5">Supprimer mon compte</h1>
-                        <p>Voulez-vous confirmer la suppression ? Cela entraînera la suppression de vos excursions actives et commentaires.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- Champ caché pour l'action de suppression -->
-                        <input type="hidden" name="action" value="supprimer">
-                        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    </div>
+            {% if editMode %}
+                <div class="d-flex">
+                    <!-- Enregistrer enregistrer les nouvelles saisies et les modifier dans la base de données -->
+                    <button type="submit" class="btn btn-success" name="modifier" value="modifier">Enregistrer</button>
+                    <!-- Annuler : Redirection vers la page d'informations du guide -->
+                    <a href="?controller=guide&action=afficher&id={{ guide.id }}" class="btn btn-outline-secondary ms-2">Annuler</a>
                 </div>
+            {% else %}
+                <a href="?controller=guide&action=modifierGuide&id={{ guide.id }}&editMode=true" class="btn btn-outline-secondary">Modifier</a>
+            {% endif %}
+
+            <!-- Supprimer toujours à droite -->
+            <div class="ms-auto">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#fenetreModale">
+                    Supprimer mon compte
+                </button>
             </div>
         </div>
     </form>
+
+    <!-- Modale de confirmation de suppression -->
+    <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes vos excursions et commentaires.</p>
+                </div>
+                <div class="modal-footer">
+                    <!-- Formulaire pour confirmer la suppression -->
+                    <form method="POST" action="?controller=guide&action=supprimerGuide&id={{ guide.id }}">
+                        <input type="hidden" name="action" value="supprimer">
+                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

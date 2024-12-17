@@ -14,14 +14,10 @@ try {
         $methode = '';
     }
 
-    if ($controllerName == '' && $methode == '') {
-        $controllerName = 'excursion';
-        $methode = 'recupererVisites';
-    }
-    if ($controllerName == '' && $methode == '') {
-        $controllerName = 'voyageur';
-        $methode = 'afficher';
-    }
+    // if ($controllerName == '' && $methode == '') {
+    //     $controllerName = 'excursion';
+    //     $methode = 'recupererVisites';
+    // }
     if ($controllerName == '') {
         throw new Exception('Le controleur n\'est pas défini');
     }

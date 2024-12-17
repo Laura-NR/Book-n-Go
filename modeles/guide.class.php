@@ -1,7 +1,7 @@
 <?php 
 
 class Guide extends Voyageur {
-    // Attribut spécifique à Guide
+   // Attribut spécifique à Guide
     private ?string $cheminCertification;
 
     // Constructeur
@@ -11,7 +11,7 @@ class Guide extends Voyageur {
         $this->cheminCertification = $cheminCertification;
     }
 
-    // Getter et Setter pour cheminCertification
+   // Getter et Setter pour cheminCertification
     public function getCheminCertification(): ?string {
         return $this->cheminCertification;
     }
