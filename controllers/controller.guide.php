@@ -98,6 +98,7 @@ class ControllerGuide extends ControllerVoyageur
         try {
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->find($id);
+            //var_dump($guide);
     
             if (!$guide) {
                 echo "Erreur : guide non trouvé.";
@@ -105,8 +106,8 @@ class ControllerGuide extends ControllerVoyageur
             }
     
             // Vérification de la soumission du formulaire de modification
-            if (isset($_POST['nom']) && isset($_POST['action']) && $_POST['action'] === 'modifier') {
-                var_dump($_POST);
+            if (/*isset($_POST['nom']) &&*/ isset($_POST['action']) && $_POST['action'] === 'modifier') {
+                //var_dump($_POST);
                 $postData = $this->getPost();
                 
 
@@ -115,17 +116,19 @@ class ControllerGuide extends ControllerVoyageur
                 
                 if (!empty($postData)) {
                     // Mise à jour des données du guide
+
                     if (isset($postData['nom'])) $guide->setNom($postData['nom']);
                     if (isset($postData['prenom'])) $guide->setPrenom($postData['prenom']);
                     if (isset($postData['numero_tel'])) $guide->setNumeroTel($postData['numero_tel']);
                     if (isset($postData['mail'])) $guide->setMail($postData['mail']);
+                    //var_dump($guide);
                     
                     // Sauvegarde dans la base de données
                     if ($guideDao->maj($guide)) {
                         // Stocke une variable de confirmation dans la session
                         $_SESSION['modification_reussie'] = true;
                         // Redirige vers la page d'affichage normale après la modification
-                        header("Location: ?controller=guide&action=afficher&id=$id&modification_reussie=true");
+                        header("Location: ?controleur=guide&methode=afficher&id=$id&modification_reussie=true");
                         exit;
                     } else {
                         echo "Erreur lors de la mise à jour du guide.";

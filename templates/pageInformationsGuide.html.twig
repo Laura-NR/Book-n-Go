@@ -8,7 +8,7 @@
 <div class="container my-5">
     <h2>Mes informations:</h2>
     <!-- Formulaire principal pour Modifier et Enregistrer -->
-    <form method="POST" action="?controller=guide&action=modifierGuide&id={{ guide.id }}" id="form-modification">
+    <form method="POST" action="?controleur=guide&methode=modifierGuide&id={{ guide.id }}" id="form-modification">
 
         <div class="card">
             <div class="card-body">
@@ -68,12 +68,12 @@
             {% if editMode %}
                 <div class="d-flex">
                     <!-- Enregistrer enregistrer les nouvelles saisies et les modifier dans la base de données -->
-                    <button type="submit" class="btn btn-success" name="modifier" value="modifier">Enregistrer</button>
+                    <button type="submit" class="btn btn-success" name="action" value="modifier">Enregistrer</button>
                     <!-- Annuler : Redirection vers la page d'informations du guide -->
-                    <a href="?controller=guide&action=afficher&id={{ guide.id }}" class="btn btn-outline-secondary ms-2">Annuler</a>
+                    <a href="?controleur=guide&methode=afficher&id={{ guide.id }}" class="btn btn-outline-secondary ms-2">Annuler</a>
                 </div>
             {% else %}
-                <a href="?controller=guide&action=modifierGuide&id={{ guide.id }}&editMode=true" class="btn btn-outline-secondary">Modifier</a>
+                <a href="?controleur=guide&methode=afficher&id={{ guide.id }}&editMode=true" class="btn btn-outline-secondary">Modifier</a>
             {% endif %}
 
             <!-- Supprimer toujours à droite -->
@@ -98,7 +98,7 @@
                 </div>
                 <div class="modal-footer">
                     <!-- Formulaire pour confirmer la suppression -->
-                    <form method="POST" action="?controller=guide&action=supprimerGuide&id={{ guide.id }}">
+                    <form method="POST" action="?controleur=guide&methode=supprimerGuide&id={{ guide.id }}">
                         <input type="hidden" name="action" value="supprimer">
                         <button type="submit" class="btn btn-danger">Confirmer</button>
                     </form>

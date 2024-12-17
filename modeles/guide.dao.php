@@ -26,8 +26,14 @@ class GuideDao
         $sql = "SELECT * FROM guide WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute(['id' => $id]);
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Guide');
-        return $pdoStatement->fetch() ?: null; // Retourne null si aucun résultat trouvé
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC); // Fetch as associative array
+        $data = $pdoStatement->fetch();
+
+        if ($data) {
+            return $this->hydrate($data); // Hydrate a Guide object
+        } else {
+            return null;
+        }
     }
 
     // Trouver tous les guides (retourne un tableau d'objets Guide)
@@ -65,15 +71,17 @@ class GuideDao
     }
 
     // Hydrater un guide à partir d'un tableau associatif
-    public function hydrate(array $data): ?Guide
+    public function hydrate(array $data): Guide // No need for nullable return type here
     {
         $guide = new Guide();
+        // Use setters inherited from Voyageur
         $guide->setId($data['id']);
         $guide->setNom($data['nom']);
         $guide->setPrenom($data['prenom']);
         $guide->setNumeroTel($data['numero_tel']);
         $guide->setMail($data['mail']);
         $guide->setMdp($data['mdp']);
+        // Guide-specific property
         $guide->setCheminCertification($data['chemin_certif']);
         return $guide;
     }
@@ -116,7 +124,7 @@ class GuideDao
             'prenom' => $guide->getPrenom(),
             'numero_tel' => $guide->getNumeroTel(),
             'mail' => $guide->getMail(),
-            'chemin_certif' => $guide->getCheminCertification() //la certif ne peux pas etre modifier
+            'chemin_certif' => "/test/test.png"/*$guide->getCheminCertification()*/ //la certif ne peux pas etre modifier
         ];
     
         // Exécution de la requête
