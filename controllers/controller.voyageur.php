@@ -27,30 +27,28 @@ class ControllerVoyageur extends BaseController {
         }
     
     // Création d'un voyageur
-    public function creerVoyageur(): void
-    {
-        if (!$this->isAdmin()) {
-            echo "Accès non autorisé. Vous devez être administrateur pour créer un guide.";
-            return;
-        }
-
-        $postData = $this->getPost();
-        if (
-            empty($postData) ||
-            !isset($postData['nom'], $postData['prenom'], $postData['numero_tel'], $postData['mail'], $postData['mdp'], $postData['chemin_certif'])
-        ) {
-            echo "Données manquantes pour créer le guide.";
-            return;
-        }
+    public function creerVoyageur(): void {
+        // Vérification des données nécessaires
+        // if (empty($this->getPost()) ||
+        //     !isset($this->getPost()['nom'],
+        //     $this->getPost()['prenom'],
+        //     $this->getPost()['numero_tel'],
+        //     $this->getPost()['mail'],
+        //     $this->getPost()['mdp'])) {
+        //     echo "Données manquantes pour créer le voyageur.";
+        //     return; // Retourner immédiatement si les données sont manquantes
+        // }
 
         try {
+            // Création du voyageur
             $voyageur = new Voyageur();
-            $voyageur->setNom($postData['nom']);
-            $voyageur->setPrenom($postData['prenom']);
-            $voyageur->setNumeroTel($postData['numero_tel']);
-            $voyageur->setMail($postData['mail']);
-            $voyageur->setMdp($postData['mdp']);
-
+            $voyageur->setNom($this->getPost()['nom']);
+            $voyageur->setPrenom($this->getPost()['prenom']);
+            $voyageur->setNumeroTel($this->getPost()['numero_tel']);
+            $voyageur->setMail($this->getPost()['mail']);
+            $voyageur->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
+            var_dump($voyageur);
+            // Utilisation de VoyageurDao pour insérer le voyageur
             $voyageurDao = new VoyageurDao($this->getPdo());
             if ($voyageurDao->creer($voyageur)) {
                 echo "Insertion réalisée avec succès.";
@@ -62,19 +60,18 @@ class ControllerVoyageur extends BaseController {
         }
     }
 
-
     // Modification d'un voyageur
     public function supprimerVoyageur(int $id): void
     {
         try {
             $voyageurDao = new VoyageurDao($this->getPdo());
             $voyageur = $voyageurDao->find($id);
-    
+
             if (!$voyageur) {
                 echo "Erreur : voyageur non trouvé.";
                 return;
             }
-    
+
             // Vérification de la soumission du formulaire de suppression
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'supprimer') {
                 if ($voyageurDao->supprimer($id)) {
@@ -87,7 +84,7 @@ class ControllerVoyageur extends BaseController {
                     echo "Erreur lors de la suppression du voyageur.";
                 }
             }
-    
+
         } catch (Exception $e) {
             echo "Erreur lors de la suppression : " . $e->getMessage();
         }
@@ -99,21 +96,21 @@ class ControllerVoyageur extends BaseController {
             $voyageurDao = new VoyageurDao($this->getPdo());
             $voyageur = $voyageurDao->find($id);
             //var_dump($guide);
-    
+
             if (!$voyageur) {
                 echo "Erreur : voyageur non trouvé.";
                 return;
             }
-    
+
             // Vérification de la soumission du formulaire de modification
             if (/*isset($_POST['nom']) &&*/ isset($_POST['action']) && $_POST['action'] === 'modifier') {
                 //var_dump($_POST);
                 $postData = $this->getPost();
-                
 
 
 
-                
+
+
                 if (!empty($postData)) {
                     // Mise à jour des données du voyageur
 
@@ -122,7 +119,7 @@ class ControllerVoyageur extends BaseController {
                     if (isset($postData['numero_tel'])) $voyageur->setNumeroTel($postData['numero_tel']);
                     if (isset($postData['mail'])) $voyageur->setMail($postData['mail']);
                     //var_dump($voyageur);
-                    
+
                     // Sauvegarde dans la base de données
                     if ($voyageurDao->maj($voyageur)) {
                         // Stocke une variable de confirmation dans la session
@@ -135,7 +132,7 @@ class ControllerVoyageur extends BaseController {
                     }
                 }
             }
-    
+
         } catch (Exception $e) {
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
         }
@@ -168,14 +165,14 @@ class ControllerVoyageur extends BaseController {
         try {
             $voyageurDao = new VoyageurDao($this->getPdo());
             $voyageur = $voyageurDao->findAssoc($id);
-    
+
             if (!$voyageur) {
                 echo "voyageur avec id $id pas trouvé.";
                 return;
             }
-    
+
             $editMode = isset($_GET['editMode']) && $_GET['editMode'] === 'true';
-    
+
             echo $this->getTwig()->render('pageInformationsVoyageur.html.twig', [
                 'voyageur' => $voyageur,
                 'menu' => "voyageur_detail",

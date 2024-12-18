@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "include.php";
 
 try {
@@ -16,8 +17,8 @@ try {
 
     if ($controllerName == '' && $methode == '') {
         echo $twig->render('pageAccueil_template.html.twig');
-        //exit;   
-}
+    }
+
     if ($controllerName == '') {
         throw new Exception('Le controleur n\'est pas défini');
     }

@@ -26,15 +26,17 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                 <li class="nav-item btn btn-primary rounded-pill me-2">
-                <a class="nav-link" href="connexion.php">Devenir guide</a>
-            </li>
-            <li class="nav-item btn btn-primary rounded-pill me-2">
-                <a class="nav-link" href="connexion.php">Connexion</a>
-            </li>
-             <li class="nav-item btn btn-primary rounded-pill me-2">
-                <a class="nav-link" href="connexion.php">Deconnexion</a>
-            </li>
+                        <li class="nav-item btn btn-primary rounded-pill me-2">
+                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherInscription">S'inscrire</a>
+                        </li>
+                        <li class="nav-item btn btn-primary rounded-pill me-2">
+                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
+                        </li>
+                        {% if app.session.user_id %}
+                        <li class="nav-item btn btn-primary rounded-pill me-2">
+                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -69,10 +71,13 @@
                         <a href="#">Newsletter</a>
                     </div>
                 </div>
-                </div>
             </div>
+        </div>
     </footer>
     {% block script %} {% endblock %}
 </body>
 
 </html>
+
+
+
