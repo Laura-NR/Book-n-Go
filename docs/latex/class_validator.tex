@@ -1,0 +1,68 @@
+\doxysection{Référence de la classe Validator}
+\hypertarget{class_validator}{}\label{class_validator}\index{Validator@{Validator}}
+\doxysubsubsection*{Fonctions membres publiques}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_validator_af034afe6a056bdbe51832ba8e04efebd}{\+\_\+\+\_\+construct}} (array \$regles)
+\begin{DoxyCompactList}\small\item\em Constructeur de la classe \doxylink{class_validator}{Validator} qui prend en paramètre un tableau de règles de validation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_validator_ac5d70af97c43dfa7fa5671f9c368c3ee}{valider}} (array \$donnees)
+\begin{DoxyCompactList}\small\item\em Valide les données fournies par rapport aux règles de validation définies. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_validator_a9c1d2a8030a7b89e1951991bd342cf07}{get\+Messages\+Erreurs}} ()
+\begin{DoxyCompactList}\small\item\em Retourne les messages d\textquotesingle{}erreur générés lors de la validation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Documentation des constructeurs et destructeur}
+\Hypertarget{class_validator_af034afe6a056bdbe51832ba8e04efebd}\index{Validator@{Validator}!\_\_construct@{\_\_construct}}
+\index{\_\_construct@{\_\_construct}!Validator@{Validator}}
+\doxysubsubsection{\texorpdfstring{\_\_construct()}{\_\_construct()}}
+{\footnotesize\ttfamily \label{class_validator_af034afe6a056bdbe51832ba8e04efebd} 
+\+\_\+\+\_\+construct (\begin{DoxyParamCaption}\item[{array}]{\$regles}{}\end{DoxyParamCaption})}
+
+
+
+Constructeur de la classe \doxylink{class_validator}{Validator} qui prend en paramètre un tableau de règles de validation. 
+
+
+\begin{DoxyParams}[1]{Paramètres}
+array & {\em \$regles} & Un tableau associatif définissant les règles de validation pour chaque champ. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Documentation des fonctions membres}
+\Hypertarget{class_validator_a9c1d2a8030a7b89e1951991bd342cf07}\index{Validator@{Validator}!getMessagesErreurs@{getMessagesErreurs}}
+\index{getMessagesErreurs@{getMessagesErreurs}!Validator@{Validator}}
+\doxysubsubsection{\texorpdfstring{getMessagesErreurs()}{getMessagesErreurs()}}
+{\footnotesize\ttfamily \label{class_validator_a9c1d2a8030a7b89e1951991bd342cf07} 
+get\+Messages\+Erreurs (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retourne les messages d\textquotesingle{}erreur générés lors de la validation. 
+
+\begin{DoxyReturn}{Renvoie}
+array Un tableau contenant les messages d\textquotesingle{}erreur pour chaque champ non valide. 
+\end{DoxyReturn}
+\Hypertarget{class_validator_ac5d70af97c43dfa7fa5671f9c368c3ee}\index{Validator@{Validator}!valider@{valider}}
+\index{valider@{valider}!Validator@{Validator}}
+\doxysubsubsection{\texorpdfstring{valider()}{valider()}}
+{\footnotesize\ttfamily \label{class_validator_ac5d70af97c43dfa7fa5671f9c368c3ee} 
+valider (\begin{DoxyParamCaption}\item[{array}]{\$donnees}{}\end{DoxyParamCaption})}
+
+
+
+Valide les données fournies par rapport aux règles de validation définies. 
+
+
+\begin{DoxyParams}[1]{Paramètres}
+array & {\em \$donnees} & Un tableau associatif des données du formulaire. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Renvoie}
+bool Retourne true si toutes les validations sont réussies, false sinon. 
+\end{DoxyReturn}
+
+
+La documentation de cette classe a été générée à partir du fichier suivant \+:\begin{DoxyCompactItemize}
+\item 
+J\+:/\+WWW/\+Book-\/n-\/\+Go/\mbox{\hyperlink{validator_8class_8php}{validator.\+class.\+php}}\end{DoxyCompactItemize}

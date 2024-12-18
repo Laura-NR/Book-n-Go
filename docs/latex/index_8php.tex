@@ -1,0 +1,46 @@
+\doxysection{Référence du fichier J\+:/\+WWW/\+Book-\/n-\/\+Go/index.php}
+\hypertarget{index_8php}{}\label{index_8php}\index{J:/WWW/Book-\/n-\/Go/index.php@{J:/WWW/Book-\/n-\/Go/index.php}}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{index_8php_abe4cc9788f52e49485473dc699537388}{try}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Documentation des variables}
+\Hypertarget{index_8php_abe4cc9788f52e49485473dc699537388}\index{index.php@{index.php}!try@{try}}
+\index{try@{try}!index.php@{index.php}}
+\doxysubsubsection{\texorpdfstring{try}{try}}
+{\footnotesize\ttfamily \label{index_8php_abe4cc9788f52e49485473dc699537388} 
+try}
+
+{\bfseries Valeur initiale \+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (isset(\$\_GET[\textcolor{stringliteral}{'controleur'}]))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \$controllerName\ =\ \$\_GET[\textcolor{stringliteral}{'controleur'}];}
+\DoxyCodeLine{\ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \$controllerName\ =\ \textcolor{stringliteral}{''};}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (isset(\$\_GET[\textcolor{stringliteral}{'methode'}]))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \$methode\ =\ \$\_GET[\textcolor{stringliteral}{'methode'}];}
+\DoxyCodeLine{\ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \$methode\ =\ \textcolor{stringliteral}{''};}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (\$controllerName\ ==\ \textcolor{stringliteral}{''}\ \&\&\ \$methode\ ==\ \textcolor{stringliteral}{''})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ echo\ \$twig-\/>render(\textcolor{stringliteral}{'pageAccueil\_template.html.twig'});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (\$controllerName\ ==\ \textcolor{stringliteral}{''})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ Exception(\textcolor{stringliteral}{'Le\ controleur\ n\(\backslash\)'est\ pas\ défini'});}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (\$methode\ ==\ \textcolor{stringliteral}{''})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ Exception(\textcolor{stringliteral}{'La\ méthode\ n\(\backslash\)'est\ pas\ définie'});}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \$controller\ =\ ControllerFactory::getController(\$controllerName,\ \$twig,\ \$loader)}
+
+\end{DoxyCode}
