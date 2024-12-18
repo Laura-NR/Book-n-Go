@@ -1,4 +1,6 @@
 <?php
+require_once 'controller.class.php';
+
 class ControllerUtilisateur extends BaseController {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
@@ -47,23 +49,25 @@ class ControllerUtilisateur extends BaseController {
 
         var_dump($_POST);
 
-        $nom = $_POST['nom'];
-        $prenom = $_POST['prenom'];
-        $numeroTel = $_POST['numeroTel'];
-        $email = $_POST['mail'];
-        $motDePasse = $_POST['mdp'];
+        // $nom = $_POST['nom'];
+        // $prenom = $_POST['prenom'];
+        // $numeroTel = $_POST['numeroTel'];
+        // $email = $_POST['mail'];
+        // $motDePasse = $_POST['mdp'];
         $role = $_POST['profil'];
-        $certif = $POST['certification'];
+        // $certif = $POST['certification'];
 
         if ($role === "voyageur"){
             // appeler la methode creer de voyageur 
             // attention mettre le mdp hacher 
            // $utilisateur = new Voyageur($nom, $prenom, $numeroTel, $email, $motDePasse);
+           $utilisateur = new Voyageur();
             $utilisateur->creerVoyageur();
         }
         else{
             // appeler la methode creer de guide
-            // attention mettre le mdp hacher  
+            // attention mettre le mdp hacher 
+            $utilisateur = new Guide(); 
             $utilisateur->creerGuide();
         }
 

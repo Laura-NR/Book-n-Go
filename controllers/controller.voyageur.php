@@ -29,11 +29,15 @@ class ControllerVoyageur extends BaseController {
     // Création d'un voyageur
     public function creerVoyageur(): void {
         // Vérification des données nécessaires
-        if (empty($this->getPost()) || 
-            !isset($this->getPost()['nom'], $this->getPost()['prenom'], $this->getPost()['numero_tel'], $this->getPost()['mail'], $this->getPost()['mdp'])) {
-            echo "Données manquantes pour créer le voyageur.";
-            return; // Retourner immédiatement si les données sont manquantes
-        }
+        // if (empty($this->getPost()) ||
+        //     !isset($this->getPost()['nom'], 
+        //     $this->getPost()['prenom'], 
+        //     $this->getPost()['numero_tel'], 
+        //     $this->getPost()['mail'], 
+        //     $this->getPost()['mdp'])) {
+        //     echo "Données manquantes pour créer le voyageur.";
+        //     return; // Retourner immédiatement si les données sont manquantes
+        // }
 
         try {
             // Création du voyageur
@@ -42,7 +46,7 @@ class ControllerVoyageur extends BaseController {
             $voyageur->setPrenom($this->getPost()['prenom']);
             $voyageur->setNumeroTel($this->getPost()['numero_tel']);
             $voyageur->setMail($this->getPost()['mail']);
-            $voyageur->setMdp($this->getPost()['mdp']);
+            $voyageur->setMdp(password_hash($this->getPost()['mdp']), PASSWORD_DEFAULT);
 
             // Utilisation de VoyageurDao pour insérer le voyageur
             $voyageurDao = new VoyageurDao($this->getPdo());
