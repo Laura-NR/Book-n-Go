@@ -75,7 +75,7 @@ class VoyageurDao {
             'prenom' => $voyageur->getPrenom(),
             'numero_tel' => $voyageur->getNumeroTel(),
             'mail' => $voyageur->getMail(),
-            'mdp' => password_hash($voyageur->getMdp(), PASSWORD_BCRYPT),
+            'mdp' => $voyageur->getMdp(),
             'derniere_co'=> $voyageur->getDerniereCo(),
         ]);
     }
@@ -97,11 +97,26 @@ class VoyageurDao {
         ]);
     }
 
+
+
     // Supprime un voyageur par son ID
     public function supprimer(int $id): int {
         $sql = "DELETE FROM voyageur WHERE id = :id";
         $requete = $this->pdo->prepare($sql);
         return $requete->execute(['id' => $id]);
+    }
+
+    public function majDerniereCo(Voyageur $voyageur) : bool
+    {
+        $nouvelleCo = $voyageur->getDerniereCo()->format("Y-m-d");
+        $sql = "UPDATE voyageur 
+                SET derniere_co = :co 
+                WHERE id = :id";
+        $requete = $this->pdo->prepare($sql);
+        return $requete->execute([
+            'co' => $nouvelleCo,
+            'id' => $voyageur->getId()
+        ]);
     }
 }
 ?>

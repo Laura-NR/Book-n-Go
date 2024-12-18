@@ -32,14 +32,33 @@ class ControllerUtilisateur extends BaseController {
         $utilisateurDao = new UtilisateurDao($this->getPdo());
         // Vérification de l'utilisateur
         $utilisateur = $utilisateurDao->findByEmail($email);
-        if ($utilisateur && password_verify($motDePasse, $utilisateur->getMdp())) {
+        if ($utilisateur){
+            echo "Utilisateur existant";
+            if(password_verify($motDePasse, $utilisateur->getMdp())) {
+                echo "Mot de passe OK";
             $_SESSION['role'] = $utilisateur instanceof Guide ? 'guide' : 'voyageur';
             $_SESSION['user_id'] = $utilisateur->getId();
-            //$_SESSION['role'] = $role;
-            var_dump($_SESSION);
+            $utilisateur->setDerniereCo(new DateTime());
+                if($utilisateur instanceof Voyageur){
+                    $voyageurDao = new VoyageurDao($this->getPdo());
+                    $voyageurDao->majDerniereCo($utilisateur);
 
-            echo "Connexion réussie ! Rôle : " . $_SESSION['role'];
-        } else {
+                }
+                else{
+                    $guideDao = new GuideDao($this->getPdo());
+                    $guideDao->majDerniereCo($utilisateur);
+                    }
+                    //$_SESSION['role'] = $role;
+                    var_dump($utilisateur->getDerniereCo());
+
+                echo "Connexion réussie ! Rôle : " . $_SESSION['role'];
+            }
+        else{
+            echo "Erreur : Email ou mot de passe incorrect.";
+        }
+
+        }
+        else {
             echo "Erreur : Email ou mot de passe incorrect.";
         }
     }
@@ -57,7 +76,7 @@ class ControllerUtilisateur extends BaseController {
         $role = $_POST['profil'];
         // $certif = $POST['certification'];
 
-        if ($role === "voyageur"){
+        if ($role == "voyageur"){
             // appeler la methode creer de voyageur 
             // attention mettre le mdp hacher 
            // $utilisateur = new Voyageur($nom, $prenom, $numeroTel, $email, $motDePasse);
@@ -66,11 +85,15 @@ class ControllerUtilisateur extends BaseController {
             $controller = new ControllerVoyageur($this->getTwig(), $this->getLoader());
             $controller->creerVoyageur();
         }
-        else{
+        else if ($role == "guide"){
             // appeler la methode creer de guide
-            // attention mettre le mdp hacher 
-            $utilisateur = new Guide(); 
-            $utilisateur->creerGuide();
+            // attention mettre le mdp hacher
+            $controller = new ControllerGuide($this->getTwig(), $this->getLoader());
+            $controller->creerGuide();
+
+        }
+        else{
+            exit;
         }
 
     }

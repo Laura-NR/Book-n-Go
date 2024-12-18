@@ -174,4 +174,15 @@ class GuideDao
 
         return null;
     }
+
+    public function majDerniereCo(Guide $guide) : bool
+    {
+        $nouvelleCo = $guide->getDerniereCo()->format("Y-m-d");
+        $sql = "UPDATE guide SET derniere_co = :co WHERE id = :id";
+        $requete = $this->pdo->prepare($sql);
+        return $requete->execute([
+            'co' => $nouvelleCo,
+            'id' => $guide->getId()
+        ]);
+    }
 }
