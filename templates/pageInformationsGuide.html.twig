@@ -68,7 +68,7 @@
         <div class="mt-4 d-flex justify-content-between">
             {% if editMode %}
                 <div class="d-flex">
-                    <!-- Enregistrer enregistrer les nouvelles saisies et les modifier dans la base de données -->
+                    <!-- Bouton Enregistrer déclenche la modale -->
                     <button type="submit" class="btn btn-success" name="action" value="modifier">Enregistrer</button>
                     <!-- Annuler : Redirection vers la page d'informations du guide -->
                     <a href="?controleur=guide&methode=afficher&id={{ guide.id }}" class="btn btn-outline-secondary ms-2">Annuler</a>
@@ -79,12 +79,36 @@
 
             <!-- Supprimer toujours à droite -->
             <div class="ms-auto">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#fenetreModale">
-                    Supprimer mon compte
-                </button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#fenetreModale"> Supprimer mon compte</button>
             </div>
         </div>
     </form>
+{# 
+    <!-- Modale de confirmation de modification -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmer la modification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir modifier vos informations ?</p>
+                
+
+            </div>
+            <div class="modal-footer">
+                 <form method="POST" action="?controleur=guide&methode=modifierGuide&id={{ guide.id }}">
+                        <input type="hidden" name="action" value="modifier">
+                        <button type="submit" class="btn btn-success">Confirmer</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div> 
+#}
+
 
     <!-- Modale de confirmation de suppression -->
     <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

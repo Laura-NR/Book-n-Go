@@ -82,7 +82,7 @@ class ControllerGuide extends ControllerVoyageur
                     // Stocke une variable de confirmation dans la session
                     $_SESSION['suppression_reussie'] = true;
                     // Redirige vers la page d'accueil après suppression
-                    header("Location: /index.php");
+                    header("Location: index.php");
                     exit;
                 } else {
                     echo "Erreur lors de la suppression du guide.";

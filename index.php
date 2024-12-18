@@ -14,10 +14,10 @@ try {
         $methode = '';
     }
 
-    // if ($controllerName == '' && $methode == '') {
-    //     $controllerName = 'excursion';
-    //     $methode = 'recupererVisites';
-    // }
+    if ($controllerName == '' && $methode == '') {
+        echo $twig->render('pageAccueil_template.html.twig');
+        //exit;   
+}
     if ($controllerName == '') {
         throw new Exception('Le controleur n\'est pas défini');
     }
