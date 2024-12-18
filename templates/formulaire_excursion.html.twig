@@ -182,7 +182,7 @@ const addVisitButton = document.getElementById('addVisit');
 const selectedVisits = document.getElementById('selectedVisits');
 const selectedVisitsTitle = document.getElementById('selectedVisitsTitle');
 
-// Function to add a visit to the selected visits list
+// Fonction pour ajouter les visites selectionées à la liste
 function addVisitToList(visitId, visitTitle, tempsSurPlace = "") {
 if (document.querySelector (`#visit-${visitId}`)) {
 alert('Cette visite est déjà sélectionnée');
@@ -215,14 +215,11 @@ listItem.innerHTML = `
 
 selectedVisits.appendChild(listItem);
 
-// Show the selected visits section if it's hidden
 selectedVisits.style.display = 'block';
 selectedVisitsTitle.style.display = 'block';
 
-// Attach the remove functionality
 listItem.querySelector('.remove-visit').addEventListener('click', () => {
 listItem.remove();
-// Hide the selected visits section if no visits remain
 if (selectedVisits.children.length === 0) {
 selectedVisits.style.display = 'none';
 selectedVisitsTitle.style.display = 'none';
@@ -230,7 +227,6 @@ selectedVisitsTitle.style.display = 'none';
 });
 }
 
-// Attach "Add Visit" functionality
 addVisitButton.addEventListener("click", () => {
 const selectedVisit = itineraireSelect.options[itineraireSelect.selectedIndex];
 if (! selectedVisit || selectedVisit.value === "" || selectedVisit.value === "add-new") {
@@ -244,12 +240,10 @@ const visitTitle = selectedVisit.textContent;
 addVisitToList(visitId, visitTitle);
 });
 
-// Initialize remove buttons for preloaded visits
 document.querySelectorAll('.remove-visit').forEach(button => {
 button.addEventListener('click', function () {
 const listItem = this.closest('li');
 listItem.remove();
-// Hide the selected visits section if no visits remain
 if (selectedVisits.children.length === 0) {
 selectedVisits.style.display = 'none';
 selectedVisitsTitle.style.display = 'none';

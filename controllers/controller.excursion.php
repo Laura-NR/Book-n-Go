@@ -75,6 +75,24 @@ class ControllerExcursion extends BaseController
                 'id_guide' => 2, // Guide par défaut
             ];
 
+            // Valider les champs "temps_sur_place"
+            $tempsSurPlaceErrors = [];
+            foreach ($this->getPost() as $key => $value) {
+                if (strpos($key, 'temps_sur_place_') === 0 && empty($value)) {
+                    $tempsSurPlaceErrors[] = "Le temps sur place pour " . substr($key, 15) . " est requis.";
+                }
+            }
+
+            // Si des erreurs de validation existent, renvoyer une erreur
+            if (!empty($tempsSurPlaceErrors)) {
+                if ($isAjax) {
+                    echo json_encode(['success' => false, 'errors' => $tempsSurPlaceErrors]);
+                    exit;
+                }
+                echo implode("<br>", $tempsSurPlaceErrors);
+                return;
+            }
+
             // Si un fichier image est téléchargé, l'ajouter aux données
             if (!empty($_FILES['chemin_image']['name'])) {
                 $uploadDirectory = './images/';
@@ -139,54 +157,70 @@ class ControllerExcursion extends BaseController
         $composerDao = new ComposerDao($this->getPdo());
         $visiteDao = new VisiteDao($this->getPdo());
 
-        // Boucle sur les visites envoyées via le formulaire
+        $currentVisits = $composerDao->findByExcursion($excursionId);
+        $currentVisitIds = array_column($currentVisits, 'visite_id');
+
+        $submittedVisits = [];
         foreach ($postData as $key => $value) {
             if (strpos($key, 'temps_sur_place_') === 0) {
-                // Récupère l'id de la visite à partir du nom de l'input
                 $visiteId = str_replace('temps_sur_place_', '', $key);
                 $tempsSurPlaceKey = 'temps_sur_place_' . $visiteId;
-
-                // Vérifie que les données nécessaires pour la visite sont présentes
-                if (!isset($postData[$tempsSurPlaceKey])) {
-                    echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (temps sur place).";
-                    continue;
-                }
-
-                $tempsSurPlace = $postData[$tempsSurPlaceKey]; // Temps passé sur place
-
-                if (empty($tempsSurPlace)) {
-                    echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (heure d'arrivée ou temps sur place).";
-                    continue;
-                }
-
-                try {
-                    $dateToday = (new DateTime())->format('Y-m-d');
-                    $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
-
-                    // Vérifie si la visite existe
-                    $visite = $visiteDao->findAllAssoc($visiteId);
-                    if (!$visite) {
-                        echo "Erreur : Visite introuvable pour ID " . $visiteId;
-                        continue;
-                    }
-
-                    // Crée un enregistrement dans la table Composer pour associer la visite à l'excursion
-                    $composer = new Composer(
-                        $tempsSurPlaceObj,
-                        $excursionId,
-                        $visiteId
-                    );
-
-                    if (!$composerDao->creer($composer)) {
-                        echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
-                    }
-                } catch (Exception $e) {
-                    echo "Erreur lors de l'ajout de la visite ID " . $visiteId . ": " . $e->getMessage();
+                if (isset($postData[$tempsSurPlaceKey])) {
+                    $submittedVisits[$visiteId] = $postData[$tempsSurPlaceKey];
                 }
             }
         }
-    }
 
+        $submittedVisitIds = array_keys($submittedVisits);
+        $visitsToAdd = array_diff($submittedVisitIds, $currentVisitIds);
+        $visitsToRemove = array_diff($currentVisitIds, $submittedVisitIds);
+        $visitsToUpdate = array_intersect($currentVisitIds, $submittedVisitIds);
+
+        // Boucle sur les visites envoyées via le formulaire
+        foreach ($visitsToAdd as $visiteId) {
+            $tempsSurPlace = $submittedVisits[$visiteId];
+            $dateToday = (new DateTime())->format('Y-m-d');
+            $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
+
+            $composer = new Composer(
+                $tempsSurPlaceObj,
+                $excursionId,
+                $visiteId
+            );
+
+            if (!$composerDao->creer($composer)) {
+                echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
+            }
+        }
+
+        // Mettre à jour les visites existantes pour l'excursion
+        foreach ($visitsToUpdate as $visiteId) {
+            $tempsSurPlace = $submittedVisits[$visiteId];
+            $dateToday = (new DateTime())->format('Y-m-d');
+            $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
+
+            // Vérifier si la valeur actuelle de temps_sur_place est différente à la valeur qui à étée soumis dans le formulaire
+            $currentTempsSurPlace = $composerDao->find($excursionId, $visiteId)->getTempsSurPlace();
+            if ($currentTempsSurPlace != $tempsSurPlaceObj) {
+                $composer = new Composer(
+                    $tempsSurPlaceObj,
+                    $excursionId,
+                    $visiteId
+                );
+
+                if (!$composerDao->modifier($composer)) {
+                    echo "Erreur: Échec de la mise à jour de la visite ID " . $visiteId;
+                }
+            }
+        }
+
+        // Enlever les visites qui ne sont plus incluses dans l'itinéraire l'excursion
+        foreach ($visitsToRemove as $visiteId) {
+            if (!$composerDao->supprimer($excursionId, $visiteId)) {
+                echo "Erreur: Échec de la suppression de la visite ID " . $visiteId;
+            }
+        }
+    }
 
     public function afficherModifier(int $id)
     {
@@ -228,75 +262,81 @@ class ControllerExcursion extends BaseController
      * @return void
      */
     public function modifier(int $id): void
-{
-    $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    {
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
-    if (!empty($this->getPost())) {
-        $data = [
-            'id' => $id, 
-            'capacite' => $this->getPost()['capacite'] ?? '',
-            'nom' => $this->getPost()['nom'] ?? '',
-            'date_creation' => new DateTime(),
-            'description' => $this->getPost()['description'] ?? '',
-            'public' => $this->getPost()['public'] ?? 0, 
-            'id_guide' => 2, 
-        ];
+        if (!empty($this->getPost())) {
+            $data = [
+                'id' => $id,
+                'capacite' => $this->getPost()['capacite'] ?? '',
+                'nom' => $this->getPost()['nom'] ?? '',
+                'date_creation' => new DateTime(),
+                'description' => $this->getPost()['description'] ?? '',
+                'public' => $this->getPost()['public'] ?? 0,
+                'id_guide' => 2,
+            ];
 
-        
-        if (!empty($_FILES['chemin_image']['name'])) {
-            $uploadDirectory = './images/';
-            $fileName = basename($_FILES['chemin_image']['name']);
-            $targetPath = $uploadDirectory . $fileName;
+            $excursionDao = new ExcursionDao($this->getPdo());
+            $currentExcursion = $excursionDao->findAssoc($id);
 
-            if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
-                $data['chemin_image'] = $targetPath;
+            if (!empty($_FILES['chemin_image']['name'])) {
+                $uploadDirectory = './images/';
+                $fileName = basename($_FILES['chemin_image']['name']);
+                $targetPath = $uploadDirectory . $fileName;
+
+                if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
+                    $data['chemin_image'] = $targetPath;
+                } else {
+                    if ($isAjax) {
+                        echo json_encode(['success' => false, 'message' => 'Image upload failed']);
+                        exit;
+                    }
+                    echo "Erreur: Échec du téléchargement de l'image.";
+                    return;
+                }
             } else {
+                if ($currentExcursion && !empty($currentExcursion->getChemin_image())) {
+                    $data['chemin_image'] = $currentExcursion->getChemin_image();
+                }
+            }
+
+            $excursionDao = new ExcursionDao($this->getPdo());
+
+
+            $updated = $excursionDao->modifier($data);
+
+            if ($updated) {
+                $this->handleVisits($id, $_POST);
+
                 if ($isAjax) {
-                    echo json_encode(['success' => false, 'message' => 'Image upload failed']);
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Excursion modifiée avec succès',
+                        'redirect' => 'index.php?controleur=excursion&methode=afficher&id=' . $id,
+                    ]);
                     exit;
                 }
-                echo "Erreur: Échec du téléchargement de l'image.";
-                return;
-            }
-        }
-
-        $excursionDao = new ExcursionDao($this->getPdo());
-
-        
-        $updated = $excursionDao->modifier($data);
-
-        if ($updated) {
-            $this->handleVisits($id, $_POST); 
-
-            if ($isAjax) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Excursion modifiée avec succès',
-                    'redirect' => 'index.php?controleur=excursion&methode=afficher&id=' . $id,
-                ]);
-                exit;
+            } else {
+                if ($isAjax) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Erreur lors de la modification de l\'excursion',
+                    ]);
+                    exit;
+                }
+                echo "Erreur : Impossible de modifier l'excursion.";
             }
         } else {
             if ($isAjax) {
                 echo json_encode([
                     'success' => false,
-                    'message' => 'Erreur lors de la modification de l\'excursion',
+                    'message' => 'Données du formulaire manquantes',
                 ]);
                 exit;
             }
-            echo "Erreur : Impossible de modifier l'excursion.";
+            echo "Erreur : Formulaire vide.";
         }
-    } else {
-        if ($isAjax) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Données du formulaire manquantes',
-            ]);
-            exit;
-        }
-        echo "Erreur : Formulaire vide.";
     }
-}
 
 
     /**
