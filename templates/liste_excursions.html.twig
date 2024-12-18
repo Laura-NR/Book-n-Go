@@ -26,15 +26,17 @@
 
 {% block content %}
 	<div class="container my-5">
-		<h1 class="text-center mb-4">Liste des Excursions</h1>
-
+		<div class="d-flex flex-rox justify-content-between align-items-center mb-5">
+			<h1 class="text-center mb-4">Liste des Excursions</h1>
+			<a href="index.php?controleur=excursion&methode=afficherCreer" class="btn btn-success">Créer une nouvelle excursion</a>
+		</div>
 		{% if excursions is defined and excursions is not empty %}
 			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
 				{% for excursion in excursions %}
 					<div class="col">
 						<div class="card h-100">
 							{% if excursion.chemin_image %}
-								<img src="{{ excursion.chemin_image }}" class="card-img-top img-fluid" alt="{{ excursion.nom }}">
+								<img src="{{ excursion.chemin_image }}" class="card-img-top img-fluid w-100" style="height: 200px;" alt="{{ excursion.nom }}">
 							{% else %}
 								<img src="./images/default-placeholder.png" class="card-img-top img-fluid" alt="Image par défaut">
 							{% endif %}

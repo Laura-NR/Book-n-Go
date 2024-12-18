@@ -363,9 +363,13 @@ class ControllerExcursion extends BaseController
         $excursionDao = new ExcursionDao($this->getPdo());
         $excursion = $excursionDao->findAssoc($id);
 
+        $composerDao = new ComposerDao($this->getPdo());
+        $visites = $composerDao->findByExcursion($id);
+
         if ($excursion) {
             echo $this->getTwig()->render('details_excursion.html.twig', [
                 'excursion' => $excursion,
+                'visites' => $visites,
             ]);
         } else {
             echo "Excursion non trouvée.";

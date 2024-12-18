@@ -26,6 +26,20 @@ Détails de l'Excursion
     {% else %}
     <p>Aucun post disponible pour cette excursion.</p>
     {% endif %}
+
+    <div>
+        <p><strong>Itineraire :</strong></p>
+        {% if visites is not empty %}
+            {% for visite in visites %}
+                <div class="position-relative">
+                    <span class="position-absolute top-50 bg-primary rounded-circle" style="width: 10px; height: 10px; transform: translate(-50%, -50%); left: 2px;"></span>
+                    <div class="border-start border-3 border-primary ps-3 pt-2 pb-2">
+                        {{ visite.titre }} - {{ visite.temps_sur_place }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
     
     <div class="mt-4">
         <a href="?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-primary">
