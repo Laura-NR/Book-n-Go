@@ -1,0 +1,17 @@
+{% extends "base_template.html.twig" %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<main class="container mt-5">
+    <h1 class="text-center mb-4">Bienvenue, {{ app.session.user.nom }}</h1>
+    
+    {% if app.session.role == 'guide' %}
+        <div class="alert alert-success">Vous êtes un guide avec certification.</div>
+        <p>Vous pouvez gérer vos offres de visites.</p>
+    {% else %}
+        <div class="alert alert-info">Vous êtes un voyageur.</div>
+        <p>Explorez les offres des guides.</p>
+    {% endif %}
+</main>
+{% endblock %}

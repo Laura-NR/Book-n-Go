@@ -1,0 +1,74 @@
+{% extends "base_template.html.twig" %}
+
+{% block title %}
+Inscription
+{% endblock %}
+
+{% block content %}
+<main class="container mt-5">
+    <h1 class="text-center mb-4">Inscription</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4 shadow-sm">
+                <form action="?controleur=utilisateur&methode=inscription" method="POST" enctype="multipart/form-data">
+                    <!-- Nom -->
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom :</label>
+                        <input type="text" name="nom" id="nom" class="form-control" placeholder="Entrez votre nom" required>
+                    </div>
+                    <!-- Prénom -->
+                    <div class="mb-3">
+                        <label for="prenom" class="form-label">Prénom :</label>
+                        <input type="text" name="prenom" id="prenom" class="form-control" placeholder="Entrez votre prénom" required>
+                    </div>
+                    <!-- Numéro de téléphone -->
+                    <div class="mb-3">
+                        <label for="numeroTel" class="form-label">Numéro de téléphone :</label>
+                        <input type="tel" name="numero_tel" id="numero_tel" class="form-control" placeholder="Entrez votre numéro de téléphone" required>
+                    </div>
+                    <!-- Adresse e-mail -->
+                    <div class="mb-3">
+                        <label for="mail" class="form-label">Adresse e-mail :</label>
+                        <input type="email" name="mail" id="mail" class="form-control" placeholder="Entrez votre adresse e-mail" required>
+                    </div>
+                    <!-- Mot de passe -->
+                    <div class="mb-3">
+                        <label for="mdp" class="form-label">Mot de passe :</label>
+                        <input type="password" name="mdp" id="mdp" class="form-control" placeholder="Entrez votre mot de passe" required>
+                    </div>
+                    <!-- Sélection du profil -->
+                    <div class="mb-3">
+                        <label for="profil" class="form-label">Je suis :</label>
+                        <select name="profil" id="profil" class="form-select" required onchange="toggleCertificationField()">
+                            <option value="voyageur" selected>Voyageur</option>
+                            <option value="guide">Guide</option>
+                        </select>
+                    </div>
+                    <!-- Certification (visible uniquement pour Guide) -->
+                    <div class="mb-3 d-none" id="certification-field">
+                        <label for="certification" class="form-label">Certification (PDF uniquement) :</label>
+                        <input type="file" name="certification" id="certification" class="form-control" accept=".pdf">
+                    </div>
+                    <!-- Bouton d'inscription -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">S'inscrire</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Fonction pour afficher/masquer le champ de certification
+    function toggleCertificationField() {
+        const profil = document.getElementById('profil').value;
+        const certificationField = document.getElementById('certification-field');
+        if (profil === 'guide') {
+            certificationField.classList.remove('d-none');
+        } else {
+            certificationField.classList.add('d-none');
+        }
+    }
+</script>
+{% endblock %}

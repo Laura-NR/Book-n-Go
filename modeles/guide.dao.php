@@ -83,6 +83,7 @@ class GuideDao
         $guide->setMdp($data['mdp']);
         // Guide-specific property
         $guide->setCheminCertification($data['chemin_certif']);
+        //$guide->setDerniereCo($data['derniere_co']); conversion a faire
         return $guide;
     }
 
@@ -98,6 +99,11 @@ class GuideDao
         $sql = "INSERT INTO guide (nom, prenom, numero_tel, mail, mdp, chemin_certif) 
                 VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :chemin_certif)";
         $pdoStatement = $this->pdo->prepare($sql);
+        $derniereCo = $guide->getDerniereCo();
+        if ($derniereCo == null){
+            $derniereCo = 1;//convertir
+        }
+
         return $pdoStatement->execute([
             'nom' => $guide->getNom(),
             'prenom' => $guide->getPrenom(),
@@ -105,6 +111,7 @@ class GuideDao
             'mail' => $guide->getMail(),
             'mdp' => $guide->getMdp(),
             'chemin_certif' => $guide->getCheminCertification(),
+            'derniere_co'=> $derniereCo,  // conversion a faire si c'est pas null
         ]);
     }
 
@@ -113,10 +120,10 @@ class GuideDao
     {
         $sql = "UPDATE guide SET nom = :nom, prenom = :prenom, numero_tel = :numero_tel, 
                 mail = :mail, chemin_certif = :chemin_certif WHERE id = :id";
-    
+
         // Préparation de la requête
         $pdoStatement = $this->pdo->prepare($sql);
-    
+
         // Paramètres à exécuter
         $modifications = [
             'id' => $guide->getId(),
@@ -126,12 +133,11 @@ class GuideDao
             'mail' => $guide->getMail(),
             'chemin_certif' => "/test/test.png"/*$guide->getCheminCertification()*/ //la certif ne peux pas etre modifier
         ];
-    
+
         // Exécution de la requête
         return $pdoStatement->execute($modifications);
-        
+
     }
-    
 
     // Supprimer un guide de la base de données
     public function supprimer(int $id): bool
@@ -167,5 +173,16 @@ class GuideDao
         }
 
         return null;
+    }
+
+    public function majDerniereCo(Guide $guide) : bool
+    {
+        $nouvelleCo = $guide->getDerniereCo()->format("Y-m-d");
+        $sql = "UPDATE guide SET derniere_co = :co WHERE id = :id";
+        $requete = $this->pdo->prepare($sql);
+        return $requete->execute([
+            'co' => $nouvelleCo,
+            'id' => $guide->getId()
+        ]);
     }
 }
