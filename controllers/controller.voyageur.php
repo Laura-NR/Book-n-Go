@@ -121,7 +121,7 @@ class ControllerVoyageur extends BaseController {
                     //var_dump($voyageur);
 
                     // Sauvegarde dans la base de données
-                    if ($voyageurDao->maj($voyageur)) {
+                    if ($voyageurDao->mettreAJour($voyageur)) {
                         // Stocke une variable de confirmation dans la session
                         $_SESSION['modification_reussie'] = true;
                         // Redirige vers la page d'affichage normale après la modification
