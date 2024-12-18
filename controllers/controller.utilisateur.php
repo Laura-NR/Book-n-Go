@@ -23,9 +23,9 @@ class ControllerUtilisateur extends BaseController {
     }
 
     // Connexion de l'utilisateur
-    public function connexion(): void {
+    public function connexion(): bool {
         //session_start();
-        var_dump($_POST);
+        //var_dump($_POST);
         $email = $_POST['username'];
         $motDePasse = $_POST['mdp'];
 
@@ -51,16 +51,22 @@ class ControllerUtilisateur extends BaseController {
                     //$_SESSION['role'] = $role;
                     var_dump($utilisateur->getDerniereCo());
 
-                echo "Connexion réussie ! Rôle : " . $_SESSION['role'];
+                //echo "Connexion réussie ! Rôle : " . $_SESSION['role'];
+                // Redirige vers la page d'accueil après suppression
+
             }
         else{
-            echo "Erreur : Email ou mot de passe incorrect.";
+            //echo "Erreur : Email ou mot de passe incorrect.";
+            return false;
         }
 
         }
         else {
-            echo "Erreur : Email ou mot de passe incorrect.";
+            //echo "Erreur : Email ou mot de passe incorrect.";
+            return false;
         }
+        return true;
+
     }
 
     // Inscription d'un utilisateur
@@ -95,6 +101,8 @@ class ControllerUtilisateur extends BaseController {
         else{
             exit;
         }
+        header("Location: /index.php");
+        exit;
 
     }
 
