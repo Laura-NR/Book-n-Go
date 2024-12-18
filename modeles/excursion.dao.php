@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file ExcursionDao.php
  * @brief Classe DAO pour la gestion des excursions dans la base de données.
@@ -69,23 +70,39 @@ class ExcursionDao
      * @param Excursion $excursion L'objet Excursion à sauvegarder.
      * @return bool True si la mise à jour a réussi, false sinon.
      */
-    public function modifier(array $excursion): bool
+    public function modifier(array $data): ?Excursion
     {
-        $sql = "UPDATE excursion SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, date_creation = :date_creation,
-                description = :description, public = :public, id_guide = :id_guide WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
+        if ($data['date_creation'] instanceof DateTime) {
+            $data['date_creation'] = $data['date_creation']->format('Y-m-d H:i:s');
+        }
 
-        return $stmt->execute([
-            ':id' => $excursion->getId(),
-            ':capacite' => $excursion->getCapacite(),
-            ':nom' => $excursion->getNom(),
-            ':chemin_image' => $excursion->getChemin_Image(),
-            ':date_creation' => $excursion->getDate_creation(),
-            ':description' => $excursion->getDescription(),
-            ':public' => $excursion->getPublic(),
-            ':id_guide' => $excursion->getId_Guide()
-        ]);
+        $data['public'] = isset($data['public']) && $data['public'] === 'on' ? 1 : 0;
+
+        try {
+            $sql = "UPDATE excursion SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, 
+                date_creation = :date_creation, description = :description, public = :public, 
+                id_guide = :id_guide WHERE id = :id";
+
+            $stmt = $this->pdo->prepare($sql);
+
+            $stmt->execute([
+                ':id' => $data['id'],
+                ':capacite' => $data['capacite'],
+                ':nom' => $data['nom'],
+                ':chemin_image' => $data['chemin_image'],
+                ':date_creation' => $data['date_creation'],
+                ':description' => $data['description'],
+                ':public' => $data['public'],
+                ':id_guide' => $data['id_guide']
+            ]);
+
+            return $this->findAssoc($data['id']);
+        } catch (PDOException $e) {
+            error_log('Database error: ' . $e->getMessage());
+            throw $e;
+        }
     }
+
 
     /**
      * Supprime une excursion en fonction de son ID.
@@ -111,7 +128,7 @@ class ExcursionDao
         $sql = "SELECT * FROM excursion WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute([':id' => $id]);
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS| PDO::FETCH_PROPS_LATE,"excursion");
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "excursion");
         $result = $pdoStatement->fetch();
 
         return $result ? $this->hydrate($result) : null;
@@ -164,8 +181,8 @@ class ExcursionDao
         $excursion->setNom($tableauAssoc['nom']);
         $excursion->setChemin_Image($tableauAssoc['chemin_image']);
         $excursion->setDate_creation(
-            !empty($tableauAssoc['date_creation']) 
-                ? new DateTime($tableauAssoc['date_creation']) 
+            !empty($tableauAssoc['date_creation'])
+                ? new DateTime($tableauAssoc['date_creation'])
                 : null
         );
         $excursion->setDescription($tableauAssoc['description']);
