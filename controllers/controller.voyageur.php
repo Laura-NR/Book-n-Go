@@ -48,6 +48,7 @@ class ControllerVoyageur extends BaseController {
             $voyageur->setMail($this->getPost()['mail']);
             $voyageur->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
             var_dump($voyageur);
+            $voyageur->setDerniereCo(new DateTime());
             // Utilisation de VoyageurDao pour insérer le voyageur
             $voyageurDao = new VoyageurDao($this->getPdo());
             if ($voyageurDao->creer($voyageur)) {
