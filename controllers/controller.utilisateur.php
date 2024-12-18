@@ -1,6 +1,6 @@
 <?php
 require_once 'controller.class.php';
-
+require_once 'include.php';
 class ControllerUtilisateur extends BaseController {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
@@ -61,8 +61,10 @@ class ControllerUtilisateur extends BaseController {
             // appeler la methode creer de voyageur 
             // attention mettre le mdp hacher 
            // $utilisateur = new Voyageur($nom, $prenom, $numeroTel, $email, $motDePasse);
-           $utilisateur = new Voyageur();
-            $utilisateur->creerVoyageur();
+           //$utilisateur = new Voyageur();
+            //$utilisateur->creerVoyageur();
+            $controller = new ControllerVoyageur($this->getTwig(), $this->getLoader());
+            $controller->creerVoyageur();
         }
         else{
             // appeler la methode creer de guide

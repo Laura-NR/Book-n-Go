@@ -67,15 +67,16 @@ class VoyageurDao {
 
     // Crée un nouveau voyageur
     public function creer(Voyageur $voyageur): bool {
-        $sql = "INSERT INTO voyageur (nom, prenom, numero_tel, mail, mdp) 
-                VALUES (:nom, :prenom, :numero_tel, :mail, :mdp)";
+        $sql = "INSERT INTO voyageur (nom, prenom, numero_tel, mail, mdp, derniere_co) 
+                VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :derniere_co)";
         $requete = $this->pdo->prepare($sql);
         return $requete->execute([
             'nom' => $voyageur->getNom(),
             'prenom' => $voyageur->getPrenom(),
             'numero_tel' => $voyageur->getNumeroTel(),
             'mail' => $voyageur->getMail(),
-            'mdp' => password_hash($voyageur->getMdp(), PASSWORD_BCRYPT)
+            'mdp' => password_hash($voyageur->getMdp(), PASSWORD_BCRYPT),
+            'derniere_co'=> $voyageur->getDerniereCo(),
         ]);
     }
 
@@ -92,6 +93,7 @@ class VoyageurDao {
             'mail' => $voyageur->getMail(),
             'mdp' => password_hash($voyageur->getMdp(), PASSWORD_BCRYPT),
             'id' => $voyageur->getId()
+
         ]);
     }
 

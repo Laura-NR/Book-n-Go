@@ -83,6 +83,7 @@ class GuideDao
         $guide->setMdp($data['mdp']);
         // Guide-specific property
         $guide->setCheminCertification($data['chemin_certif']);
+        //$guide->setDerniereCo($data['derniere_co']); conversion a faire
         return $guide;
     }
 
@@ -98,6 +99,11 @@ class GuideDao
         $sql = "INSERT INTO guide (nom, prenom, numero_tel, mail, mdp, chemin_certif) 
                 VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :chemin_certif)";
         $pdoStatement = $this->pdo->prepare($sql);
+        $derniereCo = $guide->getDerniereCo();
+        if ($derniereCo == null){
+            $derniereCo = 1;//convertir
+        }
+
         return $pdoStatement->execute([
             'nom' => $guide->getNom(),
             'prenom' => $guide->getPrenom(),
@@ -105,6 +111,7 @@ class GuideDao
             'mail' => $guide->getMail(),
             'mdp' => $guide->getMdp(),
             'chemin_certif' => $guide->getCheminCertification(),
+            'derniere_co'=> $derniereCo,  // conversion a faire si c'est pas null
         ]);
     }
 
