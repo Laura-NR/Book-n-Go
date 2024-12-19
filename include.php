@@ -44,4 +44,5 @@ require_once 'controllers/controller.visite.php';
 require_once 'controllers/controller.excursion.php';
 require_once 'controllers/controller.voyageur.php';
 require_once 'controllers/controller.post.class.php';
+require_once 'controllers/controller.commentaire.php';
 //require_once 'controllers/controller.voyageur.php';
