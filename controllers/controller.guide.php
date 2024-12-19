@@ -32,7 +32,7 @@ class ControllerGuide extends ControllerVoyageur
         $postData = $this->getPost();
         $fileData = $_FILES;
     
-        var_dump($fileData);
+        //var_dump($fileData);
     
         if (
             empty($postData) ||
@@ -57,18 +57,18 @@ class ControllerGuide extends ControllerVoyageur
             $guide->setPrenom($postData['prenom']);
             $guide->setNumeroTel($postData['numero_tel']);
             $guide->setMail($postData['mail']);
-            $guide->setMdp($postData['mdp']);
+            $guide->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
             $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
             $guide->setDerniereCo(new DateTime());
     
             $guideDao = new GuideDao($this->getPdo());
             if ($guideDao->creer($guide)) {
-                echo "Insertion réalisée avec succès.";
+                //echo "Insertion réalisée avec succès.";
             } else {
-                echo "Erreur lors de la création du guide.";
+                //echo "Erreur lors de la création du guide.";
             }
         } catch (Exception $e) {
-            echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
+            //echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
         }
     }
     

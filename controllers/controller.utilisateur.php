@@ -1,6 +1,7 @@
 <?php
 require_once 'controller.class.php';
 require_once 'include.php';
+
 class ControllerUtilisateur extends BaseController {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
@@ -24,55 +25,52 @@ class ControllerUtilisateur extends BaseController {
 
     // Connexion de l'utilisateur
     public function connexion(): bool {
-        //session_start();
-        //var_dump($_POST);
+        // Assure-toi que la session est démarrée en haut du fichier, avant toute sortie
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start(); // Démarre la session si elle n'est pas déjà commencée
+        }
+    
         $email = $_POST['username'];
         $motDePasse = $_POST['mdp'];
-
+    
         $utilisateurDao = new UtilisateurDao($this->getPdo());
         // Vérification de l'utilisateur
         $utilisateur = $utilisateurDao->findByEmail($email);
-        if ($utilisateur){
-            echo "Utilisateur existant";
-            if(password_verify($motDePasse, $utilisateur->getMdp())) {
-                echo "Mot de passe OK";
-            $_SESSION['role'] = $utilisateur instanceof Guide ? 'guide' : 'voyageur';
-            $_SESSION['user_id'] = $utilisateur->getId();
-            $utilisateur->setDerniereCo(new DateTime());
-                if($utilisateur instanceof Voyageur){
+        if ($utilisateur) {
+            if (password_verify($motDePasse, $utilisateur->getMdp())) {
+                $_SESSION['role'] = $utilisateur instanceof Guide ? 'guide' : 'voyageur';
+                $_SESSION['user_id'] = $utilisateur->getId();
+                $utilisateur->setDerniereCo(new DateTime());
+                
+                // Effectuer la mise à jour dans la base de données selon le rôle
+                if ($utilisateur instanceof Voyageur) {
                     $voyageurDao = new VoyageurDao($this->getPdo());
                     $voyageurDao->majDerniereCo($utilisateur);
-
-                }
-                else{
+                } else {
                     $guideDao = new GuideDao($this->getPdo());
                     $guideDao->majDerniereCo($utilisateur);
-                    }
-                    //$_SESSION['role'] = $role;
-                    var_dump($utilisateur->getDerniereCo());
-
-                //echo "Connexion réussie ! Rôle : " . $_SESSION['role'];
-                // Redirige vers la page d'accueil après suppression
-
+                }
+    
+                // Redirection après succès de la connexion
+                $this->redirect('', '', ['message' => 'Connexion_reussie']);
+                exit;
+            } else {
+                // Si la vérification du mot de passe échoue, affiche un message d'erreur dans l'URL
+                $this->redirect('utilisateur', 'connexion', ['message' => 'Mot de passe incorrect.']);
+                return false;
             }
-        else{
-            //echo "Erreur : Email ou mot de passe incorrect.";
+        } else {
+            // Si l'utilisateur n'est pas trouvé
+            $this->redirect('utilisateur', 'connexion', ['message' => 'Utilisateur non trouve.']);
             return false;
         }
-
-        }
-        else {
-            //echo "Erreur : Email ou mot de passe incorrect.";
-            return false;
-        }
-        return true;
-
     }
+    
 
     // Inscription d'un utilisateur
     public function inscription(): void {
 
-        var_dump($_POST);
+       // var_dump($_POST);
 
         // $nom = $_POST['nom'];
         // $prenom = $_POST['prenom'];
@@ -101,9 +99,6 @@ class ControllerUtilisateur extends BaseController {
         else{
             exit;
         }
-        header("Location: /index.php");
-        exit;
-
     }
 
     // Déconnexion de l'utilisateur
