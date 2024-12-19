@@ -13,9 +13,10 @@ class ControllerVisite extends BaseController {
             $data = [
                 'adresse' => $_POST['adresse'],
                 'ville' => $_POST['ville'],
-                'code_postal' => $_POST['code_postal'],
+                'codePostal' => $_POST['codePostal'],
                 'description' => $_POST['description'],
                 'titre' => $_POST['titre'],
+                'idGuide' => 10, /*$_SESSION['id'],*/
             ];
 
             // Utilisation de VisiteDao pour créer une nouvelle Visite
@@ -23,10 +24,13 @@ class ControllerVisite extends BaseController {
             $nouvelleVisite = $visiteDao->insert($data);
             // Redirige vers la liste des visite après création réussie
             /*$nouvelleVisite*/
-            if ($nouvelleVisite) {
-                // REDIRECTION A CHANGER POUR LA LISTE DES VISITES
-                $this->header('index.php?controleur=visite&methode=lister');
-            } else {
+            if ($nouvelleVisite /*&& parametre excursion = TRUE*/) {
+                $this->redirect('visite','lister',);
+            }
+            //elseif ($nouvelleVisite /*&&parametre excursion = FALSE*/){
+            //    $this->redirect('visite','lister');
+            //}
+            else {
                 echo "Erreur lors de la création de la visite.";
             }
         } else {
@@ -41,7 +45,7 @@ class ControllerVisite extends BaseController {
                 'id' =>$_POST['id'],
                 'adresse' => $_POST['adresse'],
                 'ville' => $_POST['ville'],
-                'code_postal' => $_POST['code_postal'],
+                'codePostal' => $_POST['codePostal'],
                 'description' => $_POST['description'],
                 'titre' => $_POST['titre'],
             ];
@@ -76,19 +80,22 @@ class ControllerVisite extends BaseController {
     //     }
     // }
 
-    public function lister(): void{
+    public function lister(): void
+    {
+        $checkbox = isset($_POST['checkbox']);
         $visiteDao = new VisiteDao($this->getPdo());
-        $listeVisite = $visiteDao->findAll();
-
+        if (!$checkbox)
+            $listeVisite = $visiteDao->findAll();
+        else {
+            $id_guide = 10 /*$_SESSION['id'],*/;
+            $listeVisite = $visiteDao->findByGuide($id_guide);
+        }
         $template = $this->getTwig()->load("liste_visite.html.twig");
 
         echo $template->render(array(
-            "visite" => $listeVisite,
+            'etatCheck' => $checkbox,
+            "visites" => $listeVisite,
         ));
-    }
-
-    public function listerModif(/*A voir*/int $id_guide): void{
-
     }
 }
 ?>
