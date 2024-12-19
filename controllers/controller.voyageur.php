@@ -145,12 +145,14 @@ class ControllerVoyageur extends BaseController {
         // Utilisation de la méthode listerTousVoyageurs pour récupérer tous les voyageurs
         $voyageurDao = new VoyageurDao($this->getPdo());
         // $voyageurs = $voyageurDao->listerTousVoyageurs(); // Récupère tous les voyageurs via la méthode listerTousVoyageurs
+        // $voyageurs = $voyageurDao->listerTousVoyageurs(); // Récupère tous les voyageurs via la méthode listerTousVoyageurs
 
         // Chargement du template pour lister les voyageurs
         $template = $this->getTwig()->load('voyageurList.twig');
 
         // Affichage du template avec les données des voyageurs
         echo $template->render([
+            // 'voyageurs' => $voyageurs, 
             // 'voyageurs' => $voyageurs, 
             'menu' => "voyageur"
         ]);
