@@ -4,6 +4,8 @@ session_start();
 
 require_once "include.php";
 
+$twig->addGlobal('session', $_SESSION);
+
 try {
     if (isset($_GET['controleur'])) {
         $controllerName = $_GET['controleur'];
@@ -18,7 +20,11 @@ try {
     }
 
     if ($controllerName == '' && $methode == '') {
-        echo $twig->render('pageAccueil_template.html.twig');
+        echo $twig->render('pageAccueil_template.html.twig', [
+            'app' => [
+                'session' => $_SESSION 
+            ]
+        ]);
     }
 
     if ($controllerName == '') {

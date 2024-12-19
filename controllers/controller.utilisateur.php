@@ -123,5 +123,14 @@ class ControllerUtilisateur extends BaseController {
         session_destroy();
         echo "Vous avez été déconnecté.";
     }
+
+    public function afficherDashboard(): void
+    {
+        if ($_SESSION['role'] == 'guide') {
+            echo $this->getTwig()->render('page_guide.html.twig');
+        } elseif ($_SESSION['role'] == 'voyageur') {
+            echo $this->getTwig()->render('page_voyageur.html.twig');
+        }
+    }
 }
 ?>

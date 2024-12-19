@@ -64,6 +64,8 @@ class ControllerExcursion extends BaseController
         // Vérifie si la requête est une requête AJAX
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
+        $idGuide = $_SESSION['user_id'];
+
         // Vérifie si le formulaire a été soumis
         if (!empty($this->getPost())) {
             $data = [
@@ -72,7 +74,7 @@ class ControllerExcursion extends BaseController
                 'date_creation' => new DateTime(),
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
-                'id_guide' => 2, // Guide par défaut
+                'id_guide' => $idGuide, 
             ];
 
             // Valider les champs "temps_sur_place"

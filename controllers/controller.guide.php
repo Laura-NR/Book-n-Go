@@ -12,7 +12,7 @@ class ControllerGuide extends ControllerVoyageur
         if (method_exists($this, $methode)) {
             // Récupère l'ID si disponible
             if (isset($_GET['id'])) {
-                $id = $_GET['id'];
+                $id = (int) $_GET['id'];
                 return $this->$methode($id); // Appelle la méthode avec l'ID si disponible
             } else {
                 return $this->$methode(); // Appelle la méthode sans ID
@@ -31,9 +31,9 @@ class ControllerGuide extends ControllerVoyageur
     {
         $postData = $this->getPost();
         $fileData = $_FILES;
-    
+
         //var_dump($fileData);
-    
+
         if (
             empty($postData) ||
             empty($postData['nom']) ||
@@ -41,16 +41,16 @@ class ControllerGuide extends ControllerVoyageur
             empty($postData['numero_tel']) ||
             empty($postData['mail']) ||
             empty($postData['mdp']) ||
-            !isset($fileData['chemin_certif']) || 
-            empty($fileData['chemin_certif']['tmp_name']) 
+            !isset($fileData['chemin_certif']) ||
+            empty($fileData['chemin_certif']['tmp_name'])
         ) {
             echo "Données manquantes ou invalides pour créer le guide.";
             return;
         }
-    
+
         // Extraire uniquement le nom du fichier (pas le chemin complet)
         $nomFichierCertif = basename($fileData['chemin_certif']['name']);
-    
+
         try {
             $guide = new Guide();
             $guide->setNom($postData['nom']);
@@ -60,7 +60,7 @@ class ControllerGuide extends ControllerVoyageur
             $guide->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
             $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
             $guide->setDerniereCo(new DateTime());
-    
+
             $guideDao = new GuideDao($this->getPdo());
             if ($guideDao->creer($guide)) {
                 //echo "Insertion réalisée avec succès.";
@@ -71,7 +71,7 @@ class ControllerGuide extends ControllerVoyageur
             //echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
         }
     }
-    
+
 
     // Modification d'un guide
     public function supprimerGuide(int $id): void
@@ -79,12 +79,12 @@ class ControllerGuide extends ControllerVoyageur
         try {
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->find($id);
-    
+
             if (!$guide) {
                 echo "Erreur : guide non trouvé.";
                 return;
             }
-    
+
             // Vérification de la soumission du formulaire de suppression
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'supprimer') {
                 if ($guideDao->supprimer($id)) {
@@ -97,7 +97,6 @@ class ControllerGuide extends ControllerVoyageur
                     echo "Erreur lors de la suppression du guide.";
                 }
             }
-    
         } catch (Exception $e) {
             echo "Erreur lors de la suppression : " . $e->getMessage();
         }
@@ -108,21 +107,21 @@ class ControllerGuide extends ControllerVoyageur
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->find($id);
             //var_dump($guide);
-    
+
             if (!$guide) {
                 echo "Erreur : guide non trouvé.";
                 return;
             }
-    
+
             // Vérification de la soumission du formulaire de modification
-            if (/*isset($_POST['nom']) &&*/ isset($_POST['action']) && $_POST['action'] === 'modifier') {
+            if (/*isset($_POST['nom']) &&*/isset($_POST['action']) && $_POST['action'] === 'modifier') {
                 //var_dump($_POST);
                 $postData = $this->getPost();
-                
 
 
 
-                
+
+
                 if (!empty($postData)) {
                     // Mise à jour des données du guide
 
@@ -131,7 +130,7 @@ class ControllerGuide extends ControllerVoyageur
                     if (isset($postData['numero_tel'])) $guide->setNumeroTel($postData['numero_tel']);
                     if (isset($postData['mail'])) $guide->setMail($postData['mail']);
                     //var_dump($guide);
-                    
+
                     // Sauvegarde dans la base de données
                     if ($guideDao->maj($guide)) {
                         // Stocke une variable de confirmation dans la session
@@ -144,27 +143,32 @@ class ControllerGuide extends ControllerVoyageur
                     }
                 }
             }
-    
         } catch (Exception $e) {
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
         }
     }
-        
+
 
     // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
-    public function afficher(int $id = 1): void
+    public function afficher(int $id = null): void
     {
         try {
+            $id = $id ?? (isset($_GET['id']) ? (int) $_GET['id'] : null);
+
+            if ($id === null || $id <= 0) {
+                throw new Exception("ID invalide ou non fourni.");
+            }
+
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->findAssoc($id);
-    
+
             if (!$guide) {
                 echo "Guide avec id $id pas trouvé.";
                 return;
             }
-    
+
             $editMode = isset($_GET['editMode']) && $_GET['editMode'] === 'true';
-    
+
             echo $this->getTwig()->render('pageInformationsGuide.html.twig', [
                 'guide' => $guide,
                 'menu' => "guide_detail",
@@ -174,7 +178,7 @@ class ControllerGuide extends ControllerVoyageur
             echo "Erreur lors de l'affichage du guide : " . $e->getMessage();
         }
     }
-    
+
 
     // Voir le certificat du guide (accessible uniquement aux administrateurs)
     public function voirCertification(int $id): void
