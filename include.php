@@ -32,6 +32,8 @@ require_once 'modeles/guide.dao.php';
 require_once 'modeles/post.class.php';
 require_once 'modeles/post.dao.php';
 require_once 'modeles/config.class.php';
+require_once 'modeles/reservation.class.php';
+require_once 'modeles/reservation.dao.php';
 
 //ajout des controllers
 require_once 'controllers/controller.class.php';
@@ -45,6 +47,6 @@ require_once 'controllers/controller.excursion.php';
 require_once 'controllers/controller.voyageur.php';
 require_once 'controllers/controller.post.class.php';
 require_once 'controllers/controller.commentaire.php';
-//require_once 'controllers/controller.voyageur.php';
+require_once 'controllers/controller.reservation.php';
 
 
