@@ -1,43 +1,49 @@
 {% extends "base_template.html.twig" %}
-    {% block title %}{{constant('WEBSITE_TITLE')}} Page d'accueil</title> {% endblock %}
 
-        {% block content %}
-        <main>
-        {# image de paysage d'arrivé sur le site A COMPLETER #}
-        <div class="text-center">
-            <div id="carouselAccueil" class="carousel slide mb-5" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselAccueil" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselAccueil" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="./images/carnetKams.jpg" class="img-fluid" alt="1">
-                        <div class="carousel-caption position-absolute top-50 start-50 translate-middle text-center">
-                            <h1 class="text-white " style="text-shadow: 1px 1px 2px black;">Découvrir n'a jamais été aussi facile</h1>
-                        </div>
-                        <button class="position-absolute top-50 start-50 translate-middle text-center btn btn-primary rounded-pill">Réserver maintenant</button>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="./images/louvres.jpg" class="img-fluid" alt="2">
-                        <div class="carousel-caption position-absolute top-50 start-50 translate-middle text-center">
-                            <h1 class="text-white" style="text-shadow: 1px 1px 2px black;">Découvrir n'a jamais été aussi facile</h1>
-                        </div>
-                        <button class="position-absolute top-50 start-50 translate-middle text-center btn btn-primary rounded-pill">Réserver maintenant</button>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselAccueil" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselAccueil" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+{% block title %}
+{{ constant('WEBSITE_TITLE') }} Page d'accueil
+{% endblock %}
+
+{% block content %}
+<main>
+    {# Affichage du message de connexion si disponible #}
+    {% if connexion %}
+        <div class="alert alert-info text-center mt-3">{'Vous êtes connecté'}</div>
+    {% endif %}
+
+    {# image de paysage d'arrivé sur le site A COMPLETER #}
+    <div class="text-center">
+        <div id="carouselAccueil" class="carousel slide mb-5" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselAccueil" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselAccueil" data-bs-slide-to="1" aria-label="Slide 2"></button>
             </div>
-
-
-{#            <img src="images/imageAccueil.jpg"  alt="">#}
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="./images/carnetKams.jpg" class="img-fluid" alt="1">
+                    <div class="carousel-caption position-absolute top-50 start-50 translate-middle text-center">
+                        <h1 class="text-white" style="text-shadow: 1px 1px 2px black;">Découvrir n'a jamais été aussi facile</h1>
+                    </div>
+                    <button class="position-absolute top-50 start-50 translate-middle text-center btn btn-primary rounded-pill">Réserver maintenant</button>
+                </div>
+                <div class="carousel-item">
+                    <img src="./images/louvres.jpg" class="img-fluid" alt="2">
+                    <div class="carousel-caption position-absolute top-50 start-50 translate-middle text-center">
+                        <h1 class="text-white" style="text-shadow: 1px 1px 2px black;">Découvrir n'a jamais été aussi facile</h1>
+                    </div>
+                    <button class="position-absolute top-50 start-50 translate-middle text-center btn btn-primary rounded-pill">Réserver maintenant</button>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselAccueil" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselAccueil" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
 
         {# texte descriptif d'un carnet de voyage  #}
             <div class="container text-center">
@@ -64,7 +70,7 @@
                             Inscrivez-vous dès maintenant à la visite de vos rêves en consultant les visites disponibles.
                         </p>
                         {# bouton vers les visites disponibles #}
-                        <a href="#" class="btn btn-primary" title="Consulter les visites disponibles">
+                        <a href="index.php?controleur=excursion&methode=lister" class="btn btn-primary" title="Consulter les visites disponibles">
                             Consulter les visites disponibles
                         </a>
                     </div>
@@ -74,36 +80,15 @@
                 </div>
             </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="container mt-4">  {#mise en place de boostrap pour les colonnes #}
-           <div class="row">
-    
-                <div class="col-12 col-md-6">
-                    <div class="carnet de voyage">
-
-                    </div>
-                </div>
-            {# texte descriptif des visites  #}
-                <div class="col-12 col-md-6">
-                    <div class="visites">
-
-                    </div>
-                </div>
-        </main>
-        {% endblock %}
-
-            {% block script %} 
-
-
-            {% endblock %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="carnet de voyage"></div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="visites"></div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

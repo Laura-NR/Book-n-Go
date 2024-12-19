@@ -26,16 +26,41 @@ abstract class BaseController
         }
     }
 
-    //Pour appeler une méthode d’un contrôleur spécifique
+    // Pour appeler une méthode d’un contrôleur spécifique
     public function call(string $methode): mixed
     {
-        //test si la methode existe
+        // Vérifier si la méthode existe dans le contrôleur
         if (!method_exists($this, $methode)) {
-            throw new Exception("La methode $methode n'existe pas dans le contrôleur " . __CLASS__);
+            throw new Exception("La méthode $methode n'existe pas dans le contrôleur " . __CLASS__);
         }
-        
+
+        // Récupérer la liste des paramètres de la méthode
+        $reflectionMethod = new ReflectionMethod($this, $methode);
+        $parameters = $reflectionMethod->getParameters();
+
+        // Si la méthode a des paramètres, on essaie de les passer
+        if (count($parameters) > 0) {
+            $args = [];
+            foreach ($parameters as $param) {
+                $paramName = $param->getName();
+                if (isset($_GET[$paramName])) {
+                    $args[] = $_GET[$paramName];
+                } else {
+                    // Si un paramètre requis est absent, une exception est levée
+                    if (!$param->isOptional()) {
+                        throw new Exception("Paramètre manquant : $paramName pour la méthode $methode");
+                    }
+                    // Si le paramètre est optionnel, utiliser sa valeur par défaut
+                    $args[] = $param->getDefaultValue();
+                }
+            }
+            return $this->$methode(...$args); // Appel avec les arguments
+        }
+
+        // Si la méthode n'a pas de paramètres, on l'appelle directement
         return $this->$methode();
     }
+
 
     // // Rendu d'une vue Twig avec les données
     // protected function render(string $template, array $data = []): void {
@@ -44,17 +69,17 @@ abstract class BaseController
 
     //Redirection vers une URL
     function redirect(string $controller, string $method, array $params = []): void
-{
-    // Construction de l'URL de base
-    $url = 'index.php?controleur=' . urlencode($controller) . '&methode=' . urlencode($method);
-    // Ajout des paramètres
-    if (!empty($params)) {
-        $url .= '&' . http_build_query($params);
+    {
+        // Construction de l'URL de base
+        $url = 'index.php?controleur=' . urlencode($controller) . '&methode=' . urlencode($method);
+        // Ajout des paramètres
+        if (!empty($params)) {
+            $url .= '&' . http_build_query($params);
+        }
+        // Redirection à l'URL qui a étéée contruite
+        header("Location: $url");
+        exit;
     }
-    // Redirection à l'URL qui a étéée contruite
-    header("Location: $url");
-    exit;
-}
 
 
     public function getPdo(): ?PDO

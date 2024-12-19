@@ -8,7 +8,7 @@ Détails de l'Excursion
 <main class="container">
     <h1 class="text-center mt-5">{{ excursion.nom }}</h1>
     <div class="text-center my-4">
-        <img src="./images/excursion/{{ excursion.chemin_img }}" alt="{{ excursion.nom }}" style="max-width: 100%; border-radius: 10px;">
+        <img src="{{ excursion.chemin_image }}" alt="{{ excursion.nom }}" style="max-width: 100%; border-radius: 10px;">
     </div>
     <p><strong>Capacité :</strong> {{ excursion.capacite }}</p>
     <p><strong>Description :</strong> {{ excursion.description }}</p>
@@ -28,10 +28,13 @@ Détails de l'Excursion
     {% endif %}
     
     <div class="mt-4">
-        <a href="?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
-            Supprimer l'Excursion
+        <a href="?controleur=excursion&methode=modifier&id={{ excursion.id }}" class="btn btn-primary">
+            Modifier
         </a>
-        <a href="?controleur=excursion&methode=lister" class="btn btn-secondary">Retour à la liste des Excursions</a>
+        <a href="?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
+            Supprimer
+        </a>
+        <a href="?controleur=excursion&methode=lister" class="btn btn-secondary">Retour à la liste</a>
     </div>
 </main>
 {% endblock %}

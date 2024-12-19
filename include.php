@@ -25,6 +25,8 @@ require_once 'modeles/visite.class.php';
 require_once 'modeles/visite.dao.php';
 require_once 'modeles/voyageur.class.php';
 require_once 'modeles/voyageur.dao.php';
+require_once 'modeles/utilisateur.class.php';
+require_once 'modeles/utilisateur.dao.php';
 require_once 'modeles/guide.class.php';
 require_once 'modeles/guide.dao.php';
 require_once 'modeles/post.class.php';
@@ -36,10 +38,13 @@ require_once 'controllers/controller.class.php';
 require_once 'controllers/controller_factory.class.php';
 require_once 'controllers/controller.carnet.class.php';
 require_once 'controllers/controller.guide.php';
+require_once 'controllers/controller.login.php';
+require_once 'controllers/controller.utilisateur.php';
 require_once 'controllers/controller.visite.php';
 require_once 'controllers/controller.excursion.php';
 require_once 'controllers/controller.voyageur.php';
 require_once 'controllers/controller.post.class.php';
+require_once 'controllers/controller.commentaire.php';
 //require_once 'controllers/controller.voyageur.php';
 
 

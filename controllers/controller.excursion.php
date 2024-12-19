@@ -136,7 +136,7 @@ class ControllerExcursion extends BaseController
             $data = [
                 'capacite' => $this->getPost()['capacite'] ?? '',
                 'nom' => $this->getPost()['nom'] ?? '',
-                'date_visite' => new DateTime(),
+                'date_creation' => new DateTime(),
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
                 'id_guide' => 1, // Guide par défaut
@@ -208,9 +208,9 @@ class ControllerExcursion extends BaseController
 
         // Boucle sur les visites envoyées via le formulaire
         foreach ($postData as $key => $value) {
-            if (strpos($key, 'heure_arrivee_') === 0) {
+            if (strpos($key, 'temps_sur_place_') === 0) {
                 // Récupère l'id de la visite à partir du nom de l'input
-                $visiteId = str_replace('heure_arrivee_', '', $key);
+                $visiteId = str_replace('temps_sur_place_', '', $key);
                 $tempsSurPlaceKey = 'temps_sur_place_' . $visiteId;
 
                 // Vérifie que les données nécessaires pour la visite sont présentes
@@ -219,17 +219,15 @@ class ControllerExcursion extends BaseController
                     continue;
                 }
 
-                $heureArr = $value; // Heure arrivée
                 $tempsSurPlace = $postData[$tempsSurPlaceKey]; // Temps passé sur place
 
-                if (empty($heureArr) || empty($tempsSurPlace)) {
+                if (empty($tempsSurPlace)) {
                     echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (heure d'arrivée ou temps sur place).";
                     continue;
                 }
 
                 try {
                     $dateToday = (new DateTime())->format('Y-m-d');
-                    $heureArrObj = new DateTime($dateToday . ' ' . $heureArr);
                     $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
 
                     // Vérifie si la visite existe
@@ -241,7 +239,6 @@ class ControllerExcursion extends BaseController
 
                     // Crée un enregistrement dans la table Composer pour associer la visite à l'excursion
                     $composer = new Composer(
-                        $heureArrObj,
                         $tempsSurPlaceObj,
                         $excursionId,
                         $visiteId
@@ -257,6 +254,22 @@ class ControllerExcursion extends BaseController
         }
     }
 
+
+    /**
+     * @brief Modifier les informations d'une excursion existante.
+     * 
+     * Cette méthode modifie les informations d'une excursion dans la base de données en fonction de son ID.
+     * Si la modification échoue, un message d'erreur est affiché.
+     * 
+     * @param int $id L'ID de l'excursion à modifier.
+     * 
+     * @return void
+     */
+    public function modifier(int $id): void 
+    {
+        
+    }
+
     /**
      * @brief Supprime une excursion.
      * 
@@ -267,7 +280,7 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function supprimer(int $id): void
+    public function supprimerAjax(int $id): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());
 
@@ -295,6 +308,17 @@ class ControllerExcursion extends BaseController
         }
     }
 
+    public function supprimer(int $id): void
+    {
+        $excursionDao = new ExcursionDao($this->getPdo());
+
+        if ($excursionDao->supprimer($id)) {
+            $this->redirect('excursion', 'lister');
+        } else {
+            echo "Erreur lors de la suppression de l'excursion.";
+        }
+    }
+
 
     /**
      * @brief Affiche les détails d'une excursion.
@@ -308,7 +332,7 @@ class ControllerExcursion extends BaseController
     public function afficher(int $id): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());
-        $excursion = $excursionDao->find($id);
+        $excursion = $excursionDao->findAssoc($id);
 
         if ($excursion) {
             echo $this->getTwig()->render('details_excursion.html.twig', [

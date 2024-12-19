@@ -35,21 +35,21 @@ class ExcursionDao
      */
     public function creer(array $data): ?Excursion
     {
-        if ($data['date_visite'] instanceof DateTime) {
-            $data['date_visite'] = $data['date_visite']->format('Y-m-d H:i:s');
+        if ($data['date_creation'] instanceof DateTime) {
+            $data['date_creation'] = $data['date_creation']->format('Y-m-d H:i:s');
         }
 
         $data['public'] = isset($data['public']) && $data['public'] === 'on' ? 1 : 0;
 
         try {
-            $sql = "INSERT INTO excursion (capacite, nom, chemin_image, date_visite, description, public, id_guide)
-                VALUES (:capacite, :nom, :chemin_image, :date_visite, :description, :public, :id_guide)";
+            $sql = "INSERT INTO excursion (capacite, nom, chemin_image, date_creation, description, public, id_guide)
+                VALUES (:capacite, :nom, :chemin_image, :date_creation, :description, :public, :id_guide)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 ':capacite' => $data['capacite'],
                 ':nom' => $data['nom'],
                 ':chemin_image' => $data['chemin_image'],
-                ':date_visite' => $data['date_visite'],
+                ':date_creation' => $data['date_creation'],
                 ':description' => $data['description'],
                 ':public' => $data['public'],
                 ':id_guide' => $data['id_guide']
@@ -71,7 +71,7 @@ class ExcursionDao
      */
     public function sauvegarder(Excursion $excursion): bool
     {
-        $sql = "UPDATE excursion SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, date_visite = :date_visite,
+        $sql = "UPDATE excursion SET capacite = :capacite, nom = :nom, chemin_image = :chemin_image, date_creation = :date_creation,
                 description = :description, public = :public, id_guide = :id_guide WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
 
@@ -80,7 +80,7 @@ class ExcursionDao
             ':capacite' => $excursion->getCapacite(),
             ':nom' => $excursion->getNom(),
             ':chemin_image' => $excursion->getChemin_Image(),
-            ':date_excursion' => $excursion->getDate_Visite(),
+            ':date_creation' => $excursion->getDate_creation(),
             ':description' => $excursion->getDescription(),
             ':public' => $excursion->getPublic(),
             ':id_guide' => $excursion->getId_Guide()
@@ -163,9 +163,9 @@ class ExcursionDao
         $excursion->setCapacite($tableauAssoc['capacite']);
         $excursion->setNom($tableauAssoc['nom']);
         $excursion->setChemin_Image($tableauAssoc['chemin_image']);
-        $excursion->setDate_Visite(
-            !empty($tableauAssoc['date_visite']) 
-                ? new DateTime($tableauAssoc['date_visite']) 
+        $excursion->setDate_creation(
+            !empty($tableauAssoc['date_creation']) 
+                ? new DateTime($tableauAssoc['date_creation']) 
                 : null
         );
         $excursion->setDescription($tableauAssoc['description']);
@@ -197,7 +197,7 @@ class ExcursionDao
      */
     public function findAll(): array
     {
-        $sql = "SELECT * FROM excursion ORDER BY date_visite DESC";
+        $sql = "SELECT * FROM excursion ORDER BY date_creation DESC";
         $stmt = $this->pdo->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -207,7 +207,7 @@ class ExcursionDao
                 $row['id'],
                 $row['capacite'],
                 $row['nom'],
-                new DateTime($row['date_visite']),
+                new DateTime($row['date_creation']),
                 $row['description'],
                 $row['chemin_image'],
                 $row['public'],

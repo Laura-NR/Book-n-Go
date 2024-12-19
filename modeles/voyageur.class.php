@@ -1,27 +1,34 @@
 <?php
-abstract class Voyageur {
+
+class Voyageur {
 //attributs   
 private ?int $id;
 private ?string $nom;
 private ?string $prenom;   
-private ?string $numeroTel;
+private ?string $numero_tel;
 private ?string $mail;   
-private ?string $mdp;   
+private ?string $mdp;
+private ?DateTime $derniere_co;
 
-//constructeur et destruteurs 
-public function __construct(?int $id = null, ?string $nom = null,?string $prenom = null, ?string $numeroTel = null,?string $mail = null, ?string $mdp = null,?string $cheminCertification = null) {
+
+
+//constructeur et destruteurs
+
+
+    public function __construct(?int $id = null, ?string $nom = null,?string $prenom = null, ?string $numero_tel = null,?string $mail = null, ?string $mdp = null,?string $cheminCertification = null, ?DateTime $derniere_co = null) {
     $this->id = $id;
     $this-> nom =$nom ;
     $this->prenom = $prenom;   
-    $this-> numeroTel = $numeroTel;
+    $this-> numero_tel = $numero_tel;
     $this->mail = $mail;   
-    $this->mdp = $mdp;   
+    $this->mdp = $mdp;
+    $this->derniere_co = $derniere_co;
 }
 
     // Getters et Setters
     public function getId(): int 
     { 
-        return $this->id; 
+        return $this->id;
     }
     public function setId(int $id): void 
     { 
@@ -48,11 +55,11 @@ public function __construct(?int $id = null, ?string $nom = null,?string $prenom
 
     public function getNumeroTel(): string 
     { 
-        return $this->numeroTel; 
+        return $this->numero_tel;
     }
     public function setNumeroTel(string $numeroTel): void
     { 
-        $this->numeroTel = $numeroTel; 
+        $this->numero_tel = $numeroTel;
     }
 
     public function getMail(): string 
@@ -72,6 +79,15 @@ public function __construct(?int $id = null, ?string $nom = null,?string $prenom
     {
          $this->mdp = $mdp;
     }
-}
 
+    public function getDerniereCo(): ?DateTime
+    {
+        return $this->derniere_co;
+    }
+
+    public function setDerniereCo(?DateTime $derniere_co): void
+    {
+        $this->derniere_co = $derniere_co;
+    }
+}
 ?>

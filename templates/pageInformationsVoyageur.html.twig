@@ -1,26 +1,104 @@
-
 {% extends "base_template.html.twig" %}
-{% block title %}{{ constant('WEBSITE_TITLE') }} - Mon compte{% endblock %}
+
+{% block title %}
+    {{ constant('WEBSITE_TITLE') }} - Mon compte
+{% endblock %}
+
 {% block content %}
-{{ dump(voyageur) }}
 <div class="container my-5">
     <h2>Mes informations:</h2>
-    {# {{dump(voyageur)}} #}
-    {# //bloc avec les informations de l'utilisateur connecté #}
-    <div class="card">
-        <div class="card-body d-flex justify-content-between align-items-center">
-            <div>
-                <p><strong>Nom:</strong> <span id="nom-utilisateur">{{ voyageur.nom }}</span></p>
-                <p><strong>Prénom:</strong> <span id="prenom-utilisateur">{{ voyageur.prenom }}</span></p>
-                <p><strong>Mail:</strong> <span id="email-utilisateur">{{ voyageur.mail }}</span></p>
-                <p><strong>Numéro de téléphone:</strong> <span id="telephone-utilisateur">{{ voyageur.numero_tel }}</span></p>
+    <!-- Formulaire principal pour Modifier et Enregistrer -->
+    <form method="POST" action="?controleur=voyageur&methode=modifiervoyageur&id={{ voyageur.id }}" id="form-modification">
+
+        <div class="card">
+            <div class="card-body">
+
+                <!-- Nom -->
+                <div class="mb-3">
+                    <label for="nom-utilisateur" class="form-label"><strong>Nom:</strong></label>
+                    {% if editMode %}
+                        <input type="text" name="nom" id="nom-utilisateur" value="{{ voyageur.nom }}" class="form-control">
+                    {% else %}
+                        <p>{{ voyageur.nom }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Prénom -->
+                <div class="mb-3">
+                    <label for="prenom-utilisateur" class="form-label"><strong>Prénom:</strong></label>
+                    {% if editMode %}
+                        <input type="text" name="prenom" id="prenom-utilisateur" value="{{ voyageur.prenom }}" class="form-control">
+                    {% else %}
+                        <p>{{ voyageur.prenom }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email-utilisateur" class="form-label"><strong>Mail:</strong></label>
+                    {% if editMode %}
+                        <input type="email" name="mail" id="email-utilisateur" value="{{ voyageur.mail }}" class="form-control">
+                    {% else %}
+                        <p>{{ voyageur.mail }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Numéro de téléphone -->
+                <div class="mb-3">
+                    <label for="telephone-utilisateur" class="form-label"><strong>Numéro de téléphone:</strong></label>
+                    {% if editMode %}
+                        <input type="text" name="numero_tel" id="telephone-utilisateur" value="{{ voyageur.numero_tel }}" class="form-control">
+                    {% else %}
+                        <p>{{ voyageur.numero_tel }}</p>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Boutons Modifier / Enregistrer / Annuler -->
+        <div class="mt-4 d-flex justify-content-between">
+            {% if editMode %}
+                <div class="d-flex">
+                    <!-- Bouton Enregistrer déclenche la modale -->
+                    <button type="submit" class="btn btn-success" name="action" value="modifier">Enregistrer</button>
+                    <!-- Annuler : Redirection vers la page d'informations du voyageur -->
+                    <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}" class="btn btn-outline-secondary ms-2">Annuler</a>
+                </div>
+            {% else %}
+                <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}&editMode=true" class="btn btn-outline-secondary">Modifier</a>
+            {% endif %}
+
+            <!-- Supprimer toujours à droite -->
+            <div class="ms-auto">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#fenetreModale"> Supprimer mon compte</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Modale de confirmation de suppression -->
+    <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera tous vos carnets de voyage, posts et commentaires.</p>
+                </div>
+                <div class="modal-footer">
+                    <!-- Formulaire pour confirmer la suppression -->
+                    <form method="POST" action="?controleur=voyageur&methode=supprimervoyageur&id={{ voyageur.id }}">
+                        <input type="hidden" name="action" value="supprimer">
+                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-center mt-3"> {# //centrer au centre de ma carte des informations #}
-    {# renvoi sur les pages de modification ou afficher un pop up de confirmation de suppression de compte #}
-        <button class="btn btn-outline-secondary mr-2" onclick="modifierVoyageur()">Modifier les informations</button>
-         <button class="btn btn-outline-danger" onclick="supprimerVoyageur()">Supprimer le compte</button>{#//mettre en rouge plutot car c'est un danger #}
-    </div>
+    
+
 </div>
 {% endblock %}
