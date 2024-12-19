@@ -48,6 +48,7 @@
                     <th scope="col">ville</th>
                     <th scope="col">code postal</th>
                     <th scope="col">description</th>
+                    {% if etatCheck == 'on' %} <th scope="col">action</th> {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -58,6 +59,7 @@
                         <td> {{ visite.ville }} </td>
                         <td> {{ visite.codePostal }} </td>
                         <td> {{ visite.description }}</td>
+                        {% if etatCheck == 'on' %} <td> <button type="button" class="btn btn-primary">Modifier</button> </td> {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
