@@ -20,8 +20,9 @@
 
 {% extends "base_template.html.twig" %}
 
-{% block link %}
-    <link rel="stylesheet" type="text/css" href="./node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css">
+{% block link %} <link rel="stylesheet" type="text/css" href="./node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css"> {% endblock %}
+
+{% block style %}
     <style>
         #tableVisite td:nth-child(5) {
             word-wrap: break-word;
