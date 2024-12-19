@@ -71,7 +71,7 @@ class UtilisateurDao {
 
             return null;
         } catch (PDOException $e) {
-            echo "Erreur lors de la recherche : " . $e->getMessage();
+            //echo "Erreur lors de la recherche : " . $e->getMessage();
             return null;
         }
     }

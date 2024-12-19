@@ -96,14 +96,21 @@ class GuideDao
     // Créer un guide dans la base de données
     public function creer(Guide $guide): bool
     {
-        $sql = "INSERT INTO guide (nom, prenom, numero_tel, mail, mdp, chemin_certif) 
-                VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :chemin_certif)";
+        // Requête SQL incluant le champ 'derniere_co'
+        $sql = "INSERT INTO guide (nom, prenom, numero_tel, mail, mdp, chemin_certif, derniere_co) 
+                VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :chemin_certif, :derniere_co)";
+        
         $pdoStatement = $this->pdo->prepare($sql);
+        
+        // Vérifier si la dernière connexion est définie et convertir au format voulu
         $derniereCo = $guide->getDerniereCo();
-        if ($derniereCo == null){
-            $derniereCo = 1;//convertir
+        if ($derniereCo !== null) {
+            $derniereCo = $derniereCo->format("Y-m-d");  // Format de la date
+        } else {
+            $derniereCo = null; // Si la date n'est pas définie, mettre à null
         }
-
+    
+        // Exécution de la requête avec les paramètres
         return $pdoStatement->execute([
             'nom' => $guide->getNom(),
             'prenom' => $guide->getPrenom(),
@@ -111,9 +118,10 @@ class GuideDao
             'mail' => $guide->getMail(),
             'mdp' => $guide->getMdp(),
             'chemin_certif' => $guide->getCheminCertification(),
-            'derniere_co'=> $derniereCo,  // conversion a faire si c'est pas null
+            'derniere_co' => $derniereCo,  // Paramètre de la date de dernière connexion
         ]);
     }
+    
 
     // Mettre à jour un guide dans la base de données
     public function maj(Guide $guide): bool

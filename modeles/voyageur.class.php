@@ -1,4 +1,5 @@
 <?php
+
 class Voyageur {
 //attributs   
 private ?int $id;
@@ -89,5 +90,4 @@ private ?DateTime $derniere_co;
         $this->derniere_co = $derniere_co;
     }
 }
-
-?> 
+?>

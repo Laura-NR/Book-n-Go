@@ -27,42 +27,51 @@ class ControllerGuide extends ControllerVoyageur
         return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
     }
 
-    // Création d'un guide
     public function creerGuide(): void
     {
-        if (!$this->isAdmin()) {
-            echo "Accès non autorisé. Vous devez être administrateur pour créer un guide.";
-            return;
-        }
-
         $postData = $this->getPost();
+        $fileData = $_FILES;
+    
+        //var_dump($fileData);
+    
         if (
             empty($postData) ||
-            !isset($postData['nom'], $postData['prenom'], $postData['numero_tel'], $postData['mail'], $postData['mdp'], $postData['chemin_certif'])
+            empty($postData['nom']) ||
+            empty($postData['prenom']) ||
+            empty($postData['numero_tel']) ||
+            empty($postData['mail']) ||
+            empty($postData['mdp']) ||
+            !isset($fileData['chemin_certif']) || 
+            empty($fileData['chemin_certif']['tmp_name']) 
         ) {
-            echo "Données manquantes pour créer le guide.";
+            echo "Données manquantes ou invalides pour créer le guide.";
             return;
         }
-
+    
+        // Extraire uniquement le nom du fichier (pas le chemin complet)
+        $nomFichierCertif = basename($fileData['chemin_certif']['name']);
+    
         try {
             $guide = new Guide();
             $guide->setNom($postData['nom']);
             $guide->setPrenom($postData['prenom']);
             $guide->setNumeroTel($postData['numero_tel']);
             $guide->setMail($postData['mail']);
-            $guide->setMdp($postData['mdp']);
-            $guide->setCheminCertification($postData['chemin_certif']);
-
+            $guide->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
+            $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
+            $guide->setDerniereCo(new DateTime());
+    
             $guideDao = new GuideDao($this->getPdo());
             if ($guideDao->creer($guide)) {
-                echo "Insertion réalisée avec succès.";
+                //echo "Insertion réalisée avec succès.";
             } else {
-                echo "Erreur lors de la création du guide.";
+                //echo "Erreur lors de la création du guide.";
             }
         } catch (Exception $e) {
-            echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
+            //echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
         }
     }
+    
 
     // Modification d'un guide
     public function supprimerGuide(int $id): void
