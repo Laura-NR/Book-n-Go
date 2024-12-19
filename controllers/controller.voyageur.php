@@ -29,15 +29,15 @@ class ControllerVoyageur extends BaseController {
     // Création d'un voyageur
     public function creerVoyageur(): void {
         // Vérification des données nécessaires
-        // if (empty($this->getPost()) ||
-        //     !isset($this->getPost()['nom'],
-        //     $this->getPost()['prenom'],
-        //     $this->getPost()['numero_tel'],
-        //     $this->getPost()['mail'],
-        //     $this->getPost()['mdp'])) {
-        //     echo "Données manquantes pour créer le voyageur.";
-        //     return; // Retourner immédiatement si les données sont manquantes
-        // }
+        if (empty($this->getPost()) ||
+            !isset($this->getPost()['nom'],
+            $this->getPost()['prenom'],
+            $this->getPost()['numero_tel'],
+            $this->getPost()['mail'],
+            $this->getPost()['mdp'])) {
+            // echo "Données manquantes pour créer le voyageur.";
+            return; // Retourner immédiatement si les données sont manquantes
+        }
 
         try {
             // Création du voyageur
@@ -47,16 +47,17 @@ class ControllerVoyageur extends BaseController {
             $voyageur->setNumeroTel($this->getPost()['numero_tel']);
             $voyageur->setMail($this->getPost()['mail']);
             $voyageur->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
-            var_dump($voyageur);
+            //var_dump($voyageur);
+            $voyageur->setDerniereCo(new DateTime());
             // Utilisation de VoyageurDao pour insérer le voyageur
             $voyageurDao = new VoyageurDao($this->getPdo());
             if ($voyageurDao->creer($voyageur)) {
-                echo "Insertion réalisée avec succès.";
+               // echo "Insertion réalisée avec succès.";
             } else {
-                echo "Erreur lors de la création du voyageur.";
+                //echo "Erreur lors de la création du voyageur.";
             }
         } catch (Exception $e) {
-            echo "Erreur lors de l'ajout du voyageur : " . $e->getMessage();
+            //echo "Erreur lors de l'ajout du voyageur : " . $e->getMessage();
         }
     }
 

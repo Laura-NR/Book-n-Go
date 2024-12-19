@@ -70,13 +70,17 @@ class VoyageurDao {
         $sql = "INSERT INTO voyageur (nom, prenom, numero_tel, mail, mdp, derniere_co) 
                 VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :derniere_co)";
         $requete = $this->pdo->prepare($sql);
+        $derniereCo = $voyageur->getDerniereCo();
+        if ($derniereCo != null){
+            $derniereCo = $derniereCo->format("Y-m-d");//convertir
+        }
         return $requete->execute([
             'nom' => $voyageur->getNom(),
             'prenom' => $voyageur->getPrenom(),
             'numero_tel' => $voyageur->getNumeroTel(),
             'mail' => $voyageur->getMail(),
             'mdp' => $voyageur->getMdp(),
-            'derniere_co'=> $voyageur->getDerniereCo(),
+            'derniere_co'=> $derniereCo,
         ]);
     }
 
