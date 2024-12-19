@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Guide extends Voyageur {
    // Attribut spécifique à Guide

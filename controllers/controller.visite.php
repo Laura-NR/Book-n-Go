@@ -1,50 +1,101 @@
 <?php
-
+require_once 'controller.class.php';
 class ControllerVisite extends BaseController {
-    public function __construct(\Twig\Loader\FilesystemLoader $loader, \Twig\Environment $twig) {
-        parent::__construct($loader, $twig);
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
+        parent::__construct($twig, $loader);
     }
 
-    // Affiche le formulaire de création d'excursion et enregistre les données si envoyées
+    // Affiche le formulaire de création d'visite et enregistre les données si envoyées
     public function creer(): void {
         // Vérifie si le formulaire a été soumis
-        if (!empty($this->getPost())) {
+        
+        if (!empty($_POST)) {
             $data = [
-                'capacite' => $this->getPost()['capacite'] ?? '',
-                'nom' => $this->getPost()['nom'] ?? '',
-                'chemin_image' => $this->getPost()['chemin_image'] ?? '',
-                'date_visite' => $this->getPost()['date_visite'] ?? '',
-                'description' => $this->getPost()['description'] ?? '',
-                'public' => $this->getPost()['public'] ?? 1, // 1 pour public, 0 pour privé
-                'id_guide' => $this->getPost()['id_guide'] ?? ''
+                'adresse' => $_POST['adresse'],
+                'ville' => $_POST['ville'],
+                'codePostal' => $_POST['codePostal'],
+                'description' => $_POST['description'],
+                'titre' => $_POST['titre'],
+                'idGuide' => 10, /*$_SESSION['id'],*/
             ];
 
-            // Utilisation de ExcursionDao pour créer une nouvelle excursion
-            $excursionDao = new ExcursionDao($this->getPdo());
-            $nouvelleExcursion = $excursionDao->creer($data);
-
-            // Redirige vers la liste des excursions après création réussie
-            if ($nouvelleExcursion) {
-                $this->redirect('ListesExcursions.php');
-            } else {
-                echo "Erreur lors de la création de l'excursion.";
+            // Utilisation de VisiteDao pour créer une nouvelle Visite
+            $visiteDao = new VisiteDao($this->getPdo());
+            $nouvelleVisite = $visiteDao->insert($data);
+            // Redirige vers la liste des visite après création réussie
+            /*$nouvelleVisite*/
+            if ($nouvelleVisite /*&& parametre excursion = TRUE*/) {
+                $this->redirect('visite','lister',);
+            }
+            //elseif ($nouvelleVisite /*&&parametre excursion = FALSE*/){
+            //    $this->redirect('visite','lister');
+            //}
+            else {
+                echo "Erreur lors de la création de la visite.";
             }
         } else {
             // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('creerExcursion.twig');
+            echo $this->getTwig()->render('creation_visite.html.twig');
         }
     }
 
-    // Supprime une excursion en fonction de son ID
-    public function supprimer(int $id): void {
-        $excursionDao = new ExcursionDao($this->getPdo());
+    public function modifier(): void {
+        if (!empty($_POST)) {
+            $data = [
+                'id' =>$_POST['id'],
+                'adresse' => $_POST['adresse'],
+                'ville' => $_POST['ville'],
+                'codePostal' => $_POST['codePostal'],
+                'description' => $_POST['description'],
+                'titre' => $_POST['titre'],
+            ];
 
-        // Si la suppression réussit, redirection vers la liste
-        if ($excursionDao->supprimer($id)) {
-            $this->redirect('ListesExcursions.php');
+            // Utilisation de VisiteDao pour créer une nouvelle Visite
+            $visiteDao = new VisiteDao($this->getPdo());
+            $visiteModif = $visiteDao->modify($data);
+            // Redirige vers la liste des visite après création réussie
+            /*$nouvelleVisite*/
+            if ($visiteModif) {
+                // REDIRECTION A CHANGER POUR LA LISTE DES VISITES
+                $this->redirect('index.php?controleur=visite&methode=lister');
+            } else {
+                echo "Erreur lors de la création de la visite.";
+            }
         } else {
-            echo "Erreur lors de la suppression de l'excursion.";
+            // Chargement du formulaire de création si aucune soumission n'a eu lieu
+            echo $this->getTwig()->render('creation_visite.html.twig');
         }
+    }
+    
+
+    // Supprime une visite en fonction de son ID
+    // public function supprimer(int $id): void {
+    //     $visiteDao = new VisiteDao($this->getPdo());
+
+    //     // Si la suppression réussit, redirection vers la liste
+    //     if ($visiteDao->supprimer($id)) {
+    //         $this->redirect('listes_visites.php');
+    //     } else {
+    //         echo "Erreur lors de la suppression de la visite.";
+    //     }
+    // }
+
+    public function lister(): void
+    {
+        $checkbox = isset($_POST['checkbox']);
+        $visiteDao = new VisiteDao($this->getPdo());
+        if (!$checkbox)
+            $listeVisite = $visiteDao->findAll();
+        else {
+            $id_guide = 10 /*$_SESSION['id'],*/;
+            $listeVisite = $visiteDao->findByGuide($id_guide);
+        }
+        $template = $this->getTwig()->load("liste_visite.html.twig");
+
+        echo $template->render(array(
+            'etatCheck' => $checkbox,
+            "visites" => $listeVisite,
+        ));
     }
 }
 ?>
