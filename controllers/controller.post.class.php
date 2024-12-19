@@ -52,6 +52,14 @@ class ControllerPost extends BaseController
 
     public function afficher($id): void
     {
+        // Récupérer les erreurs et les données de la session (si présentes)
+        $erreursCommentaire = $_SESSION['erreurs_commentaire'] ?? [];
+        $donneesCommentaire = $_SESSION['donnees_commentaire'] ?? [];
+
+        // Supprimer les variables de session pour éviter qu'elles ne soient affichées à nouveau
+        unset($_SESSION['erreurs_commentaire']);
+        unset($_SESSION['donnees_commentaire']);
+
         $postDao = new PostDAO($this->getPdo());
         $commentaireDao = new CommentaireDao($this->getPdo());
 
@@ -64,6 +72,8 @@ class ControllerPost extends BaseController
             echo $template->render(array(
                 'post' => $post,
                 'commentaires' => $commentaires,
+                'erreursCommentaire' => $erreursCommentaire, // Passer les erreurs à la vue
+                'donneesCommentaire' => $donneesCommentaire // Passer les données pour pré-remplir le formulaire
             ));
         } else {
             // Si le post n'existe pas, afficher une erreur ou rediriger

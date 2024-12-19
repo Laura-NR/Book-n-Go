@@ -1,0 +1,99 @@
+{# list_excursions.twig
+/**
+ * @file list_excursions.twig
+ * @brief Template pour afficher la liste des excursions disponibles.
+ *
+ * Ce template affiche une carte pour chaque excursion. Chaque carte contient :
+ * - Une image de l'excursion (si disponible) ou une image par défaut.
+ * - Le nom et la date de la visite.
+ * - Une description courte (si disponible).
+ * - Un bouton pour consulter les détails de l'excursion.
+ *
+ * Si aucune excursion n'est disponible, un message d'alerte est affiché.
+ *
+ * @section sections Sections du template
+ * - **title** : Titre de la page "Liste des Excursions".
+ * - **content** : Contenu principal contenant la liste des excursions sous forme de cartes.
+ *     - Si les excursions sont disponibles, elles sont affichées dans une grille responsive.
+ *     - Si aucune excursion n'est trouvée, un message d'avertissement est affiché.
+ */#}
+
+{% extends "base_template.html.twig" %}
+
+{% block link %} <link rel="stylesheet" type="text/css" href="./node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css"> {% endblock %}
+
+{% block css %}
+    <style>
+        #tableVisite td:nth-child(5) {
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 600px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    Liste des Visites
+{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Liste des Visites</h1>
+
+        {% if visites is defined and visites is not empty %}
+            <table id="tableVisite" class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">titre</th>
+                    <th scope="col">adresse</th>
+                    <th scope="col">ville</th>
+                    <th scope="col">code postal</th>
+                    <th scope="col">description</th>
+                    {% if etatCheck == 'on' %} <th scope="col">action</th> {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for visite in visites %}
+                    <tr>
+                        <td> {{ visite.titre }} </td>
+                        <td> {{ visite.adresse }} </td>
+                        <td> {{ visite.ville }} </td>
+                        <td> {{ visite.codePostal }} </td>
+                        <td> {{ visite.description }}</td>
+                        {% if etatCheck == 'on' %} <td> <button type="button" class="btn btn-primary">Modifier</button> </td> {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Formulaire avec checkbox pour recharger la page -->
+            <form id="checkboxForm" method="POST">
+                <label for="checkbox">Voir ces visites :</label>
+                <input type="checkbox" id="checkbox" name="checkbox" onclick="rechargePage()"
+                    {% if etatCheck == 'on' %} checked="checked" {% endif %}>
+            </form>
+
+        {% else %}
+            <div class="alert alert-warning text-center">
+                <p>Aucune visite créée.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+    <script src="./node_modules/datatables.net/js/dataTables.js"></script>
+    <script src="./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.js"></script>
+    <script>
+        new DataTable('#tableVisite');
+    </script>
+
+    <script>
+        // Fonction qui recharge la page lorsque l'état de la checkbox change
+        function rechargePage() {
+            document.getElementById('checkboxForm').submit(); // Soumettre le formulaire
+        }
+    </script>
+{% endblock %}
+

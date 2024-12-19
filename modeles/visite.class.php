@@ -1,20 +1,23 @@
 <?php
 class Visite{
     private int|null $id;
-    private string|null $address;
+    private string|null $adresse;
     private string|null $ville;
-    private int|null $code_postal;
+    private int|null $codePostal;
     private string|null $description;
     private string|null $titre;
 
+    private int|null $idGuide;
+
     //Constructeur
-    public function __construct(?int $id = null, ?string $address = null, ?string $ville = null, ?int $code_postal = null, ?string $description = null, ?string $titre = null){
+    public function __construct(?int $id = null, ?string $adresse = null, ?string $ville = null, ?int $codePostal = null, ?string $description = null, ?string $titre = null, ?int $idGuide = null){
         $this->id = $id;
-        $this->address = $address;
+        $this->adresse = $adresse;
         $this->ville = $ville;
-        $this->code_postal = $code_postal;
+        $this->codePostal = $codePostal;
         $this->description = $description;
         $this->titre = $titre;
+        $this->idGuide = $idGuide;
     }
 
     //Getteur
@@ -22,42 +25,46 @@ class Visite{
         return $this->id;
     }
 
-    public function getAddress(){
-        return $this->address;
+    public function getAdresse(): ?string{
+        return $this->adresse;
     }
 
-    public function getVille(){
+    public function getVille(): ?string{
         return $this->ville;
     }
 
-    public function getCodePostal(){
-        return $this->code_postal;
+    public function getCodePostal(): ?int{
+        return $this->codePostal;
     }
 
-    public function getDescription(){
+    public function getDescription(): ?string{
         return $this->description;
     }
 
-    public function getTitre(){
+    public function getTitre(): ?string{
         return $this->titre;
     }
-    
 
+    /**
+     * @return int|null
+     */public function getIdGuide(): ?int{
+    return $this->idGuide;
+    }
     //Setteur
     public function setId(?int $id): void{
         $this->id = $id;
     }
 
-    public function setAddress(?string $address): void{
-        $this->address = $address;
+    public function setAdresse(?string $adresse): void{
+        $this->adresse = $adresse;
     }
 
     public function setVille(?string $ville): void{
         $this->ville = $ville;
     }
 
-    public function setCodePostal(?int $code_postal): void{
-        $this->code_postal = $code_postal;
+    public function setCodePostal(?int $codePostal): void{
+        $this->codePostal = $codePostal;
     }
 
     public function setDescription(?string $description): void{
@@ -66,6 +73,13 @@ class Visite{
 
     public function setTitre(?string $titre): void{
         $this->titre = $titre;
+    }
+
+    /**
+     * @param int|null $idGuide
+     */
+    public function setIdGuide(?int $idGuide): void{
+        $this->idGuide = $idGuide;
     }
 }
 ?>
