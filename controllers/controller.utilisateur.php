@@ -52,23 +52,27 @@ class ControllerUtilisateur extends BaseController {
                 }
     
                 // Redirection après succès de la connexion
-                $this->redirect('', '', ['message' => 'Connexion_reussie']);
-                exit;
+                $this->redirect('', '', ['connexion' => true]);
+                ob_end_flush();
+                return true;
             } else {
                 // Si la vérification du mot de passe échoue, affiche un message d'erreur dans l'URL
-                $this->redirect('utilisateur', 'connexion', ['message' => 'Mot de passe incorrect.']);
+                $this->redirect('utilisateur', 'connexion', ['connexion' => false]);
+                ob_end_flush();
                 return false;
             }
         } else {
             // Si l'utilisateur n'est pas trouvé
-            $this->redirect('utilisateur', 'connexion', ['message' => 'Utilisateur non trouve.']);
+            $this->redirect('utilisateur', 'connexion', ['connexion' => false]);
+            ob_end_flush();
             return false;
+            
         }
     }
     
 
     // Inscription d'un utilisateur
-    public function inscription(): void {
+    public function inscription(): bool {
 
        // var_dump($_POST);
 
@@ -88,6 +92,10 @@ class ControllerUtilisateur extends BaseController {
             //$utilisateur->creerVoyageur();
             $controller = new ControllerVoyageur($this->getTwig(), $this->getLoader());
             $controller->creerVoyageur();
+
+            $this->redirect('', '', ['inscription' => true]);
+            ob_end_flush();
+            return true;
         }
         else if ($role == "guide"){
             // appeler la methode creer de guide
@@ -95,8 +103,15 @@ class ControllerUtilisateur extends BaseController {
             $controller = new ControllerGuide($this->getTwig(), $this->getLoader());
             $controller->creerGuide();
 
+            $this->redirect('', '', ['inscription' => true]);
+            ob_end_flush();
+            return true;
+
         }
         else{
+            $this->redirect('utilisateur', 'inscription', ['inscription' => false]);
+            ob_end_flush();
+            return false;
             exit;
         }
     }
