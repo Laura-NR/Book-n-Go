@@ -10,18 +10,28 @@ Connexion
 
     <div class="row justify-content-center">
         <div class="col-md-8">
+            {% if erreurs|default %}
+                {% for erreur in erreurs %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ erreur }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div class="card p-4 shadow-sm">
                 <form action="?controleur=utilisateur&methode=connexion" method="POST">
+
                     <!-- Email -->
                     <div class="mb-3">
-                        <label for="username" class="form-label">Email :</label>
-                        <input type="email" name="username" id="username" class="form-control" placeholder="Entrez votre email" required>
+                        <label for="mail" class="form-label">Email :</label>
+                        <input type="email" name="mail" id="mail" class="form-control" value="{{ donnees['mail'] }}" placeholder="Entrez votre email" required>
                     </div>
+
                     <!-- Mot de passe -->
                     <div class="mb-3">
                         <label for="mdp" class="form-label">Mot de passe :</label>
-                        <input type="password" name="mdp" id="mdp" class="form-control" placeholder="Entrez votre mot de passe" required>
+                        <input type="password" name="mdp" id="mdp" class="form-control" value="{{ donnees['mdp'] }}" placeholder="Entrez votre mot de passe" required>
                     </div>
+
                     <!-- Bouton de connexion -->
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">Se connecter</button>
