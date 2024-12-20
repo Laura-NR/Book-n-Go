@@ -1,10 +1,13 @@
 <?php
 require_once 'controller.class.php';
+require_once 'validation/ajout_voyageur.php';
 
 class ControllerVoyageur extends BaseController {
 
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
+        global $reglesValidation;
+        $this->validator = new Validator($reglesValidation);
     }
     public function call($methode): mixed
     {
@@ -27,7 +30,7 @@ class ControllerVoyageur extends BaseController {
         }
     
     // Création d'un voyageur
-    public function creerVoyageur(): void {
+    public function creerVoyageur(): bool {
         // Vérification des données nécessaires
         if (empty($this->getPost()) ||
             !isset($this->getPost()['nom'],
@@ -36,7 +39,7 @@ class ControllerVoyageur extends BaseController {
             $this->getPost()['mail'],
             $this->getPost()['mdp'])) {
             // echo "Données manquantes pour créer le voyageur.";
-            return; // Retourner immédiatement si les données sont manquantes
+            return false; // Retourner immédiatement si les données sont manquantes
         }
 
         try {
@@ -52,13 +55,14 @@ class ControllerVoyageur extends BaseController {
             // Utilisation de VoyageurDao pour insérer le voyageur
             $voyageurDao = new VoyageurDao($this->getPdo());
             if ($voyageurDao->creer($voyageur)) {
-               // echo "Insertion réalisée avec succès.";
+               return true;
             } else {
-                //echo "Erreur lors de la création du voyageur.";
+                return false;
             }
         } catch (Exception $e) {
-            //echo "Erreur lors de l'ajout du voyageur : " . $e->getMessage();
+            echo "Erreur lors de l'ajout du voyageur : " . $e->getMessage();
         }
+        return false;
     }
 
     // Modification d'un voyageur
@@ -140,24 +144,24 @@ class ControllerVoyageur extends BaseController {
     }
     // Lister tous les voyageurs
 
-    public function lister(): void {
-    try {
-        // Utilisation de la méthode listerTousVoyageurs pour récupérer tous les voyageurs
-        $voyageurDao = new VoyageurDao($this->getPdo());
-        $voyageurs = $voyageurDao->listerTousVoyageurs(); // Récupère tous les voyageurs via la méthode listerTousVoyageurs
-
-        // Chargement du template pour lister les voyageurs
-        $template = $this->getTwig()->load('voyageurList.twig');
-
-        // Affichage du template avec les données des voyageurs
-        echo $template->render([
-            'voyageurs' => $voyageurs, 
-            'menu' => "voyageur"
-        ]);
-    } catch (Exception $e) {
-        echo "Erreur lors de la récupération des voyageurs : " . $e->getMessage();
-    }
-}
+//    public function lister(): void {
+//    try {
+//        // Utilisation de la méthode listerTousVoyageurs pour récupérer tous les voyageurs
+//        $voyageurDao = new VoyageurDao($this->getPdo());
+//        $voyageurs = $voyageurDao->listerTousVoyageurs(); // Récupère tous les voyageurs via la méthode listerTousVoyageurs
+//
+//        // Chargement du template pour lister les voyageurs
+//        $template = $this->getTwig()->load('voyageurList.twig');
+//
+//        // Affichage du template avec les données des voyageurs
+//        echo $template->render([
+//            'voyageurs' => $voyageurs,
+//            'menu' => "voyageur"
+//        ]);
+//    } catch (Exception $e) {
+//        echo "Erreur lors de la récupération des voyageurs : " . $e->getMessage();
+//    }
+//}
 
 
     // Afficher les détails d'un voyageur spécifique

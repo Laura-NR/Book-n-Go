@@ -17,6 +17,7 @@ class ControllerUtilisateur extends BaseController {
 
     // Affichage de la page d'inscription
     public function afficherInscription(): void {
+
         $template = $this->getTwig()->load('inscription_template.html.twig');
 
         // Affichage du template
@@ -72,48 +73,57 @@ class ControllerUtilisateur extends BaseController {
     
 
     // Inscription d'un utilisateur
-    public function inscription(): bool {
+    public function inscription(): bool
+    {
 
-       // var_dump($_POST);
+        // var_dump($_POST);
 
         // $nom = $_POST['nom'];
         // $prenom = $_POST['prenom'];
         // $numeroTel = $_POST['numeroTel'];
         // $email = $_POST['mail'];
         // $motDePasse = $_POST['mdp'];
-        $role = $_POST['profil'];
         // $certif = $POST['certification'];
+        // MAINTENANT FAIT DANS LES CONTROLEURS SPECIFIQUES
 
-        if ($role == "voyageur"){
+        $role = $_POST['profil'];
+
+        if ($role == "voyageur") {
             // appeler la methode creer de voyageur 
             // attention mettre le mdp hacher 
-           // $utilisateur = new Voyageur($nom, $prenom, $numeroTel, $email, $motDePasse);
-           //$utilisateur = new Voyageur();
+            // $utilisateur = new Voyageur($nom, $prenom, $numeroTel, $email, $motDePasse);
+            //$utilisateur = new Voyageur();
             //$utilisateur->creerVoyageur();
             $controller = new ControllerVoyageur($this->getTwig(), $this->getLoader());
-            $controller->creerVoyageur();
-
-            $this->redirect('', '', ['inscription' => true]);
-            ob_end_flush();
-            return true;
-        }
-        else if ($role == "guide"){
+            if ($controller->creerVoyageur()) {
+                $this->redirect('', '', ['inscription' => true]);
+                ob_end_flush();
+                return true;
+            } else {
+                $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
+                ob_end_flush();
+                return false;
+            }
+        } else if ($role == "guide") {
             // appeler la methode creer de guide
             // attention mettre le mdp hacher
             $controller = new ControllerGuide($this->getTwig(), $this->getLoader());
-            $controller->creerGuide();
-
-            $this->redirect('', '', ['inscription' => true]);
-            ob_end_flush();
-            return true;
+            if ($controller->creerGuide()) {
+                //$this->redirect('', '', ['inscription' => true]);
+                ob_end_flush();
+                return true;
+            } else {
+                //$this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
+                ob_end_flush();
+                return false;
+            }
 
         }
-        else{
-            $this->redirect('utilisateur', 'inscription', ['inscription' => false]);
-            ob_end_flush();
-            return false;
-            exit;
-        }
+
+        //$this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
+        ob_end_flush();
+        return false;
+
     }
 
     // Déconnexion de l'utilisateur

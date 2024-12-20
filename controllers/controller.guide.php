@@ -1,11 +1,15 @@
 <?php
 require_once 'controller.voyageur.php';
+require_once 'validation/ajout_guide.php';
+
 class ControllerGuide extends ControllerVoyageur
 {
 
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     {
         parent::__construct($twig, $loader);
+        global $reglesValidationInsertionGuide;
+        $this->validator = new Validator($reglesValidationInsertionGuide);
     }
     public function call($methode): mixed
     {
@@ -27,13 +31,11 @@ class ControllerGuide extends ControllerVoyageur
         return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
     }
 
-    public function creerGuide(): void
+    public function creerGuide(): bool
     {
         $postData = $this->getPost();
         $fileData = $_FILES;
-    
         //var_dump($fileData);
-    
         if (
             empty($postData) ||
             empty($postData['nom']) ||
@@ -41,37 +43,52 @@ class ControllerGuide extends ControllerVoyageur
             empty($postData['numero_tel']) ||
             empty($postData['mail']) ||
             empty($postData['mdp']) ||
-            !isset($fileData['chemin_certif']) || 
-            empty($fileData['chemin_certif']['tmp_name']) 
+            !isset($fileData['chemin_certif']) ||
+            empty($fileData['chemin_certif']['tmp_name'])
         ) {
-            echo "Données manquantes ou invalides pour créer le guide.";
-            return;
+            echo "Données manquantes pour créer le guide.";
+            return false;
         }
-    
+        else {
+            $data = array_merge($postData, $fileData);
+        }
         // Extraire uniquement le nom du fichier (pas le chemin complet)
-        $nomFichierCertif = basename($fileData['chemin_certif']['name']);
-    
-        try {
-            $guide = new Guide();
-            $guide->setNom($postData['nom']);
-            $guide->setPrenom($postData['prenom']);
-            $guide->setNumeroTel($postData['numero_tel']);
-            $guide->setMail($postData['mail']);
-            $guide->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
-            $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
-            $guide->setDerniereCo(new DateTime());
-    
-            $guideDao = new GuideDao($this->getPdo());
-            if ($guideDao->creer($guide)) {
-                //echo "Insertion réalisée avec succès.";
-            } else {
-                //echo "Erreur lors de la création du guide.";
+        //var_dump($postData);
+        var_dump($data);
+        //var_dump($this->validator->valider($postData));
+        if ($this->validator->valider($data)) {
+            $nomFichierCertif = basename($data['chemin_certif']['name']);
+            try {
+                $guide = new Guide();
+                $guide->setNom($data['nom']);
+                $guide->setPrenom($data['prenom']);
+                $guide->setNumeroTel($data['numero_tel']);
+                $guide->setMail($data['mail']);
+                $guide->setMdp(password_hash($data['mdp'], PASSWORD_DEFAULT));
+                $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
+                $guide->setDerniereCo(new DateTime());
+
+                $guideDao = new GuideDao($this->getPdo());
+                if ($guideDao->creer($guide)) {
+                    echo "Guide créé";
+                    return true;
+                } else {
+                    echo "Guide non créé -> erreur liée à la bd";
+                    return false;
+                }
+            } catch (Exception $e) {
+                echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
             }
-        } catch (Exception $e) {
-            //echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
         }
+//        débuggage
+//        $erreurs = $this->validator->getMessagesErreurs();
+//        foreach ($erreurs as $erreur) {
+//            echo $erreur . "<br>";
+//        }
+        var_dump($this->validator->valider($data));
+        echo "Données invalides pour créer le guide.";
+        return false;
     }
-    
 
     // Modification d'un guide
     public function supprimerGuide(int $id): void
