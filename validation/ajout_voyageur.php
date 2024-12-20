@@ -3,7 +3,7 @@
 require_once 'validator.class.php';
 
 // Définition des règles que l'on souhaite vérifier pour chaque champ du formulaire
-$reglesValidationInsertionGuide = [
+$reglesValidationInscriptionVoyageur = [
 'nom' => [
     'obligatoire' => true,
     'type' => 'string',
