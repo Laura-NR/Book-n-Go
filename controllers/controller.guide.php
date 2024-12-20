@@ -54,7 +54,7 @@ class ControllerGuide extends ControllerVoyageur
         }
         // Extraire uniquement le nom du fichier (pas le chemin complet)
         //var_dump($postData);
-        var_dump($data);
+        //var_dump($data);
         //var_dump($this->validator->valider($postData));
         if ($this->validator->valider($data)) {
             $nomFichierCertif = basename($data['chemin_certif']['name']);
@@ -85,7 +85,14 @@ class ControllerGuide extends ControllerVoyageur
 //        foreach ($erreurs as $erreur) {
 //            echo $erreur . "<br>";
 //        }
-        var_dump($this->validator->valider($data));
+        $donnees = $data;
+        $erreurs = $this->validator->getMessagesErreurs();
+        //var_dump($erreurs);
+        $_SESSION['erreurs_inscription'] = $erreurs;
+        //var_dump($_SESSION['erreurs_commentaire']);
+        $_SESSION['donnees_inscription'] = $donnees;
+
+        //var_dump($this->validator->valider($data));
         echo "Données invalides pour créer le guide.";
         return false;
     }

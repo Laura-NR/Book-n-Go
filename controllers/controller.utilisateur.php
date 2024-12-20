@@ -17,11 +17,20 @@ class ControllerUtilisateur extends BaseController {
 
     // Affichage de la page d'inscription
     public function afficherInscription(): void {
+        // Récupérer les erreurs et les données de la session (si présentes)
+        $erreursInscription = $_SESSION['erreurs_inscription'] ?? [];
+        $donneesInscription = $_SESSION['donnees_inscription'] ?? [];
 
+        // Supprimer les variables de session pour éviter qu'elles ne soient affichées à nouveau
+        unset($_SESSION['erreurs_inscription']);
+        unset($_SESSION['donnees_inscription']);
         $template = $this->getTwig()->load('inscription_template.html.twig');
 
         // Affichage du template
-        echo $template->render();
+        echo $template->render([
+            'erreurs' => $erreursInscription,
+            'donnees' => $donneesInscription
+        ]);
     }
 
     // Connexion de l'utilisateur
@@ -109,18 +118,18 @@ class ControllerUtilisateur extends BaseController {
             // attention mettre le mdp hacher
             $controller = new ControllerGuide($this->getTwig(), $this->getLoader());
             if ($controller->creerGuide()) {
-                //$this->redirect('', '', ['inscription' => true]);
+                $this->redirect('', '', ['inscription' => true]);
                 ob_end_flush();
                 return true;
             } else {
-                //$this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
+                $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
                 ob_end_flush();
                 return false;
             }
 
         }
 
-        //$this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
+        $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
         ob_end_flush();
         return false;
 
