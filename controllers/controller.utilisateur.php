@@ -118,7 +118,7 @@ class ControllerUtilisateur extends BaseController {
 
     // Déconnexion de l'utilisateur
     public function deconnexion(): void {
-        session_start();
+        //session_start();
         session_unset();
         session_destroy();
         echo "Vous avez été déconnecté.";
