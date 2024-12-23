@@ -5,7 +5,7 @@ class EngagementDao {
 
     public function __construct(PDO $pdo=null)
     {
-        $this->pdo = $pdo;
+        $this->pdo = bd::getInstance()->getPdo();
     }
 
     public function findAll(): array
@@ -59,8 +59,9 @@ class EngagementDao {
         $engagement->setId($tableauAssoc['id']);
         $engagement->setDate_debut($tableauAssoc['date_debut_dispo']);
         $engagement->setDate_fin($tableauAssoc['date_fin_dispo']);
-        $engagement->setVisite($tableauAssoc['id_visite']);
+        $engagement->setExcursion($tableauAssoc['id_excursion']);
         $engagement->setGuide($tableauAssoc['id_guide']);
+        $engagement->setHeure_debut($tableauAssoc['heure_debut']);
         return $engagement;
     }
 
@@ -73,5 +74,18 @@ class EngagementDao {
             $engagements[] = $engagement;
         }
         return $engagements;
+    }
+
+    public function creer(Engagement $engagement): bool
+    {
+        $sql = "INSERT INTO engagement (date_debut_dispo, date_fin_dispo, id_excursion, id_guide, heure_debut) VALUES (:date_debut_dispo, :date_fin_dispo, :id_excursion, :id_guide, :heure_debut)";
+        $pdoStatement = $this->pdo->prepare($sql);
+        return $pdoStatement->execute(array(
+            ':date_debut_dispo' => $engagement->getDate_debut()->format('Y-m-d'),
+            ':date_fin_dispo' => $engagement->getDate_fin()->format('Y-m-d'),
+            ':id_excursion' => $engagement->getExcursion(),
+            ':id_guide' => $engagement->getGuide(),
+            ':heure_debut' => $engagement->getHeure_debut()->format('H:i:s')
+        ));
     }
 }

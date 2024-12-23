@@ -42,6 +42,15 @@ Détails de l'Excursion
     </div>
     
     <div class="mt-4">
+        {% if excursion.id_guide == session.user_id %}
+            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-warning">
+                Créer un engagement
+            </a>
+        {% else %}
+            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-warning">
+                Je rejoins l'excursion
+            </a>
+        {% endif %}
         <a href="index.php?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-primary">
             Modifier
         </a>

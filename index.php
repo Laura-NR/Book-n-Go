@@ -7,14 +7,17 @@ require_once "include.php";
 $twig->addGlobal('session', $_SESSION);
 
 try {
-    if (isset($_GET['controleur'])) {
-        $controllerName = $_GET['controleur'];
+    $method = $_SERVER['REQUEST_METHOD'];
+    $params = ($method === 'POST') ? $_POST : $_GET;
+
+    if (isset($params['controleur'])) {
+        $controllerName = $params['controleur'];
     } else {
         $controllerName = '';
     }
 
-    if (isset($_GET['methode'])) {
-        $methode = $_GET['methode'];
+    if (isset($params['methode'])) {
+        $methode = $params['methode'];
     } else {
         $methode = '';
     }
