@@ -29,7 +29,7 @@ Connexion
                     <!-- Mot de passe -->
                     <div class="mb-3">
                         <label for="mdp" class="form-label">Mot de passe :</label>
-                        <input type="password" name="mdp" id="mdp" class="form-control" value="{{ donnees['mdp'] }}" placeholder="Entrez votre mot de passe" required>
+                        <input type="password" name="mdp" id="mdp" minlength="16" maxlength="32" class="form-control" value="{{ donnees['mdp'] }}" placeholder="Entrez votre mot de passe" required>
                     </div>
 
                     <!-- Bouton de connexion -->

@@ -5,7 +5,6 @@ Inscription
 {% endblock %}
 
 {% block content %}
-    {{ dump(erreurs) }}
 <main class="container mt-5 mb-5">
     <h1 class="text-center mb-4">Inscription</h1>
     <div class="row justify-content-center">
@@ -22,17 +21,17 @@ Inscription
                     <!-- Nom -->
                     <div class="mb-3">
                         <label for="nom" class="form-label">Nom :</label>
-                        <input type="text" name="nom" id="nom" class="form-control" placeholder="Entrez votre nom" value="{{ donnees['nom'] }}" required>
+                        <input type="text" name="nom" id="nom" minlength="1" maxlength="255" class="form-control" placeholder="Entrez votre nom" value="{{ donnees['nom'] }}" required>
                     </div>
                     <!-- Prénom -->
                     <div class="mb-3">
                         <label for="prenom" class="form-label">Prénom :</label>
-                        <input type="text" name="prenom" id="prenom" class="form-control" placeholder="Entrez votre prénom" value="{{ donnees['prenom'] }}" required>
+                        <input type="text" name="prenom" id="prenom" minlength="1" maxlength="255" class="form-control" placeholder="Entrez votre prénom" value="{{ donnees['prenom'] }}" required>
                     </div>
                     <!-- Numéro de téléphone -->
                     <div class="mb-3">
                         <label for="numero_tel" class="form-label">Numéro de téléphone :</label>
-                        <input type="tel" name="numero_tel" id="numero_tel" class="form-control" placeholder="Entrez votre numéro de téléphone" value="{{ donnees['numero_tel'] }}" required>
+                        <input type="tel" name="numero_tel" id="numero_tel" minlength="10" maxlength="10" size="10" class="form-control" placeholder="Entrez votre numéro de téléphone" value="{{ donnees['numero_tel'] }}" required>
                     </div>
                     <!-- Adresse e-mail -->
                     <div class="mb-3">
@@ -42,7 +41,7 @@ Inscription
                     <!-- Mot de passe -->
                     <div class="mb-3">
                         <label for="mdp" class="form-label">Mot de passe :</label>
-                        <input type="password" name="mdp" id="mdp" class="form-control" placeholder="Entrez votre mot de passe" value="{{ donnees['mdp'] }}" required>
+                        <input type="password" name="mdp" id="mdp" minlength="16" maxlength="32" class="form-control" placeholder="Entrez votre mot de passe" value="{{ donnees['mdp'] }}" required>
                     </div>
                     <!-- Sélection du profil -->
                     <div class="mb-3">

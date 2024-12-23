@@ -83,12 +83,14 @@ class ControllerUtilisateur extends BaseController {
                     return true;
                 } else {
                     // Si la vérification du mot de passe échoue, affiche un message d'erreur dans l'URL
+                    $_SESSION['erreurs_connexion'][] = 'Mot de passe érroné';
                     $this->redirect('utilisateur', 'afficherConnexion', ['connexion' => false]);
                     ob_end_flush();
                     return false;
                 }
             } else {
                 // Si l'utilisateur n'est pas trouvé
+                $_SESSION['erreurs_connexion'][] = 'Compte inexistant ou addresse érronée';
                 $this->redirect('utilisateur', 'afficherConnexion', ['connexion' => false]);
                 ob_end_flush();
                 return false;
