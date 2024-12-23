@@ -30,6 +30,13 @@
              <h1 class="text-center mb-4">Liste des Excursions</h1>
              <a href="index.php?controleur=excursion&methode=afficherCreer" class="btn btn-success">Créer une nouvelle excursion</a>
          </div>
+         <form method="get" action="index.php" class="form-check form-check-inline mb-3">
+            <input type="hidden" name="controleur" value="excursion">
+            <input type="hidden" name="methode" value="listerByGuide">
+            <input type="hidden" name="id" value="{{ session.user_id }}">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="public" value="1" {% if public is defined and public %}checked{% endif %} onchange="this.form.submit()">
+            <label class="form-check-label" for="inlineCheckbox1">Montrer les excursions publiques</label>
+          </form>
          {% if excursionsByGuide is defined and excursionsByGuide is not empty %}
              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                  {% for excursion in excursionsByGuide %}

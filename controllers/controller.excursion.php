@@ -440,11 +440,18 @@ class ControllerExcursion extends BaseController
     public function listerByGuide(int $id): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());
-        $excursions = $excursionDao->findByGuide($id);
-        // var_dump($excursions);
+
+        $public = isset($_GET['public']) && $_GET['public'] == 1;
+
+        if ($public) {
+            $excursions = $excursionDao->findPublic($id);
+        } else {
+            $excursions = $excursionDao->findByGuide($id);
+        }
 
         echo $this->getTwig()->render('guide_excursions.html.twig', [
             'excursionsByGuide' => $excursions,
+            'public' => $public,
         ]);
     }
 }

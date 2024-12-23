@@ -161,6 +161,16 @@ class ExcursionDao
         return $results ? $this->hydrateAll($results) : [];
     }
 
+    public function findPublic(?int $id): ?array
+    {
+        $sql = "SELECT * FROM excursion WHERE public = 1 OR id_guide = :id_guide";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute([':id_guide' => $id]);
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $results = $pdoStatement->fetchAll();
+        return $results ? $this->hydrateAll($results) : [];
+    }
+
     /**
      * Récupère toutes les excursions sous forme de tableau associatif.
      * 
