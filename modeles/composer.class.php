@@ -1,18 +1,18 @@
 <?php
 class Composer {
-    private ?DateTime $tempsSurPlace;
-    private ?int $excursionId;
-    private ?int $visiteId;
+    private ?DateTime $temps_sur_place;
+    private ?int $id_excursion;
+    private ?int $id_visite;
 
     //Constructeur
     public function __construct(
-        ?DateTime  $tempsSurPlace = null,
-        ?int $excursionId = null,
-        ?int    $visiteId = null)
+        ?DateTime  $temps_sur_place = null,
+        ?int $id_excursion = null,
+        ?int    $id_visite = null)
         {
-            $this->tempsSurPlace = $tempsSurPlace;
-            $this->excursionId = $excursionId;
-            $this->visiteId = $visiteId;
+            $this->temps_sur_place = $temps_sur_place;
+            $this->id_excursion = $id_excursion;
+            $this->id_visite = $id_visite;
         }
 
     /**
@@ -20,7 +20,7 @@ class Composer {
      */ 
     public function getTempsSurPlace()
     {
-        return $this->tempsSurPlace;
+        return $this->temps_sur_place;
     }
 
     /**
@@ -28,7 +28,7 @@ class Composer {
      */ 
     public function setTempsSurPlace(?DateTime $tempsSurPlace): void
     {
-        $this->tempsSurPlace = $tempsSurPlace;
+        $this->temps_sur_place = $tempsSurPlace;
     }
 
     /**
@@ -36,7 +36,7 @@ class Composer {
      */ 
     public function getExcursion()
     {
-        return $this->excursionId;
+        return $this->id_excursion;
     }
 
     /**
@@ -44,7 +44,7 @@ class Composer {
      */ 
     public function setExcursion(?int $excursionId): void
     {
-        $this->excursionId = $excursionId;
+        $this->id_excursion = $excursionId;
     }
 
     /**
@@ -52,14 +52,14 @@ class Composer {
      */ 
     public function getVisite()
     {
-        return $this->visiteId;
+        return $this->id_visite;
     }
 
     /**
      * Set the value of visite
      */ 
-    public function setVisite(?Visite $visiteId): void
+    public function setVisite(?int $visiteId): void
     {
-        $this->visiteId = $visiteId;
+        $this->id_visite = $visiteId;
     }
 }

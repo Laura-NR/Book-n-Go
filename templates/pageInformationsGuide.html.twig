@@ -1,13 +1,12 @@
-{% extends "base_template.html.twig" %}
+{% extends "dashboard.html.twig" %}
 
 {% block title %}
     {{ constant('WEBSITE_TITLE') }} - Mon compte
 {% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
 <div class="container my-5">
     <h2>Mes informations:</h2>
-    <a href="index.php?controleur=excursion&methode=afficherCreer" class="btn btn-success">Créer une nouvelle excursion</a>
     <!-- Formulaire principal pour Modifier et Enregistrer -->
     <form method="POST" action="index.php?controleur=guide&methode=modifierGuide&id={{ guide.id }}" id="form-modification">
 

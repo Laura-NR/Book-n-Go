@@ -50,7 +50,7 @@ class ControllerExcursion extends BaseController
         }
     }
 
-    public function afficherCreer()
+    public function afficherCreer(): void
     {
         $visites = $this->getVisites();
 
@@ -125,7 +125,7 @@ class ControllerExcursion extends BaseController
                     echo json_encode([
                         'success' => true,
                         'message' => 'Excursion created successfully',
-                        'redirect' => 'index.php?controleur=excursion&methode=lister'
+                        'redirect' => 'index.php?controleur=excursion&methode=listerByGuide&id=' . $idGuide,
                     ]);
                 } else {
                     if ($isAjax) {
@@ -267,6 +267,8 @@ class ControllerExcursion extends BaseController
     {
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
+        $idGuide = $_SESSION['user_id'];
+
         if (!empty($this->getPost())) {
             $data = [
                 'id' => $id,
@@ -275,7 +277,7 @@ class ControllerExcursion extends BaseController
                 'date_creation' => new DateTime(),
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 0,
-                'id_guide' => 2,
+                'id_guide' => $idGuide,
             ];
 
             $excursionDao = new ExcursionDao($this->getPdo());
@@ -384,7 +386,7 @@ class ControllerExcursion extends BaseController
         $excursionDao = new ExcursionDao($this->getPdo());
 
         if ($excursionDao->supprimer($id)) {
-            $this->redirect('excursion', 'lister');
+            $this->redirect('excursion', 'listerByGuide', ['id' => $_SESSION['user_id']]);
         } else {
             echo "Erreur lors de la suppression de l'excursion.";
         }
@@ -432,6 +434,17 @@ class ControllerExcursion extends BaseController
 
         echo $this->getTwig()->render('liste_excursions.html.twig', [
             'excursions' => $excursions,
+        ]);
+    }
+
+    public function listerByGuide(int $id): void
+    {
+        $excursionDao = new ExcursionDao($this->getPdo());
+        $excursions = $excursionDao->findByGuide($id);
+        // var_dump($excursions);
+
+        echo $this->getTwig()->render('guide_excursions.html.twig', [
+            'excursionsByGuide' => $excursions,
         ]);
     }
 }

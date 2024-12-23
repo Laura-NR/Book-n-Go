@@ -41,9 +41,14 @@ class ComposerDao
         $sql = "SELECT * FROM composer WHERE id_excursion=:id_excursion AND id_visite=:id_visite";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute(array("id_excursion" => $id_excursion, "id_visite" => $id_visite));
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "Composer");
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $composer = $pdoStatement->fetch();
-        return $composer;
+        
+        if ($composer) {
+            return $this->hydrate($composer);
+        }
+
+        return null;
     }
 
     public function findAll()
@@ -79,7 +84,12 @@ class ComposerDao
     public function hydrate($tableauAssoc): ?Composer
     {
         $composer = new Composer();
-        $composer->setTempsSurPlace($tableauAssoc["temps_sur_place"]);
+
+        $tempsSurPlace = isset($tableauAssoc["temps_sur_place"]) && $tableauAssoc["temps_sur_place"] !== null
+        ? new DateTime($tableauAssoc["temps_sur_place"])
+        : null;
+
+        $composer->setTempsSurPlace($tempsSurPlace);
         $composer->setExcursion($tableauAssoc["id_excursion"]);
         $composer->setVisite($tableauAssoc["id_visite"]);
         return $composer;

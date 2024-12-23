@@ -1,9 +1,9 @@
-{% extends "base_template.html.twig" %}
+{% extends "dashboard.html.twig" %}
 
 {% block title %}
 	{{ excursion ? 'Modification de l\'Excursion' : 'Création d\'une Excursion' }}
 {% endblock %}
-{% block content %}
+{% block dashboard_content %}
 	<main class="container">
 		<h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
 			{{ excursion ? 'Modifier les informations de l\'excursion :' : 'Informations de l\'excursion :' }}
@@ -51,7 +51,7 @@
 				<div class="col">
 					<div class="mb-4">
 						<h5 id="selectedVisitsTitle" {% if visitesSelectionnees|length > 0 %} style="display: block;" {% else %} style="display: none;" {% endif %}>Visites sélectionnées :</h5>
-						<ul id="selectedVisits" style="display: {{ visitesSelectionnees|length > 0 ? 'block' : 'none' }}">
+						<ul id="selectedVisits" {% if visitesSelectionnees|length > 0 %} style="display: block;" {% else %} style="display: none;" {% endif %}>
 							{% for visite in visitesSelectionnees %}
 								<li id="visit-{{ visite.visite_id }}" class="mb-2">
 									<div class="d-flex justify-content-between align-items-center">

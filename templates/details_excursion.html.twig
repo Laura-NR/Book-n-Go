@@ -1,10 +1,10 @@
-{% extends "base_template.html.twig" %}
+{% extends "dashboard.html.twig" %}
 
 {% block title %}
 Détails de l'Excursion
 {% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
 <main class="container">
     <h1 class="text-center mt-5">{{ excursion.nom }}</h1>
     <div class="text-center my-4">
@@ -42,13 +42,13 @@ Détails de l'Excursion
     </div>
     
     <div class="mt-4">
-        <a href="?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-primary">
+        <a href="index.php?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-primary">
             Modifier
         </a>
-        <a href="?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
+        <a href="index.php?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
             Supprimer
         </a>
-        <a href="?controleur=excursion&methode=lister" class="btn btn-secondary">Retour à la liste</a>
+        <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}" class="btn btn-secondary">Retour à la liste</a>
     </div>
 </main>
 {% endblock %}

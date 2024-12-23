@@ -151,6 +151,16 @@ class ExcursionDao
         return $result ? $this->hydrate($result) : null;
     }
 
+    public function findByGuide(?int $id): ?array
+    {
+        $sql = "SELECT * FROM excursion WHERE id_guide = :id_guide";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute([':id_guide' => $id]);
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $results = $pdoStatement->fetchAll();
+        return $results ? $this->hydrateAll($results) : [];
+    }
+
     /**
      * Récupère toutes les excursions sous forme de tableau associatif.
      * 
