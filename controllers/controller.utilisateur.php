@@ -122,6 +122,23 @@ class ControllerUtilisateur extends BaseController {
         // MAINTENANT FAIT DANS LES CONTROLEURS SPECIFIQUES
 
         $role = $_POST['profil'];
+        $email = $_POST['mail'];
+
+        //gestion de l'utilisateur deja existant dans une catégorie différente de celle pour laquelle il s'inscrit
+        $utilisateurDao = new UtilisateurDao($this->getPdo());
+        $utilisateurExistant = $utilisateurDao->findByEmail($email);
+
+        if ($utilisateurExistant) {
+            // User with this email already exists, check if the role is different
+            $roleExistant = $utilisateurExistant instanceof Guide ? 'guide' : 'voyageur';
+            if ($roleExistant !== $role) {
+                // Different role, prevent registration
+                $_SESSION['erreurs_inscription'][] = 'Un compte avec cette adresse e-mail existe déjà avec un rôle différent';
+                $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
+                ob_end_flush();
+                return false;
+            }
+        }
 
         if ($role == "voyageur") {
             // appeler la methode creer de voyageur 

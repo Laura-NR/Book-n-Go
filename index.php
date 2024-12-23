@@ -20,18 +20,21 @@ try {
     if ($controllerName == '' && $methode == '') {
         echo $twig->render('pageAccueil_template.html.twig');
     }
+    else{
+        if ($controllerName == '') {
+            throw new Exception('Le controleur n\'est pas défini');
+        }
 
-    if ($controllerName == '') {
-        throw new Exception('Le controleur n\'est pas défini');
+        if ($methode == '') {
+            throw new Exception('La méthode n\'est pas définie');
+        }
+
+        $controller = ControllerFactory::getController($controllerName, $twig, $loader);
+
+        $controller->call($methode);
     }
 
-    if ($methode == '') {
-        throw new Exception('La méthode n\'est pas définie');
-    }
 
-    $controller = ControllerFactory::getController($controllerName, $twig, $loader);
-
-    $controller->call($methode);
 } catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
 }

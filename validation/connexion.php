@@ -19,5 +19,6 @@ $reglesValidationConnexion = [
     ],
 ];
 // Instanciation de la classe de validation dans le controller
-
 ?>
+
+
