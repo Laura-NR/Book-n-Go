@@ -16,7 +16,7 @@ class ControllerGuide extends ControllerVoyageur
         if (method_exists($this, $methode)) {
             // Récupère l'ID si disponible
             if (isset($_GET['id'])) {
-                $id = $_GET['id'];
+                $id = (int) $_GET['id'];
                 return $this->$methode($id); // Appelle la méthode avec l'ID si disponible
             } else {
                 return $this->$methode(); // Appelle la méthode sans ID
