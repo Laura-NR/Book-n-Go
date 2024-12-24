@@ -57,7 +57,7 @@ class ControllerVisite extends BaseController {
             /*$nouvelleVisite*/
             if ($visiteModif) {
                 // REDIRECTION A CHANGER POUR LA LISTE DES VISITES
-                $this->redirect('index.php?controleur=visite&methode=lister');
+                $this->redirect('visite', 'lister');
             } else {
                 echo "Erreur lors de la création de la visite.";
             }

@@ -8,7 +8,7 @@ $twig->addGlobal('session', $_SESSION);
 
 try {
     $method = $_SERVER['REQUEST_METHOD'];
-    $params = ($method === 'POST') ? $_POST : $_GET;
+    $params = array_merge($_GET, $_POST);
 
     if (isset($params['controleur'])) {
         $controllerName = $params['controleur'];
