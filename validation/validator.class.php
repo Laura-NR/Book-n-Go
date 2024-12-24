@@ -69,6 +69,25 @@ class Validator
         {
             switch ($regle)
             {
+                case 'type_fichier':
+                    //Verifier si le fichier n'est pas vide et possède un attribut 'type'
+                    // si le fichiern'est pas dans la liste des types autorisés on envoie un message d'erreur
+                    if (!empty($valeur) && isset($valeur['type']) && !in_array($valeur['type'], $parametre)) {
+                        $allowedTypes = implode(', ', $parametre);
+                        $this->messagesErreurs[] = "Le champ $champ doit être un fichier de type : $allowedTypes.";
+                        $estValide = false;
+                    }
+                    break;
+
+                case 'taille_max_fichier':
+                    if (!empty($valeur) && isset($valeur['size']) && $valeur['size'] > $parametre) {
+                        //$parametre est en octets par défaut donc on le converti en Mégaoctets pour plus de facilité
+                        $maxSizeInMB = $parametre / (1024 * 1024);
+                        $this->messagesErreurs[] = "Le fichier $champ ne doit pas dépasser $maxSizeInMB Mo.";
+                        $estValide = false;
+                    }
+
+                    break;
                 case 'type':
                     if ($parametre === 'string' && !is_string($valeur))
                     {
@@ -86,6 +105,8 @@ class Validator
                         $estValide = false;
                     }
                     break;
+
+
                 case 'longueur_min':
                     if (strlen($valeur) < $parametre)
                     {
