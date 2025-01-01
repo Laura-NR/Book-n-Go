@@ -94,7 +94,7 @@ class CommentaireDao{
             "date_heure_publication" => $commentaire->getDateHeurePublication()->format('Y-m-d H:i:s'),
             "contenu" => $commentaire->getContenu(),
             //ID DE VOYAGEUR TEMPORAIRE POUR TEST IL SERA PLUS TARD RECUPERE DE SESSION
-            "id_voyageur" => 1,
+            "id_voyageur" => $commentaire->getIdVoyageur(),
             "id_post" => $commentaire->getIdPost()
         ));
     }

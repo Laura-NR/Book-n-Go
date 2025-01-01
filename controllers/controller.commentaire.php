@@ -94,8 +94,8 @@ class ControllerCommentaire extends BaseController
 
                 $commentaire->setDateHeurePublication(new DateTime());
                 $commentaire->setContenu($contenu);
-                //$idVoyageur = $_SESSION['id_voyageur'];
-                //$commentaire->setIdVoyageur($idVoyageur);
+                $idVoyageur = $_SESSION['user_id'];
+                $commentaire->setIdVoyageur($idVoyageur);
 
                 $commentaire->setIdPost($idPost);
                 $commentaireDao->inserer($commentaire);

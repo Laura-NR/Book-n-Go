@@ -1,15 +1,10 @@
-{% extends "base_template.html.twig" %}
+{% extends "dashboard.html.twig" %}
 {% block title %}{{constant('WEBSITE_TITLE')}} Page d'accueil{% endblock %}
 
-{% block navbar_items %}
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Déconnexion</a>
-    </li>
-{% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
     <div class="container mt-4">
-        <h1 class="mb-4 text-center">Carnets de voyages :</h1>
+        <h1 class="mb-4 text-center">Mes Carnets de voyages :</h1>
 
 {#        <!-- Recherche - PAS ENCORE IMPLEMENTE -->#}
 {#        <form class="d-flex mb-4 justify-content-center">#}
@@ -18,14 +13,18 @@
 {#                <i class="bi bi-search"></i>#}
 {#            </button>#}
 {#        </form>#}
+{#{{ dump(carnets) }}#}
+
         {% if session.role == "voyageur" %}
-            <div class="text-center">
+            <div class="text-center mb-4">
                 <a href="index.php?controleur=carnetVoyage&methode=creer" class="btn btn-primary" title="Créer un carnet de voyage">
                     Créer un carnet de voyage
                 </a>
+                <a href="index.php?controleur=carnetVoyage&methode=lister" class="btn btn-primary" title="Créer un carnet de voyage">
+                    Voir tous les carnets publics
+                </a>
             </div>
         {% endif %}
-
 
         <!-- Grille des carnets -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -36,7 +35,7 @@
                         <div class="card-body">
                             <h5 class="card-title text-center">{{ carnet.titre }}</h5>
                             <p class="card-text">{{ carnet.description }}</p>
-                            <a href="?controleur=post&methode=listerParCarnet&id={{ carnet.id }}" class="btn btn-primary d-block mt-3">Consulter</a>
+                            <a href="?controleur=post&methode=listerParCarnet&id={{ carnet.id }}" class="btn btn-primary d-block mt-3">Consulter / Modifier</a>
                         </div>
                     </div>
                 </div>

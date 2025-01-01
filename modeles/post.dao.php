@@ -86,4 +86,23 @@ class PostDAO
         }
         return $posts;
     }
+
+    public function inserer(Post $post): bool
+    {
+        $datePublication = new DateTime();
+        $datePublicationString = $datePublication->format('Y-m-d');
+
+        var_dump($post);
+        $sql = "INSERT INTO post (chemin_img, titre, contenu, date_publication, id_carnet, id_visite) VALUES (:chemin_img, :titre, :contenu, :date_publication, :id_carnet, :id_visite)";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $resultat = $pdoStatement->execute(array(
+            "chemin_img" => $post->getChemin_img(),
+            "titre" => $post->getTitre(),
+            "contenu" => $post->getContenu(),
+            "date_publication" => $datePublicationString,
+            "id_carnet" => $post->getIdCarnet(),
+            "id_visite" => $post->getIdVisite()
+        ));
+        return $resultat;
+    }
 }

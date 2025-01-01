@@ -193,7 +193,7 @@ class ControllerUtilisateur extends BaseController {
         if ($_SESSION['role'] == 'guide') {
             echo $this->getTwig()->render('dashboard.html.twig');
         } elseif ($_SESSION['role'] == 'voyageur') {
-            echo $this->getTwig()->render('page_voyageur.html.twig');
+            echo $this->getTwig()->render('dashboard.html.twig');
         }
     }
 }

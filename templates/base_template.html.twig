@@ -74,7 +74,7 @@
         <nav class="navbar navbar-expand-lg container">
             <div class="container-fluid">
                 <a class="navbar-brand" href="index.php">
-                    <img src="./images/logo3_OK_ORIGINAL.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                    <img src="./images/logo3_OK_ORIGINAL.png" alt="Logo" width="70" class="d-inline-block align-text-center img-fluid">
                     {{ constant('WEBSITE_TITLE')}} {{ constant('WEBSITE_VERSION')}}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,17 +84,17 @@
                     <ul class="navbar-nav ms-auto">
                         {% if session.user_id %}
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherDashboard">Dashboard</a>
+                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherDashboard">Dashboard</a>
                         </li>
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
+                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
                         </li>
                         {% else %}
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherInscription">S'inscrire</a>
+                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherInscription">S'inscrire</a>
                         </li>
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
+                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
                         </li>
                         {% endif %}
                     </ul>
@@ -125,7 +125,7 @@
                     </div>
                 </div>
                 <div class="col align-items-center justify-content-center">
-                    <img src="#" alt="LOGO_BOOKNGO">
+                    <img class="img-fluid" width="120" src="./images/logo3_OK_ORIGINAL.png" alt="LOGO_BOOKNGO">
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="text-center">
