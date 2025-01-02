@@ -105,4 +105,11 @@ class PostDAO
         ));
         return $resultat;
     }
+
+    public function retirer(mixed $idPost)
+    {
+        $sql = "DELETE FROM post WHERE id = :idPost";
+        $pdoStatement = $this->pdo->prepare($sql);
+        return $pdoStatement->execute([':idPost' => $idPost]);
+    }
 }

@@ -41,13 +41,22 @@ class ControllerCarnetVoyage extends BaseController
         if (!empty($_POST)) {
             $data = [
                 'titre' => $_POST['titre'],
-                'chemin_img' => $_POST['chemin_img'],
+                'image_carnet' => $_FILES['image_carnet'],
                 'description' => $_POST['description'],
-                'id_voyageur' => $_SESSION['user_id'], // Assurez-vous que l'ID du voyageur est correctement géré
+                'id_voyageur' => $_SESSION['user_id'],
             ];
 
+            //traitement de l'image afin de la stocker
+            $repertoire = './images/carnet/';
+            $nomImage = basename($_FILES['image_carnet']['name']);
+            $cible = $repertoire . $nomImage;
+
+            if(move_uploaded_file($_FILES['image_carnet']['tmp_name'], $cible)) {
+                $data['chemin_img'] = $cible;
+            }
+
             $carnetDao = new CarnetVoyageDAO($this->getPdo());
-            $nouveauCarnet = $carnetDao->inserer($data); // Assurez-vous que CarnetVoyageDAO a une méthode insert
+            $nouveauCarnet = $carnetDao->inserer($data);
 
             if ($nouveauCarnet) {
                 $this->redirect('carnetVoyage', 'lister');
@@ -55,8 +64,8 @@ class ControllerCarnetVoyage extends BaseController
                 echo "Erreur lors de la création du carnet.";
             }
         } else {
-            // Affichez le formulaire de création de carnet
-            $template = $this->getTwig()->load('creation_carnet_dashboard.html.twig'); // Assurez-vous que le template existe
+            // Afficher le formulaire de création de carnet
+            $template = $this->getTwig()->load('creation_carnet_dashboard.html.twig');
             echo $template->render();
         }
     }

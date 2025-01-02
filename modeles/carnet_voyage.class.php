@@ -5,7 +5,8 @@ class CarnetVoyage {
     private string|null $titre;
     private string|null $chemin_img;
     private string|null $description;
-    private Voyageur|null $voyageur;
+    private int|null $id_voyageur;
+    //private Voyageur|null $voyageur;
 
     public function __construct(?int $id = null, ?string $titre = null, ?string $chemin_img = null, ?string $description = null, ?Voyageur $voyageur = null) {
         $this->id = $id;
@@ -98,6 +99,16 @@ class CarnetVoyage {
     public function setVoyageur(?Voyageur $voyageur):void
     {
         $this->voyageur = $voyageur;
+    }
+
+    public function getIdVoyageur(): ?int
+    {
+        return $this->id_voyageur;
+    }
+
+    public function setIdVoyageur(?int $id_voyageur): void
+    {
+        $this->id_voyageur = $id_voyageur;
     }
     
 }

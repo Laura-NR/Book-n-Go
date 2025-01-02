@@ -51,7 +51,7 @@ class ControllerPost extends BaseController
         echo $template->render(array(
             'posts' => $posts,
             'idCarnet' => $id,
-            'idVoyageurCarnet' => $carnet->id_voyageur // A REMPLACER PAR UN GETTER APRES MDOIFICATION DE LA CLASSE CARNET
+            'idVoyageurCarnet' => $carnet->getIdVoyageur(), // A REMPLACER PAR UN GETTER APRES MDOIFICATION DE LA CLASSE CARNET
         ));
     }
 
@@ -138,6 +138,19 @@ class ControllerPost extends BaseController
                 'donneesPost' => $donneesPost,
                 'visites' => $visites
             ));
+        }
+    }
+    public function supprimer(): void
+    {
+        if (isset($_POST["id_post"])) {
+            $postDao = new PostDAO($this->getPdo());
+            $idPost = $_POST["id_post"];
+            $idCarnet = $_POST['id_carnet']; // Retrieve id_carnet
+            $postDao->retirer($idPost);
+            header("Location: index.php?controleur=post&methode=listerParCarnet&id=" . $idCarnet); // Redirect with id_carnet
+            exit();
+        } else {
+            throw new Exception("");
         }
     }
 }
