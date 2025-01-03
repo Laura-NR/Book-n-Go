@@ -23,19 +23,34 @@ class ControllerVisite extends BaseController {
             $visiteDao = new VisiteDao($this->getPdo());
             $nouvelleVisite = $visiteDao->insert($data);
             // Redirige vers la liste des visite après création réussie
-            /*$nouvelleVisite*/
-            if ($nouvelleVisite /*&& parametre excursion = TRUE*/) {
-                $this->redirect('visite','lister',);
+            if ($nouvelleVisite && $isExcur = TRUE) {
+                $this->redirect('excursion','creer');
             }
-            //elseif ($nouvelleVisite /*&&parametre excursion = FALSE*/){
-            //    $this->redirect('visite','lister');
-            //}
+            elseif ($nouvelleVisite /*&&parametre excursion = FALSE*/){
+               $this->redirect('visite','lister');
+            }
             else {
                 echo "Erreur lors de la création de la visite.";
             }
         } else {
             // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('creation_visite.html.twig');
+            echo $this->getTwig()->render('creation_visite.html.twig', ['isEdit' => false, 'visite' => null]);
+        }
+    }
+
+    public function redirectCreer(): void {
+            echo $this->getTwig()->render('creation_visite.html.twig', ['isEdit' => false, 'visite' => null]);
+    }
+
+    public function redirectModifier(): void {
+        $id = $_POST['id'];
+        $visiteDao = new VisiteDao($this->getPdo());
+        $visite = $visiteDao->find($id);
+
+        if ($visite) {
+            echo $this->getTwig()->render('creation_visite.html.twig', ['isEdit' => true, 'visite' => $visite]);
+        } else {
+            echo "Visite non trouvée.";
         }
     }
 
@@ -56,14 +71,13 @@ class ControllerVisite extends BaseController {
             // Redirige vers la liste des visite après création réussie
             /*$nouvelleVisite*/
             if ($visiteModif) {
-                // REDIRECTION A CHANGER POUR LA LISTE DES VISITES
-                $this->redirect('index.php?controleur=visite&methode=lister');
+                $this->redirect('visite','lister');
             } else {
                 echo "Erreur lors de la création de la visite.";
             }
         } else {
             // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('creation_visite.html.twig');
+            echo $this->getTwig()->render('creation_visite.html.twig', ['isEdit' => true, 'visite' => $visite]);
         }
     }
     
