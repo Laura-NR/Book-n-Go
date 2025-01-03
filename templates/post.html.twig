@@ -82,13 +82,12 @@
         </div>
         <button onclick="history.back()" class="btn btn-secondary mt-3">Retour aux posts du carnet</button> {# CONSIDERER MODIFICATION #}
 
-        {# ... (Existing post display code) ... #}
-        {{ dump(post) }}
 
-        {% if session.role == "voyageur" %} {# Check if user can edit " and session.user_id == post.id_voyageur " #}
+        {% if session.role == "voyageur" %}
             <button class="btn btn-primary mt-3" id="editButton">Modifier le post</button>
 
             <form method="post" action="index.php?controleur=post&methode=modifier" id="editForm" style="display: none;">
+                <strong>WIP : fonctionnalité pas encore mise en place</strong>
                 <input type="hidden" name="id_post" value="{{ post.id }}">
                 <div class="form-group mt-3">
                     <label for="titre">Titre :</label>
