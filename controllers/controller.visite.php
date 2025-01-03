@@ -8,7 +8,6 @@ class ControllerVisite extends BaseController {
     // Affiche le formulaire de création d'visite et enregistre les données si envoyées
     public function creer(): void {
         // Vérifie si le formulaire a été soumis
-        
         if (!empty($_POST)) {
             $data = [
                 'adresse' => $_POST['adresse'],
@@ -24,10 +23,10 @@ class ControllerVisite extends BaseController {
             $nouvelleVisite = $visiteDao->insert($data);
             // Redirige vers la liste des visite après création réussie
             /*$nouvelleVisite*/
-            if ($nouvelleVisite && $_GET['isExcursion'] = TRUE) {
+            if ($nouvelleVisite && $_GET['isExcursion'] === '1') {
                 $this->redirect('excursion','afficherCreer');
             }
-            elseif ($nouvelleVisite && $_GET['isExcursion'] = FALSE){
+            elseif ($nouvelleVisite && $_GET['isExcursion'] === '0'){
                $this->redirect('visite','lister');
             }
             else {
@@ -40,7 +39,7 @@ class ControllerVisite extends BaseController {
     }
 
     public function redirectCreer(): void {
-            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null]);
+            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null, 'isExcursion' => $_GET["isExcursion"]]);
     }
 
     public function redirectModifier(): void {

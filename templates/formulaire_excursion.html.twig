@@ -230,7 +230,7 @@ selectedVisitsTitle.style.display = 'none';
 addVisitButton.addEventListener("click", () => {
 const selectedVisit = itineraireSelect.options[itineraireSelect.selectedIndex];
 if (selectedVisit.value === "add-new") {
-	window.location.href = "index.php?controleur=visite&methode=redirectCreer&isExcursion=TRUE";
+	window.location.href = "index.php?controleur=visite&methode=redirectCreer&isExcursion=1";
 	return;
 }
 if(! selectedVisit || selectedVisit.value === "" ) {

@@ -1,10 +1,10 @@
-{% extends "base_template.html.twig" %}
+{% extends "dashboard.html.twig" %}
 
 {% block title %} 
     {{ isEdit ? 'Modifier Visite' : 'Créer Visite' }} 
 {% endblock %} 
 
-{% block content %}
+{% block dashboard_content %}
 <main class="container">
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     {{ isEdit ? 'Modifier la visite' : 'Informations de la visite' }}
@@ -59,7 +59,7 @@
           border-radius: 30px;
           padding: 10px 40px;
         "
-        formaction="index.php?controleur=visite&methode={{ isEdit ? 'modifier' : 'creer' }}{% if isEdit %}&id={{ visite.id }}{% endif %}"
+        formaction="index.php?controleur=visite&methode={{ isEdit ? 'modifier' : 'creer' }}{% if isEdit %}&id={{ visite.id }}{% else %}&isExcursion={{ isExcursion }}{% endif %}"
       />
     </div>
   </form>

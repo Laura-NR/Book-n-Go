@@ -13,11 +13,13 @@
  *     - Si aucune visite n'est trouvée, un message d'avertissement est affiché.
  */#}
 
-{% extends "base_template.html.twig" %}
+
+{% extends "dashboard.html.twig" %}
 
 {% block link %} <link rel="stylesheet" type="text/css" href="./node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css"> {% endblock %}
 
 {% block css %}
+    {{ parent() }}
     <style>
         #tableVisite td:nth-child(5) {
             word-wrap: break-word;
@@ -31,9 +33,12 @@
     Liste des Visites
 {% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
     <div class="container my-5">
-        <h1 class="text-center mb-4">Liste des Visites</h1>
+        <div class="d-flex flex-rox justify-content-between align-items-center mb-5">
+             <h1 class="text-center mb-4">Liste des Visites</h1>
+             <a href="index.php?controleur=visite&methode=redirectCreer&isExcursion=0" class="btn btn-success">Créer une nouvelle visite</a>
+         </div>
 
         {% if visites is defined and visites is not empty %}
             <table id="tableVisite" class="table table-striped">
