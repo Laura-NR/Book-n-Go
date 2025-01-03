@@ -16,7 +16,7 @@ class ControllerVisite extends BaseController {
                 'codePostal' => $_POST['codePostal'],
                 'description' => $_POST['description'],
                 'titre' => $_POST['titre'],
-                'idGuide' => 10, /*$_SESSION['id'],*/
+                'idGuide' => $_SESSION['user_id']
             ];
 
             // Utilisation de VisiteDao pour créer une nouvelle Visite
@@ -24,23 +24,23 @@ class ControllerVisite extends BaseController {
             $nouvelleVisite = $visiteDao->insert($data);
             // Redirige vers la liste des visite après création réussie
             /*$nouvelleVisite*/
-            if ($nouvelleVisite /*&& parametre excursion = TRUE*/) {
-                $this->redirect('visite','lister');
+            if ($nouvelleVisite && $_GET['isExcursion'] = TRUE) {
+                $this->redirect('excursion','afficherCreer');
             }
-            //elseif ($nouvelleVisite /*&&parametre excursion = FALSE*/){
-            //    $this->redirect('visite','lister');
-            //}
+            elseif ($nouvelleVisite && $_GET['isExcursion'] = FALSE){
+               $this->redirect('visite','lister');
+            }
             else {
                 echo "Erreur lors de la création de la visite.";
             }
         } else {
             // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('creation_visite.html.twig', ['isEdit' => false, 'visite' => null]);
+            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null]);
         }
     }
 
     public function redirectCreer(): void {
-            echo $this->getTwig()->render('creation_visite.html.twig', ['isEdit' => false, 'visite' => null]);
+            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null]);
     }
 
     public function redirectModifier(): void {
@@ -49,7 +49,7 @@ class ControllerVisite extends BaseController {
         $visite = $visiteDao->find($id);
 
         if ($visite) {
-            echo $this->getTwig()->render('creation_visite.html.twig', ['isEdit' => true, 'visite' => $visite]);
+            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => true, 'visite' => $visite]);
         } else {
             echo "Visite non trouvée.";
         }
@@ -78,7 +78,7 @@ class ControllerVisite extends BaseController {
             }
         } else {
             // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('creation_visite.html.twig', ['isEdit' => true, 'visite' => $visite]);
+            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => true, 'visite' => $visite]);
         }
     }
     
