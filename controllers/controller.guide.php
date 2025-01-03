@@ -236,4 +236,9 @@ class ControllerGuide extends ControllerVoyageur
             echo "Erreur lors de la consultation du certificat : " . $e->getMessage();
         }
     }
+
+    public function afficherPlanning(): void
+    {
+        echo $this->getTwig()->render('planning_guide.html.twig');
+    }
 }
