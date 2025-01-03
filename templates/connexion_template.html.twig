@@ -18,8 +18,7 @@ Connexion
                 {% endfor %}
             {% endif %}
             <div class="card p-4 shadow-sm">
-                <form action="?controleur=utilisateur&methode=connexion" method="POST">
-
+                <form action="index.php?controleur=utilisateur&methode=connexion" method="POST">
                     <!-- Email -->
                     <div class="mb-3">
                         <label for="mail" class="form-label">Email :</label>
@@ -40,7 +39,7 @@ Connexion
 
                 <!-- Lien vers l'inscription -->
                 <div class="text-center mt-3">
-                    <p>Pas encore inscrit ? <a href="?controleur=utilisateur&methode=afficherInscription" class="btn btn-link">S'inscrire</a></p>
+                    <p>Pas encore inscrit ? <a href="index.php?controleur=utilisateur&methode=afficherInscription" class="btn btn-link">S'inscrire</a></p>
                 </div>
             </div>
         </div>
