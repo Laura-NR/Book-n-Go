@@ -28,14 +28,12 @@ class ControllerReservation extends BaseController {
         $idEngagement = $_POST['id_engagement'];
         $dateReservationString = $_POST['date_reservation'];
         $dateReservation = new DateTime($dateReservationString);
-//        var_dump($_POST);
-//        var_dump($dateReservation);
 
         $reservation = new Reservation(null, $idVoyageur, $dateReservation, $idEngagement);
         $reservationDao = new ReservationDao($this->getPdo());
-        $success = $reservationDao->inserer($reservation);
+        $succes = $reservationDao->inserer($reservation);
 
-        if ($success) {
+        if ($succes) {
             $this->redirect('excursion', 'afficher', ['id' => $idExcursion]); // A CHANGER POUR UN RETOUR SUR
         } else {
             echo "Erreur lors de la création de la réservation.";

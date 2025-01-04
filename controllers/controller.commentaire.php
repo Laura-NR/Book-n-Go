@@ -77,40 +77,44 @@ class ControllerCommentaire extends BaseController
     public function ajouter(): void
     {
         if (isset($_POST["contenu"]) && !ctype_space($_POST["contenu"])) {
-            //ancienne version sans validation
-            //$contenu = $_POST["contenu"];
-            $donnees = $_POST;
-            $idPost = $_POST["id_post"];
-
-            //faire la validation de contenu avec Validator
-            if ($this->validator->valider($donnees)) {
-                // Traitement des données valides (envoi au modèle, etc.)
-                $contenu = $_POST["contenu"];
-                // Utiliser la variable $contenu pour insérer les données dans la BD
-                // en utilisant le modèle Commentaire et le DAO CommentaireDao
-
-                $commentaire = new Commentaire();
-                $commentaireDao = new CommentaireDao($this->getPdo());
-
-                $commentaire->setDateHeurePublication(new DateTime());
-                $commentaire->setContenu($contenu);
-                $idVoyageur = $_SESSION['user_id'];
-                $commentaire->setIdVoyageur($idVoyageur);
-
-                $commentaire->setIdPost($idPost);
-                $commentaireDao->inserer($commentaire);
-
-                // Redirection après traitement réussi
-                header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
-                exit();
+            if (!isset($_SESSION["user_id"]) or $_SESSION["role"] != "voyageur") {
+                // gérer l'erreur au cas où utilisateur n'est pas connecté
             } else {
-                $erreurs = $this->validator->getMessagesErreurs();
-                //var_dump($erreurs);
-                $_SESSION['erreurs_commentaire'] = $erreurs;
-                //var_dump($_SESSION['erreurs_commentaire']);
-                $_SESSION['donnees_commentaire'] = $donnees;
-                // Rediriger pour éviter le double traitement du formulaire en cas de rafraîchissement de la page
-                header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
+                //ancienne version sans validation
+                //$contenu = $_POST["contenu"];
+                $donnees = $_POST;
+                $idPost = $_POST["id_post"];
+
+                //faire la validation de contenu avec Validator
+                if ($this->validator->valider($donnees)) {
+                    // Traitement des données valides (envoi au modèle, etc.)
+                    $contenu = $_POST["contenu"];
+                    // Utiliser la variable $contenu pour insérer les données dans la BD
+                    // en utilisant le modèle Commentaire et le DAO CommentaireDao
+
+                    $commentaire = new Commentaire();
+                    $commentaireDao = new CommentaireDao($this->getPdo());
+
+                    $commentaire->setDateHeurePublication(new DateTime());
+                    $commentaire->setContenu($contenu);
+                    $idVoyageur = $_SESSION['user_id'];
+                    $commentaire->setIdVoyageur($idVoyageur);
+
+                    $commentaire->setIdPost($idPost);
+                    $commentaireDao->inserer($commentaire);
+
+                    // Redirection après traitement réussi
+                    header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
+                    exit();
+                } else {
+                    $erreurs = $this->validator->getMessagesErreurs();
+                    //var_dump($erreurs);
+                    $_SESSION['erreurs_commentaire'] = $erreurs;
+                    //var_dump($_SESSION['erreurs_commentaire']);
+                    $_SESSION['donnees_commentaire'] = $donnees;
+                    // Rediriger pour éviter le double traitement du formulaire en cas de rafraîchissement de la page
+                    header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
+                }
             }
         }
     }

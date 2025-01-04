@@ -45,6 +45,15 @@
                         </div>
                     {% endfor %}
                 {% endif %}
+
+
+                {% if session.role == null %}
+                <div class="alert alert-danger" role="alert">
+                    Veuillez vous connecter pour commenter ce post
+                </div>
+                {% endif %}
+
+                {% if session.role == "voyageur" %}
                 <div class="card mb-2">
                     <div class="card-body">
                         <h6 class="card-title">{{ session.id }}</h6>
@@ -56,6 +65,9 @@
                         </form>
                     </div>
                 </div>
+                {% endif %}
+
+
                 {% for commentaire in commentaires %}
                     <div class="card mb-2">
                         <div class="card-body">
