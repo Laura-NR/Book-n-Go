@@ -2,19 +2,20 @@
 class Reservation
 {
     // Déclaration des propriétés
-    private $id;
-    private $idVoyageur;
-    private $dateReservation;
-    private $idEngagement;
+    private int|null $id;
+    private int|null $idVoyageur;
+    private DateTime|null $dateReservation;
+    private int|null $idEngagement;
 
     // Constructeur de la classe
-    public function __construct($id, $idVoyageur, $dateReservation, $idEngagement)
+    public function __construct(?int $id, ?int $idVoyageur, ?DateTime $dateReservation, ?int $idEngagement)
     {
         $this->id = $id;
         $this->idVoyageur = $idVoyageur;
         $this->dateReservation = $dateReservation;
         $this->idEngagement = $idEngagement;
     }
+
 
     // Getter pour l'id
     public function getId()
@@ -41,13 +42,13 @@ class Reservation
     }
 
     // Getter pour la dateReservation
-    public function getDateReservation()
+    public function getDateReservation() : ?DateTime
     {
         return $this->dateReservation;
     }
 
     // Setter pour la dateReservation
-    public function setDateReservation($dateReservation)
+    public function setDateReservation(?DateTime $dateReservation)
     {
         $this->dateReservation = $dateReservation;
     }

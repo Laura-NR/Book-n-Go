@@ -79,5 +79,40 @@ class ReservationDAO
         
         return $reservations; // Retourne un tableau d'objets Reservation
     }
+
+    public function inserer(Reservation $reservation)
+    {
+        $sql = "INSERT INTO reservation (id_voyageur, date_reservation, id_engagement) 
+                VALUES (:id_voyageur, :date_reservation, :id_engagement)";
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':id_voyageur', $reservation->getIdVoyageur(), PDO::PARAM_INT);
+        $stmt->bindValue(':date_reservation', $reservation->getDateReservation()->format('Y-m-d'), PDO::PARAM_STR);
+        $stmt->bindValue(':id_engagement', $reservation->getIdEngagement(), PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public function findReservationsByExcursionId(int $excursionId): array
+    {
+        $sql = "SELECT r.* 
+            FROM reservation r
+            JOIN engagement e ON r.id_engagement = e.id
+            WHERE e.id_excursion = :id_excursion";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id_excursion', $excursionId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $reservations = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $reservations[] = new Reservation(
+                $row['id'],
+                $row['id_voyageur'],
+                new DateTime($row['date_reservation']),
+                $row['id_engagement']
+            );
+        }
+        return $reservations;
+    }
 }
 ?>
