@@ -1,3 +1,5 @@
+{#PAGE POUR LES GUIDES#}
+
 {% extends "dashboard.html.twig" %}
 
 {% block title %}
@@ -5,6 +7,7 @@ Détails de l'Excursion
 {% endblock %}
 
 {% block dashboard_content %}
+    {% if session.role == "guide" %}
 <main class="container">
     <h1 class="text-center mt-5">{{ excursion.nom }}</h1>
     <div class="text-center my-4">
@@ -60,4 +63,5 @@ Détails de l'Excursion
         <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}" class="btn btn-secondary">Retour à la liste</a>
     </div>
 </main>
+{% endif %}
 {% endblock %}
