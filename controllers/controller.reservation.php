@@ -6,11 +6,8 @@ class ControllerReservation extends BaseController {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
     }
-    function afficherPlanning($id_voyageur= 1)
+    function afficherPlanning($id_voyageur= 31)
     {
-        // Supposons que le deuxième paramètre soit une date, vous pouvez le définir ainsi
-        $date = date('Y-m-d');  // Exemple de date actuelle
-
         // Instanciation du DAO
         $reservationDAO = new ReservationDAO($this->getPdo());
 

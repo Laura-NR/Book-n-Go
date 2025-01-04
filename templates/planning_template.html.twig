@@ -1,5 +1,13 @@
-<h1>Planning des réservations</h1>
+{% extends "dashboard.html.twig" %}
 
+{% block title %}
+    Mon Planning :
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="container">
+    <h1>Planning des réservations</h1>
+</div>
 {% if reservations is not empty %}
     <ul>
         {% for reservation in reservations %}
@@ -15,3 +23,4 @@
 {% else %}
     <p>Aucune réservation trouvée.</p>
 {% endif %}
+{% endblock %}

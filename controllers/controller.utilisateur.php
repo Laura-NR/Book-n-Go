@@ -185,7 +185,8 @@ class ControllerUtilisateur extends BaseController {
         //session_start();
         session_unset();
         session_destroy();
-        echo "Vous avez été déconnecté.";
+        $this->redirect('', '');
+        //echo "Vous avez été déconnecté.";
     }
 
     public function afficherDashboard(): void
