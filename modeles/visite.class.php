@@ -1,13 +1,12 @@
 <?php
 class Visite{
-    private int|null $id;
-    private string|null $adresse;
-    private string|null $ville;
-    private int|null $codePostal;
-    private string|null $description;
-    private string|null $titre;
-
-    private int|null $idGuide;
+    private ?int $id;
+    private ?string $adresse;
+    private ?string $ville;
+    private ?int $codePostal;
+    private ?string $description;
+    private ?string $titre;
+    private ?int $idGuide;
 
     //Constructeur
     public function __construct(?int $id = null, ?string $adresse = null, ?string $ville = null, ?int $codePostal = null, ?string $description = null, ?string $titre = null, ?int $idGuide = null){

@@ -1,49 +1,73 @@
 <?php
 require_once 'controller.class.php';
-class ControllerVisite extends BaseController {
-    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
+require_once 'validation/ajout_visite.php';
+
+class ControllerVisite extends BaseController
+{
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
+    {
         parent::__construct($twig, $loader);
+        global $reglesValidationInsertionVisite;
+        $this->validator = new Validator($reglesValidationInsertionVisite);
     }
 
     // Affiche le formulaire de création d'visite et enregistre les données si envoyées
-    public function creer(): void {
+    public function creer(): void
+    {
         // Vérifie si le formulaire a été soumis
-        if (!empty($_POST)) {
-            $data = [
-                'adresse' => $_POST['adresse'],
-                'ville' => $_POST['ville'],
-                'codePostal' => $_POST['codePostal'],
-                'description' => $_POST['description'],
-                'titre' => $_POST['titre'],
-                'idGuide' => $_SESSION['user_id']
-            ];
+        if (
+            empty($_POST) ||
+            empty($_POST['adresse']) ||
+            empty($_POST['ville']) ||
+            empty($_POST['codePostal']) ||
+            empty($_POST['description']) ||
+            empty($_POST['titre'])
+        ) {
+            echo "Données manquantes pour créer la visite.";
+        }
 
-            // Utilisation de VisiteDao pour créer une nouvelle Visite
-            $visiteDao = new VisiteDao($this->getPdo());
-            $nouvelleVisite = $visiteDao->insert($data);
-            // Redirige vers la liste des visite après création réussie
-            /*$nouvelleVisite*/
-            if ($nouvelleVisite && $_GET['isExcursion'] === '1') {
-                $this->redirect('excursion','afficherCreer');
+        $data = [
+            'adresse' => $_POST['adresse'],
+            'ville' => $_POST['ville'],
+            'codePostal' => $_POST['codePostal'],
+            'description' => $_POST['description'],
+            'titre' => $_POST['titre'],
+            'idGuide' => $_SESSION['user_id']
+        ];
+
+        if ($this->validator->valider($data)) {
+            try {
+                // Utilisation de VisiteDao pour créer une nouvelle Visite
+                $visiteDao = new VisiteDao($this->getPdo());
+                $nouvelleVisite = $visiteDao->insert($data);
+                // Redirige vers la liste des visite après création réussie
+                /*$nouvelleVisite*/
+                if ($nouvelleVisite && $_GET['isExcursion'] === '1') {
+                    $this->redirect('excursion', 'afficherCreer');
+                } elseif ($nouvelleVisite && $_GET['isExcursion'] === '0') {
+                    $this->redirect('visite', 'lister');
+                } else {
+                    echo "Erreur lors de la création de la visite.";
+                }
+            } catch (Exception $e) {
+                echo "Erreur lors de l'ajout de la visite : " . $e->getMessage();
             }
-            elseif ($nouvelleVisite && $_GET['isExcursion'] === '0'){
-               $this->redirect('visite','lister');
-            }
-            else {
-                echo "Erreur lors de la création de la visite.";
-            }
-        } else {
-            // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null]);
+        }
+
+        $erreurs = $this->validator->getMessagesErreurs();
+        if (!empty($erreurs)) {
+            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null, 'isExcursion' => $_GET["isExcursion"], 'erreurs' => $erreurs]);
         }
     }
 
-    public function redirectCreer(): void {
-            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null, 'isExcursion' => $_GET["isExcursion"]]);
+    public function redirectCreer(): void
+    {
+        echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null, 'isExcursion' => $_GET["isExcursion"]]);
     }
 
-    public function redirectModifier(): void {
-        $id = $_POST['id'];
+    public function redirectModifier(): void
+    {
+        $id = $_POST['visite_id'];
         $visiteDao = new VisiteDao($this->getPdo());
         $visite = $visiteDao->find($id);
 
@@ -54,33 +78,41 @@ class ControllerVisite extends BaseController {
         }
     }
 
-    public function modifier(): void {
-        if (!empty($_POST)) {
-            $data = [
-                'id' =>$_POST['id'],
-                'adresse' => $_POST['adresse'],
-                'ville' => $_POST['ville'],
-                'codePostal' => $_POST['codePostal'],
-                'description' => $_POST['description'],
-                'titre' => $_POST['titre'],
-            ];
+    public function modifier(): void
+    {
 
-            // Utilisation de VisiteDao pour créer une nouvelle Visite
-            $visiteDao = new VisiteDao($this->getPdo());
-            $visiteModif = $visiteDao->modify($data);
-            // Redirige vers la liste des visite après création réussie
-            /*$nouvelleVisite*/
-            if ($visiteModif) {
-                $this->redirect('visite','lister');
-            } else {
-                echo "Erreur lors de la création de la visite.";
+        $data = [
+            'id' => $_POST['id'],
+            'adresse' => $_POST['adresse'],
+            'ville' => $_POST['ville'],
+            'codePostal' => $_POST['codePostal'],
+            'description' => $_POST['description'],
+            'titre' => $_POST['titre'],
+        ];
+        var_dump($data);
+
+        if ($this->validator->valider($data)) {
+            try {
+                // Utilisation de VisiteDao pour créer une nouvelle Visite
+                $visiteDao = new VisiteDao($this->getPdo());
+                $visiteModif = $visiteDao->modify($data);
+                // Redirige vers la liste des visite après création réussie
+                if ($visiteModif) {
+                    $this->redirect('visite', 'lister');
+                } else {
+                    echo "Erreur lors de la création de la visite.";
+                }
+            } catch (Exception $e) {
+                echo "Erreur lors de l'ajout de la visite : " . $e->getMessage();
             }
-        } else {
-            // Chargement du formulaire de création si aucune soumission n'a eu lieu
-            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => true, 'visite' => $visite]);
+        }
+
+        $erreurs = $this->validator->getMessagesErreurs();
+        if (!empty($erreurs)) {
+            echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => true, 'visite' => $data, 'erreurs' => $erreurs]);
         }
     }
-    
+
 
     // Supprime une visite en fonction de son ID
     // public function supprimer(int $id): void {
@@ -101,7 +133,7 @@ class ControllerVisite extends BaseController {
         if (!$checkbox)
             $listeVisite = $visiteDao->findAll();
         else {
-            $id_guide = 10 /*$_SESSION['id'],*/;
+            $id_guide = $_SESSION['user_id'];
             $listeVisite = $visiteDao->findByGuide($id_guide);
         }
         $template = $this->getTwig()->load("liste_visite.html.twig");
@@ -112,4 +144,3 @@ class ControllerVisite extends BaseController {
         ));
     }
 }
-?>

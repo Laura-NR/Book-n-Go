@@ -22,11 +22,11 @@ class VisiteDao{
         VALUES (:adresse,:ville,:codePostal,:description,:titre,:idGuide)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute(array(
-            "adresse" => $data["adresse"],
-            "ville" => $data["ville"],
-            "codePostal" => $data["codePostal"],
-            "description" => $data["description"],
-            "titre" => $data["titre"],
+            "adresse" => $data["Adresse"],
+            "ville" => $data["Ville"],
+            "codePostal" => $data["Code Postal"],
+            "description" => $data["Description"],
+            "titre" => $data["Titre"],
             "idGuide" => $data["idGuide"],
         ));
     }
