@@ -79,5 +79,43 @@ class ReservationDAO
         
         return $reservations; // Retourne un tableau d'objets Reservation
     }
+    function getReservationsByVoyageur($id_voyageur)
+    {
+        $sql = "
+    SELECT
+        r.date_reservation,
+        e.nom AS titre_excursion,
+        e.description AS description_excursion,
+        e.chemin_image,
+        g.nom AS nom_guide,
+        g.prenom AS prenom_guide,
+        eng.date_debut_dispo,
+        eng.date_fin_dispo
+    FROM
+        reservation r
+    JOIN
+        engagement eng ON r.id_engagement = eng.id
+    JOIN
+        excursion e ON eng.id_excursion = e.id
+    JOIN
+        guide g ON eng.id_guide = g.id
+    WHERE
+        r.id_voyageur = :id_voyageur;
+    ";
+
+        // Préparer la requête
+        $stmt = $this->pdo->prepare($sql);
+
+        // Lier le paramètre :id_voyageur
+        $stmt->bindParam(':id_voyageur', $id_voyageur, PDO::PARAM_INT);
+
+        // Exécuter la requête
+        $stmt->execute();
+
+        // Retourner les résultats
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 }
 ?>
