@@ -202,5 +202,8 @@ class ControllerVoyageur extends BaseController {
             echo "Erreur lors de l'affichage du voyageur : " . $e->getMessage();
         }
     }
+
+
+
 }
 ?>

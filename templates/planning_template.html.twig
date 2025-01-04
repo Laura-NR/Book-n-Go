@@ -1,0 +1,17 @@
+<h1>Planning des réservations</h1>
+
+{% if reservations is not empty %}
+    <ul>
+        {% for reservation in reservations %}
+            <li>
+                <h3>{{ reservation.titre_excursion }}</h3>
+                <p><strong>Description :</strong> {{ reservation.description_excursion }}</p>
+                <p><strong>Guide :</strong> {{ reservation.nom_guide }} {{ reservation.prenom_guide }}</p>
+                <p><strong>Date de réservation :</strong> {{ reservation.date_reservation }}</p>
+                <p><strong>Heure de l'excusrion:</strong>{{ engagement.heure_debut }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucune réservation trouvée.</p>
+{% endif %}
