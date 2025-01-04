@@ -2,11 +2,14 @@
 
 class Engagement {
     private int|null $id;
-    private DateTime|null $date_debut_dispo;
-    private DateTime|null $date_fin_dispo;
+    private DateTime|null $date_debut_dispo; //a changer pour dateDebutDispo (formatage camelcase)
+    private DateTime|null $date_fin_dispo; // de même
     private int|null $id_excursion;
     private int|null $id_guide;
     private DateTime|null $heure_debut;
+
+    // /!\ ATTENTION : dû aux cahngements encore incomplets les attributs et leurs getters ne possèdent pas le même nommage,
+    // et donc pour acceder aux attributs depuis Twig, on utilisera par exemple XXXX.dateDebutDispo et non XXXX.date_debut_dispo
 
     public function __construct(?int $id = null, ?DateTime $date_debut_dispo = null, ?DateTime $date_fin_dispo = null, ?int $id_excursion = null, ?int $id_guide = null, ?DateTime $heure_debut = null) {
         $this->id = $id;
@@ -36,7 +39,7 @@ class Engagement {
     /**
      * Get the value of date_debut
      */ 
-    public function getDate_debut(): ?DateTime
+    public function getDateDebutDispo(): ?DateTime
     {
         return $this->date_debut_dispo;
     }
@@ -45,7 +48,7 @@ class Engagement {
      * Set the value of date_debut
      *
      */ 
-    public function setDate_debut(?DateTime $date_debut_dispo): void
+    public function setDateDebutDispo(?DateTime $date_debut_dispo): void
     {
         $this->date_debut_dispo = $date_debut_dispo;
     }
@@ -53,7 +56,7 @@ class Engagement {
     /**
      * Get the value of date_fin
      */ 
-    public function getDate_fin(): ?DateTime
+    public function getDateFinDispo(): ?DateTime
     {
         return $this->date_fin_dispo;
     }
@@ -62,7 +65,7 @@ class Engagement {
      * Set the value of date_fin
      *
      */ 
-    public function setDate_fin(?DateTime $date_fin_dispo): void
+    public function setDateFinDispo(?DateTime $date_fin_dispo): void
     {
         $this->date_fin_dispo = $date_fin_dispo;
     }
@@ -87,7 +90,7 @@ class Engagement {
     /**
      * Get the value of guide
      */ 
-    public function getGuide(): ?int
+    public function getIdGuide(): ?int
     {
         return $this->id_guide;
     }
@@ -104,7 +107,7 @@ class Engagement {
     /**
      * Get the value of heure_debut
      */
-    public function getHeure_debut(): ?DateTime
+    public function getHeureDebut(): ?DateTime
     {
         return $this->heure_debut;
     }
@@ -112,8 +115,30 @@ class Engagement {
     /**
      * Set the value of heure_debut
      */
-    public function setHeure_debut(?DateTime $heure_debut): void
+    public function setHeureDebut(?DateTime $heure_debut): void
     {
         $this->heure_debut = $heure_debut;
     }
+
+    public function getIdExcursion(): ?int
+    {
+        return $this->id_excursion;
+    }
+
+    public function setIdExcursion(?int $id_excursion): void
+    {
+        $this->id_excursion = $id_excursion;
+    }
+//
+//    public function getIdGuide(): ?int
+//    {
+//        return $this->id_guide;
+//    }
+//
+//    public function setIdGuide(?int $id_guide): void
+//    {
+//        $this->id_guide = $id_guide;
+//    }
+
+
 }

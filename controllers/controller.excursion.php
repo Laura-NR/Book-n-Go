@@ -410,12 +410,43 @@ class ControllerExcursion extends BaseController
         $composerDao = new ComposerDao($this->getPdo());
         $visites = $composerDao->findByExcursion($id);
 
-        if ($excursion) {
-            echo $this->getTwig()->render('details_excursion.html.twig', [
+        $engagementDao = new EngagementDao($this->getPdo());
+        $engagements = $engagementDao->findEngagementsByExcursionId($id);
+
+        $guideDao = new GuideDao($this->getPdo());
+
+        $reservationDao = new ReservationDao($this->getPdo());
+        $reservations = $reservationDao->findReservationsByExcursionId($id);
+
+        // Format reservation dates for comparison in JavaScript
+        $datesReservees = [];
+        foreach ($reservations as $reservation) {
+            $datesReservees[] = $reservation->getDateReservation()->format('Y-m-d');
+        }
+
+        // On utilise array_map pour ajouter l'info du guide associé (sous forme d'un objet guide) à chaque engagement, utile pour la réservation
+        $engagements = array_map(
+            function ($engagement) use ($guideDao) {
+                $engagement->guide = $guideDao->find($engagement->getIdGuide());
+                return $engagement;
+            }
+            , $engagements);
+
+        if ($excursion and $_SESSION['role']=="guide") {
+            echo $this->getTwig()->render('details_excursion_guide.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,
             ]);
-        } else {
+        }
+        else if ($excursion and $_SESSION['role']=="voyageur") {
+            echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
+                'excursion' => $excursion,
+                'visites' => $visites,
+                'engagements' => $engagements,// les engagements modifiés par l'array_map
+                'datesReservees' => $datesReservees
+            ]);
+        }
+        else {
             echo "Excursion non trouvée.";
         }
     }
@@ -430,7 +461,7 @@ class ControllerExcursion extends BaseController
     public function lister(): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());
-        $excursions = $excursionDao->findAll();
+        $excursions = $excursionDao->findAllWithExistingEngagement();
 
         echo $this->getTwig()->render('liste_excursions.html.twig', [
             'excursions' => $excursions,

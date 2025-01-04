@@ -253,4 +253,29 @@ class ExcursionDao
         }
         return $excursions;
     }
+
+    public function findAllWithExistingEngagement(): array
+    {
+        $sql = "SELECT DISTINCT e.* 
+            FROM excursion e
+            INNER JOIN engagement eng ON e.id = eng.id_excursion
+            ORDER BY e.date_creation DESC";
+        $stmt = $this->pdo->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $excursions = [];
+        foreach ($result as $row) {
+            $excursions[] = new Excursion(
+                $row['id'],
+                $row['capacite'],
+                $row['nom'],
+                new DateTime($row['date_creation']),
+                $row['description'],
+                $row['chemin_image'],
+                $row['public'],
+                $row['id_guide']
+            );
+        }
+        return $excursions;
+    }
 }

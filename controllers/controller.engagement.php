@@ -47,11 +47,11 @@ class ControllerEngagement extends BaseController
 
             try {
                 $engagement = new Engagement();
-                $engagement->setDate_debut($dateDebut);
-                $engagement->setDate_fin($dateFin);
+                $engagement->setDateDebutDispo($dateDebut);
+                $engagement->setDateFinDispo($dateFin);
                 $engagement->setExcursion($excursion->getId());
                 $engagement->setGuide($data['id_guide']);
-                $engagement->setHeure_debut(new DateTime($data['heure_debut']));
+                $engagement->setHeureDebut(new DateTime($data['heure_debut']));
 
                 $engagementDao = new EngagementDao();
                 $success = $engagementDao->creer($engagement);
