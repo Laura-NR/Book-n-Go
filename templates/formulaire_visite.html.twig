@@ -1,0 +1,72 @@
+{% extends "dashboard.html.twig" %}
+
+{% block title %}
+	{{ isEdit ? 'Modifier Visite' : 'Créer Visite' }}
+{% endblock %}
+
+{% block dashboard_content %}
+
+	<main class="container">
+		<h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
+			{{ isEdit ? 'Modifier la visite' : 'Informations de la visite' }}
+		</h1>
+
+		{% if erreurs is not empty %}
+			<div class="alert alert-danger">
+				<ul>
+					{% for erreur in erreurs %}
+						<li>{{ erreur }}</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
+
+		<form class="mx-auto p-5" style="width: 80%" method="post">
+			<div style="
+										        background-color: #b2708f;
+										        color: #000;
+										        border-radius: 30px;
+										        padding: 40px;
+										      ">
+
+				<div class="row mb-4">
+					<div class="col">
+						<label for="titre" class="form-label">Titre :</label>
+						<input type="text" id="titre" name="titre" class="form-control" value="{{ visite.titre|default('') }}"/>
+					</div>
+					<div class="col">
+						<label for="adresse" class="form-label">Adresse :</label>
+						<input type="text" id="adresse" name="adresse" class="form-control" value="{{ visite.adresse|default('') }}"/>
+					</div>
+				</div>
+				<div class="row mb-4">
+					<div class="col">
+						<label for="ville" class="form-label">Ville :</label>
+						<input type="text" id="ville" name="ville" class="form-control" value="{{ visite.ville|default('') }}"/>
+					</div>
+					<div class="col">
+						<label for="codePostal" class="form-label">Code postal :</label>
+						<input type="text" id="codePostal" name="codePostal" class="form-control" value="{{ visite.codePostal|default('') }}"/>
+					</div>
+				</div>
+				<div class="row mb-4">
+					<div class="col">
+						<label for="description" class="form-label">Description :</label>
+						<textarea name="description" id="description" class="form-control" rows="5">{{ visite.description|default('') }}</textarea>
+					</div>
+				</div>
+				{% if isEdit %}
+					<input type="hidden" name="id" value="{{ visite.id }}"/>
+				{% endif %}
+			</div>
+			<div class="text-center mt-4">
+				<input type="submit" value="{{ isEdit ? 'Modifier' : 'Créer' }}" class="btn" style="
+										          background-color: #b2708f;
+										          color: #fff;
+										          border-radius: 30px;
+										          padding: 10px 40px;
+										        " formaction="index.php?controleur=visite&methode={{ isEdit ? 'modifier' : 'creer' }}{% if isEdit %}&id={{ visite.id }}{% else %}&isExcursion={{ isExcursion }}{% endif %}"/>
+			</div>
+		</form>
+	</main>
+{% endblock %}
