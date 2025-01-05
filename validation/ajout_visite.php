@@ -37,6 +37,6 @@ $reglesValidationInsertionVisite = [
         'obligatoire' => false,
         'type' => 'string',
         'longueur_min' => 0,
-        'longueur_max' => 255,
+        'longueur_max' => 2000,
     ]
 ];

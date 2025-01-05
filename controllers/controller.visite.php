@@ -20,7 +20,6 @@ class ControllerVisite extends BaseController
             empty($_POST['adresse']) ||
             empty($_POST['ville']) ||
             empty($_POST['codePostal']) ||
-            empty($_POST['description']) ||
             empty($_POST['titre'])
         ) {
             echo "Données manquantes pour créer la visite.";
@@ -89,7 +88,7 @@ class ControllerVisite extends BaseController
             'description' => $_POST['description'],
             'titre' => $_POST['titre'],
         ];
-        var_dump($data);
+        
 
         if ($this->validator->valider($data)) {
             try {
