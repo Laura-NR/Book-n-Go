@@ -18,6 +18,10 @@
                 <p><strong>Date de réservation :</strong> {{ reservation.date_reservation }}</p>
                 <p><strong>Heure de l'excusrion:</strong>{{ engagement.heure_debut }}</p>
             </li>
+            <a href="index.php?controleur=reservation&methode=afficherFormulaireModification&id={{ reservation.id }}">Modifier</a>
+            <a href="index.php?controleur=reservation&methode=supprimerReservation&id={{ reservation.id }}" onclick="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
+                Supprimer
+            </a>
         {% endfor %}
     </ul>
 {% else %}
