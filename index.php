@@ -1,7 +1,11 @@
 <?php
 ob_start();
-session_start();
-
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['role'])) {
+        $_SESSION['role'] = "visiteur";
+}
 require_once "include.php";
 
 $twig->addGlobal('session', $_SESSION);

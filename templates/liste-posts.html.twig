@@ -4,7 +4,7 @@
 {#block navbar items#}
 
 {% block content %}
-    {{ dump(idVoyageurCarnet) }}
+{#    {{ dump(idVoyageurCarnet) }}#}
 
     <div class="container text-center">
     {% if session.role == "voyageur" and session.user_id == idVoyageurCarnet %}

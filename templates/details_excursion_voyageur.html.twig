@@ -51,19 +51,25 @@
                 <dd class="col-sm-8">{{ excursion.description }}</dd>
             </div>
         </div>
+    {% if session.role == "visiteur" %}
+        <div class="alert alert-danger" role="alert">
+            Veuillez vous connecter pour réserver des excursions
+        </div>
+    {% endif %}
     <div class="mt-3">
         <a href="index.php?controleur=excursion&methode=lister" class="btn btn-secondary">Retour à la liste des excursions</a>
+        {% if session.role == "voyageur" %}
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reservationModal">Réserver</button>
+    </div>
 
-
-        <p>DEBUG LES ENGAGEMENTS</p>
+{#        <p>DEBUG LES ENGAGEMENTS</p>#}
 {#        {{ dump(engagements) }}#}
-        {{ dump(datesReservees) }}
+{#        {{ dump(datesReservees) }}#}
 
-        <p>DEBUG BOUCLE ENGAGEMENT</p>
-        {{ dump(dateTime) }}
-        {% for engagement in engagements %}
-            {{ dump(engagement) }}
+{#        <p>DEBUG BOUCLE ENGAGEMENT</p>#}
+{#        {{ dump(dateTime) }}#}
+{#        {% for engagement in engagements %}#}
+{#            {{ dump(engagement) }}#}
 {#            {% set currentDate = engagement.dateDebutDispo %}#}
 
 {#            {% for i in 0 .. engagement.dateFinDispo.diff(engagement.dateDebutDispo).days %}#}
@@ -72,10 +78,8 @@
 {#                </p>#}
 {#                {% set currentDate = currentDate|date_modify('+1 day') %}#}
 {#            {% endfor %}#}
-        {% endfor %}
+{#        {% endfor %}#}
 
-
-    </div>
 
     <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -144,4 +148,5 @@
             idEngagementInput.value = selectedOption.dataset.engagementId;
         });
     </script>
+    {% endif %}
 {% endblock %}

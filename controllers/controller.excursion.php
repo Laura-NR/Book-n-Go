@@ -431,8 +431,15 @@ class ControllerExcursion extends BaseController
                 return $engagement;
             }
             , $engagements);
-
-        if ($excursion and $_SESSION['role']=="guide") {
+        if ($excursion and $_SESSION['role']=="visiteur"){
+            echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
+                'excursion' => $excursion,
+                'visites' => $visites,
+                'engagements' => $engagements,// les engagements modifiés par l'array_map
+                'datesReservees' => $datesReservees
+            ]);
+        }
+        else if ($excursion and $_SESSION['role']=="guide") {
             echo $this->getTwig()->render('details_excursion_guide.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,
