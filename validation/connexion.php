@@ -7,15 +7,15 @@ $reglesValidationConnexion = [
     'mail' => [
         'obligatoire' => true,
         'type' => 'string',
-        'longueur_min' => 1,
+        'longueur_min' => 6,
         'longueur_max' => 255,
         'format' => FILTER_VALIDATE_EMAIL
     ],
     'mdp' => [
         'obligatoire' => true,
         'type' => 'string',
-        'longueur_min' => 1,
-        'longueur_max' => 255
+        'longueur_min' => 12,
+        'longueur_max' => 32
     ],
 ];
 // Instanciation de la classe de validation dans le controller

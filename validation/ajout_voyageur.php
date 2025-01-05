@@ -21,7 +21,7 @@ $reglesValidationInscriptionVoyageur = [
 'mail' => [
     'obligatoire' => true,
     'type' => 'string',
-    'longueur_min' => 5,
+    'longueur_min' => 6,
     'longueur_max' => 255,
     'format' => FILTER_VALIDATE_EMAIL
     ],
@@ -35,7 +35,7 @@ $reglesValidationInscriptionVoyageur = [
 'mdp' => [
     'obligatoire' => true,
     'type' => 'string',
-    'longueur_min' => 16,
+    'longueur_min' => 12,
     'longueur_max' => 32
     ],
 ];
