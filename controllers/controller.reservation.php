@@ -6,19 +6,22 @@ class ControllerReservation extends BaseController {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
     }
-    function afficherPlanning($id_voyageur= 31)
+    public function afficherPlanning(): void
     {
-        // Instanciation du DAO
+        $id_voyageur = $_GET['id'] ?? null;
+
+        if (!$id_voyageur) {
+            throw new Exception("Paramètre manquant : id_voyageur");
+        }
+
         $reservationDAO = new ReservationDAO($this->getPdo());
+        $reservations = $reservationDAO->getReservationsByVoyageur((int)$id_voyageur);
 
-        // Récupérer les réservations avec deux arguments
-        $reservations = $reservationDAO->getReservationsByVoyageur($id_voyageur);
-
-        // Charger la vue
         echo $this->getTwig()->render('planning_template.html.twig', [
-            'reservations' => $reservations
+            'reservations' => $reservations,
         ]);
     }
+
 
 
     public function creer(): void
