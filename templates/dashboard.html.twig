@@ -31,7 +31,7 @@ Guide Dashboard
                     </li>
                     {% elseif session.role == "voyageur" %}
                     <li class="w-100">
-                        <a href="index.php?controleur=reservation&methode=afficherPlanning" class="nav-link align-middle px-0 mb-4 d-flex flex-row">
+                        <a href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}" class="nav-link align-middle px-0 mb-4 d-flex flex-row">
                             <img src="images/icons/planning.svg" class="me-2" title="Mon Planning"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Planning</span>
                         </a>
                     </li>
