@@ -53,6 +53,11 @@ class ControllerExcursion extends BaseController
 
     public function afficherCreer(): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
         $visites = $this->getVisites();
 
         echo $this->getTwig()->render('formulaire_excursion.html.twig', [
@@ -62,6 +67,11 @@ class ControllerExcursion extends BaseController
 
     public function creer(): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
         // Vérifie si la requête est une requête AJAX
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
@@ -227,6 +237,11 @@ class ControllerExcursion extends BaseController
 
     public function afficherModifier(int $id): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
         $visites = $this->getVisites();
 
         $excursionAmodifier = null;
@@ -279,7 +294,7 @@ class ControllerExcursion extends BaseController
             exit;
         }
 
-        if ($currentExcursion->getId_guide()!== $_SESSION['user_id']) {
+        if ($currentExcursion->getId_guide() !== $_SESSION['user_id']) {
             echo "Erreur : Vous n'êtes pas autorisé à modifier cette excursion.";
             exit;
         }
@@ -383,7 +398,7 @@ class ControllerExcursion extends BaseController
             exit;
         }
 
-        if ($excursion->getId_guide()!== $_SESSION['user_id']) {
+        if ($excursion->getId_guide() !== $_SESSION['user_id']) {
             echo "Erreur : Vous n'êtes pas autorisé à supprimer cette excursion.";
             exit;
         }
@@ -436,6 +451,28 @@ class ControllerExcursion extends BaseController
             $engagements
         );
 
+        $heureDebut = null;
+        if (!empty($engagements)) {
+            $heureDebut = new DateTime($engagements[0]->getHeureDebut()->format('Y-m-d H:i:s'));
+        }
+
+        $heuresArrivees = [];
+        if ($heureDebut) {
+            foreach ($visites as $visite) {
+                $heuresArrivees[$visite['visite_id']] = $heureDebut->format('H:i');
+                $tempsSurPlace = $visite['temps_sur_place'];
+                $parts = explode(':', $tempsSurPlace);
+
+                if (count($parts) === 3) {
+                    $heures = (int) $parts[0];
+                    $minutes = (int) $parts[1];
+
+                    $interval = new DateInterval(sprintf('PT%dH%dM', $heures, $minutes));
+                    $heureDebut->add($interval);
+                }
+            }
+        }
+
         if ($excursion and $_SESSION['role'] == "guide") {
             echo $this->getTwig()->render('details_excursion_guide.html.twig', [
                 'excursion' => $excursion,
@@ -446,7 +483,8 @@ class ControllerExcursion extends BaseController
                 'excursion' => $excursion,
                 'visites' => $visites,
                 'engagements' => $engagements, // les engagements modifiés par l'array_map
-                'datesReservees' => $datesReservees
+                'datesReservees' => $datesReservees,
+                'heuresArrivees' => $heuresArrivees,
             ]);
         } else {
             echo "Excursion non trouvée.";

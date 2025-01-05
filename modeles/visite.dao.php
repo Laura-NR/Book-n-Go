@@ -98,7 +98,7 @@ class VisiteDao{
     public function hydrate($tableauAssoc): ?Visite{
         $visite = new Visite();
         $visite->setId($tableauAssoc["id"]);
-        $visite->setAddress($tableauAssoc["adresse"]);
+        $visite->setAdresse($tableauAssoc["adresse"]);
         $visite->setVille($tableauAssoc["ville"]);
         $visite->setCodePostal($tableauAssoc["codePostal"]);
         $visite->setDescription($tableauAssoc["description"]);
