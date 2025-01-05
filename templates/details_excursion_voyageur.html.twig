@@ -1,8 +1,6 @@
 {% extends 'base_template.html.twig' %}
 
 {% block content %}
-
-
     <div class="container mt-5">
         <div class="card">
             <div class="card-header bg-primary text-white">
@@ -33,18 +31,18 @@
                     </div>
                     <div class="col-md-6">
                         <h3>Itinéraire :</h3>
-                            <div>
-                                {% if visites is not empty %}
-                                    {% for visite in visites %}
-                                        <div class="position-relative">
-                                            <span class="position-absolute top-50 bg-primary rounded-circle" style="width: 10px; height: 10px; transform: translate(-50%, -50%); left: 2px;"></span>
-                                            <div class="border-start border-3 border-primary ps-3 pt-2 pb-2">
-                                                {{ visite.titre }} - {{ visite.temps_sur_place }}
-                                            </div>
+                        <div>
+                            {% if visites is not empty %}
+                                {% for visite in visites %}
+                                    <div class="position-relative">
+                                        <span class="position-absolute top-50 bg-primary rounded-circle" style="width: 10px; height: 10px; transform: translate(-50%, -50%); left: 2px;"></span>
+                                        <div class="border-start border-3 border-primary ps-3 pt-2 pb-2">
+                                            {{ visite.titre }} - <span class="text-secondary">Heure d'Arrivée atendue :</span> {{ heuresArrivees[visite.visite_id] }} - {{ visite.temps_sur_place|date('H') != '00' ? visite.temps_sur_place|date('H') ~ ' h ' : '' }}{{ visite.temps_sur_place|date('i') != '00' ? visite.temps_sur_place|date('i') ~ ' min' : '' }}
                                         </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <dt class="col-sm-4">Description:</dt>

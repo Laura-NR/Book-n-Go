@@ -31,7 +31,7 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function getVisites()
+    public function getVisites(): array
     {
         $visiteDao = new VisiteDao($this->getPdo());
         $visites = $visiteDao->findAllAssoc();
@@ -48,10 +48,16 @@ class ControllerExcursion extends BaseController
             echo $jsonVisites;
             exit;
         }
+        return $visites;
     }
 
     public function afficherCreer(): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
         $visites = $this->getVisites();
 
         echo $this->getTwig()->render('formulaire_excursion.html.twig', [
@@ -61,6 +67,11 @@ class ControllerExcursion extends BaseController
 
     public function creer(): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
         // Vérifie si la requête est une requête AJAX
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
@@ -74,7 +85,7 @@ class ControllerExcursion extends BaseController
                 'date_creation' => new DateTime(),
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
-                'id_guide' => $idGuide, 
+                'id_guide' => $idGuide,
             ];
 
             // Valider les champs "temps_sur_place"
@@ -224,8 +235,13 @@ class ControllerExcursion extends BaseController
         }
     }
 
-    public function afficherModifier(int $id)
+    public function afficherModifier(int $id): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
         $visites = $this->getVisites();
 
         $excursionAmodifier = null;
@@ -265,6 +281,24 @@ class ControllerExcursion extends BaseController
      */
     public function modifier(int $id): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
+        $excursionDao = new ExcursionDao($this->getPdo());
+        $currentExcursion = $excursionDao->findAssoc($id);
+
+        if (!$currentExcursion) {
+            echo "Erreur : Excursion introuvable.";
+            exit;
+        }
+
+        if ($currentExcursion->getId_guide() !== $_SESSION['user_id']) {
+            echo "Erreur : Vous n'êtes pas autorisé à modifier cette excursion.";
+            exit;
+        }
+
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
         $idGuide = $_SESSION['user_id'];
@@ -279,9 +313,6 @@ class ControllerExcursion extends BaseController
                 'public' => $this->getPost()['public'] ?? 0,
                 'id_guide' => $idGuide,
             ];
-
-            $excursionDao = new ExcursionDao($this->getPdo());
-            $currentExcursion = $excursionDao->findAssoc($id);
 
             if (!empty($_FILES['chemin_image']['name'])) {
                 $uploadDirectory = './images/';
@@ -303,9 +334,6 @@ class ControllerExcursion extends BaseController
                     $data['chemin_image'] = $currentExcursion->getChemin_image();
                 }
             }
-
-            $excursionDao = new ExcursionDao($this->getPdo());
-
 
             $updated = $excursionDao->modifier($data);
 
@@ -353,37 +381,27 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function supprimerAjax(int $id): void
-    {
-        $excursionDao = new ExcursionDao($this->getPdo());
-
-        if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            header('Content-Type: application/json');
-
-            if ($excursionDao->supprimer($id)) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Excursion deleted successfully.',
-                ]);
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Error occurred while deleting the excursion.',
-                ]);
-            }
-            exit;
-        }
-
-        if ($excursionDao->supprimer($id)) {
-            $this->redirect('excursion', 'lister');
-        } else {
-            echo "Erreur lors de la suppression de l'excursion.";
-        }
-    }
 
     public function supprimer(int $id): void
     {
+        // session_start();
+
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            return;
+        }
+
         $excursionDao = new ExcursionDao($this->getPdo());
+        $excursion = $excursionDao->findAssoc($id);
+        if (!$excursion) {
+            echo "Erreur : Excursion introuvable.";
+            exit;
+        }
+
+        if ($excursion->getId_guide() !== $_SESSION['user_id']) {
+            echo "Erreur : Vous n'êtes pas autorisé à supprimer cette excursion.";
+            exit;
+        }
 
         if ($excursionDao->supprimer($id)) {
             $this->redirect('excursion', 'listerByGuide', ['id' => $_SESSION['user_id']]);
@@ -429,8 +447,32 @@ class ControllerExcursion extends BaseController
             function ($engagement) use ($guideDao) {
                 $engagement->guide = $guideDao->find($engagement->getIdGuide());
                 return $engagement;
+            },
+            $engagements
+        );
+
+        $heureDebut = null;
+        if (!empty($engagements)) {
+            $heureDebut = new DateTime($engagements[0]->getHeureDebut()->format('Y-m-d H:i:s'));
+        }
+
+        $heuresArrivees = [];
+        if ($heureDebut) {
+            foreach ($visites as $visite) {
+                $heuresArrivees[$visite['visite_id']] = $heureDebut->format('H:i');
+                $tempsSurPlace = $visite['temps_sur_place'];
+                $parts = explode(':', $tempsSurPlace);
+
+                if (count($parts) === 3) {
+                    $heures = (int) $parts[0];
+                    $minutes = (int) $parts[1];
+
+                    $interval = new DateInterval(sprintf('PT%dH%dM', $heures, $minutes));
+                    $heureDebut->add($interval);
+                }
             }
-            , $engagements);
+        }
+
         if ($excursion and $_SESSION['role']=="visiteur"){
             echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
                 'excursion' => $excursion,
@@ -444,16 +486,15 @@ class ControllerExcursion extends BaseController
                 'excursion' => $excursion,
                 'visites' => $visites,
             ]);
-        }
-        else if ($excursion and $_SESSION['role']=="voyageur") {
+        } else if ($excursion and $_SESSION['role'] == "voyageur") {
             echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,
-                'engagements' => $engagements,// les engagements modifiés par l'array_map
-                'datesReservees' => $datesReservees
+                'engagements' => $engagements, // les engagements modifiés par l'array_map
+                'datesReservees' => $datesReservees,
+                'heuresArrivees' => $heuresArrivees,
             ]);
-        }
-        else {
+        } else {
             echo "Excursion non trouvée.";
         }
     }
