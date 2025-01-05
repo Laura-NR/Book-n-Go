@@ -112,17 +112,6 @@ class ControllerUtilisateur extends BaseController {
     // Inscription d'un utilisateur
     public function inscription(): bool
     {
-
-        // var_dump($_POST);
-
-        // $nom = $_POST['nom'];
-        // $prenom = $_POST['prenom'];
-        // $numeroTel = $_POST['numeroTel'];
-        // $email = $_POST['mail'];
-        // $motDePasse = $_POST['mdp'];
-        // $certif = $POST['certification'];
-        // MAINTENANT FAIT DANS LES CONTROLEURS SPECIFIQUES
-
         $role = $_POST['profil'];
         $email = $_POST['mail'];
 
@@ -130,11 +119,12 @@ class ControllerUtilisateur extends BaseController {
         $utilisateurDao = new UtilisateurDao($this->getPdo());
         $utilisateurExistant = $utilisateurDao->findByEmail($email);
 
+        //si l'utilisateur exise déjà dans la bd avec ce mail (qu'il soit guide ou voyageur) ...
         if ($utilisateurExistant) {
-            // User with this email already exists, check if the role is different
+            // on recupère son role apres l'avoir trouvé
             $roleExistant = $utilisateurExistant instanceof Guide ? 'guide' : 'voyageur';
             if ($roleExistant !== $role) {
-                // Different role, prevent registration
+                // s'il est différent de celui demandé à l'inscription alors il a déjà un compte de l'autre role -> refus et redirection
                 $_SESSION['erreurs_inscription'][] = 'Un compte avec cette adresse e-mail existe déjà avec un rôle différent';
                 $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
                 ob_end_flush();
@@ -142,13 +132,10 @@ class ControllerUtilisateur extends BaseController {
             }
         }
 
+        // SI ON SOUHAITE INSCRIRE UN VOYAGEUR
         if ($role == "voyageur") {
-            // appeler la methode creer de voyageur 
-            // attention mettre le mdp hacher 
-            // $utilisateur = new Voyageur($nom, $prenom, $numeroTel, $email, $motDePasse);
-            //$utilisateur = new Voyageur();
-            //$utilisateur->creerVoyageur();
             $controller = new ControllerVoyageur($this->getTwig(), $this->getLoader());
+            // appeler la methode creer de voyageur qui elle ensuite effectue la validation
             if ($controller->creerVoyageur()) {
                 $this->redirect('', '', ['inscription' => true]);
                 ob_end_flush();
@@ -158,10 +145,11 @@ class ControllerUtilisateur extends BaseController {
                 ob_end_flush();
                 return false;
             }
+
+        // SI ON SOUHAITE INSCRIRE UN GUIDE
         } else if ($role == "guide") {
-            // appeler la methode creer de guide
-            // attention mettre le mdp hacher
             $controller = new ControllerGuide($this->getTwig(), $this->getLoader());
+            // appeler la methode creer de guide qui elle ensuite effectue la validation
             if ($controller->creerGuide()) {
                 $this->redirect('', '', ['inscription' => true]);
                 ob_end_flush();
@@ -173,7 +161,7 @@ class ControllerUtilisateur extends BaseController {
             }
 
         }
-
+        //Sinon
         $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
         ob_end_flush();
         return false;
