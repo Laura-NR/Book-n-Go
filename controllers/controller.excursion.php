@@ -31,7 +31,7 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function getVisites()
+    public function getVisites(): array
     {
         $visiteDao = new VisiteDao($this->getPdo());
         $visites = $visiteDao->findAllAssoc();
@@ -48,6 +48,7 @@ class ControllerExcursion extends BaseController
             echo $jsonVisites;
             exit;
         }
+        return $visites;
     }
 
     public function afficherCreer(): void
@@ -74,7 +75,7 @@ class ControllerExcursion extends BaseController
                 'date_creation' => new DateTime(),
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
-                'id_guide' => $idGuide, 
+                'id_guide' => $idGuide,
             ];
 
             // Valider les champs "temps_sur_place"
@@ -224,7 +225,7 @@ class ControllerExcursion extends BaseController
         }
     }
 
-    public function afficherModifier(int $id)
+    public function afficherModifier(int $id): void
     {
         $visites = $this->getVisites();
 
@@ -265,6 +266,24 @@ class ControllerExcursion extends BaseController
      */
     public function modifier(int $id): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
+        $excursionDao = new ExcursionDao($this->getPdo());
+        $currentExcursion = $excursionDao->findAssoc($id);
+
+        if (!$currentExcursion) {
+            echo "Erreur : Excursion introuvable.";
+            exit;
+        }
+
+        if ($currentExcursion->getId_guide()!== $_SESSION['user_id']) {
+            echo "Erreur : Vous n'êtes pas autorisé à modifier cette excursion.";
+            exit;
+        }
+
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
         $idGuide = $_SESSION['user_id'];
@@ -279,9 +298,6 @@ class ControllerExcursion extends BaseController
                 'public' => $this->getPost()['public'] ?? 0,
                 'id_guide' => $idGuide,
             ];
-
-            $excursionDao = new ExcursionDao($this->getPdo());
-            $currentExcursion = $excursionDao->findAssoc($id);
 
             if (!empty($_FILES['chemin_image']['name'])) {
                 $uploadDirectory = './images/';
@@ -303,9 +319,6 @@ class ControllerExcursion extends BaseController
                     $data['chemin_image'] = $currentExcursion->getChemin_image();
                 }
             }
-
-            $excursionDao = new ExcursionDao($this->getPdo());
-
 
             $updated = $excursionDao->modifier($data);
 
@@ -353,37 +366,27 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function supprimerAjax(int $id): void
-    {
-        $excursionDao = new ExcursionDao($this->getPdo());
-
-        if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            header('Content-Type: application/json');
-
-            if ($excursionDao->supprimer($id)) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Excursion deleted successfully.',
-                ]);
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Error occurred while deleting the excursion.',
-                ]);
-            }
-            exit;
-        }
-
-        if ($excursionDao->supprimer($id)) {
-            $this->redirect('excursion', 'lister');
-        } else {
-            echo "Erreur lors de la suppression de l'excursion.";
-        }
-    }
 
     public function supprimer(int $id): void
     {
+        // session_start();
+
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            return;
+        }
+
         $excursionDao = new ExcursionDao($this->getPdo());
+        $excursion = $excursionDao->findAssoc($id);
+        if (!$excursion) {
+            echo "Erreur : Excursion introuvable.";
+            exit;
+        }
+
+        if ($excursion->getId_guide()!== $_SESSION['user_id']) {
+            echo "Erreur : Vous n'êtes pas autorisé à supprimer cette excursion.";
+            exit;
+        }
 
         if ($excursionDao->supprimer($id)) {
             $this->redirect('excursion', 'listerByGuide', ['id' => $_SESSION['user_id']]);
@@ -429,24 +432,23 @@ class ControllerExcursion extends BaseController
             function ($engagement) use ($guideDao) {
                 $engagement->guide = $guideDao->find($engagement->getIdGuide());
                 return $engagement;
-            }
-            , $engagements);
+            },
+            $engagements
+        );
 
-        if ($excursion and $_SESSION['role']=="guide") {
+        if ($excursion and $_SESSION['role'] == "guide") {
             echo $this->getTwig()->render('details_excursion_guide.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,
             ]);
-        }
-        else if ($excursion and $_SESSION['role']=="voyageur") {
+        } else if ($excursion and $_SESSION['role'] == "voyageur") {
             echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,
-                'engagements' => $engagements,// les engagements modifiés par l'array_map
+                'engagements' => $engagements, // les engagements modifiés par l'array_map
                 'datesReservees' => $datesReservees
             ]);
-        }
-        else {
+        } else {
             echo "Excursion non trouvée.";
         }
     }
