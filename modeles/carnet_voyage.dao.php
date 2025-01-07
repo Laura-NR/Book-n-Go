@@ -10,7 +10,7 @@ class CarnetVoyageDAO
     }
 
     /**
-     * @return array
+     * @return array -> tableau des carnets de voyage
      */
     public function findAll(): array
     {
@@ -22,8 +22,8 @@ class CarnetVoyageDAO
     }
 
     /**
-     * @param int $idVoyageur id du voyageur a qui appartient le carnet
-     * @return array renvoie tous les carnets d'un voyageur
+     * @param int $idVoyageur -> id du voyageur a qui appartient le carnet
+     * @return array -> tableau des carnets d'un voyageur
      */
     public function findAllByIdVoyageur(int $idVoyageur): array
     {
@@ -66,7 +66,7 @@ class CarnetVoyageDAO
 
     /**
      * @param int|null $id id du carnet a trouver
-     * @return CarnetVoyage|null renvoie un objet CarnetVoyage dont l'id est passe en parametre
+     * @return CarnetVoyage|null renvoie un objet CarnetVoyage dont l'id est passé en parametre
      */
     public function find(?int $id): ?CarnetVoyage
     {
@@ -79,8 +79,8 @@ class CarnetVoyageDAO
     }
 
     /**
-     * @param array $tableauAssoc
-     * @return CarnetVoyage|null
+     * @param array $tableauAssoc array contenant les informations du carnet
+     * @return CarnetVoyage|null renvoie un objet CarnetVoyage
      */
     public function hydrate(array $tableauAssoc): ?CarnetVoyage
     {
@@ -94,8 +94,8 @@ class CarnetVoyageDAO
     }
 
     /**
-     * @param array $tableauAssoc
-     * @return array|null
+     * @param array $tableauAssoc array contenant les informations des carnets
+     * @return array|null renvoie un array contenant des objets CarnetVoyage
      */
     public function hydrateAll(array $tableauAssoc): ?array
     {
@@ -109,8 +109,8 @@ class CarnetVoyageDAO
     }
 
     /**
-     * @param array $data
-     * @return bool
+     * @param array $data array contenant les informations du carnet à insérer
+     * @return bool renvoie true si l'insertion a fonctionné
      */
     public function inserer(array $data): bool
     {

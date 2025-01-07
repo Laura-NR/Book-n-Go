@@ -3,18 +3,33 @@
 class CommentaireDao{
     private ?PDO $pdo;
 
+    /**
+     * @param PDO|null $pdo
+     */
     public function __construct(?PDO $pdo = null) {
         $this->pdo = bd::getInstance()->getPdo();
     }
 
+    /**
+     * @return PDO|null
+     */
     public function getPdo(): ?PDO {
         return $this->pdo;
     }
 
+    /**
+     * @param PDO|null $pdo
+     * @return void
+     */
     public function setPdo(?PDO $pdo): void {
         $this->pdo = $pdo;
     }
 
+    /**
+     * @brief Rechercher un commentaire par son id
+     * @param int|null $id
+     * @return Commentaire|null -> objet Commentaire
+     */
     public function find(?int $id): ?Commentaire {
         $sql = "SELECT * FROM commentaire WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -24,6 +39,10 @@ class CommentaireDao{
         return $commentaire;
     }
 
+    /**
+     * @brief Rechercher tous les commentaires
+     * @return array|false -> tableau associatif d'objets Commentaire
+     */
     public function findAll(){
         $sql = "SELECT * FROM commentaire";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -33,6 +52,11 @@ class CommentaireDao{
         return $commentaire;
     }
 
+    /**
+     * @brief Rechercher un commentaire par son id
+     * @param int|null $id
+     * @return array|null -> tableau associatif du commentaire
+     */
     public function findAssoc(?int $id): ?array {
         $sql = "SELECT * FROM commentaire WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -42,6 +66,10 @@ class CommentaireDao{
         return $commentaire;
     }
 
+    /**
+     * @brief Rechercher tous les commentaires
+     * @return array|false -> tableau associatif de tous les commentaires
+     */
     public function findAllAssoc(){
         $sql = "SELECT * FROM commentaire";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -52,6 +80,11 @@ class CommentaireDao{
     }
 
 
+    /**
+     * @brief Hydrate un commentaire
+     * @param $tableauAssoc
+     * @return Commentaire|null -> objet Commentaire
+     */
     public function hydrate($tableauAssoc): ?Commentaire {
         $commentaire = new Commentaire();
         $commentaire->setId($tableauAssoc['id']);
@@ -62,6 +95,11 @@ class CommentaireDao{
         return $commentaire;
     }
 
+    /**
+     * @brief Hydrate tous les commentaires
+     * @param $tableau
+     * @return array|null -> tableau d'objets Commentaire
+     */
     public function hydrateAll($tableau): ?array {
         $commentaires = [];
         foreach($tableau as $tableauAssoc){
@@ -71,6 +109,12 @@ class CommentaireDao{
         return $commentaires;
     }
 
+    /**
+     * @brief Rechercher tous les commentaires d'un post
+     * @param $idPost
+     * @return array|false -> tableau associatif de tous les commentaires
+     * @throws DateMalformedStringException
+     */
     public function findAllWithIdPost($idPost)
     {
         $sql = "SELECT C.*, V.nom, V.prenom FROM commentaire C JOIN post P ON P.id = C.id_post JOIN voyageur V on V.id = C.id_voyageur WHERE id_post = :id ORDER BY C.date_heure_publication DESC";
@@ -86,6 +130,11 @@ class CommentaireDao{
         return $commentaires;
     }
 
+    /**
+     * @brief Inserer un commentaire
+     * @param Commentaire $commentaire
+     * @return void
+     */
     public function inserer(Commentaire $commentaire)
     {
         $sql = "INSERT INTO commentaire (date_heure_publication, contenu, id_voyageur, id_post) VALUES (:date_heure_publication, :contenu, :id_voyageur, :id_post)";
@@ -99,6 +148,11 @@ class CommentaireDao{
         ));
     }
 
+    /**
+     * @brief Retirer un commentaire par son id
+     * @param $idCommentaire -> id du commentaire à retirer
+     * @return void
+     */
     public function retirer($idCommentaire)
     {
         $sql = "DELETE FROM commentaire WHERE id = :id";

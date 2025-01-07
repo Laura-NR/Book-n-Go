@@ -1,12 +1,34 @@
 <?php
 
 class Commentaire{
+    /**
+     * @var int|null
+     */
     private ?int $id;
+    /**
+     * @var DateTime|null
+     */
     private ?DateTime $date_heure_publication;
+    /**
+     * @var string|null
+     */
     private ?string $contenu;
+    /**
+     * @var int|null
+     */
     private ?int $id_voyageur;
+    /**
+     * @var int|null
+     */
     private ?int $id_post;
 
+    /**
+     * @param int|null $id
+     * @param DateTime|null $date_heure
+     * @param string|null $contenu
+     * @param int|null $id_post
+     * @param int|null $id_voyageur
+     */
     public function __construct(?int $id = null, ?DateTime $date_heure = null, ?string $contenu = null, ?int $id_post = null, ?int $id_voyageur = null){
         $this->id = $id;
         $this->date_heure_publication = $date_heure;
@@ -16,7 +38,7 @@ class Commentaire{
     }
 
     /**
-     * Get the value of id
+     * @return int|null -> id du commentaire
      */
     public function getId(): ?int
     {
@@ -24,7 +46,8 @@ class Commentaire{
     }
 
     /**
-     * Set the value of id
+     * @brief Affecte un id à un commentaire
+     * @param int|null -> id a affecter
      */
     public function setId(?int $id): void
     {
@@ -32,7 +55,7 @@ class Commentaire{
     }
 
     /**
-     * Get the value of date_heure_publication
+     * @return DateTime|null -> date et heure de publication
      */
     public function getDateHeurePublication(): ?DateTime
     {
@@ -40,7 +63,8 @@ class Commentaire{
     }
 
     /**
-     * Set the value of date_heure_publication
+     * @brief Affecte une date et heure de publication à un commentaire
+     * @param DateTime|null -> date et heure de publication
      */
     public function setDateHeurePublication(?DateTime $date_heure_publication): void
     {
@@ -48,7 +72,8 @@ class Commentaire{
     }
 
     /**
-     * Get the value of contenu
+     * @brief Recupere le contenu du commentaire
+     * @return string|null -> contenu du commentaire
      */
     public function getContenu(): ?string
     {
@@ -56,7 +81,8 @@ class Commentaire{
     }
 
     /**
-     * Set the value of contenu
+     * @brief Affecte un contenu à un commentaire
+     * @param string|null -> contenu a affecter
      */
     public function setContenu(?string $contenu): void
     {
@@ -65,7 +91,8 @@ class Commentaire{
     }
 
     /**
-     * Get the value of id_voyageur
+     * @brief Recupere l'id du voyageur qui a commenté
+     * @return int|null -> id du voyageur
      */
     public function getIdVoyageur(): ?int
     {
@@ -73,7 +100,8 @@ class Commentaire{
     }
 
     /**
-     * Set the value of id_voyageur
+     * @brief Affecte un id de voyageur au post
+     * @param int|null -> id du voyageur
      */
     public function setIdVoyageur(?int $id_voyageur): void
     {
@@ -81,7 +109,8 @@ class Commentaire{
     }
 
     /**
-     * Get the value of id_post
+     * @brief Retourne l'id du post
+     * @return int|null -> id du post
      */
     public function getIdPost(): ?int
     {
@@ -89,7 +118,8 @@ class Commentaire{
     }
 
     /**
-     * Set the value of id_post
+     * @brief Affecte un id de post au commentaire
+     * @param int|null -> id du post
      */
     public function setIdPost(?int $id_post): void
     {
