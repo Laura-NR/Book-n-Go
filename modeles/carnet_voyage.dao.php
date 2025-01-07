@@ -9,6 +9,9 @@ class CarnetVoyageDAO
         $this->pdo = bd::getInstance()->getPdo();
     }
 
+    /**
+     * @return array
+     */
     public function findAll(): array
     {
         $sql = "SELECT * FROM carnet_voyage";
@@ -18,6 +21,10 @@ class CarnetVoyageDAO
         return $carnets;
     }
 
+    /**
+     * @param int $idVoyageur id du voyageur a qui appartient le carnet
+     * @return array renvoie tous les carnets d'un voyageur
+     */
     public function findAllByIdVoyageur(int $idVoyageur): array
     {
         $sql = "SELECT * FROM carnet_voyage WHERE id_voyageur = :id";
@@ -28,7 +35,7 @@ class CarnetVoyageDAO
     }
 
     /**
-     * Get the value of pdo
+     * Renvoie le pdo
      */ 
     public function getPdo(): ?PDO
     {
@@ -36,13 +43,17 @@ class CarnetVoyageDAO
     }
 
     /**
-     * Set the value of pdo
+     * attribue le pdo
      */ 
     public function setPdo(?PDO $pdo): void
     {
         $this->pdo = $pdo;
     }
 
+    /**
+     * @param int|null $id id du carnet a trouver
+     * @return CarnetVoyage|null renvoie un array des infos du carnet dont l'id est passé en parametre
+     */
     public function findAssoc(?int $id): ?CarnetVoyage
     {
         $sql = "SELECT * FROM carnet_voyage WHERE id = :id";
@@ -53,6 +64,10 @@ class CarnetVoyageDAO
         return $carnet;
     }
 
+    /**
+     * @param int|null $id id du carnet a trouver
+     * @return CarnetVoyage|null renvoie un objet CarnetVoyage dont l'id est passe en parametre
+     */
     public function find(?int $id): ?CarnetVoyage
     {
         $sql = "SELECT * FROM carnet_voyage WHERE id = :id";
@@ -63,6 +78,10 @@ class CarnetVoyageDAO
         return $carnet;
     }
 
+    /**
+     * @param array $tableauAssoc
+     * @return CarnetVoyage|null
+     */
     public function hydrate(array $tableauAssoc): ?CarnetVoyage
     {
         $carnet = new CarnetVoyage();
@@ -74,6 +93,10 @@ class CarnetVoyageDAO
         return $carnet;
     }
 
+    /**
+     * @param array $tableauAssoc
+     * @return array|null
+     */
     public function hydrateAll(array $tableauAssoc): ?array
     {
         $carnets = [];
@@ -85,6 +108,10 @@ class CarnetVoyageDAO
         return $carnets;
     }
 
+    /**
+     * @param array $data
+     * @return bool
+     */
     public function inserer(array $data): bool
     {
         $sql = "INSERT INTO carnet_voyage (titre, chemin_img, description, id_voyageur) 
