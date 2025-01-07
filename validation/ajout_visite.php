@@ -28,7 +28,7 @@ $reglesValidationInsertionVisite = [
     ],
     "codePostal" => [
         'obligatoire' => true,
-        'type' => 'int',
+        'type' => 'string',
         'longueur_min' => 5,
         'longueur_max' => 5,
         'format' => '/^[0-9]{5}$/'

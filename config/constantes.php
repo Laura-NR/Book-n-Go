@@ -1,7 +1,7 @@
 <?php
 //Connexion à la base de données
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'gdbelascain_pro');
+define('DB_NAME', 'book-n-go');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 

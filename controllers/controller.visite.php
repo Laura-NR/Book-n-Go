@@ -88,7 +88,7 @@ class ControllerVisite extends BaseController
             'description' => $_POST['description'],
             'titre' => $_POST['titre'],
         ];
-        
+
 
         if ($this->validator->valider($data)) {
             try {
