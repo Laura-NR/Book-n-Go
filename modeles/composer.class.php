@@ -53,6 +53,7 @@ class Composer {
 
 
     /**
+     * @brief Récupère l'id de l'excursion
      * @return int|null
      */
     public function getExcursion()
@@ -62,6 +63,7 @@ class Composer {
 
 
     /**
+     * @brief Affecte l'id de l'excursion
      * @param int|null $excursionId
      * @return void
      */
@@ -72,6 +74,7 @@ class Composer {
 
 
     /**
+     * @brief Récupère l'id de la visite
      * @return int|null
      */
     public function getVisite()
@@ -81,6 +84,7 @@ class Composer {
 
 
     /**
+     * @brief Affecte l'id de la visite
      * @param int|null $visiteId
      * @return void
      */
