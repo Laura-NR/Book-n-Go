@@ -4,23 +4,37 @@ class GuideDao
 {
     private ?PDO $pdo;
 
+    /**
+     * @param PDO|null $pdo
+     */
     public function __construct(?PDO $pdo = null)
     {
         $this->pdo = $pdo;
     }
 
-    // Getters et Setters
+
+    /**
+     * @return PDO|null
+     */
     public function getPdo(): ?PDO
     {
         return $this->pdo;
     }
 
+    /**
+     * @param PDO|null $pdo
+     * @return void
+     */
     public function setPdo(?PDO $pdo): void
     {
         $this->pdo = $pdo;
     }
 
-    // Trouver un guide par ID (retourne un objet Guide ou null)
+    /**
+     * @brief Trouver un guide par ID (retourne un objet Guide ou null)
+     * @param int|null $id
+     * @return Guide|null
+     */
     public function find(?int $id): ?Guide
     {
         $sql = "SELECT * FROM guide WHERE id = :id";
@@ -36,7 +50,10 @@ class GuideDao
         }
     }
 
-    // Trouver tous les guides (retourne un tableau d'objets Guide)
+    /**
+     * @brief Trouver tous les guides (retourne un tableau d'objets Guide)
+     * @return array
+     */
     public function findAll(): array
     {
         $sql = "SELECT * FROM guide";
@@ -46,7 +63,11 @@ class GuideDao
         return $pdoStatement->fetchAll() ?: []; // Retourne un tableau vide si aucun résultat trouvé
     }
 
-    // Trouver un guide par ID en mode associatif (retourne un tableau associatif ou null)
+    /**
+     * @brief Trouver un guide par ID en mode associatif (retourne un tableau associatif ou null)
+     * @param int|null $id
+     * @return array|null
+     */
     public function findAssoc(?int $id): ?array
     {
         $sql = "SELECT * FROM guide WHERE id = :id";
@@ -60,7 +81,10 @@ class GuideDao
         return $result ?: null;
     }
 
-    // Trouver tous les guides en mode associatif (retourne un tableau de tableaux associatifs)
+    /**
+     * @brief Trouver tous les guides en mode associatif (retourne un tableau de tableaux associatifs)
+     * @return array
+     */
     public function findAllAssoc(): array
     {
         $sql = "SELECT * FROM guide";
@@ -70,7 +94,12 @@ class GuideDao
         return $pdoStatement->fetchAll() ?: []; // Retourne un tableau vide si aucun résultat trouvé
     }
 
-    // Hydrater un guide à partir d'un tableau associatif
+
+    /**
+     * @brief Hydrater un guide à partir d'un tableau associatif
+     * @param array $data
+     * @return Guide
+     */
     public function hydrate(array $data): Guide // No need for nullable return type here
     {
         $guide = new Guide();
@@ -87,13 +116,21 @@ class GuideDao
         return $guide;
     }
 
-    // Hydrater un tableau de guides à partir de tableaux associatifs
+    /**
+     * @brief Hydrater un tableau de guides à partir de tableaux associatifs
+     * @param array $data
+     * @return array
+     */
     public function hydrateAll(array $data): array
     {
         return array_map([$this, 'hydrate'], $data); // Utilisation de array_map pour simplifier
     }
 
-    // Créer un guide dans la base de données
+    /**
+     * @brief Créer un guide dans la base de données
+     * @param Guide $guide
+     * @return bool
+     */
     public function creer(Guide $guide): bool
     {
         // Requête SQL incluant le champ 'derniere_co'
@@ -121,9 +158,13 @@ class GuideDao
             'derniere_co' => $derniereCo,  // Paramètre de la date de dernière connexion
         ]);
     }
-    
 
-    // Mettre à jour un guide dans la base de données
+
+    /**
+     * @brief Mettre à jour un guide dans la base de données
+     * @param Guide $guide
+     * @return bool
+     */
     public function maj(Guide $guide): bool
     {
         $sql = "UPDATE guide SET nom = :nom, prenom = :prenom, numero_tel = :numero_tel, 
@@ -147,7 +188,11 @@ class GuideDao
 
     }
 
-    // Supprimer un guide de la base de données
+    /**
+     * @brief Supprimer un guide de la base de données
+     * @param int $id
+     * @return bool
+     */
     public function supprimer(int $id): bool
     {
         $sql = "DELETE FROM guide WHERE id = :id";
@@ -155,7 +200,10 @@ class GuideDao
         return $pdoStatement->execute(['id' => $id]);
     }
 
-    // Lister tous les guides (méthode correcte)
+    /**
+     * @brief Lister tous les guides (méthode correcte)
+     * @return array
+     */
     public function listerTousGuides(): array
     {
         $sql = "SELECT * FROM guide";
@@ -164,7 +212,11 @@ class GuideDao
         return $requete->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Guide');
     }
 
-    // Récupérer le chemin du certificat d'un guide par ID
+    /**
+     * @brief Récupérer le chemin du certificat d'un guide par ID
+     * @param int $id
+     * @return string|null
+     */
     public function getCheminCertificatParId(int $id): ?string
     {
         $sql = 'SELECT chemin_certif FROM guide WHERE id = :id';
@@ -183,6 +235,11 @@ class GuideDao
         return null;
     }
 
+    /**
+     * @brief Mettre à jour la dernière connexion d'un guide dans la BD
+     * @param Guide $guide
+     * @return bool
+     */
     public function majDerniereCo(Guide $guide) : bool
     {
         $nouvelleCo = $guide->getDerniereCo()->format("Y-m-d");

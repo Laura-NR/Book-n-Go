@@ -1,13 +1,23 @@
 <?php
 
 class EngagementDao {
+    /**
+     * @var PDO
+     */
     private PDO $pdo;
 
+    /**
+     * @param PDO|null $pdo
+     */
     public function __construct(PDO $pdo=null)
     {
         $this->pdo = bd::getInstance()->getPdo();
     }
 
+    /**
+     * @brief Recherche tous les Engagements dans la base de données
+     * @return array
+     */
     public function findAll(): array
     {
         $sql = "SELECT * FROM engagement";
@@ -18,22 +28,31 @@ class EngagementDao {
     }
 
     /**
-     * Get the value of pdo
-     */ 
+     * @brief Retourne le PDO
+     * @return PDO|null
+     */
     public function getPdo(): ?PDO
     {
         return $this->pdo;
     }
 
+
     /**
-     * Set the value of pdo
-     */ 
+     * @brief Affecte le PDO
+     * @param PDO|null $pdo
+     * @return void
+     */
     public function setPdo(?PDO $pdo): void
     {
         $this->pdo = $pdo;
     }
 
-    public function findAssoc(?int $id): ?Engagement
+    /**
+     * @brief Rechercher un engagement par son id
+     * @param int|null $id
+     * @return array|null -> tableau associatif contenant les informations de l'engagement
+     */
+    public function findAssoc(?int $id): ?array
     {
         $sql = "SELECT * FROM engagement WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -43,6 +62,11 @@ class EngagementDao {
         return $engagement;
     }
 
+    /**
+     * @brief Rechercher un engagement par son id
+     * @param int|null $id
+     * @return Engagement|null -> objet Engagement
+     */
     public function find(?int $id): ?Engagement
     {
         $sql = "SELECT * FROM engagement WHERE id = :id";
@@ -51,8 +75,14 @@ class EngagementDao {
         $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Engagement');
         $engagement = $pdoStatement->fetch();
         return $engagement;
-    } 
+    }
 
+    /**
+     * @brief Hydrate un engagement
+     * @param array $tableauAssoc
+     * @return Engagement|null -> objet Engagement
+     * @throws DateMalformedStringException
+     */
     public function hydrate(array $tableauAssoc): ?Engagement // DATES A CORRIGER
     {
         $engagement = new Engagement();
@@ -65,6 +95,12 @@ class EngagementDao {
         return $engagement;
     }
 
+    /**
+     * @brief Hydrate un tableau associatif en des engagements
+     * @param array $tableauAssoc
+     * @return array|null
+     * @throws DateMalformedStringException
+     */
     public function hydrateAll(array $tableauAssoc): ?array
     {
         $engagements = [];
@@ -76,6 +112,11 @@ class EngagementDao {
         return $engagements;
     }
 
+    /**
+     * @brief Créer un engagement en base de données
+     * @param Engagement $engagement
+     * @return bool
+     */
     public function creer(Engagement $engagement): bool
     {
         $sql = "INSERT INTO engagement (date_debut_dispo, date_fin_dispo, id_excursion, id_guide, heure_debut) VALUES (:date_debut_dispo, :date_fin_dispo, :id_excursion, :id_guide, :heure_debut)";
@@ -88,6 +129,13 @@ class EngagementDao {
             ':heure_debut' => $engagement->getHeureDebut()->format('Y-m-d H:i:s'),
         ));
     }
+
+    /**
+     * @brief Rechercher tous les engagements d'une excursion par le biais de l'id de l'excursion correspondante
+     * @param int $excursionId
+     * @return array
+     * @throws DateMalformedStringException
+     */
     public function findEngagementsByExcursionId(int $excursionId): array
     {
         $sql = "SELECT * FROM engagement WHERE id_excursion = :id_excursion";
