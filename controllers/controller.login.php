@@ -53,7 +53,7 @@ class ControllerLogin extends BaseController
         session_start();
         session_unset();
         session_destroy();
-        $this->redirect('login', 'afficherConnexion');
+        $this->redirect('', '');
     }
 
     // Message flash

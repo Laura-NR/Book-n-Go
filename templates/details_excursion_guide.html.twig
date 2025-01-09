@@ -1,0 +1,69 @@
+{#PAGE POUR LES GUIDES#}
+
+{% extends "dashboard.html.twig" %}
+
+{% block title %}
+Détails de l'Excursion
+{% endblock %}
+
+{% block dashboard_content %}
+    {% if session.role == "guide" %}
+<main class="container">
+    <h1 class="text-center mt-5">{{ excursion.nom }}</h1>
+    <div class="text-center my-4">
+        <img src="{{ excursion.chemin_image }}" alt="{{ excursion.nom }}" style="max-width: 100%; border-radius: 10px;">
+    </div>
+    <p><strong>Capacité :</strong> {{ excursion.capacite }}</p>
+    <p><strong>Description :</strong> {{ excursion.description }}</p>
+    <p><strong>Posts associés :</strong></p>
+    
+    {% if posts is not empty %}
+    <ul>
+        {% for post in posts %}
+        <li>
+            <strong>{{ post.titre }}</strong> - {{ post.date_publication }}
+            <a href="?controleur=post&methode=afficher&id={{ post.id }}" class="btn btn-sm btn-primary">Consulter</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Aucun post disponible pour cette excursion.</p>
+    {% endif %}
+
+    <div>
+        <p><strong>Itineraire :</strong></p>
+        {% if visites is not empty %}
+            {% for visite in visites %}
+                <div class="position-relative">
+                    <span class="position-absolute top-50 bg-primary rounded-circle" style="width: 10px; height: 10px; transform: translate(-50%, -50%); left: 2px;"></span>
+                    <div class="border-start border-3 border-primary ps-3 pt-2 pb-2">
+                        {{ visite.titre }} - {{ visite.temps_sur_place }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="mt-4">
+        {% if excursion.id_guide == session.user_id %}
+            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-warning">
+                Créer un engagement
+            </a>
+        {% else %}
+            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-warning">
+                Je rejoins l'excursion
+            </a>
+        {% endif %}
+        {% if excursion.id_guide == session.user_id %}
+            <a href="index.php?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-primary">
+                Modifier
+            </a>
+            <a href="index.php?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
+                Supprimer
+            </a>
+        {% endif %}
+        <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</main>
+{% endif %}
+{% endblock %}

@@ -1,26 +1,80 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script src="./node_modules/tarteaucitronjs/tarteaucitron.js"></script>
+
+    <script type="text/javascript">
+        tarteaucitron.init({
+            "privacyUrl": "", /* Privacy policy url */
+            "bodyPosition": "bottom", /* or top to bring it as first element for accessibility */
+
+            "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
+            "cookieName": "tarteaucitron", /* Cookie name */
+
+            "orientation": "middle", /* Banner position (top - bottom) */
+
+            "groupServices": false, /* Group services by category */
+            "showDetailsOnClick": true, /* Click to expand the description */
+            "serviceDefaultState": "wait", /* Default state (true - wait - false) */
+
+            "showAlertSmall": false, /* Show the small banner on bottom right */
+            "cookieslist": false, /* Show the cookie list */
+
+            "closePopup": false, /* Show a close X on the banner */
+
+            "showIcon": true, /* Show cookie icon to manage cookies */
+            //"iconSrc": "", /* Optionnal: URL or base64 encoded image */
+            "iconPosition": "BottomRight", /* BottomRight, BottomLeft, TopRight and TopLeft */
+
+            "adblocker": false, /* Show a Warning if an adblocker is detected */
+
+            "DenyAllCta" : true, /* Show the deny all button */
+            "AcceptAllCta" : true, /* Show the accept all button when highPrivacy on */
+            "highPrivacy": true, /* HIGHLY RECOMMANDED Disable auto consent */
+            "alwaysNeedConsent": false, /* Ask the consent for "Privacy by design" services */
+
+            "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
+
+            "removeCredit": false, /* Remove credit link */
+            "moreInfoLink": true, /* Show more info link */
+
+            "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
+            "useExternalJs": false, /* If false, the tarteaucitron.js file will be loaded */
+
+            //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
+
+            "readmoreLink": "", /* Change the default readmore link */
+
+            "mandatory": true, /* Show a message about mandatory cookies */
+            "mandatoryCta": true, /* Show the disabled accept button when mandatory on */
+
+            //"customCloserId": "", /* Optional a11y: Custom element ID used to open the panel */
+
+            "googleConsentMode": true, /* Enable Google Consent Mode v2 for Google ads and GA4 */
+
+            "partnersList": false /* Show the number of partners on the popup/middle banner */
+        });
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="./node_modules/bootstrap/dist/css/bootstrap.css">
     {% block link %} {% endblock %}
-    {% block style %} {% endblock %}
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     
     <meta name="description" content="{%if description is defined %} {{description}} {% else %} {{constant('WEBSITE_DESCRIPTION')}} {% endif %}">
     {% block css %} {% endblock %}
     <title>{% block title %}{{ constant('WEBSITE_TITLE')}}{% endblock %}</title>
+
 </head>
 
 {# faire en sorte que le contenu prenne toute la fenetre en empilant le contenu de body sur 100% de l'ecran #}
 <body class="d-flex flex-column min-vh-100">
     <header class="bg-body-tertiary">
-
         <nav class="navbar navbar-expand-lg container">
             <div class="container-fluid">
                 <a class="navbar-brand" href="index.php">
-                    <img src="./images/logo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                    <img src="./images/logo3_OK_ORIGINAL.png" alt="Logo" width="70" class="d-inline-block align-text-center img-fluid">
                     {{ constant('WEBSITE_TITLE')}} {{ constant('WEBSITE_VERSION')}}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,15 +82,19 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+                        {% if session.user_id %}
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherInscription">S'inscrire</a>
+                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherDashboard">Dashboard</a>
                         </li>
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
+                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
                         </li>
-                        {% if app.session.user_id %}
+                        {% else %}
                         <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
+                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherInscription">S'inscrire</a>
+                        </li>
+                        <li class="nav-item btn btn-primary rounded-pill me-2">
+                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
                         </li>
                         {% endif %}
                     </ul>
@@ -47,7 +105,11 @@
 
     {# faire en sorte que le contenu du main s'étende sur toute la place disponible #}
     <main class="flex-grow-1">
-        {% block content %}
+        {% block sidebar %}
+        {% endblock %}
+        {% block dashborad_content %}
+            {% block content %}
+            {% endblock %}
         {% endblock %}
     </main>
    
@@ -63,7 +125,7 @@
                     </div>
                 </div>
                 <div class="col align-items-center justify-content-center">
-                    <img src="#" alt="LOGO_BOOKNGO">
+                    <img class="img-fluid" width="120" src="./images/logo3_OK_ORIGINAL.png" alt="LOGO_BOOKNGO">
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="text-center">
@@ -77,8 +139,15 @@
         </div>
     </footer>
     {% block script %} {% endblock %}
-</body>
 
+    <script type="text/javascript">
+        tarteaucitron.user.gtagUa = 'G-SBQC767GXC';
+        // tarteaucitron.user.gtagCrossdomain = ['example.com', 'example2.com'];
+        tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */ };
+        (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+    </script>
+
+</body>
 </html>
 
 

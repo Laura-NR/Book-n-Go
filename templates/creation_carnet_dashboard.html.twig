@@ -1,0 +1,41 @@
+{% extends "dashboard.html.twig" %}
+
+{% block title %}{{ constant('WEBSITE_TITLE') }} Création de carnet{% endblock %}
+
+{% block dashboard_content %}
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Créer un carnet de voyage</h1>
+
+        <form method="post" action="index.php?controleur=carnetVoyage&methode=creer" class="row g-3 needs-validation" enctype="multipart/form-data" novalidate >
+            <div class="col-md-12">
+                <label for="titre" class="form-label">Titre</label>
+                <input type="text" class="form-control" id="titre" name="titre" required>
+                <div class="invalid-feedback">
+                    Veuillez saisir un titre.
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <label for="image_carnet" class="form-label">Chemin de l'image</label>
+                <input type="file" class="form-control" id="image_carnet" name="image_carnet" accept="image/*">
+            </div>
+
+            <div class="col-md-12">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description"></textarea>
+            </div>
+
+            <div class="col-md-12 d-none"> {# Champ id_voyageur masqué #}
+                <input type="hidden" id="id_voyageur" name="id_voyageur" value="{{ session.user_id }}">
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Créer</button>
+            </div>
+        </form>
+
+        <div class="mt-3 text-center">
+            <a href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}" class="btn btn-default">Retour à la liste des carnets</a>
+        </div>
+    </div>
+{% endblock %}

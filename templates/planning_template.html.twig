@@ -1,0 +1,30 @@
+{% extends "dashboard.html.twig" %}
+
+{% block title %}
+    Mon Planning :
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="container">
+    <h1>Planning des réservations</h1>
+</div>
+{% if reservations is not empty %}
+    <ul>
+        {% for reservation in reservations %}
+            <li>
+                <h3>{{ reservation.titre_excursion }}</h3>
+                <p><strong>Description :</strong> {{ reservation.description_excursion }}</p>
+                <p><strong>Guide :</strong> {{ reservation.nom_guide }} {{ reservation.prenom_guide }}</p>
+                <p><strong>Date de réservation :</strong> {{ reservation.date_reservation }}</p>
+                <p><strong>Heure de l'excusrion:</strong>{{ engagement.heure_debut }}</p>
+            </li>
+            <a href="index.php?controleur=reservation&methode=afficherFormulaireModification&id={{ reservation.id }}">Modifier</a>
+            <a href="index.php?controleur=reservation&methode=supprimerReservation&id={{ reservation.id }}" onclick="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
+                Supprimer
+            </a>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucune réservation trouvée.</p>
+{% endif %}
+{% endblock %}

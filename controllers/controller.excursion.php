@@ -31,7 +31,7 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function recupererVisites()
+    public function getVisites(): array
     {
         $visiteDao = new VisiteDao($this->getPdo());
         $visites = $visiteDao->findAllAssoc();
@@ -48,88 +48,34 @@ class ControllerExcursion extends BaseController
             echo $jsonVisites;
             exit;
         }
+        return $visites;
+    }
 
-        // Si ce n'est pas une requête AJAX, affiche les visites dans le template de création d'excursion
-        echo $this->getTwig()->render('creation_excursion.html.twig', [
+    public function afficherCreer(): void
+    {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
+        $visites = $this->getVisites();
+
+        echo $this->getTwig()->render('formulaire_excursion.html.twig', [
             'visites' => $visites
         ]);
     }
 
-    /**
-     * @brief Crée une nouvelle excursion.
-     * 
-     * Cette méthode vérifie si un formulaire de création d'excursion a été soumis, puis crée une nouvelle excursion
-     * dans la base de données via `ExcursionDao`. Elle gère également le téléchargement d'une image associée à l'excursion.
-     * 
-     * @return void
-     */
-    // public function creer(): void
-    // {
-    //     // Vérifie si la requête est une requête AJAX
-    //     $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-
-    //     // Vérifie si le formulaire a été soumis
-    //     if (!empty($this->getPost())) {
-    //         $data = [
-    //             'capacite' => $this->getPost()['capacite'] ?? '',
-    //             'nom' => $this->getPost()['nom'] ?? '',
-    //             'date_visite' => new DateTime(),
-    //             'description' => $this->getPost()['description'] ?? '',
-    //             'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
-    //             'id_guide' => 1, // Guide par défaut
-    //         ];
-
-    //         // Si un fichier image est téléchargé, l'ajouter aux données
-    //         if (!empty($_FILES['chemin_image']['name'])) {
-    //             $uploadDirectory = './images/';
-    //             $fileName = basename($_FILES['chemin_image']['name']);
-    //             $targetPath = $uploadDirectory . $fileName;
-
-    //             if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
-    //                 $data['chemin_image'] = $targetPath;
-    //             } else {
-    //                 if ($isAjax) {
-    //                     echo json_encode(['success' => false, 'message' => 'Image upload failed']);
-    //                     exit;
-    //                 }
-    //                 echo "Erreur: Echec du téléchargement de l'image.";
-    //                 return;
-    //             }
-    //         }
-
-    //         // Crée une nouvelle excursion via ExcursionDao
-    //         $excursionDao = new ExcursionDao($this->getPdo());
-    //         $nouvelleExcursion = $excursionDao->creer($data);
-
-    //         // Si la création est réussie, gérer les visites associées et rediriger
-    //         if ($nouvelleExcursion) {
-    //             $this->handleVisits($nouvelleExcursion->getId(), $_POST);
-
-    //             if ($isAjax) {
-    //                 echo json_encode(['success' => true, 'message' => 'Excursion created successfully']);
-    //                 exit;
-    //             }
-    //             $this->redirect('controleur=excursion&methode=lister');
-    //         } else {
-    //             if ($isAjax) {
-    //                 echo json_encode(['success' => false, 'message' => 'Error creating excursion']);
-    //                 exit;
-    //             }
-    //             echo "Erreur lors de la création de l'excursion.";
-    //         }
-    //     } else {
-    //         if ($isAjax) {
-    //             echo json_encode(['success' => false, 'message' => 'Form data is missing']);
-    //             exit;
-    //         }
-    //         echo "Erreur : Formulaire vide";
-    //     }
-    // }
-
     public function creer(): void
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
         // Vérifie si la requête est une requête AJAX
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+        $idGuide = $_SESSION['user_id'];
 
         // Vérifie si le formulaire a été soumis
         if (!empty($this->getPost())) {
@@ -139,8 +85,26 @@ class ControllerExcursion extends BaseController
                 'date_creation' => new DateTime(),
                 'description' => $this->getPost()['description'] ?? '',
                 'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
-                'id_guide' => 1, // Guide par défaut
+                'id_guide' => $idGuide,
             ];
+
+            // Valider les champs "temps_sur_place"
+            $tempsSurPlaceErrors = [];
+            foreach ($this->getPost() as $key => $value) {
+                if (strpos($key, 'temps_sur_place_') === 0 && empty($value)) {
+                    $tempsSurPlaceErrors[] = "Le temps sur place pour " . substr($key, 15) . " est requis.";
+                }
+            }
+
+            // Si des erreurs de validation existent, renvoyer une erreur
+            if (!empty($tempsSurPlaceErrors)) {
+                if ($isAjax) {
+                    echo json_encode(['success' => false, 'errors' => $tempsSurPlaceErrors]);
+                    exit;
+                }
+                echo implode("<br>", $tempsSurPlaceErrors);
+                return;
+            }
 
             // Si un fichier image est téléchargé, l'ajouter aux données
             if (!empty($_FILES['chemin_image']['name'])) {
@@ -172,7 +136,7 @@ class ControllerExcursion extends BaseController
                     echo json_encode([
                         'success' => true,
                         'message' => 'Excursion created successfully',
-                        'redirect' => 'index.php?controleur=excursion&methode=lister'
+                        'redirect' => 'index.php?controleur=excursion&methode=listerByGuide&id=' . $idGuide,
                     ]);
                 } else {
                     if ($isAjax) {
@@ -206,52 +170,102 @@ class ControllerExcursion extends BaseController
         $composerDao = new ComposerDao($this->getPdo());
         $visiteDao = new VisiteDao($this->getPdo());
 
-        // Boucle sur les visites envoyées via le formulaire
+        $currentVisits = $composerDao->findByExcursion($excursionId);
+        $currentVisitIds = array_column($currentVisits, 'visite_id');
+
+        $submittedVisits = [];
         foreach ($postData as $key => $value) {
             if (strpos($key, 'temps_sur_place_') === 0) {
-                // Récupère l'id de la visite à partir du nom de l'input
                 $visiteId = str_replace('temps_sur_place_', '', $key);
                 $tempsSurPlaceKey = 'temps_sur_place_' . $visiteId;
-
-                // Vérifie que les données nécessaires pour la visite sont présentes
-                if (!isset($postData[$tempsSurPlaceKey])) {
-                    echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (temps sur place).";
-                    continue;
-                }
-
-                $tempsSurPlace = $postData[$tempsSurPlaceKey]; // Temps passé sur place
-
-                if (empty($tempsSurPlace)) {
-                    echo "Erreur: Données manquantes pour la visite ID " . $visiteId . " (heure d'arrivée ou temps sur place).";
-                    continue;
-                }
-
-                try {
-                    $dateToday = (new DateTime())->format('Y-m-d');
-                    $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
-
-                    // Vérifie si la visite existe
-                    $visite = $visiteDao->findAllAssoc($visiteId);
-                    if (!$visite) {
-                        echo "Erreur : Visite introuvable pour ID " . $visiteId;
-                        continue;
-                    }
-
-                    // Crée un enregistrement dans la table Composer pour associer la visite à l'excursion
-                    $composer = new Composer(
-                        $tempsSurPlaceObj,
-                        $excursionId,
-                        $visiteId
-                    );
-
-                    if (!$composerDao->creer($composer)) {
-                        echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
-                    }
-                } catch (Exception $e) {
-                    echo "Erreur lors de l'ajout de la visite ID " . $visiteId . ": " . $e->getMessage();
+                if (isset($postData[$tempsSurPlaceKey])) {
+                    $submittedVisits[$visiteId] = $postData[$tempsSurPlaceKey];
                 }
             }
         }
+
+        $submittedVisitIds = array_keys($submittedVisits);
+        $visitsToAdd = array_diff($submittedVisitIds, $currentVisitIds);
+        $visitsToRemove = array_diff($currentVisitIds, $submittedVisitIds);
+        $visitsToUpdate = array_intersect($currentVisitIds, $submittedVisitIds);
+
+        // Boucle sur les visites envoyées via le formulaire
+        foreach ($visitsToAdd as $visiteId) {
+            $tempsSurPlace = $submittedVisits[$visiteId];
+            $dateToday = (new DateTime())->format('Y-m-d');
+            $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
+
+            $composer = new Composer(
+                $tempsSurPlaceObj,
+                $excursionId,
+                $visiteId
+            );
+
+            if (!$composerDao->creer($composer)) {
+                echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
+            }
+        }
+
+        // Mettre à jour les visites existantes pour l'excursion
+        foreach ($visitsToUpdate as $visiteId) {
+            $tempsSurPlace = $submittedVisits[$visiteId];
+            $dateToday = (new DateTime())->format('Y-m-d');
+            $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
+
+            // Vérifier si la valeur actuelle de temps_sur_place est différente à la valeur qui à étée soumis dans le formulaire
+            $currentTempsSurPlace = $composerDao->find($excursionId, $visiteId)->getTempsSurPlace();
+            if ($currentTempsSurPlace != $tempsSurPlaceObj) {
+                $composer = new Composer(
+                    $tempsSurPlaceObj,
+                    $excursionId,
+                    $visiteId
+                );
+
+                if (!$composerDao->modifier($composer)) {
+                    echo "Erreur: Échec de la mise à jour de la visite ID " . $visiteId;
+                }
+            }
+        }
+
+        // Enlever les visites qui ne sont plus incluses dans l'itinéraire l'excursion
+        foreach ($visitsToRemove as $visiteId) {
+            if (!$composerDao->supprimer($excursionId, $visiteId)) {
+                echo "Erreur: Échec de la suppression de la visite ID " . $visiteId;
+            }
+        }
+    }
+
+    public function afficherModifier(int $id): void
+    {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
+        $visites = $this->getVisites();
+
+        $excursionAmodifier = null;
+        if ($id) {
+            $excursionDao = new ExcursionDao($this->getPdo());
+            $composerDao = new ComposerDao($this->getPdo());
+
+            $excursionAmodifier = $excursionDao->findAssoc($id);
+            $visitesSelectionnees = $composerDao->findByExcursion($id);
+
+            if (!$excursionAmodifier) {
+                echo "Erreur : Excursion introuvable pour ID $id";
+                return;
+            }
+        } else {
+            echo "Erreur : ID d'excursion non spécifié.";
+            return;
+        }
+
+        echo $this->getTwig()->render('formulaire_excursion.html.twig', [
+            'visites' => $visites,
+            'visitesSelectionnees' => $visitesSelectionnees,
+            'excursion' => $excursionAmodifier,
+        ]);
     }
 
 
@@ -265,10 +279,97 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function modifier(int $id): void 
+    public function modifier(int $id): void
     {
-        
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            exit;
+        }
+
+        $excursionDao = new ExcursionDao($this->getPdo());
+        $currentExcursion = $excursionDao->findAssoc($id);
+
+        if (!$currentExcursion) {
+            echo "Erreur : Excursion introuvable.";
+            exit;
+        }
+
+        if ($currentExcursion->getId_guide() !== $_SESSION['user_id']) {
+            echo "Erreur : Vous n'êtes pas autorisé à modifier cette excursion.";
+            exit;
+        }
+
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+        $idGuide = $_SESSION['user_id'];
+
+        if (!empty($this->getPost())) {
+            $data = [
+                'id' => $id,
+                'capacite' => $this->getPost()['capacite'] ?? '',
+                'nom' => $this->getPost()['nom'] ?? '',
+                'date_creation' => new DateTime(),
+                'description' => $this->getPost()['description'] ?? '',
+                'public' => $this->getPost()['public'] ?? 0,
+                'id_guide' => $idGuide,
+            ];
+
+            if (!empty($_FILES['chemin_image']['name'])) {
+                $uploadDirectory = './images/';
+                $fileName = basename($_FILES['chemin_image']['name']);
+                $targetPath = $uploadDirectory . $fileName;
+
+                if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
+                    $data['chemin_image'] = $targetPath;
+                } else {
+                    if ($isAjax) {
+                        echo json_encode(['success' => false, 'message' => 'Image upload failed']);
+                        exit;
+                    }
+                    echo "Erreur: Échec du téléchargement de l'image.";
+                    return;
+                }
+            } else {
+                if ($currentExcursion && !empty($currentExcursion->getChemin_image())) {
+                    $data['chemin_image'] = $currentExcursion->getChemin_image();
+                }
+            }
+
+            $updated = $excursionDao->modifier($data);
+
+            if ($updated) {
+                $this->handleVisits($id, $_POST);
+
+                if ($isAjax) {
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Excursion modifiée avec succès',
+                        'redirect' => 'index.php?controleur=excursion&methode=afficher&id=' . $id,
+                    ]);
+                    exit;
+                }
+            } else {
+                if ($isAjax) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Erreur lors de la modification de l\'excursion',
+                    ]);
+                    exit;
+                }
+                echo "Erreur : Impossible de modifier l'excursion.";
+            }
+        } else {
+            if ($isAjax) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Données du formulaire manquantes',
+                ]);
+                exit;
+            }
+            echo "Erreur : Formulaire vide.";
+        }
     }
+
 
     /**
      * @brief Supprime une excursion.
@@ -280,40 +381,30 @@ class ControllerExcursion extends BaseController
      * 
      * @return void
      */
-    public function supprimerAjax(int $id): void
+
+    public function supprimer(int $id): void
     {
+        // session_start();
+
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'guide') {
+            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            return;
+        }
+
         $excursionDao = new ExcursionDao($this->getPdo());
+        $excursion = $excursionDao->findAssoc($id);
+        if (!$excursion) {
+            echo "Erreur : Excursion introuvable.";
+            exit;
+        }
 
-        if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            header('Content-Type: application/json');
-
-            if ($excursionDao->supprimer($id)) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Excursion deleted successfully.',
-                ]);
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Error occurred while deleting the excursion.',
-                ]);
-            }
+        if ($excursion->getId_guide() !== $_SESSION['user_id']) {
+            echo "Erreur : Vous n'êtes pas autorisé à supprimer cette excursion.";
             exit;
         }
 
         if ($excursionDao->supprimer($id)) {
-            $this->redirect('excursion', 'lister');
-        } else {
-            echo "Erreur lors de la suppression de l'excursion.";
-        }
-    }
-
-    public function supprimer(int $id): void
-    {
-        $excursionDao = new ExcursionDao($this->getPdo());
-
-        if ($excursionDao->supprimer($id)) {
-            $this->redirect('excursion', 'lister');
+            $this->redirect('excursion', 'listerByGuide', ['id' => $_SESSION['user_id']]);
         } else {
             echo "Erreur lors de la suppression de l'excursion.";
         }
@@ -334,9 +425,74 @@ class ControllerExcursion extends BaseController
         $excursionDao = new ExcursionDao($this->getPdo());
         $excursion = $excursionDao->findAssoc($id);
 
-        if ($excursion) {
-            echo $this->getTwig()->render('details_excursion.html.twig', [
+        $composerDao = new ComposerDao($this->getPdo());
+        $visites = $composerDao->findByExcursion($id);
+
+        $engagementDao = new EngagementDao($this->getPdo());
+        $engagements = $engagementDao->findEngagementsByExcursionId($id);
+
+        $guideDao = new GuideDao($this->getPdo());
+
+        $reservationDao = new ReservationDao($this->getPdo());
+        $reservations = $reservationDao->findReservationsByExcursionId($id);
+
+        // Format reservation dates for comparison in JavaScript
+        $datesReservees = [];
+        foreach ($reservations as $reservation) {
+            $datesReservees[] = $reservation->getDateReservation()->format('Y-m-d');
+        }
+
+        // On utilise array_map pour ajouter l'info du guide associé (sous forme d'un objet guide) à chaque engagement, utile pour la réservation
+        $engagements = array_map(
+            function ($engagement) use ($guideDao) {
+                $engagement->guide = $guideDao->find($engagement->getIdGuide());
+                return $engagement;
+            },
+            $engagements
+        );
+
+        $heureDebut = null;
+        if (!empty($engagements)) {
+            $heureDebut = new DateTime($engagements[0]->getHeureDebut()->format('Y-m-d H:i:s'));
+        }
+
+        $heuresArrivees = [];
+        if ($heureDebut) {
+            foreach ($visites as $visite) {
+                $heuresArrivees[$visite['visite_id']] = $heureDebut->format('H:i');
+                $tempsSurPlace = $visite['temps_sur_place'];
+                $parts = explode(':', $tempsSurPlace);
+
+                if (count($parts) === 3) {
+                    $heures = (int) $parts[0];
+                    $minutes = (int) $parts[1];
+
+                    $interval = new DateInterval(sprintf('PT%dH%dM', $heures, $minutes));
+                    $heureDebut->add($interval);
+                }
+            }
+        }
+
+        if ($excursion and $_SESSION['role']=="visiteur"){
+            echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
                 'excursion' => $excursion,
+                'visites' => $visites,
+                'engagements' => $engagements,// les engagements modifiés par l'array_map
+                'datesReservees' => $datesReservees
+            ]);
+        }
+        else if ($excursion and $_SESSION['role']=="guide") {
+            echo $this->getTwig()->render('details_excursion_guide.html.twig', [
+                'excursion' => $excursion,
+                'visites' => $visites,
+            ]);
+        } else if ($excursion and $_SESSION['role'] == "voyageur") {
+            echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
+                'excursion' => $excursion,
+                'visites' => $visites,
+                'engagements' => $engagements, // les engagements modifiés par l'array_map
+                'datesReservees' => $datesReservees,
+                'heuresArrivees' => $heuresArrivees,
             ]);
         } else {
             echo "Excursion non trouvée.";
@@ -353,10 +509,28 @@ class ControllerExcursion extends BaseController
     public function lister(): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());
-        $excursions = $excursionDao->findAll();
+        $excursions = $excursionDao->findAllWithExistingEngagement();
 
         echo $this->getTwig()->render('liste_excursions.html.twig', [
             'excursions' => $excursions,
+        ]);
+    }
+
+    public function listerByGuide(int $id): void
+    {
+        $excursionDao = new ExcursionDao($this->getPdo());
+
+        $public = isset($_GET['public']) && $_GET['public'] == 1;
+
+        if ($public) {
+            $excursions = $excursionDao->findPublic($id);
+        } else {
+            $excursions = $excursionDao->findByGuide($id);
+        }
+
+        echo $this->getTwig()->render('guide_excursions.html.twig', [
+            'excursionsByGuide' => $excursions,
+            'public' => $public,
         ]);
     }
 }

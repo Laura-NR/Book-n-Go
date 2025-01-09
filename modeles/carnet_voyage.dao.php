@@ -18,6 +18,15 @@ class CarnetVoyageDAO
         return $carnets;
     }
 
+    public function findAllByIdVoyageur(int $idVoyageur): array
+    {
+        $sql = "SELECT * FROM carnet_voyage WHERE id_voyageur = :id";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(array(':id' => $idVoyageur));
+        $carnets = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+        return $carnets;
+    }
+
     /**
      * Get the value of pdo
      */ 
@@ -74,5 +83,25 @@ class CarnetVoyageDAO
             $carnets[] = $carnet;
         }
         return $carnets;
+    }
+
+    public function inserer(array $data): bool
+    {
+        $sql = "INSERT INTO carnet_voyage (titre, chemin_img, description, id_voyageur) 
+                VALUES (:titre, :chemin_img, :description, :id_voyageur)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':titre', $data['titre']);
+        $stmt->bindValue(':chemin_img', $data['chemin_img']);
+        $stmt->bindValue(':description', $data['description']);
+        $stmt->bindValue(':id_voyageur', $data['id_voyageur']);
+
+        try {
+            $result = $stmt->execute();
+            return $result; // Retourne true si succès
+        } catch (PDOException $e) {
+            // dans le cas d'erreurs -> les faire remonter
+            echo "Erreur lors de l'insertion du carnet: " . $e->getMessage();
+            return false;
+        }
     }
 }

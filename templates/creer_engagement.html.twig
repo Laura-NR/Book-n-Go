@@ -1,0 +1,44 @@
+{% extends "dashboard.html.twig" %}
+
+{% block title %}
+Engagement
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="container">
+    <h1 class="mb-5">Création d'un engagement :</h1>
+    <div class="excursion mb-5 d-flex flex-row align-items-center">
+        {% if excursion is not empty %}
+            <img src="{{ excursion.chemin_image }}" alt="Apperçu de l'excursion" class="img-thumbnail" style="height: 200px; width: auto;">
+            <div class="ms-5">
+                <h2>{{ excursion.nom }}</h2>
+                <p>{{ excursion.description }}</p>
+            </div>
+        {% endif %}
+    </div>
+    <div>
+        <form action="index.php" method="post" class="form-check form-check-inline mt-5 d-flex flex-column">
+            <input type="hidden" name="controleur" value="engagement">
+            <input type="hidden" name="methode" value="creer">
+            <input type="hidden" name="id_excursion" value="{{ excursion.id }}">
+            <input type="hidden" name="id_guide" value="{{ session.user_id }}">
+            <div class="d-flex flex-row align-items-center justify-content-between mb-3">
+                <div>
+                    <label for="date_debut_dispo">Choisir date de début d'engagement:</label>
+                    <input type="date" name="date_debut_dispo" id="date_debut_dispo" class="form-control mb-3">
+                </div>
+                <div>
+                    <label for="date_fin_dispo">Choisir date de fin d'engagement:</label>
+                    <input type="date" name="date_fin_dispo" id="date_fin_dispo" class="form-control mb-3">
+                </div>
+                <div>
+                    <label for="heure_debut">Choisir heure de début dans la journée:</label>
+                    <input type="time" name="heure_debut" id="heure_debut" class="form-control mb-3">
+                </div>
+            </div>
+            <button type="submit" class="btn mt-5 align-self-center rounded-pill" style="background-color: #b2708f; width: 20%">Créer engagement</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

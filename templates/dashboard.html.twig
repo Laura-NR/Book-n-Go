@@ -1,0 +1,79 @@
+{% extends "base_template.html.twig" %}
+
+{% block css %} 
+<style>
+    .span {
+        color: #b2708f; 
+        border: 2px solid #b2708f;
+    }
+    .hover-span:hover, .hover-span:focus {
+        background: #b2708f;
+        color: #ffffff;
+    }
+</style>
+{% endblock %}
+
+{% block title %}
+Guide Dashboard
+{% endblock %}
+
+{% block sidebar %}
+<div class="container-fluid my-5">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-1 col-xl-2 px-sm-2 px-0" style="border-right: 3px solid #b2708f;">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 mt-5 align-items-center align-items-sm-start" id="menu">
+                    {% if session.role == "guide" %}
+                    <li class="w-100">
+                        <a href="index.php?controleur=guide&methode=afficherPlanning" class="nav-link align-middle px-0 mb-4 d-flex flex-row">
+                            <img src="images/icons/planning.svg" class="me-2" title="Mon Planning"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Planning</span>
+                        </a>
+                    </li>
+                    {% elseif session.role == "voyageur" %}
+                    <li class="w-100">
+                        <a href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}" class="nav-link align-middle px-0 mb-4 d-flex flex-row">
+                            <img src="images/icons/planning.svg" class="me-2" title="Mon Planning"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Planning</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if session.role == "guide" %}
+                        <li class="w-100">
+                            <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}"class="nav-link px-0 align-middle mb-4 d-flex flex-row">
+                                <img src="images/icons/excursion.svg" class="me-2" title="Excursions"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Excursions</span> </a>
+                        </li>
+                        <li class="w-100">
+                            <a href="index.php?controleur=visite&methode=lister" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
+                                <img src="images/icons/visite.svg" class="me-2" title="Visites"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Visites</span></a>
+                        </li>
+                    {% elseif session.role == "voyageur" %}
+                        <li class="w-100">
+                            {#/!\ A changer pour que ça affiche uniquement mes carnets de voyage -> probablement revoir le template d'affichage des carnets#}
+                            <a href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
+                                <img src="images/icons/excursion.svg" class="me-2" title="Excursions"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Carnets de Voyages</span> </a>
+                        </li>
+                        <li class="w-100">
+                            <a href="#" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
+                                <img src="images/icons/visite.svg" class="me-2" title="Visites"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Posts</span></a>
+                        </li>
+                    {% endif %}
+                    {% if session.role == "guide" %}
+                        <li class="w-100">
+                            <a href="index.php?controleur=guide&methode=afficher&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
+                                <img src="images/icons/infos.svg" class="me-2" title="Mes Informations"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Mes Informations</span> </a>
+                        </li>
+                    {% elseif session.role == "voyageur" %}
+                        <li class="w-100">
+                            <a href="index.php?controleur=voyageur&methode=afficher&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
+                                <img src="images/icons/infos.svg" class="me-2" title="Mes Informations"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Mes Informations</span> </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="col py-3">
+        {% block dashboard_content %}
+        {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

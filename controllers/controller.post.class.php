@@ -41,12 +41,17 @@ class ControllerPost extends BaseController
         $postDao = new PostDAO($this->getPdo());
         $posts = $postDao->findAllByCarnetId($id);
 
+        $carnetDao = new CarnetVoyageDAO($this->getPdo());
+        $carnet = $carnetDao->find($id);
+
         // Chargement du template pour lister les posts du carnet
         $template = $this->getTwig()->load('liste-posts.html.twig');
 
         // Affichage du template avec les posts du carnet
         echo $template->render(array(
             'posts' => $posts,
+            'idCarnet' => $id,
+            'idVoyageurCarnet' => $carnet->getIdVoyageur(), // A REMPLACER PAR UN GETTER APRES MDOIFICATION DE LA CLASSE CARNET
         ));
     }
 
@@ -78,6 +83,74 @@ class ControllerPost extends BaseController
         } else {
             // Si le post n'existe pas, afficher une erreur ou rediriger
             echo "post non trouvé.";
+        }
+    }
+    public function creer(): void
+    {
+        $erreursPost = $_SESSION['erreurs_post'] ?? [];
+        $donneesPost = $_SESSION['donnees_post'] ?? [];
+        unset($_SESSION['erreurs_post']);
+        unset($_SESSION['donnees_post']);
+
+        $visiteDao = new VisiteDAO($this->getPdo());
+        $visites = $visiteDao->findAll();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//            $validator = new Validator();
+            $donnees = $_POST;
+
+            // Validation des données
+//            $validator->regle('titre', 'required|min:3');
+//            $validator->regle('contenu', 'required|min:10');
+//            $validator->regle('image', 'image|max:2048'); // 2MB max
+
+            if (true/*$validator->valider($donnees)*/) {
+                $postDao = new PostDAO($this->getPdo());
+                $post = new Post();
+                $post->setTitre($_POST['titre']);
+                $post->setContenu($_POST['contenu']);
+                $post->setIdCarnet($_POST['id_carnet']);
+                $post->setIdVisite($_POST['id_visite']);
+
+                // Gestion de l'upload d'image
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $nomImage = uniqid().'_'. $_FILES['image']['name'];
+                    $cheminImage = 'images/post/' . $nomImage;
+                    move_uploaded_file($_FILES['image']['tmp_name'], $cheminImage);
+                    $post->setChemin_img($cheminImage);
+                }
+
+                $postDao->inserer($post);
+                header("Location: index.php?controleur=post&methode=listerParCarnet&id=" . $_POST['id_carnet']);
+                exit();
+            } else {
+                $_SESSION['erreurs_post'] = $validator->getMessagesErreurs();
+                $_SESSION['donnees_post'] = $donnees;
+                header("Location: index.php?controleur=post&methode=creer&id_carnet=" . $_POST['id_carnet']);
+                exit();
+            }
+        } else {
+            // Affichage du formulaire de création
+            $template = $this->getTwig()->load('creation_post.html.twig');
+            echo $template->render(array(
+                'idCarnet' => $_GET['id_carnet'],
+                'erreursPost' => $erreursPost,
+                'donneesPost' => $donneesPost,
+                'visites' => $visites
+            ));
+        }
+    }
+    public function supprimer(): void
+    {
+        if (isset($_POST["id_post"])) {
+            $postDao = new PostDAO($this->getPdo());
+            $idPost = $_POST["id_post"];
+            $idCarnet = $_POST['id_carnet']; // Retrieve id_carnet
+            $postDao->retirer($idPost);
+            header("Location: index.php?controleur=post&methode=listerParCarnet&id=" . $idCarnet); // Redirect with id_carnet
+            exit();
+        } else {
+            throw new Exception("");
         }
     }
 }

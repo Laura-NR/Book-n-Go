@@ -1,10 +1,13 @@
 <?php
 require_once 'controller.class.php';
+require_once 'validation/ajout_voyageur.php';
 
 class ControllerVoyageur extends BaseController {
 
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
+        global $reglesValidationInscriptionVoyageur;
+        $this->validator = new Validator($reglesValidationInscriptionVoyageur);
     }
     public function call($methode): mixed
     {
@@ -27,38 +30,52 @@ class ControllerVoyageur extends BaseController {
         }
     
     // Création d'un voyageur
-    public function creerVoyageur(): void {
+    public function creerVoyageur(): bool {
+        $postData = $this->getPost();
         // Vérification des données nécessaires
-        if (empty($this->getPost()) ||
-            !isset($this->getPost()['nom'],
-            $this->getPost()['prenom'],
-            $this->getPost()['numero_tel'],
-            $this->getPost()['mail'],
-            $this->getPost()['mdp'])) {
+        if (empty($postData) ||
+            !isset($postData['nom'],
+                $postData['prenom'],
+                $postData['numero_tel'],
+                $postData['mail'],
+                $postData['mdp'])) {
             // echo "Données manquantes pour créer le voyageur.";
-            return; // Retourner immédiatement si les données sont manquantes
+            return false; // Retourner immédiatement si les données sont manquantes
         }
-
-        try {
-            // Création du voyageur
-            $voyageur = new Voyageur();
-            $voyageur->setNom($this->getPost()['nom']);
-            $voyageur->setPrenom($this->getPost()['prenom']);
-            $voyageur->setNumeroTel($this->getPost()['numero_tel']);
-            $voyageur->setMail($this->getPost()['mail']);
-            $voyageur->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
-            //var_dump($voyageur);
-            $voyageur->setDerniereCo(new DateTime());
-            // Utilisation de VoyageurDao pour insérer le voyageur
-            $voyageurDao = new VoyageurDao($this->getPdo());
-            if ($voyageurDao->creer($voyageur)) {
-               // echo "Insertion réalisée avec succès.";
-            } else {
-                //echo "Erreur lors de la création du voyageur.";
+        if ($this->validator->valider($postData)) {
+            try {
+                // Création du voyageur
+                $voyageur = new Voyageur();
+                $voyageur->setNom($postData['nom']);
+                $voyageur->setPrenom($postData['prenom']);
+                $voyageur->setNumeroTel($postData['numero_tel']);
+                $voyageur->setMail($postData['mail']);
+                $voyageur->setMdp(password_hash($postData['mdp'], PASSWORD_DEFAULT));
+                //var_dump($voyageur);
+                $voyageur->setDerniereCo(new DateTime());
+                // Utilisation de VoyageurDao pour insérer le voyageur
+                $voyageurDao = new VoyageurDao($this->getPdo());
+                if ($voyageurDao->creer($voyageur)) {
+                    echo "Voyageur créé";
+                    return true;
+                } else {
+                    echo "Voyageur non créé -> erreur liée à la bd";
+                    return false;
+                }
+            } catch (Exception $e) {
+                echo "Erreur lors de l'ajout du voyageur : " . $e->getMessage();
             }
-        } catch (Exception $e) {
-            //echo "Erreur lors de l'ajout du voyageur : " . $e->getMessage();
         }
+        $donnees = $postData;
+        $erreurs = $this->validator->getMessagesErreurs();
+        //var_dump($erreurs);
+        $_SESSION['erreurs_inscription'] = $erreurs;
+        //var_dump($_SESSION['erreurs_commentaire']);
+        $_SESSION['donnees_inscription'] = $donnees;
+
+        //var_dump($this->validator->valider($data));
+        echo "Données invalides pour créer le Voyageur.";
+        return false;
     }
 
     // Modification d'un voyageur
@@ -144,14 +161,16 @@ class ControllerVoyageur extends BaseController {
     try {
         // Utilisation de la méthode listerTousVoyageurs pour récupérer tous les voyageurs
         $voyageurDao = new VoyageurDao($this->getPdo());
-        $voyageurs = $voyageurDao->listerTousVoyageurs(); // Récupère tous les voyageurs via la méthode listerTousVoyageurs
+        // $voyageurs = $voyageurDao->listerTousVoyageurs(); // Récupère tous les voyageurs via la méthode listerTousVoyageurs
+        // $voyageurs = $voyageurDao->listerTousVoyageurs(); // Récupère tous les voyageurs via la méthode listerTousVoyageurs
 
         // Chargement du template pour lister les voyageurs
         $template = $this->getTwig()->load('voyageurList.twig');
 
         // Affichage du template avec les données des voyageurs
         echo $template->render([
-            'voyageurs' => $voyageurs, 
+            // 'voyageurs' => $voyageurs,
+            // 'voyageurs' => $voyageurs,
             'menu' => "voyageur"
         ]);
     } catch (Exception $e) {
@@ -161,7 +180,7 @@ class ControllerVoyageur extends BaseController {
 
 
     // Afficher les détails d'un voyageur spécifique
-    public function afficher(int $id = 1): void
+    public function afficher(int $id): void
     {
         try {
             $voyageurDao = new VoyageurDao($this->getPdo());
@@ -183,5 +202,8 @@ class ControllerVoyageur extends BaseController {
             echo "Erreur lors de l'affichage du voyageur : " . $e->getMessage();
         }
     }
+
+
+
 }
 ?>

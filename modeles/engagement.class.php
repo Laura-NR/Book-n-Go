@@ -2,17 +2,22 @@
 
 class Engagement {
     private int|null $id;
-    private DateTime|null $date_debut;
-    private DateTime|null $date_fin;
-    private Excursion $excursion;
-    private Guide $guide;
+    private DateTime|null $date_debut_dispo; //a changer pour dateDebutDispo (formatage camelcase)
+    private DateTime|null $date_fin_dispo; // de même
+    private int|null $id_excursion;
+    private int|null $id_guide;
+    private DateTime|null $heure_debut;
 
-    public function __construct(?int $id = null, ?DateTime $date_debut = null, ?DateTime $date_fin = null, ?Excursion $excursion = null, ?Guide $guide = null) {
+    // /!\ ATTENTION : dû aux cahngements encore incomplets les attributs et leurs getters ne possèdent pas le même nommage,
+    // et donc pour acceder aux attributs depuis Twig, on utilisera par exemple XXXX.dateDebutDispo et non XXXX.date_debut_dispo
+
+    public function __construct(?int $id = null, ?DateTime $date_debut_dispo = null, ?DateTime $date_fin_dispo = null, ?int $id_excursion = null, ?int $id_guide = null, ?DateTime $heure_debut = null) {
         $this->id = $id;
-        $this->date_debut = $date_debut;
-        $this->date_fin = $date_fin;
-        $this->excursion = $excursion;
-        $this->guide = $guide;
+        $this->date_debut_dispo = $date_debut_dispo;
+        $this->date_fin_dispo = $date_fin_dispo;
+        $this->id_excursion = $id_excursion;
+        $this->id_guide = $id_guide;
+        $this->heure_debut = $heure_debut;
     }
 
     /**
@@ -34,68 +39,106 @@ class Engagement {
     /**
      * Get the value of date_debut
      */ 
-    public function getDate_debut(): ?DateTime
+    public function getDateDebutDispo(): ?DateTime
     {
-        return $this->date_debut;
+        return $this->date_debut_dispo;
     }
 
     /**
      * Set the value of date_debut
      *
      */ 
-    public function setDate_debut($date_debut): void
+    public function setDateDebutDispo(?DateTime $date_debut_dispo): void
     {
-        $this->date_debut = $date_debut;
+        $this->date_debut_dispo = $date_debut_dispo;
     }
 
     /**
      * Get the value of date_fin
      */ 
-    public function getDate_fin(): ?DateTime
+    public function getDateFinDispo(): ?DateTime
     {
-        return $this->date_fin;
+        return $this->date_fin_dispo;
     }
 
     /**
      * Set the value of date_fin
      *
      */ 
-    public function setDate_fin($date_fin): void
+    public function setDateFinDispo(?DateTime $date_fin_dispo): void
     {
-        $this->date_fin = $date_fin;
+        $this->date_fin_dispo = $date_fin_dispo;
     }
 
     /**
      * Get the value of excursion
      */ 
-    public function getExcursion(): ?Excursion
+    public function getExcursion(): ?int
     {
-        return $this->excursion;
+        return $this->id_excursion;
     }
 
     /**
      * Set the value of excursion
      *
      */ 
-    public function setExcursion($excursion): void
+    public function setExcursion(?int $id_excursion): void
     {
-        $this->excursion = $excursion;
+        $this->id_excursion = $id_excursion;
     }
 
     /**
      * Get the value of guide
      */ 
-    public function getGuide(): ?Guide
+    public function getIdGuide(): ?int
     {
-        return $this->guide;
+        return $this->id_guide;
     }
 
     /**
      * Set the value of guide
      *
      */ 
-    public function setGuide($guide): void
+    public function setGuide(?int $id_guide): void
     {
-        $this->guide = $guide;
+        $this->id_guide = $id_guide;
     }
+
+    /**
+     * Get the value of heure_debut
+     */
+    public function getHeureDebut(): ?DateTime
+    {
+        return $this->heure_debut;
+    }
+
+    /**
+     * Set the value of heure_debut
+     */
+    public function setHeureDebut(?DateTime $heure_debut): void
+    {
+        $this->heure_debut = $heure_debut;
+    }
+
+    public function getIdExcursion(): ?int
+    {
+        return $this->id_excursion;
+    }
+
+    public function setIdExcursion(?int $id_excursion): void
+    {
+        $this->id_excursion = $id_excursion;
+    }
+//
+//    public function getIdGuide(): ?int
+//    {
+//        return $this->id_guide;
+//    }
+//
+//    public function setIdGuide(?int $id_guide): void
+//    {
+//        $this->id_guide = $id_guide;
+//    }
+
+
 }

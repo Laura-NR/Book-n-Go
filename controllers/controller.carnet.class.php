@@ -35,6 +35,56 @@ class ControllerCarnetVoyage extends BaseController
             'carnets' => $carnets,
         ));
     }
+
+    public function creer(): void
+    {
+        if (!empty($_POST)) {
+            $data = [
+                'titre' => $_POST['titre'],
+                'image_carnet' => $_FILES['image_carnet'],
+                'description' => $_POST['description'],
+                'id_voyageur' => $_SESSION['user_id'],
+            ];
+
+            //traitement de l'image afin de la stocker
+            $repertoire = './images/carnet/';
+            $nomImage = basename($_FILES['image_carnet']['name']);
+            $cible = $repertoire . $nomImage;
+
+            if(move_uploaded_file($_FILES['image_carnet']['tmp_name'], $cible)) {
+                $data['chemin_img'] = $cible;
+            }
+
+            $carnetDao = new CarnetVoyageDAO($this->getPdo());
+            $nouveauCarnet = $carnetDao->inserer($data);
+
+            if ($nouveauCarnet) {
+                $this->redirect('carnetVoyage', 'lister');
+            } else {
+                echo "Erreur lors de la création du carnet.";
+            }
+        } else {
+            // Afficher le formulaire de création de carnet
+            $template = $this->getTwig()->load('creation_carnet_dashboard.html.twig');
+            echo $template->render();
+        }
+    }
+
+    //Spécifique au dashboard
+    public function listerParVoyageur(int $idVoyageur): void
+    {
+        $carnetDao = new CarnetVoyageDAO($this->getPdo());
+        $carnets = $carnetDao->findAllByIdVoyageur($idVoyageur);
+
+// Chargement du template pour lister les carnets de voyage
+        $template = $this->getTwig()->load('liste_carnets_dashboard.html.twig');
+
+// Affichage du template avec carnets de voyage
+        echo $template->render(array(
+            'carnets' => $carnets,
+        ));
+    }
+}
 //    public function afficher($id): void
 //    {
 //        $carnetDao = new CarnetVoyageDAO($this->getPdo());
@@ -52,4 +102,3 @@ class ControllerCarnetVoyage extends BaseController
 //            echo "Carnet non trouvé.";
 //        }
 //    }
-}

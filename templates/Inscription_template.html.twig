@@ -5,55 +5,66 @@ Inscription
 {% endblock %}
 
 {% block content %}
-<main class="container mt-5">
+<main class="container mt-5 mb-5">
     <h1 class="text-center mb-4">Inscription</h1>
     <div class="row justify-content-center">
         <div class="col-md-8">
+            {% if erreurs|default %}
+                {% for erreur in erreurs %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ erreur }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div class="card p-4 shadow-sm">
                 <form action="?controleur=utilisateur&methode=inscription" method="POST" enctype="multipart/form-data">
                     <!-- Nom -->
                     <div class="mb-3">
                         <label for="nom" class="form-label">Nom :</label>
-                        <input type="text" name="nom" id="nom" class="form-control" placeholder="Entrez votre nom" required>
+                        <input type="text" name="nom" id="nom" minlength="1" maxlength="255" class="form-control" placeholder="Entrez votre nom" value="{{ donnees['nom'] }}" required>
                     </div>
                     <!-- Prénom -->
                     <div class="mb-3">
                         <label for="prenom" class="form-label">Prénom :</label>
-                        <input type="text" name="prenom" id="prenom" class="form-control" placeholder="Entrez votre prénom" required>
+                        <input type="text" name="prenom" id="prenom" minlength="1" maxlength="255" class="form-control" placeholder="Entrez votre prénom" value="{{ donnees['prenom'] }}" required>
                     </div>
                     <!-- Numéro de téléphone -->
                     <div class="mb-3">
                         <label for="numero_tel" class="form-label">Numéro de téléphone :</label>
-                        <input type="tel" name="numero_tel" id="numero_tel" class="form-control" placeholder="Entrez votre numéro de téléphone" required>
+                        <input type="tel" name="numero_tel" id="numero_tel" minlength="10" maxlength="10" size="10" class="form-control" placeholder="Entrez votre numéro de téléphone" value="{{ donnees['numero_tel'] }}" required>
                     </div>
                     <!-- Adresse e-mail -->
                     <div class="mb-3">
                         <label for="mail" class="form-label">Adresse e-mail :</label>
-                        <input type="email" name="mail" id="mail" class="form-control" placeholder="Entrez votre adresse e-mail" required>
+                        <input type="email" name="mail" id="mail" class="form-control" placeholder="Entrez votre adresse e-mail" value="{{ donnees['mail'] }}" required>
                     </div>
                     <!-- Mot de passe -->
                     <div class="mb-3">
                         <label for="mdp" class="form-label">Mot de passe :</label>
-                        <input type="password" name="mdp" id="mdp" class="form-control" placeholder="Entrez votre mot de passe" required>
+                        <input type="password" name="mdp" id="mdp" minlength="12" maxlength="32" class="form-control" placeholder="Entrez votre mot de passe" value="{{ donnees['mdp'] }}" required>
                     </div>
                     <!-- Sélection du profil -->
                     <div class="mb-3">
                         <label for="profil" class="form-label">Je suis :</label>
                         <select name="profil" id="profil" class="form-select" required onchange="toggleCertificationField()">
-                            <option value="voyageur" selected>Voyageur</option>
-                            <option value="guide">Guide</option>
+                            <option value="voyageur" {% if donnees['profil'] == 'voyageur' %}selected{% endif %}>Voyageur</option>
+                            <option value="guide" {% if donnees['profil'] == 'guide' %}selected{% endif %}>Guide</option>
                         </select>
                     </div>
                     <!-- Certification (visible uniquement pour Guide) -->
                     <div class="mb-3 d-none" id="certification-field">
-                        <label for="chemin_certif" class="form-label">Certification (PDF uniquement) :</label>
-                        <input type="file" name="chemin_certif" id="chemin_certif" class="form-control" accept=".pdf">
+                        <label for="chemin_certif" class="form-label" >Certification (PDF uniquement) :</label>
+                        <input type="file" name="chemin_certif" id="chemin_certif" class="form-control" accept="application/pdf">
                     </div>
                     <!-- Bouton d'inscription -->
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">S'inscrire</button>
                     </div>
                 </form>
+                <!-- Lien vers la connexion -->
+                <div class="text-center mt-3">
+                    <p>Dejà inscrit ? <a href="index.php?controleur=utilisateur&methode=afficherConnexion" class="btn btn-link">Se connecter</a></p>
+                </div>
             </div>
         </div>
     </div>
@@ -70,5 +81,9 @@ Inscription
             certificationField.classList.add('d-none');
         }
     }
+    //faire en sorte que le champ de certification soit visible quand le profil est guide récupéré des données
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleCertificationField();
+    });
 </script>
 {% endblock %}

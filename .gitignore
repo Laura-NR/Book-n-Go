@@ -1,4 +1,7 @@
 /vendor
 /node_modules
+/config
 .codiumai
-/docs
+/docs.qodo
+/.qodo/
+.idea/

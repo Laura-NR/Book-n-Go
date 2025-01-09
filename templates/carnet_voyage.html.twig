@@ -3,26 +3,13 @@
 
 {% block navbar_items %}
     <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Mes Informations</a>
-    </li>
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Mon Planning</a>
-    </li>
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Carnets de Voyage</a>
-    </li>
-
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Devenir guide</a>
-    </li>
-    <li class="nav-item btn btn-primary rounded-pill me-2">
         <a class="nav-link" href="#">Déconnexion</a>
     </li>
 {% endblock %}
 
 {% block content %}
     <div class="container mt-4">
-        <h1 class="mb-4 text-center">Mes carnets de voyages :</h1>
+        <h1 class="mb-4 text-center">Carnets de voyages :</h1>
 
 {#        <!-- Recherche - PAS ENCORE IMPLEMENTE -->#}
 {#        <form class="d-flex mb-4 justify-content-center">#}
@@ -31,13 +18,21 @@
 {#                <i class="bi bi-search"></i>#}
 {#            </button>#}
 {#        </form>#}
+        {% if session.role == "voyageur" %}
+            <div class="text-center">
+                <a href="index.php?controleur=carnetVoyage&methode=creer" class="btn btn-primary" title="Créer un carnet de voyage">
+                    Créer un carnet de voyage
+                </a>
+            </div>
+        {% endif %}
+
 
         <!-- Grille des carnets -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for carnet in carnets %}
                 <div class="col">
                     <div class="card h-100">
-                        <img src="./images/carnet/{{ carnet.chemin_img }}" class="card-img-top" alt="Image du carnet {{ carnet.titre }}">
+                        <img src="{{ carnet.chemin_img }}" class="card-img-top" style="object-fit: cover; height: 200px" alt="Image du carnet {{ carnet.titre }}">
                         <div class="card-body">
                             <h5 class="card-title text-center">{{ carnet.titre }}</h5>
                             <p class="card-text">{{ carnet.description }}</p>

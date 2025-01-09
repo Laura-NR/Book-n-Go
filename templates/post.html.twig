@@ -45,6 +45,15 @@
                         </div>
                     {% endfor %}
                 {% endif %}
+
+
+                {% if session.role == visiteur %}
+                <div class="alert alert-danger" role="alert">
+                    Veuillez vous connecter pour commenter ce post
+                </div>
+                {% endif %}
+
+                {% if session.role == "voyageur" %}
                 <div class="card mb-2">
                     <div class="card-body">
                         <h6 class="card-title">{{ session.id }}</h6>
@@ -56,6 +65,9 @@
                         </form>
                     </div>
                 </div>
+                {% endif %}
+
+
                 {% for commentaire in commentaires %}
                     <div class="card mb-2">
                         <div class="card-body">
@@ -66,7 +78,7 @@
 {#                            Pour plus tard quand on aura récupéré les infos de l'utilisateur connecté#}
 
 {#                            {{ if commentaire.id_voyageur == session.id }}#}
-                            {% if commentaire.id_voyageur == 1 %}
+                            {% if commentaire.id_voyageur == session.user_id %}
                                 <form class="card-text" method="post">
                                     {#passage d'une valeur invisible en post afin de pouvoir lier le commentaire créé au post#}
                                     <input type="hidden" value="{{ post.id }}" name="id_post" />
@@ -74,17 +86,48 @@
                                     <input type="submit" class="btn btn-danger" value="Supprimer" formaction="?controleur=commentaire&methode=supprimer&id={{ commentaire.id }}">
                                 </form>
                             {% endif %}
-
                         </div>
                     </div>
+
                 {% endfor %}
             </div>
         </div>
+        <button onclick="history.back()" class="btn btn-secondary mt-3">Retour aux posts du carnet</button> {# CONSIDERER MODIFICATION #}
+
+
+        {% if session.role == "voyageur" %}
+            <button class="btn btn-primary mt-3" id="editButton">Modifier le post</button>
+
+            <form method="post" action="index.php?controleur=post&methode=modifier" id="editForm" style="display: none;">
+                <strong>WIP : fonctionnalité pas encore mise en place</strong>
+                <input type="hidden" name="id_post" value="{{ post.id }}">
+                <div class="form-group mt-3">
+                    <label for="titre">Titre :</label>
+                    <input type="text" class="form-control" id="titre" name="titre" value="{{ post.titre }}">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="contenu">Contenu :</label>
+                    <textarea class="form-control" id="contenu" name="contenu">{{ post.contenu }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-success mt-3">Enregistrer les modifications</button>
+            </form>
+        {% endif %}
     </div>
 
-    {{ dump(erreursCommentaire) }}
-    {{ dump(donneesCommentaire) }}
+{#    {{ dump(erreursCommentaire) }}#}
+{#    {{ dump(donneesCommentaire) }}#}
 {#    {{ dump(post) }}
     {{ dump(visite) }}
     {{ dump(commentaires) }} #}
+{% endblock %}
+
+{% block script %}
+<script>
+    editButton = document.getElementById('editButton');
+    editForm = document.getElementById('editForm');
+
+    editButton.addEventListener('click', () => {
+        editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
+    });
+</script>
 {% endblock %}

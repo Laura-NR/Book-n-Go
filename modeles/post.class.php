@@ -5,9 +5,12 @@ class Post {
     private string|null $titre;
     private string|null $chemin_img;
     private string|null $contenu;
-    private int|null $id_visite; // Stocke l'ID de la visite
-    private int|null $id_guide; // Stocke l'ID du guide
-    private int|null $id_carnet; // Stocke l'ID du guide
+    private int|null $id_visite;
+
+    // Stocke l'ID de la visite
+    private int|null $id_carnet;
+
+     // Stocke l'ID du guide
     private string|null $date_publication; // Stocke l'ID du guide
     /**
      * date('Y-m-d H:i:s', strtotime(str_replace('-', '/', $date))) pourra permettre la conversion de date php en DATETIME MySQL
@@ -105,11 +108,24 @@ class Post {
         $this->date_heure_publication = $date_heure_publication;
     }
 
-    /**
-     * Get the value of voyageur
-     */
+    public function getIdCarnet(): ?int
+    {
+        return $this->id_carnet;
+    }
 
-    /**
-     * Get the value of visite
-     */
+    public function setIdCarnet(?int $id_carnet): void
+    {
+        $this->id_carnet = $id_carnet;
+    }
+
+    public function getIdVisite(): ?int
+    {
+        return $this->id_visite;
+    }
+
+    public function setIdVisite(?int $id_visite): void
+    {
+        $this->id_visite = $id_visite;
+    }
 }
+

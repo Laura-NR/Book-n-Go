@@ -1,0 +1,49 @@
+{% extends 'base_template.html.twig' %}
+
+{% block title %}Créer un nouveau post{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Créer un nouveau post dans le carnet {{ idCarnet }}</h1>
+
+        <form action="index.php?controleur=post&methode=creer" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id_carnet" value="{{ idCarnet }}">
+            <div class="mb-3">
+                <label for="id_visite" class="form-label">Visite associée :</label>
+                <select class="form-control" id="id_visite" name="id_visite" required>
+                    {% for visite in visites %}
+                        <option value="{{ visite.id }}" {% if donneesPost.id_visite == visite.id %}selected{% endif %}>{{ visite.titre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="titre" class="form-label">Titre :</label>
+                <input type="text" class="form-control" id="titre" name="titre" value="{{ donneesPost.titre ?? '' }}" required>
+                {% if erreursPost.titre is defined %}
+                    <div class="text-danger">{{ erreursPost.titre }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="contenu" class="form-label">Contenu :</label>
+                <textarea class="form-control" id="contenu" name="contenu" rows="5" required>{{ donneesPost.contenu ?? '' }}</textarea>
+                {% if erreursPost.contenu is defined %}
+                    <div class="text-danger">{{ erreursPost.contenu }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label">Image :</label>
+                <input type="file" class="form-control" id="image" name="image">
+                {% if erreursPost.image is defined %}
+                    <div class="text-danger">{{ erreursPost.image }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Créer le post</button>
+        </form>
+
+        <a href="index.php?controleur=post&methode=listerParCarnet&id={{ idCarnet }}" class="btn btn-secondary mt-3">Retour à la liste des posts</a>
+    </div>
+{% endblock %}

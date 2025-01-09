@@ -1,18 +1,22 @@
 <?php
 require_once 'controller.voyageur.php';
+require_once 'validation/ajout_guide.php';
+
 class ControllerGuide extends ControllerVoyageur
 {
 
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     {
         parent::__construct($twig, $loader);
+        global $reglesValidationInsertionGuide;
+        $this->validator = new Validator($reglesValidationInsertionGuide);
     }
     public function call($methode): mixed
     {
         if (method_exists($this, $methode)) {
             // Récupère l'ID si disponible
             if (isset($_GET['id'])) {
-                $id = $_GET['id'];
+                $id = (int) $_GET['id'];
                 return $this->$methode($id); // Appelle la méthode avec l'ID si disponible
             } else {
                 return $this->$methode(); // Appelle la méthode sans ID
@@ -27,7 +31,7 @@ class ControllerGuide extends ControllerVoyageur
         return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
     }
 
-    public function creerGuide(): void
+    public function creerGuide(): bool
     {
         $postData = $this->getPost();
         $fileData = $_FILES;
@@ -41,37 +45,59 @@ class ControllerGuide extends ControllerVoyageur
             empty($postData['numero_tel']) ||
             empty($postData['mail']) ||
             empty($postData['mdp']) ||
-            !isset($fileData['chemin_certif']) || 
-            empty($fileData['chemin_certif']['tmp_name']) 
+            !isset($fileData['chemin_certif']) ||
+            empty($fileData['chemin_certif']['tmp_name'])
         ) {
-            echo "Données manquantes ou invalides pour créer le guide.";
-            return;
+            echo "Données manquantes pour créer le guide.";
+            return false;
         }
-    
+        else {
+            $data = array_merge($postData, $fileData);
+        }
         // Extraire uniquement le nom du fichier (pas le chemin complet)
-        $nomFichierCertif = basename($fileData['chemin_certif']['name']);
-    
-        try {
-            $guide = new Guide();
-            $guide->setNom($postData['nom']);
-            $guide->setPrenom($postData['prenom']);
-            $guide->setNumeroTel($postData['numero_tel']);
-            $guide->setMail($postData['mail']);
-            $guide->setMdp(password_hash($this->getPost()['mdp'], PASSWORD_DEFAULT));
-            $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
-            $guide->setDerniereCo(new DateTime());
-    
-            $guideDao = new GuideDao($this->getPdo());
-            if ($guideDao->creer($guide)) {
-                //echo "Insertion réalisée avec succès.";
-            } else {
-                //echo "Erreur lors de la création du guide.";
+        //var_dump($postData);
+        //var_dump($data);
+        //var_dump($this->validator->valider($postData));
+        if ($this->validator->valider($data)) {
+            $nomFichierCertif = basename($data['chemin_certif']['name']);
+            try {
+                $guide = new Guide();
+                $guide->setNom($data['nom']);
+                $guide->setPrenom($data['prenom']);
+                $guide->setNumeroTel($data['numero_tel']);
+                $guide->setMail($data['mail']);
+                $guide->setMdp(password_hash($data['mdp'], PASSWORD_DEFAULT));
+                $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
+                $guide->setDerniereCo(new DateTime());
+
+                $guideDao = new GuideDao($this->getPdo());
+                if ($guideDao->creer($guide)) {
+                    echo "Guide créé";
+                    return true;
+                } else {
+                    echo "Guide non créé -> erreur liée à la bd";
+                    return false;
+                }
+            } catch (Exception $e) {
+                echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
             }
-        } catch (Exception $e) {
-            //echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
         }
+//        débuggage
+//        $erreurs = $this->validator->getMessagesErreurs();
+//        foreach ($erreurs as $erreur) {
+//            echo $erreur . "<br>";
+//        }
+        $donnees = $data;
+        $erreurs = $this->validator->getMessagesErreurs();
+        //var_dump($erreurs);
+        $_SESSION['erreurs_inscription'] = $erreurs;
+        //var_dump($_SESSION['erreurs_commentaire']);
+        $_SESSION['donnees_inscription'] = $donnees;
+
+        //var_dump($this->validator->valider($data));
+        echo "Données invalides pour créer le guide.";
+        return false;
     }
-    
 
     // Modification d'un guide
     public function supprimerGuide(int $id): void
@@ -144,7 +170,6 @@ class ControllerGuide extends ControllerVoyageur
                     }
                 }
             }
-    
         } catch (Exception $e) {
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
         }
@@ -152,19 +177,25 @@ class ControllerGuide extends ControllerVoyageur
         
 
     // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
-    public function afficher(int $id = 1): void
+    public function afficher(int $id = null): void
     {
         try {
+            $id = $id ?? (isset($_GET['id']) ? (int) $_GET['id'] : null);
+
+            if ($id === null || $id <= 0) {
+                throw new Exception("ID invalide ou non fourni.");
+            }
+
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->findAssoc($id);
-    
+
             if (!$guide) {
                 echo "Guide avec id $id pas trouvé.";
                 return;
             }
-    
+
             $editMode = isset($_GET['editMode']) && $_GET['editMode'] === 'true';
-    
+
             echo $this->getTwig()->render('pageInformationsGuide.html.twig', [
                 'guide' => $guide,
                 'menu' => "guide_detail",
@@ -174,7 +205,7 @@ class ControllerGuide extends ControllerVoyageur
             echo "Erreur lors de l'affichage du guide : " . $e->getMessage();
         }
     }
-    
+
 
     // Voir le certificat du guide (accessible uniquement aux administrateurs)
     public function voirCertification(int $id): void
@@ -204,5 +235,10 @@ class ControllerGuide extends ControllerVoyageur
         } catch (Exception $e) {
             echo "Erreur lors de la consultation du certificat : " . $e->getMessage();
         }
+    }
+
+    public function afficherPlanning(): void
+    {
+        echo $this->getTwig()->render('planning_guide.html.twig');
     }
 }
