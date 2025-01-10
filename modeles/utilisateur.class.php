@@ -1,16 +1,45 @@
 <?php
 class Utilisateur {
+    /**
+     * @var int|null
+     */
     private ?int $id;
+    /**
+     * @var string|null
+     */
     private ?string $nom;
+    /**
+     * @var string|null
+     */
     private ?string $prenom;
+    /**
+     * @var string|null
+     */
     private ?string $numeroTel;
+    /**
+     * @var string|null
+     */
     private ?string $mail;
+    /**
+     * @var string|null
+     */
     private ?string $mdp;
-    private ?string $role;  // Attribut rôle basé sur la présence de certification
+    /**
+     * @var string|null
+     */
+    private ?string $role;
 
-    // Constructeur
-    public function __construct(?int $id = null, ?string $nom = null, ?string $prenom = null, 
-                                ?string $numeroTel = null, ?string $mail = null, ?string $mdp = null, 
+    /**
+     * @param int|null $id
+     * @param string|null $nom
+     * @param string|null $prenom
+     * @param string|null $numeroTel
+     * @param string|null $mail
+     * @param string|null $mdp
+     * @param string|null $role
+     */
+    public function __construct(?int    $id = null, ?string $nom = null, ?string $prenom = null,
+                                ?string $numeroTel = null, ?string $mail = null, ?string $mdp = null,
                                 ?string $role = null) {
         $this->id = $id;
         $this->nom = $nom;
@@ -21,35 +50,59 @@ class Utilisateur {
         $this->role = $role;
     }
 
-    // Getters et Setters
+    /**
+     * @return int|null
+     */
     public function getId(): ?int {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getNom(): ?string {
         return $this->nom;
     }
 
+    /**
+     * @return string|null
+     */
     public function getPrenom(): ?string {
         return $this->prenom;
     }
 
+    /**
+     * @return string|null
+     */
     public function getNumeroTel(): ?string {
         return $this->numeroTel;
     }
 
+    /**
+     * @return string|null
+     */
     public function getMail(): ?string {
         return $this->mail;
     }
 
+    /**
+     * @return string|null
+     */
     public function getMdp(): ?string {
         return $this->mdp;
     }
 
+    /**
+     * @return string|null
+     */
     public function getRole(): ?string {
         return $this->role;
     }
 
+    /**
+     * @param string $role
+     * @return void
+     */
     public function setRole(string $role): void {
         $this->role = $role;
     }

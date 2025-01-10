@@ -2,21 +2,33 @@
 class VisiteDao{
     private ?PDO $pdo;
 
-    //Constructeur
+    /**
+     * @param PDO|null $pdo
+     */
     public function __construct(?PDO $pdo = null){
         $this->pdo = bd::getInstance()->getPdo();
     }
 
-    //Getteur
+    /**
+     * @return PDO|null
+     */
     public function getPdo(){
         return $this->pdo;
     }
 
-    //Setteur
+    /**
+     * @param PDO|null $pdo
+     * @return void
+     */
     public function setPdo(?PDO $pdo = null){
         $this->pdo = $pdo;
     }
 
+    /**
+     * @brief Insérer une visite avec les données passées en paramètre
+     * @param array $data
+     * @return bool
+     */
     public function insert(array $data) : bool {
         $sql = "INSERT INTO visite (adresse, ville, codePostal, description, titre, idGuide)
         VALUES (:adresse,:ville,:codePostal,:description,:titre,:idGuide)";
@@ -39,6 +51,12 @@ class VisiteDao{
     //     ));
     // }
 
+
+    /**
+     * @brief Modifier une visite avec les données passées en paramètre
+     * @param array $data
+     * @return bool
+     */
     public function modify(array $data) : bool {
         $sql = "UPDATE visite 
         SET adresse = :adresse, ville = :ville, codePostal = :codePostal, description = :description, titre = :titre 
@@ -55,6 +73,11 @@ class VisiteDao{
         ));
     }
 
+    /**
+     * @brief Trouver une visite par ID (objet Visite)
+     * @param int|null $id
+     * @return Visite|null
+     */
     public function find(?int $id): ?Visite{
         $sql ="SELECT * FROM visite WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -67,6 +90,11 @@ class VisiteDao{
         }
         return $visite;
     }
+
+    /**
+     * @brief Trouver toutes les visites (retourne un tableau associatif de toutes les visites (objets Visite))
+     * @return array|false
+     */
     public function findAll(){
         $sql ="SELECT * FROM visite";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -76,6 +104,11 @@ class VisiteDao{
         return $visite;
     }
 
+    /**
+     * @brief Trouver une visite par ID (tableau associatif)
+     * @param int|null $id
+     * @return array|null
+     */
     public function findAssoc(?int $id): ?array{
         $sql ="SELECT * FROM visite WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -85,6 +118,10 @@ class VisiteDao{
         return $visite;
     }
 
+    /**
+     * @brief Trouver toutes les visites (retourne un tableau associatif de toutes les visites)
+     * @return array|false
+     */
     public function findAllAssoc(){
         $sql ="SELECT * FROM visite";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -95,6 +132,11 @@ class VisiteDao{
         return $visite;
     }
 
+    /**
+     * @brief Hydrater une visite à partir d'un tableau associatif
+     * @param $tableauAssoc
+     * @return Visite|null
+     */
     public function hydrate($tableauAssoc): ?Visite{
         $visite = new Visite();
         $visite->setId($tableauAssoc["id"]);
@@ -107,6 +149,11 @@ class VisiteDao{
         return $visite;
     }
 
+    /**
+     * @brief Hydrater un tableau de visites à partir d'un tableau associatif
+     * @param $tab
+     * @return array|null
+     */
     public function hydrateAll($tab): ?array{
         $visiteTab = [];
         foreach ($tab as $tableauAssoc) {
@@ -126,6 +173,13 @@ class VisiteDao{
         $visite = $pdoStatement->fetchAll();
         return $visite;
     }*/
+
+
+    /**
+     * @brief Trouver toutes les visites d'un guide dont l'id est spécifié en paramètre (retourne un tableau associatif de tous les objets visites)
+     * @param string $idGuide
+     * @return array
+     */
     public function findByGuide(string $idGuide): array
     {
         $sql = "SELECT * FROM visite WHERE idGuide = :id";

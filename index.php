@@ -15,12 +15,12 @@ try {
     $params = array_merge($_GET, $_POST);
 
     if (isset($params['controleur'])) {
-        $controllerName = $params['controleur'];
+        $controllerName = htmlspecialchars($params['controleur'], ENT_QUOTES, 'UTF-8');
     } else {
         $controllerName = '';
     }
     if (isset($params['methode'])) {
-        $methode = $params['methode'];
+        $methode = htmlspecialchars($params['methode'], ENT_QUOTES, 'UTF-8');
     } else {
         $methode = '';
     }

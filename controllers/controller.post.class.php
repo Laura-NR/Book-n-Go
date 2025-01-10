@@ -25,7 +25,7 @@ class ControllerPost extends BaseController
     public function lister(): void
     {
         $postDao = new PostDAO($this->getPdo());
-        $posts = $postDao->findAll();
+        $posts = $postDao->findAllAssoc();
 
 // Chargement du template pour lister les posts de voyage
         $template = $this->getTwig()->load('liste-posts.html.twig');

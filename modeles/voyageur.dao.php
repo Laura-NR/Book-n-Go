@@ -8,17 +8,31 @@ class VoyageurDao {
     }
 
     // Getteur
+
+    /**
+     * @return PDO|null
+     */
     public function getPdo(){
         return $this->pdo;
     }
 
     // Setteur
+
+    /**
+     * @param PDO|null $pdo
+     * @return void
+     */
     public function setPdo(?PDO $pdo = null){
         $this->pdo = $pdo;
     }
 
-    // Hydrate les données de la base de données dans l'objet Voyageur
-    private function hydrate(Voyageur $voyageur, array $data): void {
+    /**
+     * @brief Hydrater un voyageur à partir d'un tableau associatif
+     * @param Voyageur $voyageur
+     * @param array $data
+     * @return void
+     */
+    public function hydrate(Voyageur $voyageur, array $data): void {
         // Remplir les propriétés de l'objet Voyageur à partir du tableau $data
         foreach ($data as $key => $value) {
             $method = 'set' . ucfirst($key);
@@ -29,6 +43,12 @@ class VoyageurDao {
     }
 
     // Recherche un voyageur par son ID
+
+    /**
+     * @brief Trouver un voyageur par son ID (retourne un objet Voyageur)
+     * @param int|null $id
+     * @return Voyageur|null
+     */
     public function find(?int $id): ?Voyageur {
         $sql = "SELECT * FROM voyageur WHERE id = :id";
         $requete = $this->pdo->prepare($sql);
@@ -43,7 +63,13 @@ class VoyageurDao {
     }
 
      // Trouver un voyageur par ID en mode associatif (retourne un tableau associatif ou null)
-     public function findAssoc(?int $id): ?array
+
+    /**
+     * @brief Trouver un voyageur par son ID (retourne un tableau associatif)
+     * @param int|null $id
+     * @return array|null
+     */
+    public function findAssoc(?int $id): ?array
      {
          $sql = "SELECT * FROM voyageur WHERE id = :id";
          $pdoStatement = $this->pdo->prepare($sql);
@@ -57,7 +83,12 @@ class VoyageurDao {
      }
  
      // Récupère tous les voyageurs
-     public function findAll(): array {
+
+    /**
+     * @brief Récupérer tous les voyageurs (tableau associatif d'objets Voyageur)
+     * @return array
+     */
+    public function findAll(): array {
          // Requête SELECT pour récupérer tous les voyageurs
          $sql = "SELECT * FROM voyageur";
          $requete = $this->pdo->prepare($sql); // Préparation de la requête
@@ -66,6 +97,12 @@ class VoyageurDao {
      }
 
     // Crée un nouveau voyageur
+
+    /**
+     * @brief Insérer un nouveau voyageur en bd
+     * @param Voyageur $voyageur
+     * @return bool
+     */
     public function creer(Voyageur $voyageur): bool {
         $sql = "INSERT INTO voyageur (nom, prenom, numero_tel, mail, mdp, derniere_co) 
                 VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :derniere_co)";
@@ -85,6 +122,12 @@ class VoyageurDao {
     }
 
     // Met à jour un voyageur existant
+
+    /**
+     * @brief Mettre à jour un voyageur existant en bd
+     * @param Voyageur $voyageur
+     * @return bool
+     */
     public function mettreAJour(Voyageur $voyageur): bool {
         $sql = "UPDATE voyageur 
                 SET nom = :nom, prenom = :prenom, numero_tel = :numero_tel, mail = :mail, mdp = :mdp 
@@ -104,12 +147,23 @@ class VoyageurDao {
 
 
     // Supprime un voyageur par son ID
+
+    /**
+     * @brief Supprimer un voyageur par son ID
+     * @param int $id
+     * @return int
+     */
     public function supprimer(int $id): int {
         $sql = "DELETE FROM voyageur WHERE id = :id";
         $requete = $this->pdo->prepare($sql);
         return $requete->execute(['id' => $id]);
     }
 
+    /**
+     * @brief Mettre à jour la dernière connexion d'un voyageur
+     * @param Voyageur $voyageur
+     * @return bool
+     */
     public function majDerniereCo(Voyageur $voyageur) : bool
     {
         $nouvelleCo = $voyageur->getDerniereCo()->format("Y-m-d");

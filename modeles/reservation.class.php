@@ -1,13 +1,32 @@
 <?php
 class Reservation
 {
-    // Déclaration des propriétés
+
+    /**
+     * @var int|null
+     */
     private int|null $id;
+    /**
+     * @var int|null
+     */
     private int|null $idVoyageur;
+    /**
+     * @var DateTime|null
+     */
     private DateTime|null $dateReservation;
+    /**
+     * @var int|null
+     */
     private int|null $idEngagement;
 
     // Constructeur de la classe
+
+    /**
+     * @param int|null $id
+     * @param int|null $idVoyageur
+     * @param DateTime|null $dateReservation
+     * @param int|null $idEngagement
+     */
     public function __construct(?int $id, ?int $idVoyageur, ?DateTime $dateReservation, ?int $idEngagement)
     {
         $this->id = $id;
@@ -17,55 +36,86 @@ class Reservation
     }
 
 
-    // Getter pour l'id
+    /**
+     * @brief Retourne l'ID de la reservation
+     * @return int|null
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    // Setter pour l'id
+    /**
+     * @brief Affecte l'ID de la reservation
+     * @param $id
+     * @return void
+     */
     public function setId($id)
     {
         $this->id = $id;
     }
 
-    // Getter pour l'idVoyageur
+    /**
+     * @brief Retourne l'ID du voyageur
+     * @return int|null
+     */
     public function getIdVoyageur()
     {
         return $this->idVoyageur;
     }
 
-    // Setter pour l'idVoyageur
+    /**
+     * @brief Affecte l'ID du voyageur
+     * @param $idVoyageur
+     * @return void
+     */
     public function setIdVoyageur($idVoyageur)
     {
         $this->idVoyageur = $idVoyageur;
     }
 
-    // Getter pour la dateReservation
+    /**
+     * @brief Retourne la date de la reservation
+     * @return DateTime|null
+     */
     public function getDateReservation() : ?DateTime
     {
         return $this->dateReservation;
     }
 
-    // Setter pour la dateReservation
+    /**
+     * @brief Affecte la date de la reservation
+     * @param DateTime|null $dateReservation
+     * @return void
+     */
     public function setDateReservation(?DateTime $dateReservation)
     {
         $this->dateReservation = $dateReservation;
     }
 
-    // Getter pour l'idEngagement
+    /**
+     * @brief Retourne l'ID de l'engagement
+     * @return int|null
+     */
     public function getIdEngagement()
     {
         return $this->idEngagement;
     }
 
-    // Setter pour l'idEngagement
+    /**
+     * @brief Affecte l'ID de l'engagement
+     * @param $idEngagement
+     * @return void
+     */
     public function setIdEngagement($idEngagement)
     {
         $this->idEngagement = $idEngagement;
     }
 
-    // Méthode pour afficher les détails de la réservation
+    /**
+     * @brief Affiche les details de la reservation
+     * @return void
+     */
     public function afficherDetails()
     {
         echo "ID de la réservation: " . $this->getId() . "<br>";
