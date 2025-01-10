@@ -59,11 +59,33 @@ class ControllerVisite extends BaseController
         }
     }
 
+
+    /**
+     * @brief Redirige vers le formulaire de création d'une visite.
+     *
+     * Cette méthode affiche le formulaire de création d'une visite en utilisant le template
+     * `formulaire_visite.html.twig`. Elle indique que le formulaire est en mode création
+     * et non en mode édition, et détermine si la visite fait partie d'une excursion en fonction
+     * du paramètre `isExcursion` passé dans l'URL.
+     *
+     * @return void
+     */
     public function redirectCreer(): void
     {
         echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null, 'isExcursion' => $_GET["isExcursion"]]);
     }
 
+    /**
+     * @brief Redirige vers le formulaire de modification d'une visite.
+     *
+     * Cette méthode affiche le formulaire de modification d'une visite en utilisant le template
+     * `formulaire_visite.html.twig`. Elle indique que le formulaire est en mode édition
+     * et non en mode création, et cherche la visite correspondant au paramètre `visite_id`
+     * passé dans le formulaire. Si la visite existe, elle est transmise au template.
+     * Sinon, un message d'erreur est affiché.
+     *
+     * @return void
+     */
     public function redirectModifier(): void
     {
         $id = $_POST['visite_id'];
@@ -77,6 +99,17 @@ class ControllerVisite extends BaseController
         }
     }
 
+    /**
+     * @brief Modifie une visite.
+     *
+     * Cette méthode modifie une visite en validant les données du formulaire
+     * et en appelant la méthode `modify` de VisiteDao.
+     * Si la validation est réussie et que la modification est effectuée,
+     * elle redirige vers la liste des visites.
+     * Sinon, elle affiche le formulaire de modification avec les erreurs.
+     *
+     * @return void
+     */
     public function modifier(): void
     {
 
@@ -125,6 +158,14 @@ class ControllerVisite extends BaseController
     //     }
     // }
 
+    /**
+     * @brief Affiche la liste des visites.
+     *
+     * Si le champ checkbox est décochée, cette méthode affiche les visites associées au guide
+     * connecté. Sinon, elle affiche toutes les visites enregistrées.
+     *
+     * @return void
+     */
     public function lister(): void
     {
         $checkbox = isset($_POST['checkbox']);

@@ -28,8 +28,12 @@ class ControllerVoyageur extends BaseController {
         {
            return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
         }
-    
-    // Création d'un voyageur
+
+
+    /**
+     * Crée un voyageur avec les données fournies
+     * @return bool True si le voyageur est créé, sinon false
+     */
     public function creerVoyageur(): bool {
         $postData = $this->getPost();
         // Vérification des données nécessaires
@@ -78,7 +82,15 @@ class ControllerVoyageur extends BaseController {
         return false;
     }
 
-    // Modification d'un voyageur
+    /**
+     * Supprime un voyageur de la base de données.
+     *
+     * Cette méthode supprime un voyageur à partir de son ID, après vérification de l'existence du voyageur
+     * et de la soumission du formulaire de suppression. Si la suppression réussit, elle redirige vers la page d'accueil.
+     *
+     * @param int $id L'identifiant du voyageur à supprimer.
+     * @return void
+     */
     public function supprimerVoyageur(int $id): void
     {
         try {
@@ -108,6 +120,17 @@ class ControllerVoyageur extends BaseController {
         }
     }
 
+    /**
+     * Modifie un voyageur de la base de données.
+     *
+     * Cette méthode modifie un voyageur existant en validant les données du formulaire
+     * et en appelant la méthode `modify` de VoyageurDao.
+     * Si la modification est réussie, elle redirige vers la page d'affichage normale avec un paramètre de confirmation
+     * Sinon, elle affiche le formulaire de modification avec les erreurs.
+     *
+     * @param int $id L'identifiant du voyageur à modifier.
+     * @return void
+     */
     public function modifierVoyageur(int $id): void
     {
         try {
@@ -157,6 +180,14 @@ class ControllerVoyageur extends BaseController {
     }
     // Lister tous les voyageurs
 
+    /**
+     * Lister tous les voyageurs.
+     *
+     * Cette méthode charge le template voyageurList.twig et l'affiche avec les données des voyageurs.
+     * Si une erreur survient, un message d'erreur est affiché.
+     *
+     * @return void
+     */
     public function lister(): void {
     try {
         // Utilisation de la méthode listerTousVoyageurs pour récupérer tous les voyageurs
@@ -179,7 +210,15 @@ class ControllerVoyageur extends BaseController {
 }
 
 
-    // Afficher les détails d'un voyageur spécifique
+    /**
+     * Affiche la page d'un voyageur.
+     *
+     * Cette méthode charge le template pageInformationsVoyageur.html.twig et l'affiche avec les données du voyageur.
+     * Si une erreur survient, un message d'erreur est affiché.
+     *
+     * @param int $id L'identifiant du voyageur dont afficher la page.
+     * @return void
+     */
     public function afficher(int $id): void
     {
         try {

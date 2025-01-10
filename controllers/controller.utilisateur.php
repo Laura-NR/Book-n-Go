@@ -46,7 +46,11 @@ class ControllerUtilisateur extends BaseController {
         ]);
     }
 
-    // Connexion de l'utilisateur
+        /**
+         * Vérifie si la connexion est possible en fonction des données de l'utilisateur
+         *
+         * @return bool true si la connexion est possible, false sinon
+         */
     public function connexion(): bool
     {
         // Assure-toi que la session est démarrée en haut du fichier, avant toute sortie
@@ -109,7 +113,12 @@ class ControllerUtilisateur extends BaseController {
     }
     
 
-    // Inscription d'un utilisateur
+
+    /**
+     * Méthode qui s'occupe de l'inscription d'un utilisateur, qu'il soit guide ou voyageur
+     *
+     * @return bool true si l'inscription est un succès, false sinon
+     */
     public function inscription(): bool
     {
         $role = $_POST['profil'];
@@ -177,6 +186,15 @@ class ControllerUtilisateur extends BaseController {
         //echo "Vous avez été déconnecté.";
     }
 
+    /**
+     * Affiche le tableau de bord en fonction du rôle de l'utilisateur connecté.
+     *
+     * Cette méthode vérifie le rôle de l'utilisateur dans la session et affiche
+     * le tableau de bord approprié en utilisant le template 'dashboard.html.twig'.
+     * Actuellement, les guides et les voyageurs partagent la  même page d'accueil de tableau de bord.
+     *
+     * @return void
+     */
     public function afficherDashboard(): void
     {
         if ($_SESSION['role'] == 'guide') {
