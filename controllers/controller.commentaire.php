@@ -1,6 +1,11 @@
 <?php
 
 require_once 'validation/ajout_commentaire.php';
+
+/**
+ * @class ControllerCommentaire
+ * @brief Classe du contrôleur pour la gestion des commentaires
+ */
 class ControllerCommentaire extends BaseController
 {
     //Contructeur du contrôleur de commentaire, initialise les objets Twig indispensables pour la gestion des templates

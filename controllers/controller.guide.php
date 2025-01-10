@@ -2,6 +2,10 @@
 require_once 'controller.voyageur.php';
 require_once 'validation/ajout_guide.php';
 
+/**
+ * @class ControllerGuide
+ * @brief Classe du contrôleur pour la gestion des guides
+ */
 class ControllerGuide extends ControllerVoyageur
 {
 

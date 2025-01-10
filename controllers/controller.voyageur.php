@@ -2,6 +2,10 @@
 require_once 'controller.class.php';
 require_once 'validation/ajout_voyageur.php';
 
+/**
+ * @class ControllerVoyageur
+ * @brief Classe du contrôleur pour la gestion des voyageurs
+ */
 class ControllerVoyageur extends BaseController {
 
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {

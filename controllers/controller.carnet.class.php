@@ -1,4 +1,8 @@
 <?php
+/**
+ * @class ControllerCarnetVoyage
+ * @brief Classe de contrôleur pour les carnets de voyage
+ */
 class ControllerCarnetVoyage extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)

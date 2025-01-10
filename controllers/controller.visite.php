@@ -2,6 +2,10 @@
 require_once 'controller.class.php';
 require_once 'validation/ajout_visite.php';
 
+/**
+ * @class ControllerVisite
+ * @brief Classe du contrôleur pour la gestion des visites
+ */
 class ControllerVisite extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)

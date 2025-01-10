@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @class ControllerPost
+ * @brief Classe du contrôleur pour la gestion des posts
+ */
 class ControllerPost extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
