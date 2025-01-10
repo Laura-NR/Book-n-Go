@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <script src="./node_modules/tarteaucitronjs/tarteaucitron.js"></script>
+    <script src="./node_modules/feather-icons/dist/feather.js"></script>
 
     <script type="text/javascript">
         tarteaucitron.init({
@@ -97,6 +98,9 @@
                             <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
                         </li>
                         {% endif %}
+                        <li class="nav-item btn btn-outline-primary rounded-pill me-2 align-content-lg-center">
+                            <button data-feather="sun" color="bs-primary" id="themeToggleButton">Toggle Dark Mode</button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -141,10 +145,23 @@
     {% block script %} {% endblock %}
 
     <script type="text/javascript">
+        feather.replace();
         tarteaucitron.user.gtagUa = 'G-SBQC767GXC';
         // tarteaucitron.user.gtagCrossdomain = ['example.com', 'example2.com'];
         tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */ };
         (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+
+
+        const themeToggleButton = document.getElementById('themeToggleButton');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        document.documentElement.setAttribute('data-bs-theme', currentTheme);
+
+        themeToggleButton.addEventListener('click', () => {
+            const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
     </script>
 
 </body>

@@ -1,102 +1,41 @@
 {% extends "base_template.html.twig" %}
 {% block title %}{{constant('WEBSITE_TITLE')}} Page d'accueil{% endblock %}
 
-{% block navbar_items %}
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Mes Informations</a>
-    </li>
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Mon Planning</a>
-    </li>
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Carnets de Voyage</a>
-    </li>
+{#{% block navbar_items %}#}
+{#    <li class="nav-item btn btn-primary rounded-pill me-2">#}
+{#        <a class="nav-link" href="#">Mes Informations</a>#}
+{#    </li>#}
+{#    <li class="nav-item btn btn-primary rounded-pill me-2">#}
+{#        <a class="nav-link" href="#">Mon Planning</a>#}
+{#    </li>#}
+{#    <li class="nav-item btn btn-primary rounded-pill me-2">#}
+{#        <a class="nav-link" href="#">Carnets de Voyage</a>#}
+{#    </li>#}
 
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Devenir guide</a>
-    </li>
-    <li class="nav-item btn btn-primary rounded-pill me-2">
-        <a class="nav-link" href="#">Déconnexion</a>
-    </li>
-{% endblock %}
+{#    <li class="nav-item btn btn-primary rounded-pill me-2">#}
+{#        <a class="nav-link" href="#">Devenir guide</a>#}
+{#    </li>#}
+{#    <li class="nav-item btn btn-primary rounded-pill me-2">#}
+{#        <a class="nav-link" href="#">Déconnexion</a>#}
+{#    </li>#}
+{#{% endblock %}#}
 
 {% block content %}
+
+{#    TEST#}
+
+
+
+
     <div class="container mt-5">
-        <div class="card mb-3">
-            <div class="card-header bg-primary text-white text-center">
-                <h2>{{ post.titre }}</h2>
-            </div>
-            <a href="?controleur=visite&methode=afficher&id={{ post.id_visite }}">Visite concernée : {{ post.titre_visite }}</a>
-            <img src="/images/post/{{ post.chemin_img }}" class="card-img-top" alt="Image du Point d'intérêt associé">
-            <div class="card-body">
-                <p class="card-text">{{ post.contenu }}</p>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-header bg-primary text-white">
-                <h3>Commentaires</h3>
-            </div>
-            <div class="card-body">
 
-                {% if erreursCommentaire|default %}
-                    {% for erreur in erreursCommentaire %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ erreur }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
+        <div class="d-flex">
+{#        Bouton retour#}
+        <button onclick="history.back()" class="btn btn-rose text-white mt-3 mb-3">Retour aux posts du carnet</button>
 
-
-                {% if session.role == visiteur %}
-                <div class="alert alert-danger" role="alert">
-                    Veuillez vous connecter pour commenter ce post
-                </div>
-                {% endif %}
-
-                {% if session.role == "voyageur" %}
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <h6 class="card-title">{{ session.id }}</h6>
-                        <form class="card-text" method="post">
-                            <textarea name="contenu" max="2000" class="form-control mb-2" placeholder="Ecrivez votre commentaire ici">{{ donneesCommentaire.contenu }}</textarea>
-{#                            passage d'une valeur invisible en post afin de pouvoir lier le commentaire créé au post#}
-                            <input type="hidden" value="{{ post.id }}" name="id_post"/>
-                            <input type="submit" class="btn btn-primary" value="Publier" formaction="?controleur=commentaire&methode=ajouter">
-                        </form>
-                    </div>
-                </div>
-                {% endif %}
-
-
-                {% for commentaire in commentaires %}
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <h6 class="card-title">{{ commentaire.prenom }} {{ commentaire.nom }}</h6>
-                            <p class="card-subtitle mb-2 text-body-secondary">{{ commentaire.date_heure_publication }}</p>
-                            <p class="card-text">{{ commentaire.contenu }}</p>
-
-{#                            Pour plus tard quand on aura récupéré les infos de l'utilisateur connecté#}
-
-{#                            {{ if commentaire.id_voyageur == session.id }}#}
-                            {% if commentaire.id_voyageur == session.user_id %}
-                                <form class="card-text" method="post">
-                                    {#passage d'une valeur invisible en post afin de pouvoir lier le commentaire créé au post#}
-                                    <input type="hidden" value="{{ post.id }}" name="id_post" />
-                                    <input type="hidden" value="{{ commentaire.id }}" name="id_commentaire" />
-                                    <input type="submit" class="btn btn-danger" value="Supprimer" formaction="?controleur=commentaire&methode=supprimer&id={{ commentaire.id }}">
-                                </form>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                {% endfor %}
-            </div>
-        </div>
-        <button onclick="history.back()" class="btn btn-secondary mt-3">Retour aux posts du carnet</button> {# CONSIDERER MODIFICATION #}
-
-
+{#        Bouton modification#}
         {% if session.role == "voyageur" %}
-            <button class="btn btn-primary mt-3" id="editButton">Modifier le post</button>
+            <button class="btn btn-success mt-3 mb-3" id="editButton">Modifier le post</button>
 
             <form method="post" action="index.php?controleur=post&methode=modifier" id="editForm" style="display: none;">
                 <strong>WIP : fonctionnalité pas encore mise en place</strong>
@@ -112,13 +51,78 @@
                 <button type="submit" class="btn btn-success mt-3">Enregistrer les modifications</button>
             </form>
         {% endif %}
+        </div>
+
+
+        <div class="mb-3 p-3 shadow-sm border border-primary rounded">
+            <div class="bg-primary text-white text-center py-2" style="border-radius: 10px;">
+                <h2>{{ post.titre }}</h2>
+            </div>
+            <a href="?controleur=visite&methode=afficher&id={{ post.id_visite }}" class="text-decoration-none text-primary">Visite concernée : {{ post.titre_visite }}</a>
+            <img src="{{ post.chemin_img }}" class="img-fluid mt-3 d-block mx-auto rounded" alt="Image du Point d'intérêt associé">
+            <div class="mt-3">
+                <p>{{ post.contenu }}</p>
+            </div>
+        </div>
+
+
+
+        <div class="mb-3 p-3 shadow-sm border border-primary rounded">
+            <div class="bg-rose text-white text-center py-2 card-header rounded">
+                <h5>Commentaires</h5>
+            </div>
+            <div class="mt-3">
+
+                {% if erreursCommentaire|default %}
+                    {% for erreur in erreursCommentaire %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ erreur }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if session.role == visiteur %}
+                    <div class="alert alert-danger" role="alert">
+                        Veuillez vous connecter pour commenter ce post
+                    </div>
+                {% endif %}
+
+                {% if session.role == "voyageur" %}
+                    <div class="mb-2 p-3 shadow-sm border border-primary rounded">
+                        <div>
+                            <h6>{{ session.id }}</h6>
+                            <form method="post">
+                                <textarea name="contenu" max="2000" class="form-control mb-2" placeholder="Ecrivez votre commentaire ici">{{ donneesCommentaire.contenu }}</textarea>
+                                <input type="hidden" value="{{ post.id }}" name="id_post"/>
+                                <input type="submit" class="btn btn-primary" value="Publier" formaction="?controleur=commentaire&methode=ajouter">
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% for commentaire in commentaires %}
+                    <div class="mb-2 p-3 shadow-sm border border-primary rounded">
+                        <div>
+                            <h6><i data-feather="user" color="#803D5C"></i>{{ commentaire.prenom }} {{ commentaire.nom }}</h6>
+                            <p class="text-muted">{{ commentaire.date_heure_publication }}</p>
+                            <p>{{ commentaire.contenu }}</p>
+
+                            {% if commentaire.id_voyageur == session.user_id %}
+                                <form method="post">
+                                    <input type="hidden" value="{{ post.id }}" name="id_post" />
+                                    <input type="hidden" value="{{ commentaire.id }}" name="id_commentaire" />
+                                    <input type="submit" class="btn btn-danger" value="Supprimer" formaction="?controleur=commentaire&methode=supprimer&id={{ commentaire.id }}">
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
-{#    {{ dump(erreursCommentaire) }}#}
-{#    {{ dump(donneesCommentaire) }}#}
-{#    {{ dump(post) }}
-    {{ dump(visite) }}
-    {{ dump(commentaires) }} #}
+
+
 {% endblock %}
 
 {% block script %}
