@@ -5,16 +5,24 @@
 {% endblock %}
 {% block dashboard_content %}
 	<main class="container">
+		{% if app.session.erreurs_excursion is defined %}
+			{% for erreur in app.session.erreurs_excursion %}
+				<div class="alert alert-danger" role="alert">
+					{{ erreur }}
+				</div>
+			{% endfor %}
+		{% endif %}
+
 		<h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
 			{{ excursion ? 'Modifier les informations de l\'excursion :' : 'Informations de l\'excursion :' }}
 		</h1>
 		<form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" style="width: 80%" method="post">
 			<div style="
-																																			        background-color: #b2708f;
-																																			        color: #000;
-																																			        border-radius: 30px;
-																																			        padding: 40px;
-																																			      ">
+																																								        background-color: #b2708f;
+																																								        color: #000;
+																																								        border-radius: 30px;
+																																								        padding: 40px;
+																																								      ">
 				<div class="row mb-4">
 					<div class="col">
 						<label for="nom" class="form-label">Titre :</label>
@@ -94,25 +102,25 @@
 				<div class="d-flex flex-row mt-4 justify-content-center gap-3">
 					<div class="text-center">
 						<input type="submit" data-excursion-id="{{ excursion.id }}" id="btn_maj" value="Modifier" class="btn" style="
-																																			background-color: #b2708f;
-																																			color: #fff;
-																																			border-radius: 30px;
-																																			padding: 10px 40px;
-																																			"/>
+																																									background-color: #b2708f;
+																																									color: #fff;
+																																									border-radius: 30px;
+																																									padding: 10px 40px;
+																																									"/>
 					</div>
 					<a type="button" class="btn btn-secondary" href="index.php?controleur=excursion&methode=afficher&id={{ excursion.id }}" style="
-																																			color: #fff;
-																																			border-radius: 30px;
-																																			padding: 10px 40px;">Annuler</a>
+																																									color: #fff;
+																																									border-radius: 30px;
+																																									padding: 10px 40px;">Annuler</a>
 				</div>
 			{% else %}
 				<div class="text-center mt-4">
 					<input type="submit" value="Créer" class="btn" style="
-																																	background-color: #b2708f;
-																																	color: #fff;
-																																	border-radius: 30px;
-																																	padding: 10px 40px;
-																																	"/>
+																																						background-color: #b2708f;
+																																						color: #fff;
+																																						border-radius: 30px;
+																																						padding: 10px 40px;
+																																						"/>
 				</div>
 			{% endif %}
 		</form>
@@ -230,10 +238,10 @@ selectedVisitsTitle.style.display = 'none';
 addVisitButton.addEventListener("click", () => {
 const selectedVisit = itineraireSelect.options[itineraireSelect.selectedIndex];
 if (selectedVisit.value === "add-new") {
-	window.location.href = "index.php?controleur=visite&methode=redirectCreer&isExcursion=1";
-	return;
+window.location.href = "index.php?controleur=visite&methode=redirectCreer&isExcursion=1";
+return;
 }
-if(! selectedVisit || selectedVisit.value === "" ) {
+if (! selectedVisit || selectedVisit.value === "") {
 alert('Veuillez sélectionner une visite valide.');
 return;
 }
@@ -258,61 +266,54 @@ selectedVisitsTitle.style.display = 'none';
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('excursionForm');
-    const submitButton = document.getElementById('btn_maj'); 
-    const excursionId = submitButton ? parseInt(submitButton.getAttribute('data-excursion-id'), 10) : null;
-	console.log('Excursion ID:', excursionId);
+const form = document.getElementById('excursionForm');
+const submitButton = document.getElementById('btn_maj');
+const excursionId = submitButton ? parseInt(submitButton.getAttribute('data-excursion-id'), 10) : null;
+console.log('Excursion ID:', excursionId);
 
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
+form.addEventListener('submit', function (e) {
+e.preventDefault();
 
-        const formData = new FormData(form);
-        if (excursionId) {
-            formData.append('id', excursionId);
-        }
+const formData = new FormData(form);
+if (excursionId) {
+formData.append('id', excursionId);
+}
 
-        const endpoint = excursionId
-            ? 'index.php?controleur=excursion&methode=modifier&id=' + excursionId 
-            : 'index.php?controleur=excursion&methode=creer'; 
+const endpoint = excursionId ? 'index.php?controleur=excursion&methode=modifier&id=' + excursionId : 'index.php?controleur=excursion&methode=creer';
 
-        fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: formData,
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log('Server response:', data);
+fetch(endpoint, {
+method: 'POST',
+headers: {
+'X-Requested-With': 'XMLHttpRequest'
+},
+body: formData
+}).then((response) => {
+if (!response.ok) {
+throw new Error (`HTTP error! Status: ${
+response.status
+}`);
+}
+return response.json();
+}).then((data) => {
+console.log('Server response:', data);
 
-                if (data.success) {
-                	/* alert(
+if (data.success) { /* alert(
                         excursionId
                             ? 'Excursion modifiée avec succès!'
                             : 'Excursion créée avec succès!'
                     ); */
 
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
-                    }
-                } else {
-                    alert(data.message || 'Une erreur est survenue.');
-                }
-            })
-            .catch((error) => {
-                console.error('Erreur lors de la soumission du formulaire:', error);
-                alert(
-                    'Une erreur est survenue lors de la soumission du formulaire. Veuillez réessayer.'
-                );
-            });
-    });
+if (data.redirect) {
+window.location.href = data.redirect;
+}
+} else {
+alert(data.message || 'Une erreur est survenue.');
+}
+}).catch((error) => {
+console.error('Erreur lors de la soumission du formulaire:', error);
+alert('Une erreur est survenue lors de la soumission du formulaire. Veuillez réessayer.');
 });
-
-</script>
+});
+});
+	</script>
 {% endblock %}

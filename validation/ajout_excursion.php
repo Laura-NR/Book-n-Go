@@ -9,7 +9,7 @@ $reglesValidationInsertionExcursion = [
         'type' => 'string',
         'longueur_min' => 1,
         'longueur_max' => 255,
-        'format' => '/^[a-zA-ZÀ-ÿ\'\s-]+$/'
+        'format' => '/^[\p{L}0-9\s.,!?\'"-]+$/u'
     ],
     "capacite" => [
         'obligatoire' => true,
@@ -20,7 +20,7 @@ $reglesValidationInsertionExcursion = [
     ],
     "image" => [
         'obligatoire' => true,
-        'type_fichier' => ['image/jpeg', 'image/png'],
+        'type_fichier' => ['image/jpg', 'image/jpeg', 'image/png'],
         'taille_max_fichier' => 5000000,
     ],
     "description" => [
@@ -28,6 +28,6 @@ $reglesValidationInsertionExcursion = [
         'type' => 'string',
         'longueur_min' => 1,
         'longueur_max' => 1000,
-        'format' => '/^[a-zA-ZÀ-ÿ\'\s-]+$/'
+        'format' => '/^[\p{L}0-9\s.,!?\'"-]+$/u'
     ],
 ];

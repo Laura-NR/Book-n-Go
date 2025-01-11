@@ -77,6 +77,8 @@ class ControllerUtilisateur extends BaseController {
                         $guideDao->majDerniereCo($utilisateur);
                     }
 
+                    $_SESSION['messages_alertes'][] = ['type' => 'success', 'message' => 'Vous êtes bien connecté à la page.'];
+
                     // Redirection après succès de la connexion
                     $this->redirect('', '', ['connexion' => true]);
                     ob_end_flush();
@@ -132,6 +134,8 @@ class ControllerUtilisateur extends BaseController {
             }
         }
 
+        $_SESSION['messages_alertes'][] = ['type' => 'success', 'message' => 'Votre compte a bien été créé, vous pouvez vous connecter à la page.'];
+
         // SI ON SOUHAITE INSCRIRE UN VOYAGEUR
         if ($role == "voyageur") {
             $controller = new ControllerVoyageur($this->getTwig(), $this->getLoader());
@@ -170,20 +174,16 @@ class ControllerUtilisateur extends BaseController {
 
     // Déconnexion de l'utilisateur
     public function deconnexion(): void {
-        //session_start();
+
         session_unset();
         session_destroy();
+
         $this->redirect('', '');
-        //echo "Vous avez été déconnecté.";
     }
 
     public function afficherDashboard(): void
     {
-        if ($_SESSION['role'] == 'guide') {
-            echo $this->getTwig()->render('dashboard.html.twig');
-        } elseif ($_SESSION['role'] == 'voyageur') {
-            echo $this->getTwig()->render('dashboard.html.twig');
-        }
+        echo $this->getTwig()->render('dashboard.html.twig');
     }
 }
 ?>

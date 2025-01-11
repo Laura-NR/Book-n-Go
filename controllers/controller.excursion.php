@@ -1,5 +1,6 @@
 <?php
 require_once 'controller.class.php';
+require_once 'validation/ajout_excursion.php';
 
 /**
  * @class ControllerExcursion
@@ -21,6 +22,8 @@ class ControllerExcursion extends BaseController
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     {
         parent::__construct($twig, $loader);
+        global $reglesValidationInsertionExcursion;
+        $this->validator = new Validator($reglesValidationInsertionExcursion);
     }
 
     /**
@@ -54,21 +57,28 @@ class ControllerExcursion extends BaseController
     public function afficherCreer(): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+
+            if (!isset($_SESSION['messages_alertes']['auth']) || is_array($_SESSION['messages_alertes']['auth'])) {
+                $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Vous n\'êtes pas autorisé à effectuer cette action.'];
+            }
+            $this->redirect('', '', ['excursion' => false]);
             exit;
         }
 
         $visites = $this->getVisites();
 
         echo $this->getTwig()->render('formulaire_excursion.html.twig', [
-            'visites' => $visites
+            'visites' => $visites,
         ]);
     }
 
     public function creer(): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            if (!isset($_SESSION['messages_alertes']['auth']) || is_array($_SESSION['messages_alertes']['auth'])) {
+                $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Vous n\'êtes pas autorisé à effectuer cette action.'];;
+            }
+            $this->redirect('', '', ['excursion' => false]);
             exit;
         }
 
@@ -78,12 +88,12 @@ class ControllerExcursion extends BaseController
         $idGuide = $_SESSION['user_id'];
 
         // Vérifie si le formulaire a été soumis
-        if (!empty($this->getPost())) {
+        if ($this->validator->valider($_POST)) {
             $data = [
-                'capacite' => $this->getPost()['capacite'] ?? '',
-                'nom' => $this->getPost()['nom'] ?? '',
+                'capacite' => htmlentities($this->getPost()['capacite'] ?? '', ENT_QUOTES, 'UTF-8'),
+                'nom' => htmlentities($this->getPost()['nom'] ?? '', ENT_QUOTES, 'UTF-8'),
                 'date_creation' => new DateTime(),
-                'description' => $this->getPost()['description'] ?? '',
+                'description' => htmlentities($this->getPost()['description'] ?? '', ENT_QUOTES, 'UTF-8'),
                 'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
                 'id_guide' => $idGuide,
             ];
@@ -151,6 +161,11 @@ class ControllerExcursion extends BaseController
                 }
                 echo "Erreur : Formulaire vide";
             }
+        } else {
+            $erreurs = $this->validator->getMessagesErreurs();
+            $_SESSION['erreurs_excursion'][] = $erreurs;
+            $this->redirect('excursion', 'afficherCreer');
+            exit;
         }
     }
 
@@ -238,7 +253,10 @@ class ControllerExcursion extends BaseController
     public function afficherModifier(int $id): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            if (!isset($_SESSION['erreurs_excursion']['auth']) || is_array($_SESSION['erreurs_excursion']['auth'])) {
+                $_SESSION['erreurs_excursion']['auth'] = "Vous n'êtes pas autorisé à effectuer cette action.";
+            }
+            $this->redirect('', '', ['excursion' => false]);
             exit;
         }
 
@@ -282,7 +300,10 @@ class ControllerExcursion extends BaseController
     public function modifier(int $id): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            if (!isset($_SESSION['erreurs_excursion']['auth']) || is_array($_SESSION['erreurs_excursion']['auth'])) {
+                $_SESSION['erreurs_excursion']['auth'] = "Vous n'êtes pas autorisé à effectuer cette action.";
+            }
+            $this->redirect('', '', ['excursion' => false]);
             exit;
         }
 
@@ -306,10 +327,10 @@ class ControllerExcursion extends BaseController
         if (!empty($this->getPost())) {
             $data = [
                 'id' => $id,
-                'capacite' => $this->getPost()['capacite'] ?? '',
-                'nom' => $this->getPost()['nom'] ?? '',
+                'capacite' => htmlentities($this->getPost()['capacite'] ?? '', ENT_QUOTES, 'UTF-8'),
+                'nom' =>  htmlentities($this->getPost()['nom'] ?? '', ENT_QUOTES, 'UTF-8'),
                 'date_creation' => new DateTime(),
-                'description' => $this->getPost()['description'] ?? '',
+                'description' => htmlentities($this->getPost()['description'] ?? '', ENT_QUOTES, 'UTF-8'),
                 'public' => $this->getPost()['public'] ?? 0,
                 'id_guide' => $idGuide,
             ];

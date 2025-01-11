@@ -37,6 +37,15 @@ require_once 'modeles/reservation.dao.php';
 require_once 'modeles/engagement.class.php';
 require_once 'modeles/engagement.dao.php';
 
+//Ajout des fichiers des règles de validation
+require_once 'validation/ajout_commentaire.php';
+require_once 'validation/ajout_excursion.php';
+require_once 'validation/ajout_guide.php';
+require_once 'validation/ajout_visite.php';
+require_once 'validation/ajout_voyageur.php';
+require_once 'validation/connexion.php';
+require_once 'validation/validator.class.php';
+
 //ajout des controllers
 require_once 'controllers/controller.class.php';
 require_once 'controllers/controller_factory.class.php';
