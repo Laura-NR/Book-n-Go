@@ -151,6 +151,12 @@ class ExcursionDao
         return $result ? $this->hydrate($result) : null;
     }
 
+    /**
+     * @brief Récupère toutes les excursions associées au guide dont l'ID est fourni.
+     * @param int|null $id
+     * @return array|null
+     */
+
     public function findByGuide(?int $id): ?array
     {
         $sql = "SELECT * FROM excursion WHERE id_guide = :id_guide";
@@ -160,6 +166,12 @@ class ExcursionDao
         $results = $pdoStatement->fetchAll();
         return $results ? $this->hydrateAll($results) : [];
     }
+
+    /**
+     * @brief Récupère toutes les excursions publiques ou associées au guide dont l'ID est fourni.
+     * @param int|null $id
+     * @return array|null
+     */
 
     public function findPublic(?int $id): ?array
     {
@@ -254,6 +266,11 @@ class ExcursionDao
         return $excursions;
     }
 
+    /**
+     * @brief Récupère toutes les excursions, triées par date de visite, avec des engagements existants.
+     * @return array
+     * @throws DateMalformedStringException
+     */
     public function findAllWithExistingEngagement(): array
     {
         $sql = "SELECT DISTINCT e.* 

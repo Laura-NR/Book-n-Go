@@ -1,7 +1,7 @@
 {% extends "dashboard.html.twig" %}
 
 {% block title %}
-	{{ isEdit ? 'Modifier Visite' : 'Créer Visite' }}
+	{{ parent() }}{{ isEdit ? 'Modifier Visite' : 'Créer Visite' }}
 {% endblock %}
 
 {% block dashboard_content %}

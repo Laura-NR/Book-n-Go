@@ -4,12 +4,19 @@ class PostDAO
 {
     private PDO $pdo;
 
+    /**
+     * @param PDO|null $pdo
+     */
     public function __construct(PDO $pdo=null)
     {
         $this->pdo = $pdo;
     }
 
-    public function findAll(): array
+    /**
+     * @brief Trouver tous les posts (retourne un tableau associatif de tous les posts)
+     * @return array
+     */
+    public function findAllAssoc(): array
     {
         $sql = "SELECT * FROM post";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -18,6 +25,11 @@ class PostDAO
         return $posts;
     }
 
+    /**
+     * @brief Trouver tous les posts d'un carnet dont l'id est passé en paramètre (retourne un tableau associatif de tous les posts)
+     * @param int $carnetId
+     * @return array
+     */
     public function findAllByCarnetId(int $carnetId): array
     {
         $sql = "SELECT P.*, V.titre AS titre_visite FROM post P JOIN visite V ON V.id = P.id_visite WHERE id_carnet = :carnetId";
@@ -27,22 +39,30 @@ class PostDAO
         return $posts;
     }
 
+
     /**
-     * Get the value of pdo
-     */ 
+     * @return PDO|null
+     */
     public function getPdo(): ?PDO
     {
         return $this->pdo;
     }
 
+
     /**
-     * Set the value of pdo
-     */ 
+     * @param PDO|null $pdo
+     * @return void
+     */
     public function setPdo(?PDO $pdo): void
     {
         $this->pdo = $pdo;
     }
 
+    /**
+     * @brief Trouver un post par ID en mode associatif (retourne un tableau associatif ou null)
+     * @param int|null $id
+     * @return Post|null
+     */
     public function findAssoc(?int $id): ?Post
     {
         $sql = "SELECT * FROM post WHERE id = :id";
@@ -53,6 +73,11 @@ class PostDAO
         return $post;
     }
 
+    /**
+     * @brief Trouver un post par ID
+     * @param int|null $id
+     * @return Post|null
+     */
     public function find(?int $id): ?Post
     {
         $sql = "SELECT P.*, V.titre AS titre_visite FROM post P JOIN visite V ON V.id = P.id_visite WHERE P.id = :id";
@@ -63,6 +88,11 @@ class PostDAO
         return $post;
     }
 
+    /**
+     * @brief Hydrater un post à partir d'un tableau associatif
+     * @param array $tableauAssoc
+     * @return Post|null
+     */
     public function hydrate(array $tableauAssoc): ?Post
     {
         $post = new Post();
@@ -76,6 +106,11 @@ class PostDAO
         return $post;
     }
 
+    /**
+     * @brief Hydrater un tableau de posts à partir de tableaux associatifs
+     * @param array $tableauAssoc
+     * @return array|null
+     */
     public function hydrateAll(array $tableauAssoc): ?array
     {
         $posts = [];
@@ -87,6 +122,11 @@ class PostDAO
         return $posts;
     }
 
+    /**
+     * @brief Inserer un post
+     * @param Post $post
+     * @return bool
+     */
     public function inserer(Post $post): bool
     {
         $datePublication = new DateTime();
@@ -106,6 +146,11 @@ class PostDAO
         return $resultat;
     }
 
+    /**
+     * @brief Supprimer un post de la bd
+     * @param mixed $idPost
+     * @return bool
+     */
     public function retirer(mixed $idPost)
     {
         $sql = "DELETE FROM post WHERE id = :idPost";

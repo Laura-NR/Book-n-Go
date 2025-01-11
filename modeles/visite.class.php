@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file visite.class.php
  * @class Visite
@@ -13,15 +12,43 @@
  * 
  * La classe inclut des méthodes permettant de modifier et de récupérer les différents attributs mentionnés précédemment.
  */
+
 class Visite
 {
     //Attribut
+    /**
+     * @var int
+     */
     private ?int $id;
+
+    /**
+     * @var string
+     */
     private ?string $adresse;
+
+    /**
+     * @var string
+     */
     private ?string $ville;
+
+    /**
+     * @var string
+     */
     private ?string $codePostal;
+
+    /**
+     * @var string
+     */
     private ?string $description;
+
+    /**
+     * @var string
+     */
     private ?string $titre;
+
+    /**
+     * @var int
+     */
     private ?int $idGuide;
 
     //Constructeur

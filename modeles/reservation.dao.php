@@ -3,13 +3,19 @@ class ReservationDAO
 {
     private $pdo;
 
-    // Constructeur pour établir une connexion à la base de données
+    /**
+     * @param $pdo
+     */
     public function __construct($pdo)
     {
         $this->pdo = $pdo;
     }
 
-    // Méthode pour récupérer une réservation par son ID
+    /**
+     * @brief Recupère une reservation par son id
+     * @param $id
+     * @return Reservation|null
+     */
     public function getReservationById($id)
     {
         $sql = "SELECT * FROM reservations WHERE id = :id";
@@ -26,7 +32,11 @@ class ReservationDAO
         }
     }
 
-    // Méthode pour insérer une nouvelle réservation
+    /**
+     * @brief Inserer une reservation
+     * @param Reservation $reservation
+     * @return mixed
+     */
     public function insererReservation(Reservation $reservation)
     {
         $sql = "INSERT INTO reservations (id_voyageur, date_reservation, id_engagement) 
@@ -40,7 +50,11 @@ class ReservationDAO
         return $stmt->execute(); // Retourne true si l'insertion réussit
     }
 
-    // Méthode pour mettre à jour une réservation
+    /**
+     * @brief Mettre à jour une reservation
+     * @param Reservation $reservation
+     * @return mixed
+     */
     public function majReservation(Reservation $reservation)
     {
         $sql = "UPDATE reservations 
@@ -56,7 +70,11 @@ class ReservationDAO
         return $stmt->execute(); // Retourne true si la mise à jour réussit
     }
 
-    // Méthode pour supprimer une réservation
+    /**
+     * @brief Supprimer une reservation
+     * @param $id
+     * @return mixed
+     */
     public function supprimerReservation($id)
     {
         $sql = "DELETE FROM reservations WHERE id = :id";
@@ -65,7 +83,10 @@ class ReservationDAO
         return $stmt->execute(); // Retourne true si la suppression réussit
     }
 
-    // Méthode pour récupérer toutes les réservations
+    /**
+     * @brief Recupérer toutes les reservations
+     * @return array
+     */
     public function getAllReservations()
     {
         $sql = "SELECT * FROM reservations";
@@ -80,6 +101,11 @@ class ReservationDAO
         return $reservations; // Retourne un tableau d'objets Reservation
     }
 
+    /**
+     * @brief Inserer une reservation
+     * @param Reservation $reservation
+     * @return mixed
+     */
     public function inserer(Reservation $reservation)
     {
         $sql = "INSERT INTO reservation (id_voyageur, date_reservation, id_engagement) 
@@ -93,6 +119,12 @@ class ReservationDAO
         return $stmt->execute();
     }
 
+    /**
+     * @brief Rechercher toutes les reservations d'une excursion à partir de son id
+     * @param int $excursionId
+     * @return array
+     * @throws DateMalformedStringException
+     */
     public function findReservationsByExcursionId(int $excursionId): array
     {
         $sql = "SELECT r.* 
@@ -114,6 +146,12 @@ class ReservationDAO
         }
         return $reservations;
     }
+
+    /**
+     * @brief Rechercher toutes les reservations d'un voyageur à partir de son id
+     * @param $id_voyageur
+     * @return mixed
+     */
     function getReservationsByVoyageur($id_voyageur)
     {
         $sql = "

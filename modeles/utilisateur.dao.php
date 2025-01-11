@@ -6,38 +6,11 @@ class UtilisateurDao {
         $this->pdo = $pdo;
     }
 
-    // // Recherche d'un utilisateur par email
-    // public function findByEmail($email) {
-    //     // Vérifier dans la table des guides
-    //     $stmt = $this->pdo->prepare("SELECT * FROM guides WHERE email = :email");
-    //     $stmt->execute(['email' => $email]);
-    //     $guide = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    //     if ($guide) {
-    //         return new Utilisateur(
-    //             $guide['id'], $guide['nom'], $guide['prenom'], $guide['email'],
-    //             $guide['mot_de_passe'], $guide['numero_tel'], 'guide', $guide['certification']
-    //         );
-    //     }
-
-    //     // Sinon, vérifier dans la table des voyageurs
-    //     $stmt = $this->pdo->prepare("SELECT * FROM voyageurs WHERE email = :email");
-    //     $stmt->execute(['email' => $email]);
-    //     $voyageur = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    //     if ($voyageur) {
-    //         return new Utilisateur(
-    //             $voyageur['id'], $voyageur['nom'], $voyageur['prenom'], $voyageur['email'],
-    //             $voyageur['mot_de_passe'], $voyageur['numero_tel'], 'voyageur'
-    //         );
-    //     }
-
-    //     return null; // Aucun utilisateur trouvé
-    // }
-
-    // Création d'un utilisateur
-
-    // Trouver un utilisateur par email (voyageur ou guide)
+    /**
+     * @brief Rechercher un utilisateur par son email. l'utilisateur retourné peut être un guide comme un voyageur
+     * @param string $email
+     * @return Guide|Voyageur|null
+     */
     public function findByEmail(string $email) {
         try {
             // Chercher d'abord dans les guides
