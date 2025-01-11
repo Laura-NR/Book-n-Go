@@ -174,13 +174,6 @@ class ControllerVisite extends BaseController
         }
     }
 
-<<<<<<< HEAD
-    /**
-     * Liste les visites.
-     *
-     * - Si la case "mes visites" est cochée, affiche les visites du guide connecté.
-     * - Sinon, affiche toutes les visites.
-=======
 
     // Supprime une visite en fonction de son ID
     // public function supprimer(int $id): void {
@@ -201,7 +194,6 @@ class ControllerVisite extends BaseController
      * connecté. Sinon, elle affiche toutes les visites enregistrées.
      *
      * @return void
->>>>>>> f5f470861aa16afb6f511b09397d7c5c1083c969
      */
     public function lister(): void
     {
