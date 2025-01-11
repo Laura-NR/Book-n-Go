@@ -1,6 +1,6 @@
 database: # Informations de connexion à la BDD
   host: "localhost"
-  name: "gdbelascain_pro"
+  name: "book-n-go"
   user: "root"
   pass: ""
 
