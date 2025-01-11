@@ -60,21 +60,27 @@ class VisiteDao
      * But : Insère une nouvelle visite dans la base de données.
      *
      * @param array $data Données de la visite à insérer qui est composer de l'adresse, la ville, le codePostal, la description, le titre et idGuide.
-     * @return bool Retourne true en cas de succès, false sinon.
+     * @return Visite Retourne l'objet Visite créer en cas de succès, false sinon.
      */
-    public function insert(array $data): bool
+    public function insert(array $data): ?Visite
     {
         $sql = "INSERT INTO visite (adresse, ville, codePostal, description, titre, idGuide)
         VALUES (:adresse,:ville,:codePostal,:description,:titre,:idGuide)";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute(array(
+        if($stmt->execute(array(
             "adresse" => $data["adresse"],
             "ville" => $data["ville"],
             "codePostal" => $data["codePostal"],
             "description" => $data["description"],
             "titre" => $data["titre"],
             "idGuide" => $data["idGuide"],
-        ));
+            )))
+            {
+                return $this->find($this->pdo->lastInsertId());
+            }
+            else {
+                return false;
+            }
     }
 
     // public function delete(int $id) : bool {

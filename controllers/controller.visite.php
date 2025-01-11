@@ -69,7 +69,7 @@ class ControllerVisite extends BaseController
 
                 // Gestion de la redirection selon le type d'action
                 if ($nouvelleVisite && $_GET['isExcursion'] === '1') {
-                    $this->redirect('excursion', 'afficherCreer');
+                    $this->redirect('excursion', 'afficherCreer',);
                 } elseif ($nouvelleVisite && $_GET['isExcursion'] === '0') {
                     $this->redirect('visite', 'lister');
                 } else {
@@ -167,10 +167,10 @@ class ControllerVisite extends BaseController
         $visiteDao = new VisiteDao($this->getPdo());
 
         if (!$checkbox) {
-            $listeVisite = $visiteDao->findAll();
-        } else {
             $id_guide = $_SESSION['user_id'];
             $listeVisite = $visiteDao->findByGuide($id_guide);
+        } else {
+            $listeVisite = $visiteDao->findAll();
         }
 
         $template = $this->getTwig()->load("liste_visite.html.twig");
