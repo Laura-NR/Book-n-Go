@@ -4,6 +4,11 @@ require_once 'include.php';
 require_once 'validation/connexion.php';
 
 class ControllerUtilisateur extends BaseController {
+
+    /**
+     * @var Validator
+     */
+    private Validator $validator; // Instance de la classe Validator
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
         global $reglesValidationConnexion;

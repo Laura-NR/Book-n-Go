@@ -4,7 +4,7 @@
 require_once 'validator.class.php';
 
 $reglesValidationInsertionExcursion = [
-    "titre" => [
+    "nom" => [
         'obligatoire' => true,
         'type' => 'string',
         'longueur_min' => 1,
@@ -18,7 +18,7 @@ $reglesValidationInsertionExcursion = [
         'longueur_max' => 2,
         'format' => '/^[1-9][0-9]{0,1}$/',
     ],
-    "image" => [
+    "chemin_image" => [
         'obligatoire' => true,
         'type_fichier' => ['image/jpg', 'image/jpeg', 'image/png'],
         'taille_max_fichier' => 5000000,
