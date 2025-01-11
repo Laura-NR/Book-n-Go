@@ -2,6 +2,21 @@
 require_once 'controller.class.php';
 require_once 'validation/ajout_visite.php';
 
+/**
+ * @file controller.visite.php
+ * @class ControllerVisite
+ * @brief Classe permetant de controler les visites.
+ *
+ * La classe `ControllerVisite` fournit des méthodes pour interagir avec les visites.
+ * Elle gère les opérations suivantes :
+ * - Création de nouvelles visites.
+ * - la redirection vers le formulaire de création d'une visite.
+ * - la redirection vers le formulaire de modofication d'une visite.
+ * - Modification d'une visite.
+ * - Suppression d'un visite (commenté dans ce code).
+ * - Liste tout les visite ou ceux d'un guide précis.
+ */
+
 class ControllerVisite extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
