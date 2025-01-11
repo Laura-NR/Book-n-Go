@@ -8,6 +8,11 @@ require_once 'validation/ajout_commentaire.php';
  */
 class ControllerCommentaire extends BaseController
 {
+    /**
+     * @var Validator
+     */
+    private Validator $validator; // Instance de la classe Validator
+    
     //Contructeur du contrôleur de commentaire, initialise les objets Twig indispensables pour la gestion des templates
     // et instancie la classe de validation
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)

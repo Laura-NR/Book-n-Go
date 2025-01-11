@@ -1,5 +1,6 @@
 <?php
 require_once 'controller.class.php';
+require_once 'validation/ajout_excursion.php';
 
 /**
  * @class ControllerExcursion
@@ -18,9 +19,16 @@ class ControllerExcursion extends BaseController
      * @param \Twig\Environment $twig L'environnement Twig.
      * @param \Twig\Loader\FilesystemLoader $loader Le chargeur de fichiers pour Twig.
      */
+
+     /**
+     * @var Validator
+     */
+    private Validator $validator; // Instance de la classe Validator
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     {
         parent::__construct($twig, $loader);
+        global $reglesValidationInsertionExcursion;
+        $this->validator = new Validator($reglesValidationInsertionExcursion);
     }
 
     /**
@@ -67,14 +75,18 @@ class ControllerExcursion extends BaseController
     public function afficherCreer(): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+
+            if (!isset($_SESSION['messages_alertes']['auth']) || is_array($_SESSION['messages_alertes']['auth'])) {
+                $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Vous n\'êtes pas autorisé à effectuer cette action.'];
+            }
+            $this->redirect('', '', ['excursion' => false]);
             exit;
         }
 
         $visites = $this->getVisites();
 
         echo $this->getTwig()->render('formulaire_excursion.html.twig', [
-            'visites' => $visites
+            'visites' => $visites,
         ]);
     }
 
@@ -92,89 +104,96 @@ class ControllerExcursion extends BaseController
     public function creer(): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            if (!isset($_SESSION['messages_alertes']['auth']) || is_array($_SESSION['messages_alertes']['auth'])) {
+                $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Vous n\'êtes pas autorisé à effectuer cette action.'];
+            }
+            $this->redirect('', '', ['excursion' => false]);
             exit;
         }
 
         // Vérifie si la requête est une requête AJAX
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
+        // Récupère l'ID du guide connecté
         $idGuide = $_SESSION['user_id'];
 
-        // Vérifie si le formulaire a été soumis
-        if (!empty($this->getPost())) {
-            $data = [
-                'capacite' => $this->getPost()['capacite'] ?? '',
-                'nom' => $this->getPost()['nom'] ?? '',
-                'date_creation' => new DateTime(),
-                'description' => $this->getPost()['description'] ?? '',
-                'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
-                'id_guide' => $idGuide,
-            ];
+        // Récupère les données du formulaire
+        $donnees = array_merge($_POST, $_FILES);
 
-            // Valider les champs "temps_sur_place"
-            $tempsSurPlaceErrors = [];
-            foreach ($this->getPost() as $key => $value) {
-                if (strpos($key, 'temps_sur_place_') === 0 && empty($value)) {
-                    $tempsSurPlaceErrors[] = "Le temps sur place pour " . substr($key, 15) . " est requis.";
-                }
+        // Valider les données du formulaire
+        if (!$this->validator->valider($donnees)) {
+            echo json_encode([
+                'success' => false,
+                'errors' => $this->validator->getMessagesErreurs()
+            ]);
+            exit;
+        }
+
+        $data = [
+            'capacite' => htmlentities($this->getPost()['capacite'] ?? '', ENT_QUOTES, 'UTF-8'),
+            'nom' => htmlentities($this->getPost()['nom'] ?? '', ENT_QUOTES, 'UTF-8'),
+            'date_creation' => new DateTime(),
+            'description' => htmlentities($this->getPost()['description'] ?? '', ENT_QUOTES, 'UTF-8'),
+            'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
+            'id_guide' => $idGuide,
+        ];
+
+        // Valider les champs "temps_sur_place"
+        $tempsSurPlaceErrors = [];
+        foreach ($this->getPost() as $key => $value) {
+            if (strpos($key, 'temps_sur_place_') === 0 && empty($value)) {
+                $tempsSurPlaceErrors[] = "Le temps sur place pour " . substr($key, 15) . " est requis.";
             }
+        }
 
-            // Si des erreurs de validation existent, renvoyer une erreur
-            if (!empty($tempsSurPlaceErrors)) {
-                if ($isAjax) {
-                    echo json_encode(['success' => false, 'errors' => $tempsSurPlaceErrors]);
-                    exit;
-                }
-                echo implode("<br>", $tempsSurPlaceErrors);
-                return;
-            }
-
-            // Si un fichier image est téléchargé, l'ajouter aux données
-            if (!empty($_FILES['chemin_image']['name'])) {
-                $uploadDirectory = './images/';
-                $fileName = basename($_FILES['chemin_image']['name']);
-                $targetPath = $uploadDirectory . $fileName;
-
-                if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
-                    $data['chemin_image'] = $targetPath;
-                } else {
-                    if ($isAjax) {
-                        echo json_encode(['success' => false, 'message' => 'Image upload failed']);
-                        exit;
-                    }
-                    echo "Erreur: Echec du téléchargement de l'image.";
-                    return;
-                }
-            }
-
-            // Crée une nouvelle excursion via ExcursionDao
-            $excursionDao = new ExcursionDao($this->getPdo());
-            $nouvelleExcursion = $excursionDao->creer($data);
-
-            // Si la création est réussie, gérer les visites associées
-            if ($nouvelleExcursion) {
-                $this->handleVisits($nouvelleExcursion->getId(), $_POST);
-
-                if ($isAjax) {
-                    echo json_encode([
-                        'success' => true,
-                        'message' => 'Excursion created successfully',
-                        'redirect' => 'index.php?controleur=excursion&methode=listerByGuide&id=' . $idGuide,
-                    ]);
-                } else {
-                    if ($isAjax) {
-                        echo json_encode(['success' => false, 'message' => 'Error creating excursion']);
-                    }
-                }
+        // Si des erreurs de validation existent, renvoyer une erreur
+        if (!empty($tempsSurPlaceErrors)) {
+            if ($isAjax) {
+                echo json_encode(['success' => false, 'errors' => $tempsSurPlaceErrors]);
                 exit;
+            }
+        }
+
+        // Si un fichier image est téléchargé, l'ajouter aux données
+        if (!empty($_FILES['chemin_image']['name'])) {
+            $uploadDirectory = './images/';
+            $fileName = basename($_FILES['chemin_image']['name']);
+            $targetPath = $uploadDirectory . $fileName;
+
+            if (move_uploaded_file($_FILES['chemin_image']['tmp_name'], $targetPath)) {
+                $data['chemin_image'] = $targetPath;
             } else {
                 if ($isAjax) {
-                    echo json_encode(['success' => false, 'message' => 'Form data is missing']);
-                    exit;
+                    echo json_encode(['success' => false, 'message' => 'Image upload failed']);
                 }
-                echo "Erreur : Formulaire vide";
+                exit;
             }
+        }
+
+        // Crée une nouvelle excursion via ExcursionDao
+        $excursionDao = new ExcursionDao($this->getPdo());
+        $nouvelleExcursion = $excursionDao->creer($data);
+
+        // Si la création est réussie, gérer les visites associées
+        if ($nouvelleExcursion) {
+            $this->handleVisits($nouvelleExcursion->getId(), $_POST);
+
+            if ($isAjax) {
+                $_SESSION['success_excursion'] = 'Excursion créée avec succès!';
+
+                echo json_encode([
+                    'success' => true,
+                    'redirect' => 'index.php?controleur=excursion&methode=listerByGuide&id=' . $idGuide,
+                ]);
+            } else {
+                if ($isAjax) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Une erreur est survenue lors de la création de l\'excursion.'
+                    ]);
+                }
+            }
+            exit;
         }
     }
 
@@ -276,7 +295,10 @@ class ControllerExcursion extends BaseController
     public function afficherModifier(int $id): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            if (!isset($_SESSION['erreurs_excursion']['auth']) || is_array($_SESSION['erreurs_excursion']['auth'])) {
+                $_SESSION['erreurs_excursion']['auth'] = "Vous n'êtes pas autorisé à effectuer cette action.";
+            }
+            $this->redirect('', '', ['excursion' => false]);
             exit;
         }
 
@@ -320,7 +342,10 @@ class ControllerExcursion extends BaseController
     public function modifier(int $id): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            if (!isset($_SESSION['erreurs_excursion']['auth']) || is_array($_SESSION['erreurs_excursion']['auth'])) {
+                $_SESSION['erreurs_excursion']['auth'] = "Vous n'êtes pas autorisé à effectuer cette action.";
+            }
+            $this->redirect('', '', ['excursion' => false]);
             exit;
         }
 
@@ -344,10 +369,10 @@ class ControllerExcursion extends BaseController
         if (!empty($this->getPost())) {
             $data = [
                 'id' => $id,
-                'capacite' => $this->getPost()['capacite'] ?? '',
-                'nom' => $this->getPost()['nom'] ?? '',
+                'capacite' => htmlentities($this->getPost()['capacite'] ?? '', ENT_QUOTES, 'UTF-8'),
+                'nom' =>  htmlentities($this->getPost()['nom'] ?? '', ENT_QUOTES, 'UTF-8'),
                 'date_creation' => new DateTime(),
-                'description' => $this->getPost()['description'] ?? '',
+                'description' => htmlentities($this->getPost()['description'] ?? '', ENT_QUOTES, 'UTF-8'),
                 'public' => $this->getPost()['public'] ?? 0,
                 'id_guide' => $idGuide,
             ];
@@ -511,15 +536,14 @@ class ControllerExcursion extends BaseController
             }
         }
 
-        if ($excursion and $_SESSION['role']=="visiteur"){
+        if ($excursion and $_SESSION['role'] == "visiteur") {
             echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,
-                'engagements' => $engagements,// les engagements modifiés par l'array_map
+                'engagements' => $engagements, // les engagements modifiés par l'array_map
                 'datesReservees' => $datesReservees
             ]);
-        }
-        else if ($excursion and $_SESSION['role']=="guide") {
+        } else if ($excursion and $_SESSION['role'] == "guide") {
             echo $this->getTwig()->render('details_excursion_guide.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,
@@ -570,6 +594,9 @@ class ControllerExcursion extends BaseController
      */
     public function listerByGuide(int $id): void
     {
+        $successExcursion = isset($_SESSION['success_excursion']) ? $_SESSION['success_excursion'] : null;
+        unset($_SESSION['success_excursion']);
+
         $excursionDao = new ExcursionDao($this->getPdo());
 
         $public = isset($_GET['public']) && $_GET['public'] == 1;
@@ -581,6 +608,7 @@ class ControllerExcursion extends BaseController
         }
 
         echo $this->getTwig()->render('guide_excursions.html.twig', [
+            'success_excursion' => $successExcursion,
             'excursionsByGuide' => $excursions,
             'public' => $public,
         ]);
