@@ -27,3 +27,7 @@ $twig->addExtension(new \Twig\Extension\DebugExtension());
 //$twig->addExtension(new IntlExtension());
 
 //ajouter les données du fichier de config pour le twig
+$config = config::getInstance()->getConf();
+foreach ($config as $key => $value) {
+    $twig->addGlobal($key, $value);
+}

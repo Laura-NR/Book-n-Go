@@ -63,9 +63,9 @@
     {% block link %} {% endblock %}
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     
-    <meta name="description" content="{%if description is defined %} {{description}} {% else %} {{constant('WEBSITE_DESCRIPTION')}} {% endif %}">
+    <meta name="description" content="{%if description is defined %} {{description}} {% else %} {{website.description}} {% endif %}">
     {% block css %} {% endblock %}
-    <title>{% block title %}{{ constant('WEBSITE_TITLE')}}{% endblock %}</title>
+    <title>{% block title %}{{ website.title }}{% endblock %}</title>
 
 </head>
 
@@ -76,7 +76,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="index.php">
                     <img src="./images/logo3_OK_ORIGINAL.png" alt="Logo" width="70" class="d-inline-block align-text-center img-fluid">
-                    {{ constant('WEBSITE_TITLE')}} {{ constant('WEBSITE_VERSION')}}
+                    {{ website.title }} {{ website.version }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -122,10 +122,10 @@
             <div class="row">
                 <div class="col align-items-center justify-content-center">
                     <div class="text-center">
-                        <a href="#">Mentions légales</a>
+                        <a class="link-primary" href="#">Mentions légales</a>
                     </div>
                     <div class="text-center">
-                        <a href="#">Aide</a>
+                        <a class="link-primary" href="#">Aide</a>
                     </div>
                 </div>
                 <div class="col align-items-center justify-content-center">
@@ -133,10 +133,10 @@
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="text-center">
-                        <a href="#">Cookie Policy</a>
+                        <a class="link-primary" href="#">Cookie Policy</a>
                     </div>
                     <div class="text-center">
-                        <a href="#">Newsletter</a>
+                        <a class="link-primary" href="#">Newsletter</a>
                     </div>
                 </div>
             </div>
