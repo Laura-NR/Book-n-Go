@@ -3,11 +3,28 @@ require_once 'controller.class.php';
 require_once 'validation/ajout_visite.php';
 
 /**
+ * @file controller.visite.php
  * @class ControllerVisite
- * @brief Classe du contrôleur pour la gestion des visites
+ * @brief Classe permettant de gérer les visites.
+ *
+ * Cette classe fournit des méthodes pour gérer les différentes opérations relatives aux visites :
+ * - Création de nouvelles visites.
+ * - Redirection vers le formulaire de création d'une visite.
+ * - Redirection vers le formulaire de modification d'une visite.
+ * - Modification d'une visite existante.
+ * - Suppression d'une visite (fonctionnalité commentée).
+ * - Liste des visites disponibles ou celles d'un guide spécifique.
  */
+
 class ControllerVisite extends BaseController
 {
+    /**
+     * Constructeur de la classe ControllerVisite.
+     * Initialise le validateur avec les règles de validation pour les visites.
+     *
+     * @param \Twig\Environment $twig L'environnement Twig pour le rendu des templates.
+     * @param \Twig\Loader\FilesystemLoader $loader Le chargeur de fichiers Twig.
+     */
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     {
         parent::__construct($twig, $loader);
@@ -15,10 +32,15 @@ class ControllerVisite extends BaseController
         $this->validator = new Validator($reglesValidationInsertionVisite);
     }
 
-    // Affiche le formulaire de création d'visite et enregistre les données si envoyées
+    /**
+     * Gère la création d'une nouvelle visite.
+     *
+     * - Si le formulaire est envoyé avec des données valides, une nouvelle visite est ajoutée via VisiteDao.
+     * - Redirige ensuite vers la liste des visites ou un formulaire lié à une excursion, selon le contexte.
+     */
     public function creer(): void
     {
-        // Vérifie si le formulaire a été soumis
+        // Validation des données du formulaire
         if (
             empty($_POST) ||
             empty($_POST['adresse']) ||
@@ -29,6 +51,7 @@ class ControllerVisite extends BaseController
             echo "Données manquantes pour créer la visite.";
         }
 
+        // Récupération des données du formulaire
         $data = [
             'adresse' => $_POST['adresse'],
             'ville' => $_POST['ville'],
@@ -38,15 +61,15 @@ class ControllerVisite extends BaseController
             'idGuide' => $_SESSION['user_id']
         ];
 
+        // Validation des données
         if ($this->validator->valider($data)) {
             try {
-                // Utilisation de VisiteDao pour créer une nouvelle Visite
                 $visiteDao = new VisiteDao($this->getPdo());
                 $nouvelleVisite = $visiteDao->insert($data);
-                // Redirige vers la liste des visite après création réussie
-                /*$nouvelleVisite*/
+
+                // Gestion de la redirection selon le type d'action
                 if ($nouvelleVisite && $_GET['isExcursion'] === '1') {
-                    $this->redirect('excursion', 'afficherCreer');
+                    $this->redirect('excursion', 'afficherCreer',);
                 } elseif ($nouvelleVisite && $_GET['isExcursion'] === '0') {
                     $this->redirect('visite', 'lister');
                 } else {
@@ -57,6 +80,7 @@ class ControllerVisite extends BaseController
             }
         }
 
+        // Affichage des erreurs si la validation échoue
         $erreurs = $this->validator->getMessagesErreurs();
         if (!empty($erreurs)) {
             echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null, 'isExcursion' => $_GET["isExcursion"], 'erreurs' => $erreurs]);
@@ -116,7 +140,7 @@ class ControllerVisite extends BaseController
      */
     public function modifier(): void
     {
-
+        // Récupération des données du formulaire
         $data = [
             'id' => $_POST['id'],
             'adresse' => $_POST['adresse'],
@@ -125,24 +149,25 @@ class ControllerVisite extends BaseController
             'description' => $_POST['description'],
             'titre' => $_POST['titre'],
         ];
-        
 
+        // Validation des données
         if ($this->validator->valider($data)) {
             try {
-                // Utilisation de VisiteDao pour créer une nouvelle Visite
                 $visiteDao = new VisiteDao($this->getPdo());
                 $visiteModif = $visiteDao->modify($data);
-                // Redirige vers la liste des visite après création réussie
+
+                // Redirection après modification
                 if ($visiteModif) {
                     $this->redirect('visite', 'lister');
                 } else {
-                    echo "Erreur lors de la création de la visite.";
+                    echo "Erreur lors de la modification de la visite.";
                 }
             } catch (Exception $e) {
-                echo "Erreur lors de l'ajout de la visite : " . $e->getMessage();
+                echo "Erreur lors de la modification de la visite : " . $e->getMessage();
             }
         }
 
+        // Affichage des erreurs si la validation échoue
         $erreurs = $this->validator->getMessagesErreurs();
         if (!empty($erreurs)) {
             echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => true, 'visite' => $data, 'erreurs' => $erreurs]);
@@ -174,17 +199,20 @@ class ControllerVisite extends BaseController
     {
         $checkbox = isset($_POST['checkbox']);
         $visiteDao = new VisiteDao($this->getPdo());
-        if (!$checkbox)
-            $listeVisite = $visiteDao->findAll();
-        else {
+
+        if (!$checkbox) {
             $id_guide = $_SESSION['user_id'];
             $listeVisite = $visiteDao->findByGuide($id_guide);
+        } else {
+            $listeVisite = $visiteDao->findAll();
         }
+
         $template = $this->getTwig()->load("liste_visite.html.twig");
 
-        echo $template->render(array(
+        echo $template->render([
             'etatCheck' => $checkbox,
             "visites" => $listeVisite,
-        ));
+        ]);
     }
 }
+?>

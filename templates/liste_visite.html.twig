@@ -23,7 +23,7 @@
              <h1 class="text-center mb-4">Liste des Visites</h1>
              <a href="index.php?controleur=visite&methode=redirectCreer&isExcursion=0" class="btn btn-success">Créer une nouvelle visite</a>
          </div>
-
+        
         {% if visites is defined and visites is not empty %}
             <table id="tableVisite" class="table table-striped">
                 <thead>
@@ -33,7 +33,7 @@
                     <th scope="col">ville</th>
                     <th scope="col">code postal</th>
                     <th scope="col">description</th>
-                    {% if etatCheck == 'on' %} <th scope="col">action</th> {% endif %}
+                    {% if etatCheck == false %} <th scope="col">action</th> {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -44,7 +44,7 @@
                         <td> {{ visite.ville }} </td>
                         <td> {{ visite.codePostal }} </td>
                         <td> {{ visite.description }}</td>
-                        {% if etatCheck == 'on' %} 
+                        {% if etatCheck == false %} 
                         <td> 
                         <form method="POST" action="index.php?controleur=visite&methode=redirectModifier">
                             <input type="hidden" name="visite_id" value="{{ visite.id }}">
@@ -59,9 +59,9 @@
 
             <!-- Formulaire avec checkbox pour recharger la page -->
             <form id="checkboxForm" method="POST">
-                <label for="checkbox">Voir ces visites :</label>
+                <label for="checkbox">Voir toute les visites :</label>
                 <input type="checkbox" id="checkbox" name="checkbox" onclick="rechargePage()"
-                    {% if etatCheck == 'on' %} checked="checked" {% endif %}>
+                    {% if etatCheck == true %} checked="checked" {% endif %}>
             </form>
 
         {% else %}
