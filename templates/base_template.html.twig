@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <script src="./node_modules/tarteaucitronjs/tarteaucitron.js"></script>
+    <script src="./node_modules/feather-icons/dist/feather.js"></script>
 
     <script type="text/javascript">
         tarteaucitron.init({
@@ -62,9 +63,9 @@
     {% block link %} {% endblock %}
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     
-    <meta name="description" content="{%if description is defined %} {{description}} {% else %} {{constant('WEBSITE_DESCRIPTION')}} {% endif %}">
+    <meta name="description" content="{%if description is defined %} {{description}} {% else %} {{website.description}} {% endif %}">
     {% block css %} {% endblock %}
-    <title>{% block title %}{{ constant('WEBSITE_TITLE')}}{% endblock %}</title>
+    <title>{% block title %}{{ website.title }}{% endblock %}</title>
 
 </head>
 
@@ -75,7 +76,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="index.php">
                     <img src="./images/logo3_OK_ORIGINAL.png" alt="Logo" width="70" class="d-inline-block align-text-center img-fluid">
-                    {{ constant('WEBSITE_TITLE')}} {{ constant('WEBSITE_VERSION')}}
+                    {{ website.title }} {{ website.version }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -97,6 +98,9 @@
                             <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
                         </li>
                         {% endif %}
+                        <li class="nav-item btn btn-outline-primary rounded-pill me-2 align-content-lg-center">
+                            <button data-feather="sun" color="bs-primary" id="themeToggleButton">Toggle Dark Mode</button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -118,10 +122,10 @@
             <div class="row">
                 <div class="col align-items-center justify-content-center">
                     <div class="text-center">
-                        <a href="#">Mentions légales</a>
+                        <a class="link-primary" href="#">Mentions légales</a>
                     </div>
                     <div class="text-center">
-                        <a href="#">Aide</a>
+                        <a class="link-primary" href="#">Aide</a>
                     </div>
                 </div>
                 <div class="col align-items-center justify-content-center">
@@ -129,10 +133,10 @@
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="text-center">
-                        <a href="#">Cookie Policy</a>
+                        <a class="link-primary" href="#">Cookie Policy</a>
                     </div>
                     <div class="text-center">
-                        <a href="#">Newsletter</a>
+                        <a class="link-primary" href="#">Newsletter</a>
                     </div>
                 </div>
             </div>
@@ -141,10 +145,23 @@
     {% block script %} {% endblock %}
 
     <script type="text/javascript">
+        feather.replace();
         tarteaucitron.user.gtagUa = 'G-SBQC767GXC';
         // tarteaucitron.user.gtagCrossdomain = ['example.com', 'example2.com'];
         tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */ };
         (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+
+
+        const themeToggleButton = document.getElementById('themeToggleButton');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        document.documentElement.setAttribute('data-bs-theme', currentTheme);
+
+        themeToggleButton.addEventListener('click', () => {
+            const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
     </script>
 
 </body>

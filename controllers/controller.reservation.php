@@ -2,10 +2,19 @@
 require_once 'controller.class.php';
 require_once 'include.php';
 
+/**
+ * @class ControllerReservation
+ * @brief Classe du contrôleur pour la gestion des réservations
+ */
 class ControllerReservation extends BaseController {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
     }
+    /**
+     * @brief Affiche la page du planning des réservations d'un voyageur
+     * @throws Exception si le paramètre "id" n'est pas renseigné
+     * @return void
+     */
     public function afficherPlanning(): void
     {
         $id_voyageur = $_GET['id'] ?? null;
@@ -22,6 +31,23 @@ class ControllerReservation extends BaseController {
         ]);
     }
 
+    /**
+     * @brief Crée une nouvelle réservation pour un voyageur
+     *
+     * Crée une nouvelle réservation pour un voyageur en fonction des données
+     * soumises (id de l'excursion, id du voyageur, id de l'engagement, date de
+     * réservation).
+     *
+     * Si la création réussit, redirige vers la page d'affichage de l'excursion
+     * avec l'ID de l'excursion.
+     *
+     * @throws Exception si le paramètre "id_excursion" n'est pas renseigné
+     * @throws Exception si le paramètre "id_voyageur" n'est pas renseigné
+     * @throws Exception si le paramètre "id_engagement" n'est pas renseigné
+     * @throws Exception si le paramètre "date_reservation" n'est pas renseigné
+     *
+     * @return void
+     */
     public function creer(): void
     {
         $idExcursion = $_POST['id_excursion'];
@@ -40,6 +66,17 @@ class ControllerReservation extends BaseController {
             echo "Erreur lors de la création de la réservation.";
         }
     }
+    /**
+     * @brief Supprime une réservation
+     *
+     * Supprime une réservation en fonction de son ID.
+     *
+     * Si la suppression réussit, redirige vers la page de la liste des réservations.
+     *
+     * @throws Exception si le paramètre "id_reservation" n'est pas renseigné
+     *
+     * @return void
+     */
     public function supprimerReservation(): void
     {
         // Récupérer l'ID de la réservation depuis l'URL ou le formulaire

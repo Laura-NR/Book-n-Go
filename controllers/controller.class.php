@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @class BaseController
+ * @brief Classe de base pour les contrôleurs
+ */
 abstract class BaseController
 {
     private PDO $pdo;

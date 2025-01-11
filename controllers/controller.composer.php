@@ -1,5 +1,5 @@
 <?php 
-
+// Classe ...
 class ControllerComposer extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)

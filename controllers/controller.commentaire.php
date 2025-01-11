@@ -1,8 +1,15 @@
 <?php
 
 require_once 'validation/ajout_commentaire.php';
+
+/**
+ * @class ControllerCommentaire
+ * @brief Classe du contrôleur pour la gestion des commentaires
+ */
 class ControllerCommentaire extends BaseController
 {
+    //Contructeur du contrôleur de commentaire, initialise les objets Twig indispensables pour la gestion des templates
+    // et instancie la classe de validation
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
     {
         parent::__construct($twig, $loader);
@@ -74,14 +81,15 @@ class ControllerCommentaire extends BaseController
 //            echo "post non trouvé.";
 //        }
 //    }
+
+
+// Ajouter un commentaire au post et le stocker en base de données
     public function ajouter(): void
     {
         if (isset($_POST["contenu"]) && !ctype_space($_POST["contenu"])) {
             if (!isset($_SESSION["user_id"]) or $_SESSION["role"] != "voyageur") {
                 // gérer l'erreur au cas où utilisateur n'est pas connecté
             } else {
-                //ancienne version sans validation
-                //$contenu = $_POST["contenu"];
                 $donnees = $_POST;
                 $idPost = $_POST["id_post"];
 
@@ -95,8 +103,11 @@ class ControllerCommentaire extends BaseController
                     $commentaire = new Commentaire();
                     $commentaireDao = new CommentaireDao($this->getPdo());
 
+                    // ajout de la date-heure actuelle au commentaire
                     $commentaire->setDateHeurePublication(new DateTime());
+                    // ajout du contenu du commentaire
                     $commentaire->setContenu($contenu);
+
                     $idVoyageur = $_SESSION['user_id'];
                     $commentaire->setIdVoyageur($idVoyageur);
 
@@ -108,9 +119,9 @@ class ControllerCommentaire extends BaseController
                     exit();
                 } else {
                     $erreurs = $this->validator->getMessagesErreurs();
-                    //var_dump($erreurs);
+
                     $_SESSION['erreurs_commentaire'] = $erreurs;
-                    //var_dump($_SESSION['erreurs_commentaire']);
+
                     $_SESSION['donnees_commentaire'] = $donnees;
                     // Rediriger pour éviter le double traitement du formulaire en cas de rafraîchissement de la page
                     header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
@@ -119,6 +130,7 @@ class ControllerCommentaire extends BaseController
         }
     }
 
+    // Supprimer un commentaire d'un post
     public function supprimer(): void
     {
         if (isset($_POST["id_commentaire"])) {
@@ -129,7 +141,7 @@ class ControllerCommentaire extends BaseController
             header("Location: index.php?controleur=post&methode=afficher&id=" . $idPost);
             exit();
         } else {
-            throw new Exception("");
+            throw new Exception("!");
         }
     }
 }

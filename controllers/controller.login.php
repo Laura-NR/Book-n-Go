@@ -7,7 +7,16 @@ class ControllerLogin extends BaseController
         $this->render('connexion_template.html.twig');
     }
 
-    // Gère la connexion d'un utilisateur
+    /**
+     * Contrôle la connexion d'un utilisateur
+     *
+     * Vérifie que les champs de connexion sont remplis, puis
+     * vérifie l'email et le mot de passe en appelant la methode
+     * findByMail() de la classe UserDao. Si l'utilisateur est trouvé,
+     * il est connecté et redirigé vers la page de dashboard.
+     *
+     * @return void
+     */
     public function connexion(): void
     {
         $mail = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_EMAIL);

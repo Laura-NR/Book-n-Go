@@ -2,6 +2,10 @@
 require_once 'controller.voyageur.php';
 require_once 'validation/ajout_guide.php';
 
+/**
+ * @class ControllerGuide
+ * @brief Classe du contrôleur pour la gestion des guides
+ */
 class ControllerGuide extends ControllerVoyageur
 {
 
@@ -31,6 +35,11 @@ class ControllerGuide extends ControllerVoyageur
         return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
     }
 
+    /**
+     * Crée un guide avec les données fournies
+     * @param array $data Données du formulaire (nom, prenom, numero_tel, mail, mdp et chemin_certif)
+     * @return bool True si le guide est créé, sinon false
+     */
     public function creerGuide(): bool
     {
         $postData = $this->getPost();
@@ -99,7 +108,12 @@ class ControllerGuide extends ControllerVoyageur
         return false;
     }
 
-    // Modification d'un guide
+
+    /**
+     * Supprimer un guide de la base de données
+     * @param int $id identifiant du guide à supprimer
+     * @return void
+     */
     public function supprimerGuide(int $id): void
     {
         try {
@@ -128,6 +142,16 @@ class ControllerGuide extends ControllerVoyageur
             echo "Erreur lors de la suppression : " . $e->getMessage();
         }
     }
+    /**
+     * @brief Modifier les informations d'un guide existant.
+     *
+     * Cette méthode modifie les informations d'un guide dans la base de données en fonction de son ID.
+     * Si la modification échoue, un message d'erreur est affiché.
+     *
+     * @param int $id L'ID du guide à modifier.
+     *
+     * @return void
+     */
     public function modifierGuide(int $id): void
     {
         try {
@@ -237,6 +261,9 @@ class ControllerGuide extends ControllerVoyageur
         }
     }
 
+    /**
+     * Afficher le planning du guide (accessible uniquement au guide connecté)
+     */
     public function afficherPlanning(): void
     {
         echo $this->getTwig()->render('planning_guide.html.twig');

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @class ControllerEngagement
+ * @brief Classe du contrôleur pour la gestion des engagements
+ */
 class ControllerEngagement extends BaseController
 {
 
@@ -8,6 +12,15 @@ class ControllerEngagement extends BaseController
         parent::__construct($twig, $loader);
     }
 
+    /**
+     * @brief Affiche le formulaire de création d'un engagement pour une excursion.
+     *
+     * Cette méthode affiche le formulaire de création d'un engagement pour une excursion en fonction de son ID.
+     *
+     * @param int $id L'ID de l'excursion pour laquelle l'engagement sera créé.
+     *
+     * @return void
+     */
     public function afficherCreer(int $id): void
     {
         $ExcursionDao = new ExcursionDao();
@@ -18,6 +31,16 @@ class ControllerEngagement extends BaseController
         ]);
     }
 
+    /**
+     * @brief Crée un engagement pour une excursion.
+     *
+     * Cette méthode crée un engagement pour une excursion en fonction des données soumises.
+     *
+     * @throws InvalidArgumentException Si les données soumises sont invalides.
+     * @throws Exception Si une erreur se produit lors de la création de l'engagement.
+     *
+     * @return void
+     */
     public function creer(): void
     {
         if (!empty($this->getPost())) {
@@ -29,16 +52,19 @@ class ControllerEngagement extends BaseController
                 'id_guide' => $this->getPost()['id_guide'] ?? '',
             ];
 
+            // Si les données sont invalides, on lance une exception
             if (empty($data['date_debut_dispo']) || empty($data['date_fin_dispo']) || empty($data['heure_debut']) || empty($data['id_excursion']) || empty($data['id_guide'])) {
                 throw new InvalidArgumentException("Tous les chemps sont obligatoires.");
             }
 
+            // si la date de fin est avant la date de debut, on lance une exception
             $dateDebut = new DateTime($data['date_debut_dispo']);
             $dateFin = new DateTime($data['date_fin_dispo']);
             if ($dateDebut > $dateFin) {
                 throw new InvalidArgumentException("La date de début de l'engagement ne peut pas être après la date de fin de l'engagement.");
             }
 
+            // Création de l'engagement
             $excursionDao = new ExcursionDao();
             $excursion = $excursionDao->findAssoc($data['id_excursion']);
             if (!$excursion) {
@@ -62,6 +88,7 @@ class ControllerEngagement extends BaseController
                 } else {
                     throw new Exception("Erreur lors de la création de l'engagement.");
                 }
+            // Si une erreur se produit, on affiche un message d'erreur
             } catch (Exception $e) {
                 error_log($e->getMessage());
                 echo "Erreur: " . $e->getMessage();

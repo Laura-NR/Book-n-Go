@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @class ControllerPost
+ * @brief Classe du contrôleur pour la gestion des posts
+ */
 class ControllerPost extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
@@ -36,6 +41,11 @@ class ControllerPost extends BaseController
         ));
     }
 
+    /**
+     * Liste tous les posts d'un carnet spécifique
+     *
+     * @param int $id ID du carnet dont on veut lister les posts
+     */
     public function listerParCarnet(int $id): void
     {
         $postDao = new PostDAO($this->getPdo());
@@ -55,6 +65,17 @@ class ControllerPost extends BaseController
         ));
     }
 
+/**
+ * Affiche les détails d'un post spécifique ainsi que ses commentaires.
+ *
+ * Cette méthode récupère un post par son ID ainsi que les commentaires associés.
+ * Elle gère également les erreurs de validation de commentaires stockées en session.
+ * Les erreurs et les données de formulaire soumises sont passées à la vue pour pré-remplissage.
+ * Si le post est trouvé, il est affiché avec ses commentaires, sinon un message d'erreur est affiché.
+ *
+ * @param int $id L'ID du post à afficher.
+ * @return void
+ */
     public function afficher($id): void
     {
         // Récupérer les erreurs et les données de la session (si présentes)
@@ -85,6 +106,16 @@ class ControllerPost extends BaseController
             echo "post non trouvé.";
         }
     }
+
+    /**
+     * Affiche le formulaire de création d'un post et le stocke en base de données si les données sont valides.
+     *
+     * Cette méthode récupère les erreurs et les données de la session (si présentes) et les passe à la vue pour pré-remplissage.
+     * Si la méthode est appelée avec un POST, elle valide les données et les stocke en base de données.
+     * Si les données sont valides, elle redirige vers la liste des posts du carnet.
+     * Sinon, elle redirige vers la page de création de post avec les erreurs. (Validation à ajouter !)
+     * @return void
+     */
     public function creer(): void
     {
         $erreursPost = $_SESSION['erreurs_post'] ?? [];
@@ -140,6 +171,16 @@ class ControllerPost extends BaseController
             ));
         }
     }
+    /**
+     * Supprime un post de la base de données.
+     *
+     * Cette méthode doit être appelée via un formulaire POST contenant l'ID du post à supprimer.
+     * L'ID du carnet est également récupéré pour rediriger vers la liste des posts du carnet.
+     * Si la méthode est appelée via un GET, elle lève une exception.
+     *
+     * @return void
+     * @throws Exception Si la méthode est appelée via un GET.
+     */
     public function supprimer(): void
     {
         if (isset($_POST["id_post"])) {

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @class ControllerCarnetVoyage
+ * @brief Classe de contrôleur pour les carnets de voyage
+ */
 class ControllerCarnetVoyage extends BaseController
 {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
@@ -6,6 +10,7 @@ class ControllerCarnetVoyage extends BaseController
         parent::__construct($twig, $loader);
     }
 
+    //redéfinition de call afin que l'index appelle la methode appropriée avec son paramètre id
     public function call($methode): mixed
     {
         if (method_exists($this, $methode)) {
@@ -36,6 +41,8 @@ class ControllerCarnetVoyage extends BaseController
         ));
     }
 
+    //Créer un carnet de voyage par récupération des informations du $_POST
+    //Validation à ajouter !
     public function creer(): void
     {
         if (!empty($_POST)) {
@@ -55,6 +62,7 @@ class ControllerCarnetVoyage extends BaseController
                 $data['chemin_img'] = $cible;
             }
 
+            // Insertion du carnet dans la base de données
             $carnetDao = new CarnetVoyageDAO($this->getPdo());
             $nouveauCarnet = $carnetDao->inserer($data);
 
@@ -64,13 +72,14 @@ class ControllerCarnetVoyage extends BaseController
                 echo "Erreur lors de la création du carnet.";
             }
         } else {
-            // Afficher le formulaire de création de carnet
+            // Afficher le formulaire de création de carnet. Retour d'erreurs à ajouter
             $template = $this->getTwig()->load('creation_carnet_dashboard.html.twig');
             echo $template->render();
         }
     }
 
     //Spécifique au dashboard
+    //Liste tous les carnets d'un voyageur spécifique
     public function listerParVoyageur(int $idVoyageur): void
     {
         $carnetDao = new CarnetVoyageDAO($this->getPdo());
@@ -85,6 +94,7 @@ class ControllerCarnetVoyage extends BaseController
         ));
     }
 }
+
 //    public function afficher($id): void
 //    {
 //        $carnetDao = new CarnetVoyageDAO($this->getPdo());

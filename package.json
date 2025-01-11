@@ -2,6 +2,7 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "datatables.net-bs5": "^2.1.8",
+    "feather-icons": "^4.29.2",
     "tarteaucitronjs": "^1.19.0"
   }
 }

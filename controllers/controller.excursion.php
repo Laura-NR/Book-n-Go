@@ -51,6 +51,19 @@ class ControllerExcursion extends BaseController
         return $visites;
     }
 
+
+    /**
+     * @brief Affiche le formulaire de création d'excursion.
+     *
+     * Si l'utilisateur n'est pas connecté ou n'a pas le rôle de guide, cette méthode
+     * affiche un message d'erreur et met fin à l'exécution du script.
+     *
+     * Sinon, cette méthode affiche le formulaire de création d'excursion via le template
+     * `formulaire_excursion.html.twig` en injectant les visites récupérées avec la méthode
+     * `getVisites`.
+     *
+     * @return void
+     */
     public function afficherCreer(): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
@@ -65,6 +78,17 @@ class ControllerExcursion extends BaseController
         ]);
     }
 
+    /**
+     * @brief Crée une nouvelle excursion.
+     *
+     * Cette méthode vérifie si l'utilisateur connecté a le rôle de guide et si le formulaire a été soumis.
+     * Elle valide les données du formulaire, télécharge l'image associée si présente, et utilise ExcursionDao
+     * pour créer une nouvelle excursion dans la base de données. Si la création réussit, elle gère les visites
+     * associées à l'excursion. En cas d'erreur, des messages d'erreur sont affichés ou renvoyés en JSON
+     * pour les requêtes AJAX.
+     *
+     * @return void
+     */
     public function creer(): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
@@ -235,6 +259,20 @@ class ControllerExcursion extends BaseController
         }
     }
 
+
+    /**
+     * @brief Affiche le formulaire de modification pour une excursion spécifique.
+     *
+     * Vérifie si l'utilisateur est connecté et a le rôle de guide avant de procéder.
+     * Récupère l'excursion à modifier ainsi que les visites associées via leur ID respectif.
+     * Si l'ID est invalide ou si l'excursion n'est pas trouvée, affiche un message d'erreur.
+     * Utilise le template `formulaire_excursion.html.twig` pour afficher le formulaire
+     * avec les données de l'excursion et les visites sélectionnées.
+     *
+     * @param int $id L'ID de l'excursion à modifier.
+     *
+     * @return void
+     */
     public function afficherModifier(int $id): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
@@ -516,6 +554,20 @@ class ControllerExcursion extends BaseController
         ]);
     }
 
+
+    /**
+     * @brief Liste les excursions d'un guide spécifique.
+     *
+     * Cette méthode récupère toutes les excursions associées à un guide donné
+     * en fonction de son ID. Si le paramètre 'public' est présent dans la requête
+     * GET et a pour valeur 1, elle récupère uniquement les excursions publiques.
+     * Sinon, elle récupère toutes les excursions du guide.
+     * Les excursions sont ensuite affichées dans le template 'guide_excursions.html.twig'.
+     *
+     * @param int $id L'ID du guide pour lequel récupérer les excursions.
+     *
+     * @return void
+     */
     public function listerByGuide(int $id): void
     {
         $excursionDao = new ExcursionDao($this->getPdo());

@@ -3,8 +3,10 @@
 //Ajout de l'autoload de composer
 require_once 'vendor/autoload.php';
 
-//Ajout du fichier des constantes pour configurer l'application
-require_once 'config/constantes.php';
+//Ajout du modèle de la classe config pour configurer l'application
+
+//require_once 'config/constantes.php';
+require_once 'modeles/config.class.php';
 
 //Ajout du code pour initialiser twig
 require_once 'config/twig.php';
@@ -31,7 +33,6 @@ require_once 'modeles/guide.class.php';
 require_once 'modeles/guide.dao.php';
 require_once 'modeles/post.class.php';
 require_once 'modeles/post.dao.php';
-require_once 'modeles/config.class.php';
 require_once 'modeles/reservation.class.php';
 require_once 'modeles/reservation.dao.php';
 require_once 'modeles/engagement.class.php';
