@@ -1,0 +1,446 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.13.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Book&#39;n&#39;Go: Référence de la classe VisiteDao</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(function() { init_search(); });
+/* @license-end */
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo3_OK_MINI.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">Book&#39;n&#39;Go<span id="projectnumber">&#160;2.5</span>
+   </div>
+  </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Recherche" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.13.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('class_visite_dao.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Fonctions membres publiques</a>  </div>
+  <div class="headertitle"><div class="title">Référence de la classe VisiteDao</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Classe permettant de gérer les visites dans la base de données.  
+ <a href="#details">Plus de détails...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Fonctions membres publiques</h2></td></tr>
+<tr class="memitem:a547eaaa1e35bdd4cab1800ac47b3a3b0" id="r_a547eaaa1e35bdd4cab1800ac47b3a3b0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a547eaaa1e35bdd4cab1800ac47b3a3b0">__construct</a> (?PDO $pdo=null)</td></tr>
+<tr class="separator:a547eaaa1e35bdd4cab1800ac47b3a3b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e7560ad95a7986be67f7528c80e7f1a" id="r_a6e7560ad95a7986be67f7528c80e7f1a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e7560ad95a7986be67f7528c80e7f1a">getPdo</a> ()</td></tr>
+<tr class="separator:a6e7560ad95a7986be67f7528c80e7f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a776a61c65750d77c108e555dbea3a986" id="r_a776a61c65750d77c108e555dbea3a986"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a776a61c65750d77c108e555dbea3a986">setPdo</a> (?PDO $pdo=null)</td></tr>
+<tr class="separator:a776a61c65750d77c108e555dbea3a986"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9036c33ccb06d6070a021ec2f2d34ca9" id="r_a9036c33ccb06d6070a021ec2f2d34ca9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9036c33ccb06d6070a021ec2f2d34ca9">insert</a> (array $data)</td></tr>
+<tr class="separator:a9036c33ccb06d6070a021ec2f2d34ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4036ed6ee3aa18ba160bb076a67923c8" id="r_a4036ed6ee3aa18ba160bb076a67923c8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4036ed6ee3aa18ba160bb076a67923c8">modify</a> (array $data)</td></tr>
+<tr class="separator:a4036ed6ee3aa18ba160bb076a67923c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48d48013b7a2536dff0ae9cdda03dd7e" id="r_a48d48013b7a2536dff0ae9cdda03dd7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48d48013b7a2536dff0ae9cdda03dd7e">find</a> (?int $id)</td></tr>
+<tr class="separator:a48d48013b7a2536dff0ae9cdda03dd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73a1b0348919b6755e4f69dcc70eba64" id="r_a73a1b0348919b6755e4f69dcc70eba64"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73a1b0348919b6755e4f69dcc70eba64">findAll</a> ()</td></tr>
+<tr class="separator:a73a1b0348919b6755e4f69dcc70eba64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5094aa92cda0504aa7484dd4c5d89230" id="r_a5094aa92cda0504aa7484dd4c5d89230"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5094aa92cda0504aa7484dd4c5d89230">findAssoc</a> (?int $id)</td></tr>
+<tr class="separator:a5094aa92cda0504aa7484dd4c5d89230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a584ce41683cc8dfa9f035be21416074d" id="r_a584ce41683cc8dfa9f035be21416074d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a584ce41683cc8dfa9f035be21416074d">findAllAssoc</a> ()</td></tr>
+<tr class="separator:a584ce41683cc8dfa9f035be21416074d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af25ea6725e23d399c8ad498f5a6aa930" id="r_af25ea6725e23d399c8ad498f5a6aa930"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af25ea6725e23d399c8ad498f5a6aa930">hydrate</a> ($tableauAssoc)</td></tr>
+<tr class="separator:af25ea6725e23d399c8ad498f5a6aa930"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61551f73ae009dd7f2203929e566887d" id="r_a61551f73ae009dd7f2203929e566887d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61551f73ae009dd7f2203929e566887d">hydrateAll</a> ($tab)</td></tr>
+<tr class="separator:a61551f73ae009dd7f2203929e566887d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac190e6e77a407ebe79494b39fe1e62dd" id="r_ac190e6e77a407ebe79494b39fe1e62dd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac190e6e77a407ebe79494b39fe1e62dd">findByGuide</a> (string $idGuide)</td></tr>
+<tr class="separator:ac190e6e77a407ebe79494b39fe1e62dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><p>Classe permettant de gérer les visites dans la base de données. </p>
+<p>La classe <code><a class="el" href="class_visite_dao.html" title="Classe permettant de gérer les visites dans la base de données.">VisiteDao</a></code> fournit des méthodes pour interagir avec les visites dans la base de données. Elle gère les opérations suivantes :</p><ul>
+<li>Insertion de nouvelles visites.</li>
+<li>Modification d'une visite existante.</li>
+<li>Suppression d'une visite (commentée dans le code).</li>
+<li>Recherche d'une visite par son identifiant, par l'identifiant du guide qui l'a créer ou par la ville (commenté dans le code).</li>
+<li>Récupération de toute les visites.</li>
+<li>Conversion de un ou plusieurs tableaux associatifs représentant une ou plusieurs visites en objets <code><a class="el" href="class_visite.html" title="Classe représentant une visite.">Visite</a></code> .</li>
+</ul>
+<p>Attribut principal :</p><ul>
+<li>$pdo : Instance de PDO pour effectuer les opérations SQL. </li>
+</ul>
+</div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
+<a id="a547eaaa1e35bdd4cab1800ac47b3a3b0" name="a547eaaa1e35bdd4cab1800ac47b3a3b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a547eaaa1e35bdd4cab1800ac47b3a3b0">&#9670;&#160;</a></span>__construct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__construct </td>
+          <td>(</td>
+          <td class="paramtype">?PDO</td>          <td class="paramname"><span class="paramname"><em>$pdo</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Constructeur de la classe. Initialise la connexion à la base de données via une instance de PDO.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">?PDO</td><td class="paramname">$pdo</td><td>Instance de PDO optionnelle. Si null, utilise une instance par défaut. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentation des fonctions membres</h2>
+<a id="a48d48013b7a2536dff0ae9cdda03dd7e" name="a48d48013b7a2536dff0ae9cdda03dd7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48d48013b7a2536dff0ae9cdda03dd7e">&#9670;&#160;</a></span>find()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">find </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Rechercher une visite dans la base de données grâce à son identifiant et l'obtenir sous forme d'objet.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>identifiant de la visite à rechercher. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_visite.html" title="Classe représentant une visite.">Visite</a> Retourne l'objet visite correspondant. </dd></dl>
+
+</div>
+</div>
+<a id="a73a1b0348919b6755e4f69dcc70eba64" name="a73a1b0348919b6755e4f69dcc70eba64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73a1b0348919b6755e4f69dcc70eba64">&#9670;&#160;</a></span>findAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findAll </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Récupérer tout les visite de la base de données et les obtenir sous forme d'objet. </p><dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_visite.html" title="Classe représentant une visite.">Visite</a> Retourne les objets visite correspondant. </dd></dl>
+
+</div>
+</div>
+<a id="a584ce41683cc8dfa9f035be21416074d" name="a584ce41683cc8dfa9f035be21416074d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a584ce41683cc8dfa9f035be21416074d">&#9670;&#160;</a></span>findAllAssoc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findAllAssoc </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Récupérer tout les visite de la base de données et les obtenir sous forme d'un tableau associatif. </p><dl class="section return"><dt>Renvoie</dt><dd>array Retourne le tableau associatif contenant les visite correspondant. </dd></dl>
+
+</div>
+</div>
+<a id="a5094aa92cda0504aa7484dd4c5d89230" name="a5094aa92cda0504aa7484dd4c5d89230"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5094aa92cda0504aa7484dd4c5d89230">&#9670;&#160;</a></span>findAssoc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findAssoc </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Rechercher une visite dans la base de données grâce à son identifiant et le retourner sous forme d'un tableaux associatif.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>identifiant de la visite à rechercher. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Retourne le tableau associatif comportant les informations de la visite correspondant. </dd></dl>
+
+</div>
+</div>
+<a id="ac190e6e77a407ebe79494b39fe1e62dd" name="ac190e6e77a407ebe79494b39fe1e62dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac190e6e77a407ebe79494b39fe1e62dd">&#9670;&#160;</a></span>findByGuide()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findByGuide </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$idGuide</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Recherche toutes les visites d'un guide spécifique.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$idGuide</td><td>Identifiant du guide. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Retourne un tableau d'objets <a class="el" href="class_visite.html" title="Classe représentant une visite.">Visite</a>. </dd></dl>
+
+</div>
+</div>
+<a id="a6e7560ad95a7986be67f7528c80e7f1a" name="a6e7560ad95a7986be67f7528c80e7f1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e7560ad95a7986be67f7528c80e7f1a">&#9670;&#160;</a></span>getPdo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getPdo </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Permet de retourner l'instance de PDO </p><dl class="section return"><dt>Renvoie</dt><dd>PDO l'attribut de l'instance </dd></dl>
+
+</div>
+</div>
+<a id="af25ea6725e23d399c8ad498f5a6aa930" name="af25ea6725e23d399c8ad498f5a6aa930"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af25ea6725e23d399c8ad498f5a6aa930">&#9670;&#160;</a></span>hydrate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">hydrate </td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>$tableauAssoc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Convertir un tableau associatif contenant les informations d'un visite en un objet visite.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$tableauAssoc</td><td>Tableau associatif représentnant une visite. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_visite.html" title="Classe représentant une visite.">Visite</a> Retourne l'objet visite qui est constitué des information données en paramètre. </dd></dl>
+
+</div>
+</div>
+<a id="a61551f73ae009dd7f2203929e566887d" name="a61551f73ae009dd7f2203929e566887d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61551f73ae009dd7f2203929e566887d">&#9670;&#160;</a></span>hydrateAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">hydrateAll </td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>$tab</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Convertir un tableau associatif contenant les informations de plusieurs visite en un tableau d'objets visite.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$tab</td><td>Tableau associatif représentnant les visite. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Retourne le tableau d'objet visite. </dd></dl>
+
+</div>
+</div>
+<a id="a9036c33ccb06d6070a021ec2f2d34ca9" name="a9036c33ccb06d6070a021ec2f2d34ca9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9036c33ccb06d6070a021ec2f2d34ca9">&#9670;&#160;</a></span>insert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">insert </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$data</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Insère une nouvelle visite dans la base de données.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$data</td><td>Données de la visite à insérer qui est composer de l'adresse, la ville, le codePostal, la description, le titre et idGuide. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_visite.html" title="Classe représentant une visite.">Visite</a> Retourne l'objet <a class="el" href="class_visite.html" title="Classe représentant une visite.">Visite</a> créer en cas de succès, false sinon. </dd></dl>
+
+</div>
+</div>
+<a id="a4036ed6ee3aa18ba160bb076a67923c8" name="a4036ed6ee3aa18ba160bb076a67923c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4036ed6ee3aa18ba160bb076a67923c8">&#9670;&#160;</a></span>modify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">modify </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$data</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Modifier une visite déjà existante dans la base de données.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$data</td><td>Nouvelle données de la visite qui est composer de l'adresse, la ville, le codePostal, la description, le titre et idGuide, ainsi que l'id de la visite à modifier. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool Retourne true en cas de succès, false sinon. </dd></dl>
+
+</div>
+</div>
+<a id="a776a61c65750d77c108e555dbea3a986" name="a776a61c65750d77c108e555dbea3a986"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a776a61c65750d77c108e555dbea3a986">&#9670;&#160;</a></span>setPdo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setPdo </td>
+          <td>(</td>
+          <td class="paramtype">?PDO</td>          <td class="paramname"><span class="paramname"><em>$pdo</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>But : Permet de changer l'attribut pdo de l'instance avec la valeur passer en paramètre donc $pdo </p><dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">PDO</td><td class="paramname">$pdo</td><td>données à affecter ou null si il n'est pas préciser </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>La documentation de cette classe a été générée à partir du fichier suivant :<ul>
+<li>Book-n-Go/modeles/<a class="el" href="visite_8dao_8php.html">visite.dao.php</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="class_visite_dao.html">VisiteDao</a></li>
+    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
+  </ul>
+</div>
+</body>
+</html>

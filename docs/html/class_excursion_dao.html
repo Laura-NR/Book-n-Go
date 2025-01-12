@@ -1,0 +1,486 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.13.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Book&#39;n&#39;Go: Référence de la classe ExcursionDao</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(function() { init_search(); });
+/* @license-end */
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo3_OK_MINI.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">Book&#39;n&#39;Go<span id="projectnumber">&#160;2.5</span>
+   </div>
+  </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Recherche" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.13.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('class_excursion_dao.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Fonctions membres publiques</a>  </div>
+  <div class="headertitle"><div class="title">Référence de la classe ExcursionDao</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Classe d'accès aux données (DAO) pour les excursions.  
+ <a href="#details">Plus de détails...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Fonctions membres publiques</h2></td></tr>
+<tr class="memitem:a1af66732d88f0cf13159e9a0475fcbf3" id="r_a1af66732d88f0cf13159e9a0475fcbf3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1af66732d88f0cf13159e9a0475fcbf3">__construct</a> (PDO $pdo=null)</td></tr>
+<tr class="separator:a1af66732d88f0cf13159e9a0475fcbf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9da4ebd5c297750161a175e50a8e5e36" id="r_a9da4ebd5c297750161a175e50a8e5e36"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9da4ebd5c297750161a175e50a8e5e36">creer</a> (array $data)</td></tr>
+<tr class="separator:a9da4ebd5c297750161a175e50a8e5e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade230b18823fd257ec2d1abae9c08be8" id="r_ade230b18823fd257ec2d1abae9c08be8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade230b18823fd257ec2d1abae9c08be8">modifier</a> (array $data)</td></tr>
+<tr class="separator:ade230b18823fd257ec2d1abae9c08be8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c132256683c26e5acb7c36cb1ac3444" id="r_a3c132256683c26e5acb7c36cb1ac3444"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c132256683c26e5acb7c36cb1ac3444">supprimer</a> (int $id)</td></tr>
+<tr class="separator:a3c132256683c26e5acb7c36cb1ac3444"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48d48013b7a2536dff0ae9cdda03dd7e" id="r_a48d48013b7a2536dff0ae9cdda03dd7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48d48013b7a2536dff0ae9cdda03dd7e">find</a> (?int $id)</td></tr>
+<tr class="separator:a48d48013b7a2536dff0ae9cdda03dd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5094aa92cda0504aa7484dd4c5d89230" id="r_a5094aa92cda0504aa7484dd4c5d89230"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5094aa92cda0504aa7484dd4c5d89230">findAssoc</a> (?int $id)</td></tr>
+<tr class="separator:a5094aa92cda0504aa7484dd4c5d89230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f393c5c8e87d6e0f49ec2281b5153de" id="r_a5f393c5c8e87d6e0f49ec2281b5153de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f393c5c8e87d6e0f49ec2281b5153de">findByGuide</a> (?int $id)</td></tr>
+<tr class="memdesc:a5f393c5c8e87d6e0f49ec2281b5153de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère toutes les excursions associées au guide dont l'ID est fourni.  <br /></td></tr>
+<tr class="separator:a5f393c5c8e87d6e0f49ec2281b5153de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5053ce1adce64f9aee268562f52df48f" id="r_a5053ce1adce64f9aee268562f52df48f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5053ce1adce64f9aee268562f52df48f">findPublic</a> (?int $id)</td></tr>
+<tr class="memdesc:a5053ce1adce64f9aee268562f52df48f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère toutes les excursions publiques ou associées au guide dont l'ID est fourni.  <br /></td></tr>
+<tr class="separator:a5053ce1adce64f9aee268562f52df48f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a584ce41683cc8dfa9f035be21416074d" id="r_a584ce41683cc8dfa9f035be21416074d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a584ce41683cc8dfa9f035be21416074d">findAllAssoc</a> ()</td></tr>
+<tr class="separator:a584ce41683cc8dfa9f035be21416074d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b4bed00dfbadc5baec818e940fb0898" id="r_a3b4bed00dfbadc5baec818e940fb0898"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b4bed00dfbadc5baec818e940fb0898">hydrate</a> (array $tableauAssoc)</td></tr>
+<tr class="separator:a3b4bed00dfbadc5baec818e940fb0898"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e83b7ce7104b79f8ca3cd9a20bad5e4" id="r_a1e83b7ce7104b79f8ca3cd9a20bad5e4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e83b7ce7104b79f8ca3cd9a20bad5e4">hydrateAll</a> (array $tableauAssoc)</td></tr>
+<tr class="separator:a1e83b7ce7104b79f8ca3cd9a20bad5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73a1b0348919b6755e4f69dcc70eba64" id="r_a73a1b0348919b6755e4f69dcc70eba64"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73a1b0348919b6755e4f69dcc70eba64">findAll</a> ()</td></tr>
+<tr class="separator:a73a1b0348919b6755e4f69dcc70eba64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a785cb2de59ac029049a1df2e7a2eb2e8" id="r_a785cb2de59ac029049a1df2e7a2eb2e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a785cb2de59ac029049a1df2e7a2eb2e8">findAllWithExistingEngagement</a> ()</td></tr>
+<tr class="memdesc:a785cb2de59ac029049a1df2e7a2eb2e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère toutes les excursions, triées par date de visite, avec des engagements existants.  <br /></td></tr>
+<tr class="separator:a785cb2de59ac029049a1df2e7a2eb2e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><p>Classe d'accès aux données (DAO) pour les excursions. </p>
+</div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
+<a id="a1af66732d88f0cf13159e9a0475fcbf3" name="a1af66732d88f0cf13159e9a0475fcbf3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1af66732d88f0cf13159e9a0475fcbf3">&#9670;&#160;</a></span>__construct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__construct </td>
+          <td>(</td>
+          <td class="paramtype">PDO</td>          <td class="paramname"><span class="paramname"><em>$pdo</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Constructeur de la classe <a class="el" href="class_excursion_dao.html" title="Classe d&#39;accès aux données (DAO) pour les excursions.">ExcursionDao</a>.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">PDO&#160;|&#160;null</td><td class="paramname">$pdo</td><td>Objet PDO pour la connexion à la base de données. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentation des fonctions membres</h2>
+<a id="a9da4ebd5c297750161a175e50a8e5e36" name="a9da4ebd5c297750161a175e50a8e5e36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9da4ebd5c297750161a175e50a8e5e36">&#9670;&#160;</a></span>creer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">creer </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$data</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Crée une nouvelle excursion dans la base de données.</p>
+<p>Cette méthode insère les informations d'une excursion dans la table <code>excursion</code>. Elle retourne un objet <code><a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a></code> avec les données de la nouvelle excursion, ou null en cas d'échec.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$data</td><td>Données de l'excursion à insérer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Excursion|null L'objet <a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a> créé ou null si l'insertion échoue. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">PDOException</td><td>Si une erreur de base de données se produit. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a48d48013b7a2536dff0ae9cdda03dd7e" name="a48d48013b7a2536dff0ae9cdda03dd7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48d48013b7a2536dff0ae9cdda03dd7e">&#9670;&#160;</a></span>find()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">find </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Récupère une excursion par son ID.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$id</td><td>L'ID de l'excursion à récupérer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Excursion|null L'objet <a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a> correspondant à l'ID, ou null si l'excursion n'existe pas. </dd></dl>
+
+</div>
+</div>
+<a id="a73a1b0348919b6755e4f69dcc70eba64" name="a73a1b0348919b6755e4f69dcc70eba64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73a1b0348919b6755e4f69dcc70eba64">&#9670;&#160;</a></span>findAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findAll </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Récupère toutes les excursions, triées par date de visite.</p>
+<dl class="section return"><dt>Renvoie</dt><dd>array Tableau des excursions triées. </dd></dl>
+
+</div>
+</div>
+<a id="a584ce41683cc8dfa9f035be21416074d" name="a584ce41683cc8dfa9f035be21416074d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a584ce41683cc8dfa9f035be21416074d">&#9670;&#160;</a></span>findAllAssoc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findAllAssoc </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Récupère toutes les excursions sous forme de tableau associatif.</p>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null Un tableau de toutes les excursions ou null si aucune excursion n'est trouvée. </dd></dl>
+
+</div>
+</div>
+<a id="a785cb2de59ac029049a1df2e7a2eb2e8" name="a785cb2de59ac029049a1df2e7a2eb2e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a785cb2de59ac029049a1df2e7a2eb2e8">&#9670;&#160;</a></span>findAllWithExistingEngagement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findAllWithExistingEngagement </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère toutes les excursions, triées par date de visite, avec des engagements existants. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>array </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">DateMalformedStringException</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5094aa92cda0504aa7484dd4c5d89230" name="a5094aa92cda0504aa7484dd4c5d89230"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5094aa92cda0504aa7484dd4c5d89230">&#9670;&#160;</a></span>findAssoc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findAssoc </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Récupère une excursion par son ID et la retourne sous forme de tableau associatif.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$id</td><td>L'ID de l'excursion. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Excursion|null L'objet <a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a> ou null si l'ID est introuvable. </dd></dl>
+
+</div>
+</div>
+<a id="a5f393c5c8e87d6e0f49ec2281b5153de" name="a5f393c5c8e87d6e0f49ec2281b5153de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f393c5c8e87d6e0f49ec2281b5153de">&#9670;&#160;</a></span>findByGuide()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findByGuide </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère toutes les excursions associées au guide dont l'ID est fourni. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$id</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null </dd></dl>
+
+</div>
+</div>
+<a id="a5053ce1adce64f9aee268562f52df48f" name="a5053ce1adce64f9aee268562f52df48f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5053ce1adce64f9aee268562f52df48f">&#9670;&#160;</a></span>findPublic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findPublic </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère toutes les excursions publiques ou associées au guide dont l'ID est fourni. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$id</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null </dd></dl>
+
+</div>
+</div>
+<a id="a3b4bed00dfbadc5baec818e940fb0898" name="a3b4bed00dfbadc5baec818e940fb0898"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b4bed00dfbadc5baec818e940fb0898">&#9670;&#160;</a></span>hydrate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">hydrate </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$tableauAssoc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Crée une instance de <a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a> à partir des données récupérées.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$tableauAssoc</td><td>Tableau associatif contenant les données de l'excursion. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a> L'objet <a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a> créé. </dd></dl>
+
+</div>
+</div>
+<a id="a1e83b7ce7104b79f8ca3cd9a20bad5e4" name="a1e83b7ce7104b79f8ca3cd9a20bad5e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e83b7ce7104b79f8ca3cd9a20bad5e4">&#9670;&#160;</a></span>hydrateAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">hydrateAll </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$tableauAssoc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Hydrate une liste d'instances de <a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a> à partir d'un tableau associatif.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$tableauAssoc</td><td>Tableau associatif contenant les données. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Un tableau d'objets <a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a>. </dd></dl>
+
+</div>
+</div>
+<a id="ade230b18823fd257ec2d1abae9c08be8" name="ade230b18823fd257ec2d1abae9c08be8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade230b18823fd257ec2d1abae9c08be8">&#9670;&#160;</a></span>modifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">modifier </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$data</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sauvegarde une excursion existante (mise à jour dans la base de données).</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a></td><td class="paramname">$excursion</td><td>L'objet <a class="el" href="class_excursion.html" title="Représente une excursion.">Excursion</a> à sauvegarder. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool True si la mise à jour a réussi, false sinon. </dd></dl>
+
+</div>
+</div>
+<a id="a3c132256683c26e5acb7c36cb1ac3444" name="a3c132256683c26e5acb7c36cb1ac3444"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c132256683c26e5acb7c36cb1ac3444">&#9670;&#160;</a></span>supprimer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">supprimer </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Supprime une excursion en fonction de son ID.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>L'ID de l'excursion à supprimer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool True si la suppression a réussi, false sinon. </dd></dl>
+
+</div>
+</div>
+<hr/>La documentation de cette classe a été générée à partir du fichier suivant :<ul>
+<li>Book-n-Go/modeles/<b>excursion.dao.php</b></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="class_excursion_dao.html">ExcursionDao</a></li>
+    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
+  </ul>
+</div>
+</body>
+</html>
