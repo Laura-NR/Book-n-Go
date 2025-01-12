@@ -4,27 +4,16 @@ class GuideDao
 {
     private ?PDO $pdo;
 
-    /**
-     * @param PDO|null $pdo
-     */
     public function __construct(?PDO $pdo = null)
     {
         $this->pdo = $pdo;
     }
 
-
-    /**
-     * @return PDO|null
-     */
     public function getPdo(): ?PDO
     {
         return $this->pdo;
     }
 
-    /**
-     * @param PDO|null $pdo
-     * @return void
-     */
     public function setPdo(?PDO $pdo): void
     {
         $this->pdo = $pdo;
@@ -64,43 +53,11 @@ class GuideDao
     }
 
     /**
-     * @brief Trouver un guide par ID en mode associatif (retourne un tableau associatif ou null)
-     * @param int|null $id
-     * @return array|null
-     */
-    public function findAssoc(?int $id): ?array
-    {
-        $sql = "SELECT * FROM guide WHERE id = :id";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(['id' => $id]);
-        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
-        $result = $pdoStatement->fetch();
-        if (!$result) {
-            echo "Aucun guide trové avec l'id $id";
-        }
-        return $result ?: null;
-    }
-
-    /**
-     * @brief Trouver tous les guides en mode associatif (retourne un tableau de tableaux associatifs)
-     * @return array
-     */
-    public function findAllAssoc(): array
-    {
-        $sql = "SELECT * FROM guide";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute();
-        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
-        return $pdoStatement->fetchAll() ?: []; // Retourne un tableau vide si aucun résultat trouvé
-    }
-
-
-    /**
      * @brief Hydrater un guide à partir d'un tableau associatif
      * @param array $data
      * @return Guide
      */
-    public function hydrate(array $data): Guide // No need for nullable return type here
+    public function hydrate(array $data): Guide
     {
         $guide = new Guide();
         // Use setters inherited from Voyageur
@@ -110,20 +67,15 @@ class GuideDao
         $guide->setNumeroTel($data['numero_tel']);
         $guide->setMail($data['mail']);
         $guide->setMdp($data['mdp']);
-        // Guide-specific property
         $guide->setCheminCertification($data['chemin_certif']);
-        //$guide->setDerniereCo($data['derniere_co']); conversion a faire
-        return $guide;
-    }
 
-    /**
-     * @brief Hydrater un tableau de guides à partir de tableaux associatifs
-     * @param array $data
-     * @return array
-     */
-    public function hydrateAll(array $data): array
-    {
-        return array_map([$this, 'hydrate'], $data); // Utilisation de array_map pour simplifier
+        // Hydrater les nouveaux attributs (tentatives échouées, date de dernier échec, statut compte)
+        $guide->setTentativesEchouees($data['tentatives_echouees']);
+        $guide->setDateDernierEchec($data['date_dernier_echec'] ? new DateTime($data['date_dernier_echec']) : null);
+        $guide->setStatutCompte($data['statut_compte']);
+
+        // Retourner l'objet Guide hydraté
+        return $guide;
     }
 
     /**
@@ -133,20 +85,16 @@ class GuideDao
      */
     public function creer(Guide $guide): bool
     {
-        // Requête SQL incluant le champ 'derniere_co'
-        $sql = "INSERT INTO guide (nom, prenom, numero_tel, mail, mdp, chemin_certif, derniere_co) 
-                VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :chemin_certif, :derniere_co)";
-        
+        // Requête SQL incluant tous les nouveaux champs
+        $sql = "INSERT INTO guide (nom, prenom, numero_tel, mail, mdp, chemin_certif, tentatives_echouees, date_dernier_echec, statut_compte) 
+                VALUES (:nom, :prenom, :numero_tel, :mail, :mdp, :chemin_certif, :tentatives_echouees, :date_dernier_echec, :statut_compte)";
+
         $pdoStatement = $this->pdo->prepare($sql);
-        
-        // Vérifier si la dernière connexion est définie et convertir au format voulu
-        $derniereCo = $guide->getDerniereCo();
-        if ($derniereCo !== null) {
-            $derniereCo = $derniereCo->format("Y-m-d");  // Format de la date
-        } else {
-            $derniereCo = null; // Si la date n'est pas définie, mettre à null
-        }
-    
+
+        // Vérification et conversion de la date du dernier échec si elle est définie
+        $dateDernierEchec = $guide->getDateDernierEchec();
+        $dateDernierEchec = $dateDernierEchec ? $dateDernierEchec->format("Y-m-d") : null;
+
         // Exécution de la requête avec les paramètres
         return $pdoStatement->execute([
             'nom' => $guide->getNom(),
@@ -155,10 +103,11 @@ class GuideDao
             'mail' => $guide->getMail(),
             'mdp' => $guide->getMdp(),
             'chemin_certif' => $guide->getCheminCertification(),
-            'derniere_co' => $derniereCo,  // Paramètre de la date de dernière connexion
+            'tentatives_echouees' => $guide->getTentativesEchouees(),
+            'date_dernier_echec' => $dateDernierEchec,
+            'statut_compte' => $guide->getStatutCompte(),
         ]);
     }
-
 
     /**
      * @brief Mettre à jour un guide dans la base de données
@@ -167,11 +116,17 @@ class GuideDao
      */
     public function maj(Guide $guide): bool
     {
+        // Requête SQL incluant les nouveaux champs
         $sql = "UPDATE guide SET nom = :nom, prenom = :prenom, numero_tel = :numero_tel, 
-                mail = :mail, chemin_certif = :chemin_certif WHERE id = :id";
+                mail = :mail, chemin_certif = :chemin_certif, tentatives_echouees = :tentatives_echouees, 
+                date_dernier_echec = :date_dernier_echec, statut_compte = :statut_compte WHERE id = :id";
 
         // Préparation de la requête
         $pdoStatement = $this->pdo->prepare($sql);
+
+        // Conversion de la date du dernier échec
+        $dateDernierEchec = $guide->getDateDernierEchec();
+        $dateDernierEchec = $dateDernierEchec ? $dateDernierEchec->format("Y-m-d") : null;
 
         // Paramètres à exécuter
         $modifications = [
@@ -180,12 +135,14 @@ class GuideDao
             'prenom' => $guide->getPrenom(),
             'numero_tel' => $guide->getNumeroTel(),
             'mail' => $guide->getMail(),
-            'chemin_certif' => "/test/test.png"/*$guide->getCheminCertification()*/ //la certif ne peux pas etre modifier
+            'chemin_certif' => $guide->getCheminCertification(),
+            'tentatives_echouees' => $guide->getTentativesEchouees(),
+            'date_dernier_echec' => $dateDernierEchec,
+            'statut_compte' => $guide->getStatutCompte(),
         ];
 
         // Exécution de la requête
         return $pdoStatement->execute($modifications);
-
     }
 
     /**
@@ -250,4 +207,22 @@ class GuideDao
             'id' => $guide->getId()
         ]);
     }
+
+    public function majStatutCompte(Guide $guide): void {
+        $stmt = $this->pdo->prepare("
+        UPDATE guide 
+        SET tentativesEchouees = :tentatives_echouees,
+            dateDernierEchec = :date_dernier_echec,
+            statutCompte = :statut_compte
+        WHERE id = :id
+    ");
+        $stmt->execute([
+            'tentatives_echouees' => $guide->getTentativesEchouees(),
+            'date_dernier_echec' => $guide->getDateDernierEchec()?->format('Y-m-d H:i:s'),
+            'statut_compte' => $guide->getStatutCompte(),
+            'id' => $guide->getId(),
+        ]);
+    }
+
 }
+?>

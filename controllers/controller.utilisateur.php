@@ -60,28 +60,53 @@ class ControllerUtilisateur extends BaseController {
          *
          * @return bool true si la connexion est possible, false sinon
          */
+    /**
+     * Vérifie si la connexion est possible en fonction des données de l'utilisateur
+     *
+     * @return bool true si la connexion est possible, false sinon
+     */
     public function connexion(): bool
     {
-        // Assure-toi que la session est démarrée en haut du fichier, avant toute sortie
+        // Assurer que la session est démarrée
         if (session_status() == PHP_SESSION_NONE) {
-            session_start(); // Démarre la session si elle n'est pas déjà commencée
+            session_start();
         }
-
+        // Récupérer les données du formulaire
         $email = $_POST['mail'];
         $motDePasse = $_POST['mdp'];
 
-
+        // Valider les données du formulaire
         if ($this->validator->valider($_POST)) {
             $utilisateurDao = new UtilisateurDao($this->getPdo());
-            // Vérification de l'utilisateur
             $utilisateur = $utilisateurDao->findByEmail($email);
+            //var_dump($utilisateur);
+
             if ($utilisateur) {
+                // Gestion des tentatives de connexion et du statut du compte
+                if ($utilisateur->getStatutCompte() === Voyageur::STATUT_DESACTIVE) {
+                    if (!$utilisateur->delaiAttenteEstEcoule()) {
+                        $tempsRestant = $utilisateur->tempsRestantAvantReactivationCompte();
+                        if ($tempsRestant === 0) {
+                            $utilisateur->setStatutCompte(Voyageur::STATUT_ACTIF); // Activer le compte
+                            $utilisateurDao->majStatutCompte($utilisateur);
+                        }
+                        $messageErreur = "Votre compte est temporairement désactivé. Veuillez réessayer dans " . $tempsRestant . " secondes.";
+                        $_SESSION['erreurs_connexion'][] = $messageErreur;
+                        $this->redirect('utilisateur', 'afficherConnexion', ['connexion' => false]);
+                        return false;
+                    } else {
+                        $utilisateur->setStatutCompte(Voyageur::STATUT_ACTIF); // Activer le compte
+                        $utilisateurDao->majStatutCompte($utilisateur);
+                    }
+                }
                 if (password_verify($motDePasse, $utilisateur->getMdp())) {
+                    // Connexion réussie
                     $_SESSION['role'] = $utilisateur instanceof Guide ? 'guide' : 'voyageur';
                     $_SESSION['user_id'] = $utilisateur->getId();
-                    $utilisateur->setDerniereCo(new DateTime());
+                    $utilisateur->reinitialiserTentativesConnexions();
 
-                    // Effectuer la mise à jour dans la base de données selon le rôle
+
+                    //mettre à jour dernière connexion
                     if ($utilisateur instanceof Voyageur) {
                         $voyageurDao = new VoyageurDao($this->getPdo());
                         $voyageurDao->majDerniereCo($utilisateur);
@@ -93,36 +118,40 @@ class ControllerUtilisateur extends BaseController {
                     $_SESSION['messages_alertes'][] = ['type' => 'success', 'message' => 'Vous êtes bien connecté à la page.'];
 
                     // Redirection après succès de la connexion
+                    $utilisateurDao->majStatutCompte($utilisateur);
+
+                    // Rediriger après succès de la connexion
                     $this->redirect('', '', ['connexion' => true]);
                     ob_end_flush();
                     return true;
                 } else {
-                    // Si la vérification du mot de passe échoue, affiche un message d'erreur dans l'URL
-                    $_SESSION['erreurs_connexion'][] = 'Mot de passe érroné';
+                    // Mot de passe incorrect
+                    //var_dump($utilisateur);
+                    $utilisateur->gererEchecConnexion();
+                    //var_dump($utilisateur);
+                    // Mettre à jour le statut du compte (actif/désactivé et tentatives)
+                    $utilisateurDao->majStatutCompte($utilisateur);
+
+                    $_SESSION['erreurs_connexion'][] = 'Mot de passe erroné.';
                     $this->redirect('utilisateur', 'afficherConnexion', ['connexion' => false]);
                     ob_end_flush();
                     return false;
                 }
             } else {
-                // Si l'utilisateur n'est pas trouvé
-                $_SESSION['erreurs_connexion'][] = 'Compte inexistant ou addresse érronée';
+                $_SESSION['erreurs_connexion'][] = 'Compte inexistant ou adresse e-mail incorrecte.';
                 $this->redirect('utilisateur', 'afficherConnexion', ['connexion' => false]);
                 ob_end_flush();
                 return false;
             }
         } else {
-            $donnees = $_POST;
-            $erreurs = $this->validator->getMessagesErreurs();
-            //var_dump($erreurs);
-            $_SESSION['erreurs_connexion'] = $erreurs;
-            //var_dump($_SESSION['erreurs_commentaire']);
-            $_SESSION['donnees_connexion'] = $donnees;
+            // Données invalides
+            $_SESSION['erreurs_connexion'] = $this->validator->getMessagesErreurs();
+            $_SESSION['donnees_connexion'] = $_POST;
             $this->redirect('utilisateur', 'afficherConnexion', ['connexion' => false]);
             ob_end_flush();
             return false;
         }
     }
-    
 
 
     /**

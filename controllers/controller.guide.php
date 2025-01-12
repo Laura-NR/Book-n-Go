@@ -48,9 +48,7 @@ class ControllerGuide extends ControllerVoyageur
     {
         $postData = $this->getPost();
         $fileData = $_FILES;
-    
-        //var_dump($fileData);
-    
+
         if (
             empty($postData) ||
             empty($postData['nom']) ||
@@ -63,14 +61,10 @@ class ControllerGuide extends ControllerVoyageur
         ) {
             echo "Données manquantes pour créer le guide.";
             return false;
-        }
-        else {
+        } else {
             $data = array_merge($postData, $fileData);
         }
-        // Extraire uniquement le nom du fichier (pas le chemin complet)
-        //var_dump($postData);
-        //var_dump($data);
-        //var_dump($this->validator->valider($postData));
+
         if ($this->validator->valider($data)) {
             $nomFichierCertif = basename($data['chemin_certif']['name']);
             try {
@@ -82,6 +76,11 @@ class ControllerGuide extends ControllerVoyageur
                 $guide->setMdp(password_hash($data['mdp'], PASSWORD_DEFAULT));
                 $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
                 $guide->setDerniereCo(new DateTime());
+
+                // *** Initialisation des nouveaux champs lors de la création ***
+                $guide->setTentativesEchouees(0); // Initialiser à 0 lors de la création
+                $guide->setStatutCompte('actif'); // Statut actif par défaut
+                $guide->setDateDernierEchec(null); // Pas d'échec initial
 
                 $guideDao = new GuideDao($this->getPdo());
                 if ($guideDao->creer($guide)) {
@@ -95,22 +94,16 @@ class ControllerGuide extends ControllerVoyageur
                 echo "Erreur lors de l'ajout du guide : " . $e->getMessage();
             }
         }
-//        débuggage
-//        $erreurs = $this->validator->getMessagesErreurs();
-//        foreach ($erreurs as $erreur) {
-//            echo $erreur . "<br>";
-//        }
+
         $donnees = $data;
         $erreurs = $this->validator->getMessagesErreurs();
-        //var_dump($erreurs);
         $_SESSION['erreurs_inscription'] = $erreurs;
-        //var_dump($_SESSION['erreurs_commentaire']);
         $_SESSION['donnees_inscription'] = $donnees;
 
-        //var_dump($this->validator->valider($data));
         echo "Données invalides pour créer le guide.";
         return false;
     }
+
 
 
     /**
@@ -156,27 +149,33 @@ class ControllerGuide extends ControllerVoyageur
      *
      * @return void
      */
+    /**
+     * @brief Modifier les informations d'un guide existant.
+     *
+     * Cette méthode modifie les informations d'un guide dans la base de données en fonction de son ID.
+     * Si la modification échoue, un message d'erreur est affiché.
+     *
+     * @param int $id L'ID du guide à modifier.
+     *
+     * @return void
+     */
     public function modifierGuide(int $id): void
     {
         try {
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->find($id);
             //var_dump($guide);
-    
+
             if (!$guide) {
                 echo "Erreur : guide non trouvé.";
                 return;
             }
-    
+
             // Vérification de la soumission du formulaire de modification
-            if (/*isset($_POST['nom']) &&*/ isset($_POST['action']) && $_POST['action'] === 'modifier') {
+            if (isset($_POST['action']) && $_POST['action'] === 'modifier') {
                 //var_dump($_POST);
                 $postData = $this->getPost();
-                
 
-
-
-                
                 if (!empty($postData)) {
                     // Mise à jour des données du guide
 
@@ -184,8 +183,24 @@ class ControllerGuide extends ControllerVoyageur
                     if (isset($postData['prenom'])) $guide->setPrenom($postData['prenom']);
                     if (isset($postData['numero_tel'])) $guide->setNumeroTel($postData['numero_tel']);
                     if (isset($postData['mail'])) $guide->setMail($postData['mail']);
-                    //var_dump($guide);
-                    
+
+                    // *** Modifications pour intégrer les nouveaux champs ***
+
+                    // Mise à jour du nombre de tentatives échouées
+                    if (isset($postData['tentatives_echouees'])) {
+                        $guide->setTentativesEchouees((int)$postData['tentatives_echouees']);
+                    }
+
+                    // Mise à jour du statut du compte
+                    if (isset($postData['statut_compte'])) {
+                        $guide->setStatutCompte($postData['statut_compte']);
+                    }
+
+                    // Mise à jour de la date du dernier échec
+                    if (isset($postData['date_dernier_echec'])) {
+                        $guide->setDateDernierEchec(new DateTime($postData['date_dernier_echec']));
+                    }
+
                     // Sauvegarde dans la base de données
                     if ($guideDao->maj($guide)) {
                         // Stocke une variable de confirmation dans la session
@@ -200,37 +215,6 @@ class ControllerGuide extends ControllerVoyageur
             }
         } catch (Exception $e) {
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
-        }
-    }
-        
-
-    // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
-    public function afficher(int $id = null): void
-    {
-        try {
-            $id = $id ?? (isset($_GET['id']) ? (int) $_GET['id'] : null);
-
-            if ($id === null || $id <= 0) {
-                throw new Exception("ID invalide ou non fourni.");
-            }
-
-            $guideDao = new GuideDao($this->getPdo());
-            $guide = $guideDao->findAssoc($id);
-
-            if (!$guide) {
-                echo "Guide avec id $id pas trouvé.";
-                return;
-            }
-
-            $editMode = isset($_GET['editMode']) && $_GET['editMode'] === 'true';
-
-            echo $this->getTwig()->render('pageInformationsGuide.html.twig', [
-                'guide' => $guide,
-                'menu' => "guide_detail",
-                'editMode' => $editMode, // Mode d'édition
-            ]);
-        } catch (Exception $e) {
-            echo "Erreur lors de l'affichage du guide : " . $e->getMessage();
         }
     }
 
@@ -273,3 +257,4 @@ class ControllerGuide extends ControllerVoyageur
         echo $this->getTwig()->render('planning_guide.html.twig');
     }
 }
+?>

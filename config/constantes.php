@@ -10,3 +10,5 @@ define('WEBSITE_TITLE', 'Book\'n\'Go');
 define('WEBSITE_VERSION', '0.2');
 define('WEBSITE_DESCRIPTION', 'Book\'n\'Go : application de carnets de voyage');
 define('WEBSITE_LANGUAGE', 'fr');
+
+
