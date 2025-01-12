@@ -13,6 +13,12 @@ class UtilisateurDao {
      */
     public function findByEmail(string $email) {
         try {
+            // Nettoyage et validation de l'email
+            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return null;  // Retourne null si l'email est invalide
+            }
+
             // Chercher d'abord dans les guides
             $stmt = $this->pdo->prepare("SELECT * FROM guide WHERE mail = :mail");
             $stmt->bindValue(':mail', $email);
@@ -20,13 +26,13 @@ class UtilisateurDao {
             $guide = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($guide) {
+                // Crée un objet Guide avec de nouveaux champs si nécessaire
                 $retour = new Guide(
                     $guide['id'], $guide['nom'], $guide['prenom'], $guide['numero_tel'],
-                    $guide['mail'], $guide['mdp'], $guide['chemin_certif']
+                    $guide['mail'], $guide['mdp'], $guide['chemin_certif'],
+                    $guide['statut_compte'], $guide['tentatives_echouees'] // Champs supplémentaires
                 );
-                //var_dump($retour);
                 return $retour;
-                //exit;
             }
 
             // Chercher dans les voyageurs
@@ -44,10 +50,12 @@ class UtilisateurDao {
 
             return null;
         } catch (PDOException $e) {
-            //echo "Erreur lors de la recherche : " . $e->getMessage();
+            // Log l'erreur ou retourne un message détaillé
+            error_log("Erreur lors de la recherche par email: " . $e->getMessage());
             return null;
         }
     }
+
 }
 ?>
 

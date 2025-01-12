@@ -37,10 +37,11 @@ class Utilisateur {
      * @param string|null $mail
      * @param string|null $mdp
      * @param string|null $role
+     * @param string|null $statut;
      */
     public function __construct(?int    $id = null, ?string $nom = null, ?string $prenom = null,
                                 ?string $numeroTel = null, ?string $mail = null, ?string $mdp = null,
-                                ?string $role = null) {
+                                ?string $role = null, ?string $statut = null) {
         $this->id = $id;
         $this->nom = $nom;
         $this->prenom = $prenom;
@@ -48,6 +49,8 @@ class Utilisateur {
         $this->mail = $mail;
         $this->mdp = $mdp;
         $this->role = $role;
+        $this->statut = $statut;
+
     }
 
     /**
@@ -106,5 +109,17 @@ class Utilisateur {
     public function setRole(string $role): void {
         $this->role = $role;
     }
+
+    /**
+     * @var string|null
+     */
+
+// Ajout d'un getter pour le statut
+    public function getStatut(): ?string {
+        return $this->statut;
+    }
+
+
+
 }
 ?>
