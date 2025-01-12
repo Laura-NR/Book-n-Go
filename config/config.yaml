@@ -1,6 +1,6 @@
 database: # Informations de connexion à la BDD
   host: "localhost"
-  name: "gdbelascain_bis"
+  name: "gdbelascain_pro"
   user: "root"
   pass: ""
 
