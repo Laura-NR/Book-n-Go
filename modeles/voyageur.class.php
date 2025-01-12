@@ -1,10 +1,10 @@
 <?php
 class Voyageur {
     // Constantes pour les statuts de compte
-    private const MAX_TENTATIVES = 3;
-    private const DELAI_REACTIVATION = '+5 minutes';
-    private const STATUT_ACTIF = 'actif';
-    private const STATUT_DESACTIVE = 'désactivé';
+    public const MAX_TENTATIVES = 3;
+    public const DELAI_REACTIVATION = '+1 minutes';
+    public const STATUT_ACTIF = 'actif';
+    public const STATUT_DESACTIVE = 'désactivé';
 
     private ?int $id;
     private ?string $nom;
@@ -82,11 +82,12 @@ class Voyageur {
 
     // Gère un échec de connexion
     public function gererEchecConnexion(): void {
-        $this->tentatives_echouees++;
+        $this->tentatives_echouees += 1;
         $this->date_dernier_echec = new DateTime();
 
         if ($this->tentatives_echouees >= self::MAX_TENTATIVES) {
             $this->statut_compte = self::STATUT_DESACTIVE;
+            $this->tentatives_echouees = 0;
         }
     }
 
@@ -101,9 +102,8 @@ class Voyageur {
         if (!$this->date_dernier_echec) {
             return null;
         }
-
         $delai = (new DateTime())->getTimestamp() - $this->date_dernier_echec->getTimestamp();
-        return ($delai >= 15 * 60) ? null : 15 * 60 - $delai; // Temps restant en secondes
+        return ($delai >= 1 * 60) ? null : 1 * 60 - $delai; // Temps restant en secondes
     }
 
     // Réactive le compte si le délai d'attente est écoulé

@@ -116,82 +116,88 @@ class VoyageurDao {
 
     // Mettre à jour la dernière connexion d'un voyageur
     public function majDerniereCo(Voyageur $voyageur): bool {
-        $nouvelleCo = $voyageur->getDerniereCo()->format("Y-m-d");
-        $sql = "UPDATE voyageur 
-                SET derniere_co = :co 
-                WHERE id = :id";
-        $requete = $this->pdo->prepare($sql);
-        return $requete->execute([
-            'co' => $nouvelleCo,
-            'id' => $voyageur->getId()
-        ]);
+        $derniereCo = $voyageur->getDerniereCo();
+        if ($derniereCo instanceof DateTime) {
+            $nouvelleCo = $voyageur->getDerniereCo()->format("Y-m-d");
+            $sql = "UPDATE voyageur 
+                    SET derniere_co = :co 
+                    WHERE id = :id";
+            $requete = $this->pdo->prepare($sql);
+            return $requete->execute([
+                'co' => $nouvelleCo,
+                'id' => $voyageur->getId()
+            ]);
+        } else {
+            error_log("Error in majDerniereCo: derniere_co is null for Voyageur ID: " . $voyageur->getId());
+            return false;
+        }
     }
 
-    //Incremente le nombre de tentative d'un voyageur
-    public function incrementeTentatives(Voyageur $voyageur): void {
-        // Incrémente les tentatives échouées dans l'objet avant mise à jour en base de données
-        $tentativesActuelles = $voyageur->getTentativesEchouees();
-        $voyageur->setTentativesEchouees($tentativesActuelles + 1);
-
-        // Prépare et exécute la requête SQL
-        $stmt = $this->pdo->prepare("
-        UPDATE voyageur
-        SET tentatives_echouees = :tentatives_echouees
-        WHERE id = :id
-    ");
-
-        $stmt->execute([
-            'tentatives_echouees' => $voyageur->getTentativesEchouees(),
-            'id' => $voyageur->getId()
-        ]);
-    }
+//    //Incremente le nombre de tentative d'un voyageur
+//    public function incrementeTentatives(Voyageur $voyageur): void {
+//        // Incrémente les tentatives échouées dans l'objet avant mise à jour en base de données
+//        $tentativesActuelles = $voyageur->getTentativesEchouees();
+//        $voyageur->setTentativesEchouees($tentativesActuelles + 1);
+//
+//        // Prépare et exécute la requête SQL
+//        $stmt = $this->pdo->prepare("
+//        UPDATE voyageur
+//        SET tentatives_echouees = :tentatives_echouees
+//        WHERE id = :id
+//    ");
+//
+//        $stmt->execute([
+//            'tentatives_echouees' => $voyageur->getTentativesEchouees(),
+//            'id' => $voyageur->getId()
+//        ]);
+//    }
 
 
 
 
     // Met à jour le statut du compte d'un voyageur
-    public function majStatutCompte(Voyageur $voyageur): void {
-        $stmt = $this->pdo->prepare("
-            UPDATE voyageur
-            SET tentatives_echouees = :tentatives_echouees,
-                date_dernier_echec = :date_dernier_echec,
-                statut_compte = :statut_compte
-            WHERE id = :id
-        ");
-
-        $stmt->execute([
-            'tentatives_echouees' => $voyageur->getTentativesEchouees(),
-            'date_dernier_echec' => $voyageur->getDateDernierEchec() ? $voyageur->getDateDernierEchec()->format('Y-m-d H:i:s') : null,
-            'statut_compte' => $voyageur->getStatutCompte(),
-            'id' => $voyageur->getId()
-        ]);
-
-    }
-
-    // Calculer le temps restant avant réactivation du compte
-    public function tempsRestantAvantReactivationCompte(Voyageur $voyageur): ?DateInterval {
-        $dateDernierEchec = $voyageur->getDateDernierEchec();
-        if (!$dateDernierEchec) {
-            return null;
-        }
-
-        $delaiReactivation = clone $dateDernierEchec;
-        $delaiReactivation->modify('+15 minutes');
-
-        $maintenant = new DateTime();
-        if ($maintenant >= $delaiReactivation) {
-            return null; // Pas de temps restant
-        }
-
-        return $delaiReactivation->diff($maintenant);
-    }
-
-    // Réinitialiser les tentatives échouées d'un voyageur
-    public function reinitialiserTentatives(Voyageur $voyageur): bool {
-        $sql = "UPDATE voyageur SET tentatives_echouees = 0 WHERE id = :id";
-        $requete = $this->pdo->prepare($sql);
-        return $requete->execute(['id' => $voyageur->getId()]);
-    }
+//    public function majStatutCompte(Voyageur $voyageur): void {
+//        $stmt = $this->pdo->prepare("
+//            UPDATE voyageur
+//            SET tentatives_echouees = :tentatives_echouees,
+//                date_dernier_echec = :date_dernier_echec,
+//                statut_compte = :statut_compte
+//            WHERE id = :id
+//        ");
+//
+//        $stmt->execute([
+//            'tentatives_echouees' => $voyageur->getTentativesEchouees(),
+//            'date_dernier_echec' => $voyageur->getDateDernierEchec() ? $voyageur->getDateDernierEchec()->format('Y-m-d H:i:s') : null,
+//            'statut_compte' => $voyageur->getStatutCompte(),
+//            'id' => $voyageur->getId()
+//        ]);
+//
+//    }
+//
+//    // Calculer le temps restant avant réactivation du compte
+//    public function tempsRestantAvantReactivationCompte(Voyageur $voyageur): ?DateInterval {
+//        $dateDernierEchec = $voyageur->getDateDernierEchec();
+//        if (!$dateDernierEchec) {
+//            return null;
+//        }
+//
+//        $delaiReactivation = clone $dateDernierEchec;
+//        $delaiReactivation->modify('+15 minutes');
+//
+//        $maintenant = new DateTime();
+//        if ($maintenant >= $delaiReactivation) {
+//            return null; // Pas de temps restant
+//        }
+//
+//        return $delaiReactivation->diff($maintenant);
+//    }
+//
+//    // Réinitialiser les tentatives échouées d'un voyageur
+//    public function reinitialiserTentatives(Voyageur $voyageur): bool {
+//        $sql = "UPDATE voyageur SET tentatives_echouees = 0 WHERE id = :id";
+//        $requete = $this->pdo->prepare($sql);
+//        return $requete->execute(['id' => $voyageur->getId()]);
+//    }
 
 }
 ?>
