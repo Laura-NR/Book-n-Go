@@ -10,7 +10,7 @@ class ControllerCarnetVoyage extends BaseController
         parent::__construct($twig, $loader);
     }
 
-    //redéfinition de call afin que l'index appelle la methode appropriée avec son paramètre id
+
     public function call($methode): mixed
     {
         if (method_exists($this, $methode)) {
@@ -26,7 +26,15 @@ class ControllerCarnetVoyage extends BaseController
         }
     }
 
-// Liste tous les carnets
+
+    /**
+     * Liste tous les carnets de voyage.
+     *
+     * Cette méthode charge le template "carnet_voyage.html.twig" et l'affiche avec les données des carnets de voyage.
+     * Les carnets sont récupérés via la méthode "findAll" de la classe "CarnetVoyageDAO".
+     *
+     * @return void
+     */
     public function lister(): void
     {
         $carnetDao = new CarnetVoyageDAO($this->getPdo());
@@ -41,8 +49,17 @@ class ControllerCarnetVoyage extends BaseController
         ));
     }
 
-    //Créer un carnet de voyage par récupération des informations du $_POST
-    //Validation à ajouter !
+
+
+    /**
+     * Crée un nouveau carnet de voyage.
+     *
+     * Cette méthode traite le formulaire de création de carnet et insert le carnet dans la base de données.
+     * Si le formulaire est envoyé avec des données valides, le carnet est ajouté via la méthode "inserer" de la classe "CarnetVoyageDAO".
+     * Si le formulaire n'est pas envoyé, le formulaire de création de carnet est affiché.
+     *
+     * @return void
+     */
     public function creer(): void
     {
         if (!empty($_POST)) {
@@ -78,8 +95,16 @@ class ControllerCarnetVoyage extends BaseController
         }
     }
 
-    //Spécifique au dashboard
-    //Liste tous les carnets d'un voyageur spécifique
+
+    /**
+     * Lister les carnets de voyage appartenant à un voyageur.
+     *
+     * Cette méthode charge le template "liste_carnets_dashboard.html.twig" et l'affiche avec les carnets de voyage correspondant au voyageur d'ID $idVoyageur.
+     * Les carnets sont récupérés via la méthode "findAllByIdVoyageur" de la classe "CarnetVoyageDAO".
+     *
+     * @param int $idVoyageur ID du voyageur
+     * @return void
+     */
     public function listerParVoyageur(int $idVoyageur): void
     {
         $carnetDao = new CarnetVoyageDAO($this->getPdo());
@@ -94,21 +119,3 @@ class ControllerCarnetVoyage extends BaseController
         ));
     }
 }
-
-//    public function afficher($id): void
-//    {
-//        $carnetDao = new CarnetVoyageDAO($this->getPdo());
-//        // On récupère un carnet par son ID
-//        $carnet = $carnetDao->find($id);
-//
-//        if ($carnet) {
-//            // Chargement du template pour afficher un carnet
-//            $template = $this->getTwig()->load('carnets_detail.html.twig');
-//            echo $template->render(array(
-//                'carnet' => $carnet,
-//            ));
-//        } else {
-//            // Si le carnet n'existe pas, afficher une erreur ou rediriger
-//            echo "Carnet non trouvé.";
-//        }
-//    }

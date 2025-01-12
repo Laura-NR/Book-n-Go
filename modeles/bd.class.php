@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @file bd.class.php
+ * @brief Classe singleton de connexion a la base de données
+ *
+ * Cette classe permet de fournir une connexion à la base de données en utilisant le design pattern Singleton.
+ *
+ * @class Excursion
+ */
 class bd{
     private static ?bd $instance = null;
     private PDO $pdo;
