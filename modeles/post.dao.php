@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file post.dao.php
  * @class PostDAO
  * @brief Classe DAO pour la gestion des posts dans la base de données.
  *

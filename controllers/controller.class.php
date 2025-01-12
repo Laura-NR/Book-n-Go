@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file controller.class.php
  * @class BaseController
  * @brief Classe de base pour les contrôleurs
  */

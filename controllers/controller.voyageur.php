@@ -3,6 +3,7 @@ require_once 'controller.class.php';
 require_once 'validation/ajout_voyageur.php';
 
 /**
+ * @file controller.voyageur.php
  * @class ControllerVoyageur
  * @brief Classe du contrôleur pour la gestion des voyageurs
  */

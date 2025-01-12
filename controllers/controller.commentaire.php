@@ -3,6 +3,7 @@
 require_once 'validation/ajout_commentaire.php';
 
 /**
+ * @file controller.commentaire.php
  * @class ControllerCommentaire
  * @brief Classe du contrôleur pour la gestion des commentaires
  */

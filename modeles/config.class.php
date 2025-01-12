@@ -1,6 +1,7 @@
 <?php
 use Symfony\Component\Yaml\Yaml;
 /**
+ * @file config.class.php
  * @class config
  * @brief Classe singleton pour la gestion de la configuration de l'application.
  *

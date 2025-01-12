@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file utilisateur.dao.php
  * @class UtilisateurDao
  * @brief Classe d'accès aux données (DAO) pour les utilisateurs.
  *

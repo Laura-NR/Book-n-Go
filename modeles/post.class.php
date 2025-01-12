@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file post.class.php
  * @class Post
  * @brief Classe représentant un post.
  *

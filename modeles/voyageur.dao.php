@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file voyageur.dao.php
  * @class VoyageurDao
  * @brief Classe DAO pour la gestion des voyageurs dans la base de données.
  *

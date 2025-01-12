@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file controller_factory.class.php
  * @class ControllerFactory
  * @brief Classe qui crée un objet de type Controller en fonction du parametre controleur
  */

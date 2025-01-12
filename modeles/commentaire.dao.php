@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file commentaire.dao.php
  * @class CommentaireDao
  * @brief Classe DAO pour la gestion des commentaires dans la base de données.
  *

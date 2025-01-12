@@ -3,6 +3,7 @@ require_once 'controller.class.php';
 require_once 'validation/ajout_excursion.php';
 
 /**
+ * @file controller.excursion.php
  * @class ControllerExcursion
  * @brief Contrôleur principal pour gérer les excursions.
  * 

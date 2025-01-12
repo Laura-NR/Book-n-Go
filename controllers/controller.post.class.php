@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file controller.post.class.php
  * @class ControllerPost
  * @brief Classe du contrôleur pour la gestion des posts
  */

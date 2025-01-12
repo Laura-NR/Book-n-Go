@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file guide.class.php
  * @class Guide
  * @brief Classe représentant un guide.
  *

@@ -4,6 +4,7 @@ require_once 'include.php';
 require_once 'validation/connexion.php';
 
 /**
+ * @file controller.utilisateur.php
  * @class ControllerUtilisateur
  * @brief Classe du contrôleur pour la gestion des utilisateurs
  */

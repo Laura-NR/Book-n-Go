@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  CarnetVoyage.class.php
+ * @file CarnetVoyage.class.php
  * @class CarnetVoyage
  * @brief Classe représentant un carnet de voyage
  */

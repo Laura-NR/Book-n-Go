@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file reservation.dao.php
  * @class ReservationDAO
  * @brief Classe DAO pour la gestion des réservations dans la base de données.
  *

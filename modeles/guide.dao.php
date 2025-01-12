@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file guide.dao.php
  * @class GuideDao
  * @brief Classe d'accès aux données (DAO) pour les guides.
  *

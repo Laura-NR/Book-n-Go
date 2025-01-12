@@ -3,6 +3,7 @@ require_once 'controller.class.php';
 require_once 'include.php';
 
 /**
+ * @file controller.reservation.php
  * @class ControllerReservation
  * @brief Classe du contrôleur pour la gestion des réservations
  */

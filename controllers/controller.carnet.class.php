@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file controller.carnet.php
  * @class ControllerCarnetVoyage
  * @brief Classe de contrôleur pour les carnets de voyage
  */
