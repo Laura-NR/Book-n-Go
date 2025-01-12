@@ -130,10 +130,10 @@ class ControllerExcursion extends BaseController
         }
 
         $data = [
-            'capacite' => htmlentities($this->getPost()['capacite'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'nom' => htmlentities($this->getPost()['nom'] ?? '', ENT_QUOTES, 'UTF-8'),
+            'capacite' => htmlentities($this->getPost()['capacite'] ?? '', ENT_NOQUOTES, 'UTF-8'),
+            'nom' => htmlentities($this->getPost()['nom'] ?? '', ENT_NOQUOTES, 'UTF-8'),
             'date_creation' => new DateTime(),
-            'description' => htmlentities($this->getPost()['description'] ?? '', ENT_QUOTES, 'UTF-8'),
+            'description' => htmlentities($this->getPost()['description'] ?? '', ENT_NOQUOTES, 'UTF-8'),
             'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
             'id_guide' => $idGuide,
         ];
