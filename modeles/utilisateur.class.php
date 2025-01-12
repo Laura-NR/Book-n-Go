@@ -1,4 +1,13 @@
 <?php
+/**
+ * @file utilisateur.class.php
+ * @class Utilisateur
+ * @brief Représentation d'un utilisateur.
+ *
+ * Cette classe permet de représenter un utilisateur, avec ses informations personnelles
+ * et son rôle. Elle peut être étendue pour inclure d'autres fonctionnalités
+ * spécifiques aux utilisateurs.
+ */
 class Utilisateur {
     /**
      * @var int|null

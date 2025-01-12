@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @class PostDAO
+ * @brief Classe DAO pour la gestion des posts dans la base de données.
+ *
+ * Cette classe permet de créer, lire, mettre à jour et supprimer des posts.
+ * Elle fournit également des méthodes pour récupérer un post spécifique ou tous les posts.
+ */
 class PostDAO
 {
     private PDO $pdo;

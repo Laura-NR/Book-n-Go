@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * @file carnet_voyage.dao.php
+ * @class CarnetVoyageDAO
+ * @brief Classe de DAO (Data Access Object) pour les carnets de voyage.
+ *
+ * La classe `CarnetVoyageDAO` fournit des méthodes pour interagir avec les carnets de voyage dans la base de données.
+ * Elle gère les opérations suivantes :
+ * - Récupération de tout les carnets de voyage.
+ * - Recherche d'un carnet de voyage par son identifiant.
+ */
 class CarnetVoyageDAO
 {
     private PDO $pdo;

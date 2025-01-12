@@ -1,4 +1,12 @@
 <?php
+/**
+ * @file composer.class.php
+ *
+ * Cette classe permet de représenter une composition d'une excursion et d'une visite.
+ *
+ * @class Composer
+ * @brief Représentation d'une composition d'une excursion et d'une visite.
+ */
 class Composer {
     /**
      * @var DateTime|null

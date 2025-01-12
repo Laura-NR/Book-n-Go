@@ -1,4 +1,14 @@
 <?php
+/**
+ * @file reservation.class.php
+ * @class Reservation
+ * @brief Classe pour les réservations
+ *
+ * Cette classe permet de gérer les réservations. Elle contient les informations de
+ * base d'une réservation : l'ID, l'ID du voyageur, la date de réservation, l'ID de
+ * l'engagement.
+ *
+ */
 class Reservation
 {
 

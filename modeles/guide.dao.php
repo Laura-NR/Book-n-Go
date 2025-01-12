@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @class GuideDao
+ * @brief Classe d'accès aux données (DAO) pour les guides.
+ *
+ * Elle permet de créer, lire, mettre à jour et supprimer des guides.
+ * Elle fournit également des méthodes pour récupérer un guide spécifique ou tous les guides.
+ */
 class GuideDao
 {
     private ?PDO $pdo;

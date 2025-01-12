@@ -1,4 +1,10 @@
 <?php
+/**
+ * @class VoyageurDao
+ * @brief Classe DAO pour la gestion des voyageurs dans la base de données.
+ *
+ * La classe `VoyageurDao` fournit des méthodes pour interagir avec les voyageurs dans la base de données.
+ */
 class VoyageurDao {
     private ?PDO $pdo;
 

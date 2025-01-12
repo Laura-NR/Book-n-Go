@@ -1,4 +1,28 @@
 <?php
+/**
+ * @file voyageur.class.php
+ * @class Voyageur
+ * @brief Classe pour les voyageurs.
+ *
+ * La classe `Voyageur` représente un voyageur avec des informations de base :
+ * - Identifiant ($id) : Un identifiant unique pour le voyageur.
+ * - Nom ($nom) : Le nom du voyageur.
+ * - Prénom ($prenom) : Le prénom du voyageur.
+ * - Numéro de téléphone ($numero_tel) : Le numéro de téléphone du voyageur.
+ * - Adresse email ($mail) : L'adresse email du voyageur.
+ * - Mot de passe ($mdp) : Le mot de passe du voyageur.
+ * - Date de la dernière connexion ($derniere_co) : La date de la dernière connexion du voyageur.
+ *
+ * La classe inclut également des attributs pour gérer les tentatives de connexion
+ * et le statut du compte :
+ * - Tentatives échouées ($tentatives_echouees) : Le nombre de tentatives de
+ *   connexion échouées.
+ * - Date du dernier échec ($date_dernier_echec) : La date du dernier échec de
+ *   connexion.
+ * - Statut du compte ($statut_compte) : Le statut du compte du voyageur.
+ *
+ * La classe fournit des méthodes pour accéder et modifier ces informations.
+ */
 class Voyageur {
     // Constantes pour les statuts de compte
     public const MAX_TENTATIVES = 3;

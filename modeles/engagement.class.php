@@ -1,5 +1,15 @@
 <?php 
-
+/**
+ * @file engagement.class.php
+ * @brief Classe représentant un engagement.
+ *
+ * La classe `Engagement` représente un engagement avec des informations comme l'ID, la date de debut de disponibilité,
+ * la date de fin de disponibilité, l'ID de l'excursion et l'ID du guide.
+ * Elle contient des méthodes pour accéder et modifier ces informations.
+ *
+ * @class Engagement
+ * @brief Représente un engagement.
+ */
 class Engagement {
     /**
      * @var int|null

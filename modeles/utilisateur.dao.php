@@ -1,4 +1,12 @@
 <?php
+/**
+ * @class UtilisateurDao
+ * @brief Classe d'accès aux données (DAO) pour les utilisateurs.
+ *
+ * Elle permet de créer, lire, mettre à jour et supprimer des utilisateurs.
+ * Elle fournit également des méthodes pour récupérer un utilisateur spécifique
+ * ou tous les utilisateurs.
+ */
 class UtilisateurDao {
     private $pdo;
 

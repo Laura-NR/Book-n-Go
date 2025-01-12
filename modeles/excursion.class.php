@@ -1,6 +1,6 @@
 <?php
 /**
- * @file Excursion.php
+ * @file Excursion.class.php
  * @brief Classe représentant une excursion.
  *
  * La classe `Excursion` représente une excursion avec des informations comme l'ID, la capacité, le nom,

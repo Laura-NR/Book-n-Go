@@ -1,5 +1,10 @@
-<?php 
+<?php
 
+/**
+ *  CarnetVoyage.class.php
+ * @class CarnetVoyage
+ * @brief Classe représentant un carnet de voyage
+ */
 class CarnetVoyage {
     /**
      * @var int|null

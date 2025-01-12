@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * @class Guide
+ * @brief Classe représentant un guide.
+ *
+ * La classe `Guide` hérite de la classe `Voyageur` et ajoute des fonctionnalités spécifiques aux guides,
+ * comme la gestion du chemin de certification.
+ *
+ * Cette classe est utilisée pour représenter un guide dans l'application, avec ses informations personnelles
+ * et son fichier de certification. Elle peut être étendue pour inclure d'autres fonctionnalités spécifiques aux guides.
+ */
 class Guide extends Voyageur {
     // Attribut spécifique à Guide
     /**
