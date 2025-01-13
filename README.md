@@ -4,8 +4,6 @@
 
 ### Enseignant tuteur : Borthwick
 
-**Projet de développement d'une application de réservation de salles de réunion.**
-
 ## Description du projet
 
 Book-n-Go est une application web de création de carnets de Voyage et de Reservation d'excursions
