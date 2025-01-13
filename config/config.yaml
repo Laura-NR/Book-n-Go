@@ -1,8 +1,8 @@
 database: # Informations de connexion à la BDD
-  host: "localhost"
+  host: "lakartxela.iutbayonne.univ-pau.fr"
   name: "gdbelascain_pro"
-  user: "root"
-  pass: ""
+  user: "gdbelascain_pro"
+  pass: "gdbelascain_pro"
 
 website: # Informations sur le site
   title: "Book'n'Go"
