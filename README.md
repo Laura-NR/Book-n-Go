@@ -8,7 +8,7 @@
 
 ## Description du projet
 
-Book-n-Go est une application web permettant de réserver des salles de réunion au sein d'une entreprise.  Elle offre aux utilisateurs la possibilité de visualiser les disponibilités des salles, de créer des réservations, de gérer leurs réservations existantes et d'administrer les salles et les utilisateurs (pour les rôles autorisés).
+Book-n-Go est une application web de création de carnets de Voyage et de Reservation d'excursions
 
 ## Diagramme de classes (à compléter)
 
