@@ -8,9 +8,6 @@
 
 Book-n-Go est une application web de création de carnets de Voyage et de Reservation d'excursions
 
-## Diagramme de classes (à compléter)
-
-
 ## Technologies utilisées
 
 Frontend: JavaScript, CSS, Bootstrap 5.3.3, DataTables 1.13.6, Twig 
@@ -23,13 +20,20 @@ Autres: Git, GitHub, Visual Studio Code
 
 ## Installation et utilisation
 
-Cloner le dépôt:\
+### Cloner le dépôt:
+
 git clone https://github.com/Laura-NR/Book-n-Go
 
-Installer les dépendances:\
-npm install
+### Installer les dépendances:
 
-Configurer la base de données:
+npm install\
+composer install
+
+Sur la base du template configExample.yaml accessible dans /config créer un fichier config.yaml contenant les informations de votre site et configuration de votre base de données 
+
+## Documentation
+
+https://lauranunez.me/Book-n-Go/
 
 ## Contributeurs :
 Dalmayrac-Belascain Gorka\
