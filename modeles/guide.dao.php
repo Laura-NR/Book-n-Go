@@ -230,6 +230,19 @@ class GuideDao
             'id' => $guide->getId(),
         ]);
     }
+     // Trouver un guide par ID en mode associatif (retourne un tableau associatif ou null)
+     public function findAssoc(?int $id): ?array
+     {
+         $sql = "SELECT * FROM guide WHERE id = :id";
+         $pdoStatement = $this->pdo->prepare($sql);
+         $pdoStatement->execute(['id' => $id]);
+         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+         $result = $pdoStatement->fetch();
+         if (!$result) {
+             echo "Aucun guide trové avec l'id $id";
+         }
+         return $result ?: null;
+     }
 
 }
 ?>

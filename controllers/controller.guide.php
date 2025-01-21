@@ -257,5 +257,34 @@ class ControllerGuide extends ControllerVoyageur
     {
         echo $this->getTwig()->render('planning_guide.html.twig');
     }
+     // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
+     public function afficher(int $id = null): void
+     {
+         try {
+             $id = $id ?? (isset($_GET['id']) ? (int) $_GET['id'] : null);
+ 
+             if ($id === null || $id <= 0) {
+                 throw new Exception("ID invalide ou non fourni.");
+             }
+ 
+             $guideDao = new GuideDao($this->getPdo());
+             $guide = $guideDao->findAssoc($id);
+ 
+             if (!$guide) {
+                 echo "Guide avec id $id pas trouvé.";
+                 return;
+             }
+ 
+             $editMode = isset($_GET['editMode']) && $_GET['editMode'] === 'true';
+ 
+             echo $this->getTwig()->render('pageInformationsGuide.html.twig', [
+                 'guide' => $guide,
+                 'menu' => "guide_detail",
+                 'editMode' => $editMode, // Mode d'édition
+             ]);
+         } catch (Exception $e) {
+             echo "Erreur lors de l'affichage du guide : " . $e->getMessage();
+         }
+     } 
 }
 ?>
