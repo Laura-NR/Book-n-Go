@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @file commentaire.dao.php
+ * @class CommentaireDao
+ * @brief Classe DAO pour la gestion des commentaires dans la base de données.
+ *
+ * Elle permet de créer, lire, mettre à jour et supprimer des commentaires.
+ * Elle fournit également des méthodes pour récupérer un commentaire spécifique ou tous les commentaires.
+ */
 class CommentaireDao{
     private ?PDO $pdo;
 

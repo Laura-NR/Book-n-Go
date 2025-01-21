@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @file post.class.php
+ * @class Post
+ * @brief Classe représentant un post.
+ *
+ * La classe `Post` représente un post avec des informations telles que l'ID, le titre, le chemin de l'image,
+ * le contenu et la date de publication. Elle contient des méthodes pour accéder et modifier ces informations.
+ */
 class Post {
     /**
      * @var int|null

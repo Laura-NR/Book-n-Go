@@ -1,0 +1,11 @@
+database: # Informations de connexion à la BDD
+  host: "" #addresse hote de la base de données
+  name: "" #nom de la base de données à utiliser
+  user: "" #login de la base de données
+  pass: "" #mdp de la base de données
+
+website: # Informations sur le site
+  title: "" #nom du site
+  version: "" #version du site
+  description: "" #description du site web
+  lang: "" #langue du site (fr / en / ...)

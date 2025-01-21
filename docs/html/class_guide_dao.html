@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.13.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Book&#39;n&#39;Go: Référence de la classe GuideDao</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(function() { init_search(); });
+/* @license-end */
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo3_OK_MINI.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">Book&#39;n&#39;Go<span id="projectnumber">&#160;2.5</span>
+   </div>
+  </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Recherche" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.13.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('class_guide_dao.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Fonctions membres publiques</a>  </div>
+  <div class="headertitle"><div class="title">Référence de la classe GuideDao</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Classe d'accès aux données (DAO) pour les guides.  
+ <a href="#details">Plus de détails...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Fonctions membres publiques</h2></td></tr>
+<tr class="memitem:a547eaaa1e35bdd4cab1800ac47b3a3b0" id="r_a547eaaa1e35bdd4cab1800ac47b3a3b0"><td class="memItemLeft" align="right" valign="top"><a id="a547eaaa1e35bdd4cab1800ac47b3a3b0" name="a547eaaa1e35bdd4cab1800ac47b3a3b0"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>__construct</b> (?PDO $pdo=null)</td></tr>
+<tr class="separator:a547eaaa1e35bdd4cab1800ac47b3a3b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e7560ad95a7986be67f7528c80e7f1a" id="r_a6e7560ad95a7986be67f7528c80e7f1a"><td class="memItemLeft" align="right" valign="top"><a id="a6e7560ad95a7986be67f7528c80e7f1a" name="a6e7560ad95a7986be67f7528c80e7f1a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>getPdo</b> ()</td></tr>
+<tr class="separator:a6e7560ad95a7986be67f7528c80e7f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba4c54698c520d0e4a7cabcd4905b7a2" id="r_aba4c54698c520d0e4a7cabcd4905b7a2"><td class="memItemLeft" align="right" valign="top"><a id="aba4c54698c520d0e4a7cabcd4905b7a2" name="aba4c54698c520d0e4a7cabcd4905b7a2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>setPdo</b> (?PDO $pdo)</td></tr>
+<tr class="separator:aba4c54698c520d0e4a7cabcd4905b7a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48d48013b7a2536dff0ae9cdda03dd7e" id="r_a48d48013b7a2536dff0ae9cdda03dd7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48d48013b7a2536dff0ae9cdda03dd7e">find</a> (?int $id)</td></tr>
+<tr class="memdesc:a48d48013b7a2536dff0ae9cdda03dd7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trouver un guide par ID (retourne un objet <a class="el" href="class_guide.html" title="Classe représentant un guide.">Guide</a> ou null)  <br /></td></tr>
+<tr class="separator:a48d48013b7a2536dff0ae9cdda03dd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73a1b0348919b6755e4f69dcc70eba64" id="r_a73a1b0348919b6755e4f69dcc70eba64"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73a1b0348919b6755e4f69dcc70eba64">findAll</a> ()</td></tr>
+<tr class="memdesc:a73a1b0348919b6755e4f69dcc70eba64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trouver tous les guides (retourne un tableau d'objets <a class="el" href="class_guide.html" title="Classe représentant un guide.">Guide</a>)  <br /></td></tr>
+<tr class="separator:a73a1b0348919b6755e4f69dcc70eba64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ffd29b37acdf3a126f9d79d63f1e04e" id="r_a4ffd29b37acdf3a126f9d79d63f1e04e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ffd29b37acdf3a126f9d79d63f1e04e">hydrate</a> (array $data)</td></tr>
+<tr class="memdesc:a4ffd29b37acdf3a126f9d79d63f1e04e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hydrater un guide à partir d'un tableau associatif.  <br /></td></tr>
+<tr class="separator:a4ffd29b37acdf3a126f9d79d63f1e04e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32b2122fd587af5c7aaba2f74c444cee" id="r_a32b2122fd587af5c7aaba2f74c444cee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32b2122fd587af5c7aaba2f74c444cee">creer</a> (<a class="el" href="class_guide.html">Guide</a> $guide)</td></tr>
+<tr class="memdesc:a32b2122fd587af5c7aaba2f74c444cee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Créer un guide dans la base de données.  <br /></td></tr>
+<tr class="separator:a32b2122fd587af5c7aaba2f74c444cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb869a9c0a8e5693aec0ee730b7a7e68" id="r_aeb869a9c0a8e5693aec0ee730b7a7e68"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb869a9c0a8e5693aec0ee730b7a7e68">maj</a> (<a class="el" href="class_guide.html">Guide</a> $guide)</td></tr>
+<tr class="memdesc:aeb869a9c0a8e5693aec0ee730b7a7e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mettre à jour un guide dans la base de données.  <br /></td></tr>
+<tr class="separator:aeb869a9c0a8e5693aec0ee730b7a7e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c132256683c26e5acb7c36cb1ac3444" id="r_a3c132256683c26e5acb7c36cb1ac3444"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c132256683c26e5acb7c36cb1ac3444">supprimer</a> (int $id)</td></tr>
+<tr class="memdesc:a3c132256683c26e5acb7c36cb1ac3444"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supprimer un guide de la base de données.  <br /></td></tr>
+<tr class="separator:a3c132256683c26e5acb7c36cb1ac3444"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad677657a9657ca368235821896b1a233" id="r_ad677657a9657ca368235821896b1a233"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad677657a9657ca368235821896b1a233">listerTousGuides</a> ()</td></tr>
+<tr class="memdesc:ad677657a9657ca368235821896b1a233"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lister tous les guides (méthode correcte)  <br /></td></tr>
+<tr class="separator:ad677657a9657ca368235821896b1a233"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf4c0fdbc3d6107dc231d511cc1aa02f" id="r_adf4c0fdbc3d6107dc231d511cc1aa02f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf4c0fdbc3d6107dc231d511cc1aa02f">getCheminCertificatParId</a> (int $id)</td></tr>
+<tr class="memdesc:adf4c0fdbc3d6107dc231d511cc1aa02f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupérer le chemin du certificat d'un guide par ID.  <br /></td></tr>
+<tr class="separator:adf4c0fdbc3d6107dc231d511cc1aa02f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81566e4fe32ef8ed1e31ca343960e0b4" id="r_a81566e4fe32ef8ed1e31ca343960e0b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81566e4fe32ef8ed1e31ca343960e0b4">majDerniereCo</a> (<a class="el" href="class_guide.html">Guide</a> $guide)</td></tr>
+<tr class="memdesc:a81566e4fe32ef8ed1e31ca343960e0b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mettre à jour la dernière connexion d'un guide dans la BD.  <br /></td></tr>
+<tr class="separator:a81566e4fe32ef8ed1e31ca343960e0b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a236458fe6a544ff4b677613044cea2fc" id="r_a236458fe6a544ff4b677613044cea2fc"><td class="memItemLeft" align="right" valign="top"><a id="a236458fe6a544ff4b677613044cea2fc" name="a236458fe6a544ff4b677613044cea2fc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>majStatutCompte</b> (<a class="el" href="class_guide.html">Guide</a> $guide)</td></tr>
+<tr class="separator:a236458fe6a544ff4b677613044cea2fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><p>Classe d'accès aux données (DAO) pour les guides. </p>
+<p>Elle permet de créer, lire, mettre à jour et supprimer des guides. Elle fournit également des méthodes pour récupérer un guide spécifique ou tous les guides. </p>
+</div><h2 class="groupheader">Documentation des fonctions membres</h2>
+<a id="a32b2122fd587af5c7aaba2f74c444cee" name="a32b2122fd587af5c7aaba2f74c444cee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32b2122fd587af5c7aaba2f74c444cee">&#9670;&#160;</a></span>creer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">creer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_guide.html">Guide</a></td>          <td class="paramname"><span class="paramname"><em>$guide</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Créer un guide dans la base de données. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="class_guide.html" title="Classe représentant un guide.">Guide</a></td><td class="paramname">$guide</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool </dd></dl>
+
+</div>
+</div>
+<a id="a48d48013b7a2536dff0ae9cdda03dd7e" name="a48d48013b7a2536dff0ae9cdda03dd7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48d48013b7a2536dff0ae9cdda03dd7e">&#9670;&#160;</a></span>find()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">find </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Trouver un guide par ID (retourne un objet <a class="el" href="class_guide.html" title="Classe représentant un guide.">Guide</a> ou null) </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$id</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Guide|null </dd></dl>
+
+</div>
+</div>
+<a id="a73a1b0348919b6755e4f69dcc70eba64" name="a73a1b0348919b6755e4f69dcc70eba64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73a1b0348919b6755e4f69dcc70eba64">&#9670;&#160;</a></span>findAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findAll </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Trouver tous les guides (retourne un tableau d'objets <a class="el" href="class_guide.html" title="Classe représentant un guide.">Guide</a>) </p>
+<dl class="section return"><dt>Renvoie</dt><dd>array </dd></dl>
+
+</div>
+</div>
+<a id="adf4c0fdbc3d6107dc231d511cc1aa02f" name="adf4c0fdbc3d6107dc231d511cc1aa02f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf4c0fdbc3d6107dc231d511cc1aa02f">&#9670;&#160;</a></span>getCheminCertificatParId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getCheminCertificatParId </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupérer le chemin du certificat d'un guide par ID. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>string|null </dd></dl>
+
+</div>
+</div>
+<a id="a4ffd29b37acdf3a126f9d79d63f1e04e" name="a4ffd29b37acdf3a126f9d79d63f1e04e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ffd29b37acdf3a126f9d79d63f1e04e">&#9670;&#160;</a></span>hydrate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">hydrate </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$data</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Hydrater un guide à partir d'un tableau associatif. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$data</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_guide.html" title="Classe représentant un guide.">Guide</a> </dd></dl>
+
+</div>
+</div>
+<a id="ad677657a9657ca368235821896b1a233" name="ad677657a9657ca368235821896b1a233"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad677657a9657ca368235821896b1a233">&#9670;&#160;</a></span>listerTousGuides()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">listerTousGuides </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lister tous les guides (méthode correcte) </p>
+<dl class="section return"><dt>Renvoie</dt><dd>array </dd></dl>
+
+</div>
+</div>
+<a id="aeb869a9c0a8e5693aec0ee730b7a7e68" name="aeb869a9c0a8e5693aec0ee730b7a7e68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb869a9c0a8e5693aec0ee730b7a7e68">&#9670;&#160;</a></span>maj()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">maj </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_guide.html">Guide</a></td>          <td class="paramname"><span class="paramname"><em>$guide</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mettre à jour un guide dans la base de données. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="class_guide.html" title="Classe représentant un guide.">Guide</a></td><td class="paramname">$guide</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool </dd></dl>
+
+</div>
+</div>
+<a id="a81566e4fe32ef8ed1e31ca343960e0b4" name="a81566e4fe32ef8ed1e31ca343960e0b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81566e4fe32ef8ed1e31ca343960e0b4">&#9670;&#160;</a></span>majDerniereCo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">majDerniereCo </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_guide.html">Guide</a></td>          <td class="paramname"><span class="paramname"><em>$guide</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mettre à jour la dernière connexion d'un guide dans la BD. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="class_guide.html" title="Classe représentant un guide.">Guide</a></td><td class="paramname">$guide</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool </dd></dl>
+
+</div>
+</div>
+<a id="a3c132256683c26e5acb7c36cb1ac3444" name="a3c132256683c26e5acb7c36cb1ac3444"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c132256683c26e5acb7c36cb1ac3444">&#9670;&#160;</a></span>supprimer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">supprimer </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Supprimer un guide de la base de données. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool </dd></dl>
+
+</div>
+</div>
+<hr/>La documentation de cette classe a été générée à partir du fichier suivant :<ul>
+<li>Book-n-Go/modeles/<a class="el" href="guide_8dao_8php.html">guide.dao.php</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="class_guide_dao.html">GuideDao</a></li>
+    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,5 +1,20 @@
 <?php
 use Symfony\Component\Yaml\Yaml;
+/**
+ * @file config.class.php
+ * @class config
+ * @brief Classe singleton pour la gestion de la configuration de l'application.
+ *
+ * La classe `config` est utilisée pour lire et stocker les paramètres de configuration
+ * de l'application à partir d'un fichier YAML. Elle utilise le design pattern Singleton
+ * pour s'assurer qu'une seule instance de la configuration est chargée et accessible
+ * à travers l'application.
+ *
+ * La configuration est stockée sous forme de tableau associatif, accessible via les
+ * méthodes de la classe.
+ *
+ * @note Cette classe utilise le composant Symfony Yaml pour le parsing du fichier YAML.
+ */
 class config{
     private static ?config $instance = null;
 

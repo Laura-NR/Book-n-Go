@@ -3,11 +3,16 @@ require_once 'controller.class.php';
 require_once 'validation/ajout_voyageur.php';
 
 /**
+ * @file controller.voyageur.php
  * @class ControllerVoyageur
  * @brief Classe du contrôleur pour la gestion des voyageurs
  */
 class ControllerVoyageur extends BaseController {
 
+    /**
+     * @var Validator
+     */
+    private Validator $validator; // Instance de la classe Validator
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
         global $reglesValidationInscriptionVoyageur;
@@ -61,6 +66,9 @@ class ControllerVoyageur extends BaseController {
                 $voyageur->setMdp(password_hash($postData['mdp'], PASSWORD_DEFAULT));
                 //var_dump($voyageur);
                 $voyageur->setDerniereCo(new DateTime());
+                $voyageur->setTentativesEchouees(0); // Tentatives échouées initialisées à 0
+                $voyageur->setDateDernierEchec(null); // Aucun échec au départ
+                $voyageur->setStatutCompte('actif'); // Le compte est actif par défaut
                 // Utilisation de VoyageurDao pour insérer le voyageur
                 $voyageurDao = new VoyageurDao($this->getPdo());
                 if ($voyageurDao->creer($voyageur)) {
@@ -140,7 +148,6 @@ class ControllerVoyageur extends BaseController {
         try {
             $voyageurDao = new VoyageurDao($this->getPdo());
             $voyageur = $voyageurDao->find($id);
-            //var_dump($guide);
 
             if (!$voyageur) {
                 echo "Erreur : voyageur non trouvé.";
@@ -148,28 +155,22 @@ class ControllerVoyageur extends BaseController {
             }
 
             // Vérification de la soumission du formulaire de modification
-            if (/*isset($_POST['nom']) &&*/ isset($_POST['action']) && $_POST['action'] === 'modifier') {
-                //var_dump($_POST);
+            if (isset($_POST['action']) && $_POST['action'] === 'modifier') {
                 $postData = $this->getPost();
-
-
-
-
 
                 if (!empty($postData)) {
                     // Mise à jour des données du voyageur
-
                     if (isset($postData['nom'])) $voyageur->setNom($postData['nom']);
                     if (isset($postData['prenom'])) $voyageur->setPrenom($postData['prenom']);
                     if (isset($postData['numero_tel'])) $voyageur->setNumeroTel($postData['numero_tel']);
                     if (isset($postData['mail'])) $voyageur->setMail($postData['mail']);
-                    //var_dump($voyageur);
+                    if (isset($postData['tentatives_echouees'])) $voyageur->setTentativesEchouees($postData['tentatives_echouees']);
+                    if (isset($postData['statut_compte'])) $voyageur->setStatutCompte($postData['statut_compte']);
+                    if (isset($postData['date_dernier_echec'])) $voyageur->setDateDernierEchec(new DateTime($postData['date_dernier_echec']));
 
                     // Sauvegarde dans la base de données
                     if ($voyageurDao->mettreAJour($voyageur)) {
-                        // Stocke une variable de confirmation dans la session
                         $_SESSION['modification_reussie'] = true;
-                        // Redirige vers la page d'affichage normale après la modification
                         header("Location: ?controleur=voyageur&methode=afficher&id=$id&modification_reussie=true");
                         exit;
                     } else {
@@ -177,11 +178,12 @@ class ControllerVoyageur extends BaseController {
                     }
                 }
             }
-
         } catch (Exception $e) {
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
         }
     }
+
+
     // Lister tous les voyageurs
 
     /**

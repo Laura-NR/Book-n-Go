@@ -1,4 +1,13 @@
 <?php
+/**
+ * @file reservation.dao.php
+ * @class ReservationDAO
+ * @brief Classe DAO pour la gestion des réservations dans la base de données.
+ *
+ * Elle permet de créer, lire, mettre à jour et supprimer des réservations.
+ * Elle fournit également des méthodes pour récupérer une réservation spécifique par son ID.
+ *
+ */
 class ReservationDAO
 {
     private $pdo;

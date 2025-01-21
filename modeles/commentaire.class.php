@@ -1,5 +1,15 @@
 <?php
-
+/**
+ * @file commentaire.class.php
+ * @brief Classe représentant un commentaire.
+ *
+ * La classe `Commentaire` représente un commentaire avec des informations comme l'ID, la date et heure de publication,
+ * le contenu, l'ID du post et l'ID du voyageur.
+ * Elle contient des méthodes pour accéder et modifier ces informations.
+ *
+ * @class Commentaire
+ * @brief Représente un commentaire.
+ */
 class Commentaire{
     /**
      * @var int|null

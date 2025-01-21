@@ -26,11 +26,16 @@ try {
     }
 
     if ($controllerName == '' && $methode == '') {
+        $messages = $_SESSION['messages_alertes'] ?? [];
+
         echo $twig->render('pageAccueil_template.html.twig', [
             'app' => [
-                'session' => $_SESSION 
+                'session' => $_SESSION,
+                'messages_alertes' => $messages  
             ]
         ]);
+        
+        unset($_SESSION['messages_alertes']);
     }
     else{
         if ($controllerName == '') {

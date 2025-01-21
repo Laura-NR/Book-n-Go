@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file controller.class.php
  * @class BaseController
  * @brief Classe de base pour les contrôleurs
  */
@@ -30,7 +31,22 @@ abstract class BaseController
         }
     }
 
-    // Pour appeler une méthode d’un contrôleur spécifique
+
+    /**
+     * Appelle une méthode du contrôleur avec les paramètres appropriés.
+     *
+     * Cette fonction vérifie d'abord si la méthode spécifiée existe dans le contrôleur.
+     * Si elle existe, elle utilise la réflexion pour récupérer la liste des paramètres
+     * nécessaires à l'appel de la méthode. Si la méthode a des paramètres, elle tente
+     * de les passer en vérifiant leur présence dans les paramètres GET. Si un paramètre
+     * requis est manquant, une exception est levée. Si tous les paramètres requis sont
+     * présents, ou s'ils sont optionnels, la méthode est appelée avec les arguments
+     * appropriés. Si la méthode n'a pas de paramètres, elle est appelée directement.
+     *
+     * @param string $methode Le nom de la méthode à appeler.
+     * @return mixed Le résultat de l'appel de la méthode.
+     * @throws Exception Si la méthode n'existe pas dans le contrôleur ou si un paramètre requis est manquant.
+     */
     public function call(string $methode): mixed
     {
         // Vérifier si la méthode existe dans le contrôleur
@@ -66,12 +82,15 @@ abstract class BaseController
     }
 
 
-    // // Rendu d'une vue Twig avec les données
-    // protected function render(string $template, array $data = []): void {
-    //     echo $this->twig->render($template, $data);
-    // }
-
-    //Redirection vers une URL
+    /**
+     * Redirige vers une autre page en construisant l'URL d'après les paramètres.
+     *
+     * @param string $controller Le contrôleur vers lequel rediriger.
+     * @param string $method La méthode du contrôleur vers laquelle rediriger.
+     * @param array $params Les paramètres à passer en GET.
+     *
+     * @return void
+     */
     function redirect(string $controller, string $method, array $params = []): void
     {
         // Construction de l'URL de base

@@ -3,11 +3,17 @@
 require_once 'validation/ajout_commentaire.php';
 
 /**
+ * @file controller.commentaire.php
  * @class ControllerCommentaire
  * @brief Classe du contrôleur pour la gestion des commentaires
  */
 class ControllerCommentaire extends BaseController
 {
+    /**
+     * @var Validator
+     */
+    private Validator $validator; // Instance de la classe Validator
+    
     //Contructeur du contrôleur de commentaire, initialise les objets Twig indispensables pour la gestion des templates
     // et instancie la classe de validation
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
@@ -83,7 +89,17 @@ class ControllerCommentaire extends BaseController
 //    }
 
 
-// Ajouter un commentaire au post et le stocker en base de données
+
+    /**
+     * Ajoute un commentaire pour un post spécifique
+     *
+     * Cette méthode gère la validation des données de formulaire pour l'ajout d'un commentaire.
+     * Si les données sont valides, elle les stocke en base de données et redirige vers la page de détail du post.
+     * Si les données sont invalides, elle stocke les erreurs en session et redirige vers la page de détail du post.
+     * Si l'utilisateur n'est pas connecté, elle gère l'erreur.
+     *
+     * @return void
+     */
     public function ajouter(): void
     {
         if (isset($_POST["contenu"]) && !ctype_space($_POST["contenu"])) {
@@ -130,7 +146,17 @@ class ControllerCommentaire extends BaseController
         }
     }
 
-    // Supprimer un commentaire d'un post
+
+    /**
+     * Supprime un commentaire spécifique
+     *
+     * Cette méthode gère la suppression d'un commentaire spécifique.
+     * Si le commentaire existe, elle le supprime en base de données et redirige vers la page de détail du post.
+     * Si le commentaire n'existe pas, elle gère l'erreur.
+     *
+     * @return void
+     * @throws Exception Si le commentaire n'existe pas
+     */
     public function supprimer(): void
     {
         if (isset($_POST["id_commentaire"])) {

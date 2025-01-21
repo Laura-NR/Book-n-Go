@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @file engagement.dao.php
+ * @brief Classe d'accès aux données pour les Engagements
+ * @class EngagementDao
+ * @brief Classe d'accès aux données pour les Engagements
+ * Cette classe fournit des méthodes pour accéder et modifier les Engagements dans la base de données.
+ * Elle permet de créer, lire, mettre à jour et supprimer des engagements.
+ */
 class EngagementDao {
     /**
      * @var PDO

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @file composer.dao.php
+ * @class ComposerDao
+ * @brief Classe pour la gestion des requêtes en base de données
+ * concernant les relations entre les utilisateurs et les carnets de voyage
+ */
 class ComposerDao
 {
     private ?PDO $pdo;

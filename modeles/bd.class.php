@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @file bd.class.php
+ *
+ * Cette classe permet de fournir une connexion à la base de données en utilisant le design pattern Singleton.
+ *
+ * @class bd
+ * @brief Singleton de connexion à la base de données
+ */
 class bd{
     private static ?bd $instance = null;
     private PDO $pdo;
@@ -17,6 +25,15 @@ class bd{
         }
     }
 
+    /**
+     * Retourne l'instance unique de la classe bd.
+     *
+     * La méthode getInstance est la seule manière d'accéder à l'instance
+     * de la classe bd. Si l'instance n'existe pas encore, elle est créée
+     * à l'aide du constructeur privé.
+     *
+     * @return bd L'instance unique de la classe bd.
+     */
     public static function getInstance(): bd
     {
         if (is_null(self::$instance)) {

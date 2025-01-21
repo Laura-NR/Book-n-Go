@@ -1,11 +1,16 @@
 <?php
 
 /**
+ * @file controller.post.class.php
  * @class ControllerPost
  * @brief Classe du contrôleur pour la gestion des posts
  */
 class ControllerPost extends BaseController
 {
+    /**
+     * @var Validator
+     */
+    private Validator $validator; // Instance de la classe Validator
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
     {
         parent::__construct($twig, $loader);

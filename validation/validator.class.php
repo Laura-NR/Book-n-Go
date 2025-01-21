@@ -1,5 +1,16 @@
 <?php
-
+/**
+ * @class Validator
+ * @brief Classe de validation pour les données.
+ *
+ * La classe Validator permet de valider des données en fonction de règles définies.
+ * Les règles de validation sont définies dans un tableau associatif.
+ * Les clés du tableau sont les noms des champs à valider, et les valeurs sont des tableaux
+ * associatifs contenant les règles de validation pour chaque champ.
+ *
+ * Les messages d'erreurs standardisés sont stockés dans un tableau qui est retourné
+ * par la méthode getMessagesErreurs.
+ */
 class Validator
 {
     private array $regles; // Les règles de validation à vérifier

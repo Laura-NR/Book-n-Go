@@ -19,6 +19,11 @@ require_once 'validation/ajout_visite.php';
 class ControllerVisite extends BaseController
 {
     /**
+     * @var Validator
+     */
+    private Validator $validator; // Instance de la classe Validator
+    
+    /**
      * Constructeur de la classe ControllerVisite.
      * Initialise le validateur avec les règles de validation pour les visites.
      *
