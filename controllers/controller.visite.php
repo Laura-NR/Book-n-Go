@@ -69,7 +69,7 @@ class ControllerVisite extends BaseController
 
                 // Gestion de la redirection selon le type d'action
                 if ($nouvelleVisite && $_GET['isExcursion'] === '1') {
-                    $this->redirect('excursion', 'afficherCreer',);
+                    $this->redirect('excursion', 'afficherCreer');
                 } elseif ($nouvelleVisite && $_GET['isExcursion'] === '0') {
                     $this->redirect('visite', 'lister');
                 } else {
