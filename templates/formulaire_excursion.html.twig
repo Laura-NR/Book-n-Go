@@ -129,7 +129,7 @@
               <option value="" selected disabled>
                 Composez l'itineraire de votre excursion
               </option>
-              <option href="" value="add-new">
+              <option href="" value="add-new" class="bg-primary text-white">
                 Ajouter une nouvelle visite dans l'itineraire
               </option>
             </select>
@@ -332,7 +332,7 @@
               option.value = visit.id;
               option.textContent = `${visit.titre} - ${visit.ville}`;
               option.setAttribute("data-fetched", true);
-              itineraireSelect.insertBefore(option, addNewOption);
+              addNewOption.insertAdjacentElement("afterend", option);
             });
           } catch (error) {
             console.error("Failed to parse JSON:", error);
