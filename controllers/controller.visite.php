@@ -77,8 +77,6 @@ class ControllerVisite extends BaseController
                     $this->redirect('excursion', 'afficherCreer',);
                 } elseif ($nouvelleVisite && $_GET['isExcursion'] === '0') {
                     $this->redirect('visite', 'lister');
-                } else {
-                    echo "Erreur lors de la création de la visite.";
                 }
             } catch (Exception $e) {
                 echo "Erreur lors de l'ajout de la visite : " . $e->getMessage();
@@ -164,8 +162,6 @@ class ControllerVisite extends BaseController
                 // Redirection après modification
                 if ($visiteModif) {
                     $this->redirect('visite', 'lister');
-                } else {
-                    echo "Erreur lors de la modification de la visite.";
                 }
             } catch (Exception $e) {
                 echo "Erreur lors de la modification de la visite : " . $e->getMessage();
