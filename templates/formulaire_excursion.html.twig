@@ -207,6 +207,12 @@
         closeButton.setAttribute("aria-label", "Close");
         errorElement.appendChild(closeButton);
         errorContainer.appendChild(errorElement);
+
+        // Les messages d'erreur vont disparaitre après 8 secondes si l'utilisateur ne les ferme pas
+        const bsAlert = new bootstrap.Alert(errorElement);
+            setTimeout(() => {
+                bsAlert.close(); 
+            }, 8000);
       });
       errorContainer.style.display = "block";
     } else {
