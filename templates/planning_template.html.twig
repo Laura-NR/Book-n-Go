@@ -5,26 +5,83 @@
 {% endblock %}
 
 {% block dashboard_content %}
-<div class="container">
-    <h1>Planning des réservations</h1>
-</div>
-{% if reservations is not empty %}
-    <ul>
-        {% for reservation in reservations %}
-            <li>
-                <h3>{{ reservation.titre_excursion }}</h3>
-                <p><strong>Description :</strong> {{ reservation.description_excursion }}</p>
-                <p><strong>Guide :</strong> {{ reservation.nom_guide }} {{ reservation.prenom_guide }}</p>
-                <p><strong>Date de réservation :</strong> {{ reservation.date_reservation }}</p>
-                <p><strong>Heure de l'excusrion:</strong>{{ engagement.heure_debut }}</p>
-            </li>
-            <a href="index.php?controleur=reservation&methode=afficherFormulaireModification&id={{ reservation.id }}">Modifier</a>
-            <a href="index.php?controleur=reservation&methode=supprimerReservation&id={{ reservation.id }}" onclick="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
-                Supprimer
-            </a>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Aucune réservation trouvée.</p>
-{% endif %}
+    <div class="container">
+        <h1>Planning des réservations</h1>
+
+        <!-- Zone pour afficher le calendrier -->
+        <div id="calendar"></div>
+    </div>
+
+<!-- {% if reservations is not empty %}
+        <ul>
+            {% for reservation in reservations %}
+                <li>
+                    <h3>{{ reservation.titre_excursion }}</h3>
+                    <p><strong>Description :</strong> {{ reservation.description_excursion }}</p>
+                    <p><strong>Guide :</strong> {{ reservation.nom_guide }} {{ reservation.prenom_guide }}</p>
+                    <p><strong>Date de réservation :</strong> {{ reservation.date_reservation }}</p>
+                    <p><strong>Heure de l'excusrion:</strong>{{ engagement.heure_debut }}</p>
+                </li>
+                <a href="index.php?controleur=reservation&methode=afficherFormulaireModification&id={{ reservation.id }}">Modifier</a>
+                <a href="index.php?controleur=reservation&methode=supprimerReservation&id={{ reservation.id }}" onclick="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
+                    Supprimer
+                </a>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucune réservation trouvée.</p>
+    {% endif %}-->
+
+{% endblock %}
+
+{# Ajouter les assets JS et CSS nécessaires pour FullCalendar #}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.15/main.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/main.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/main.min.css" rel="stylesheet">
+{% endblock %}
+
+{# Ajouter un script pour initialiser FullCalendar #}
+{% block footer_javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['dayGrid', 'interaction'],
+                initialView: 'dayGridMonth',
+                events: [
+                    {% for reservation in reservations %}
+                    {
+                        title: '{{ reservation.titre_excursion }}',
+                        start: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ engagement.heure_debut|date("H:i:s") }}',
+                        end: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ engagement.heure_fin|date("H:i:s") }}',
+                        description: '{{ reservation.description_excursion }}',
+                        extendedProps: {
+                            guide: '{{ reservation.nom_guide }} {{ reservation.prenom_guide }}'
+                        }
+                    },
+                    {% endfor %}
+                ],
+                editable: true,
+                droppable: true
+            });
+            calendar.render();
+        });
+    </script>
+{% endblock %}
+
+{# Ajout d'un style CSS pour garantir que le calendrier soit visible #}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        #calendar {
+            width: 100%;
+            height: 600px;  /* Assure-toi que le calendrier a une hauteur suffisante */
+            margin-top: 20px;
+        }
+    </style>
 {% endblock %}
