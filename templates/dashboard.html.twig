@@ -18,7 +18,6 @@ Guide Dashboard
 {% endblock %}
 
 {% block sidebar %}
-{{ dump(session.user_id) }}
 <div class="container-fluid my-5">
     <div class="row flex-nowrap">
         <div class="col-auto col-md-1 col-xl-2 px-sm-2 px-0" style="border-right: 3px solid #b2708f;">
@@ -97,7 +96,11 @@ Guide Dashboard
                 </div>
                 <div class="modal-footer">
                     <!-- Formulaire pour confirmer la suppression -->
+                    {% if session.role == "guide" %}
                     <form method="POST" action="?controleur=guide&methode=supprimerGuide&id={{ session.user_id }}">
+                        {% elseif session.role == "voyageur" %}
+                        <form method="POST" action="?controleur=guide&methode=supprimerVoyageur&id={{ session.user_id }}">
+                            {% endif %}
                         <input type="hidden" name="action" value="supprimer">
                         <button type="submit" class="btn btn-danger">Confirmer</button>
                     </form>
