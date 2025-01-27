@@ -128,8 +128,11 @@ class ControllerGuide extends ControllerVoyageur
                 if ($guideDao->supprimer($id)) {
                     // Stocke une variable de confirmation dans la session
                     $_SESSION['suppression_reussie'] = true;
-                    // Redirige vers la page d'accueil après suppression
+                    //deconnecte le compte
+                    session_destroy();
+                    //Redirige vers la page d'accueil après suppression
                     header("Location: index.php");
+
                     exit;
                 } else {
                     echo "Erreur lors de la suppression du guide.";
@@ -258,7 +261,7 @@ class ControllerGuide extends ControllerVoyageur
         echo $this->getTwig()->render('planning_guide.html.twig');
     }
      // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
-     public function afficher(int $id = null): void
+     public function afficherInformation(int $id = null): void
      {
          try {
              $id = $id ?? (isset($_GET['id']) ? (int) $_GET['id'] : null);

@@ -1,20 +1,16 @@
 {% extends "dashboard.html.twig" %} {% block title %}
 {{ excursion ? "Modification de l'Excursion" : "Création d'une Excursion" }}
-{% endblock %} {% block dashboard_content %}
-<main class="container">
-  <div id="errorContainer"></div>
-
-<<<<<<< HEAD
-{% block title %}
-	{{ excursion ? 'Modification de l\'Excursion' : 'Création d\'une Excursion' }}
 {% endblock %}
+
+
 {% block dashboard_content %}
 	<main class="container">
+      <div id="errorContainer"></div>
 		<h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
 			{{ excursion ? 'Modifier les informations de l\'excursion :' : 'Informations de l\'excursion :' }}
 		</h1>
 		<form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" style="width: 80%" method="post">
-			<div style="
+			   <div style="
 				        background-color: #b2708f;
 						color: #000;
 						border-radius: 30px;
@@ -23,7 +19,7 @@
 				<div class="row mb-4">
 					<div class="col">
 						<label for="nom" class="form-label">Titre :</label>
-						<input type="text" id="nom" name="nom" class="form-control" value="{{ excursion.nom | default('') }}"/>
+						<input            type="text" id="nom" name="nom" class="form-control" value="{{ excursion.nom | default('') }}"/>
 					</div>
 					<div class="col">
 						<label for="capacite" class="form-label">Capacite :</label>
@@ -76,7 +72,6 @@
 								</li>
 							{% endfor %}
 						</ul>
-=======
   <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
     {{
       excursion
@@ -194,7 +189,6 @@
           </ul>
         </div>
       </div>
->>>>>>> af320b1d83745b9ad72f6c1ee8d312c3b4f3660d
 
       <div class="row mb-4">
         <div class="col">
