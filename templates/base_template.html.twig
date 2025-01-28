@@ -110,11 +110,7 @@
 
     {# faire en sorte que le contenu du main s'étende sur toute la place disponible #}
     <main class="flex-grow-1">
-        {% block sidebar %}
-        {% endblock %}
-        {% block dashboard_content %}
-            {% block content %}
-            {% endblock %}
+        {% block content %}
         {% endblock %}
     </main>
    
