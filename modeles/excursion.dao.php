@@ -167,6 +167,12 @@ class ExcursionDao
         return $results ? $this->hydrateAll($results) : [];
     }
 
+
+
+
+
+
+
     /**
      * @brief Récupère toutes les excursions publiques ou associées au guide dont l'ID est fourni.
      * @param int|null $id
@@ -294,5 +300,24 @@ class ExcursionDao
             );
         }
         return $excursions;
+    }
+
+    /**
+     * @brief Récupère toutes les excursions associées à la visite dont l'ID est fourni.
+     * @param int|null $idVisite
+     * @return array|null
+     */
+    public function findByVisite(?int $idVisite): ?array
+    {
+        $query = "SELECT DISTINCT e.* FROM excursion e 
+        JOIN composer c ON e.id = c.id_excursion
+        JOIN visite v ON c.id_visite = v.id
+        INNER JOIN engagement eng ON e.id = eng.id_excursion
+        WHERE v.id = :idVisite
+        ORDER BY e.date_creation DESC";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindValue(':idVisite', $idVisite, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
