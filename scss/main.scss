@@ -1,0 +1,30 @@
+@import "./node_modules/bootstrap/scss/functions";
+@import "./node_modules/bootstrap/scss/variables";
+@import "./node_modules/bootstrap/scss/mixins";
+
+// Custom colors
+$custom-colors: (
+        "violet": #803D5C,
+        "rose": #B2708F,
+        "rose_pale": #e4b9c4,
+        "bleu": #20183D
+);
+
+// Replace the default primary color with a custom one
+$primary: map-get($custom-colors, "violet");
+
+// Merge custom colors with the default theme-colors
+$theme-colors: map-merge(
+                $theme-colors, // Start with the default theme colors
+                (
+                        "primary": $primary // Replace the primary color
+                )
+);
+
+// Add additional custom colors to the theme
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "./node_modules/bootstrap/scss/bootstrap";
+
+// pour compiler scss en css -> dans terminal :
+// sass scss/main.scss scss/output/bootstrap.css

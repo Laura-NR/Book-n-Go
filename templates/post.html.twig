@@ -54,16 +54,69 @@
         </div>
 
 
+{#        <div class="mb-3 p-3 shadow-sm border border-primary rounded">#}
+{#            <div class="bg-primary text-white text-center py-2" style="border-radius: 10px;">#}
+{#                <h2>{{ post.titre }}</h2>#}
+{#            </div>#}
+{#            <a href="?controleur=visite&methode=afficher&id={{ post.id_visite }}" class="text-decoration-none text-primary">Visite concernée : {{ post.titre_visite }}</a>#}
+{#            <img src="{{ post.chemin_img }}" class="img-fluid mt-3 d-block mx-auto rounded" alt="Image de la visite associée">#}
+{#            <div class="mt-3">#}
+{#                <p>{{ post.contenu }}</p>#}
+{#            </div>#}
+{#        </div>#}
+
         <div class="mb-3 p-3 shadow-sm border border-primary rounded">
             <div class="bg-primary text-white text-center py-2" style="border-radius: 10px;">
                 <h2>{{ post.titre }}</h2>
             </div>
-            <a href="?controleur=visite&methode=afficher&id={{ post.id_visite }}" class="text-decoration-none text-primary">Visite concernée : {{ post.titre_visite }}</a>
+
+            <div>
+                <h6>Visite concernée : {{ post.titre_visite }}</h6>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#excursionsModal">
+                    Voir les excursions comprenant cette visite
+                </button>
+            </div>
+
+
             <img src="{{ post.chemin_img }}" class="img-fluid mt-3 d-block mx-auto rounded" alt="Image de la visite associée">
             <div class="mt-3">
                 <p>{{ post.contenu }}</p>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="excursionsModal" tabindex="-1" aria-labelledby="excursionsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="excursionsModalLabel">Excursions pour {{ post.titre_visite }}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            {% for excursion in excursions %}
+                                <li>
+                                    <a href="?controleur=excursion&methode=afficher&id={{ excursion.id }}" class="text-decoration-none text-primary">{{ excursion.nom }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if excursions|length == 0 %}
+                                <li>Aucune excursion n'inclut cette visite pour le moment.</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="mb-3 p-3 shadow-sm border border-primary rounded">
+            {# ... (rest of the template remains unchanged) ... #}
+        </div>
+    </div>
 
 
 
