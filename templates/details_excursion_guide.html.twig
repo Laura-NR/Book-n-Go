@@ -46,16 +46,16 @@ Détails de l'Excursion
     
     <div class="mt-4">
         {% if excursion.id_guide == session.user_id %}
-            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-warning">
+            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-primary">
                 Créer un engagement
             </a>
         {% else %}
-            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-warning">
-                Je rejoins l'excursion
+            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-primary">
+                Rejoindre l'excursion
             </a>
         {% endif %}
         {% if excursion.id_guide == session.user_id %}
-            <a href="index.php?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-primary">
+            <a href="index.php?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-secondary">
                 Modifier
             </a>
             <a href="index.php?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">

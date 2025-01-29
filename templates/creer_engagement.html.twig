@@ -6,6 +6,14 @@ Engagement
 
 {% block dashboard_content %}
 <div class="container">
+    {% if messages_engagements is not empty %}
+        {% for message in messages_engagements %}
+            <div class="alert alert-{{ message.type }} text-center alert-dismissible fade show" role="alert">
+                <p>{{ message.message }}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
     <h1 class="mb-5">Création d'un engagement :</h1>
     <div class="excursion mb-5 d-flex flex-row align-items-center">
         {% if excursion is not empty %}
@@ -17,7 +25,7 @@ Engagement
         {% endif %}
     </div>
     <div>
-        <form action="index.php" method="post" class="form-check form-check-inline mt-5 d-flex flex-column">
+        <form action="" method="post" class="form-check form-check-inline mt-5 d-flex flex-column">
             <input type="hidden" name="controleur" value="engagement">
             <input type="hidden" name="methode" value="creer">
             <input type="hidden" name="id_excursion" value="{{ excursion.id }}">
@@ -41,4 +49,19 @@ Engagement
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Les notifications vont disparaitre après 5 secondes si l'utilisateur ne les ferme pas
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            setTimeout(() => {
+                bsAlert.close();
+            }, 5000);
+        });
+    });
+</script>
 {% endblock %}
