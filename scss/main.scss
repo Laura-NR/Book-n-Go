@@ -1,3 +1,6 @@
+// Commande de build SASS du fichier SCSS en fichier CSS (chemins relatifs par rapport à ce dossier) :
+// sass main.scss ../css/bootstrap.css 
+
 @import "../node_modules/bootstrap/scss/functions";
 @import "../node_modules/bootstrap/scss/variables";
 @import "../node_modules/bootstrap/scss/mixins";
@@ -25,6 +28,3 @@ $theme-colors: map-merge(
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
 @import "../node_modules/bootstrap/scss/bootstrap";
-
-// pour compiler scss en css -> dans terminal :
-// sass scss/main.scss scss/output/bootstrap.css
