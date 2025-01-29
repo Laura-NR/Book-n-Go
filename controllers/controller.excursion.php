@@ -595,7 +595,7 @@ class ControllerExcursion extends BaseController
      */
     public function listerByGuide(int $id): void
     {
-        $successExcursion = isset($_SESSION['success_excursion']) ? $_SESSION['success_excursion'] : null;
+        $successExcursion = $_SESSION['success_excursion'] ?? [];
         unset($_SESSION['success_excursion']);
 
         $excursionDao = new ExcursionDao($this->getPdo());
@@ -608,10 +608,14 @@ class ControllerExcursion extends BaseController
             $excursions = $excursionDao->findByGuide($id);
         }
 
+        $messages = $_SESSION['success_engagements'] ?? [];
+        unset($_SESSION['success_engagements']);
+
         echo $this->getTwig()->render('guide_excursions.html.twig', [
             'success_excursion' => $successExcursion,
             'excursionsByGuide' => $excursions,
             'public' => $public,
+            'success_engagements' => $messages
         ]);
     }
 }
