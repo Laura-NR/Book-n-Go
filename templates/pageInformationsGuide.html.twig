@@ -57,7 +57,7 @@
                 {% if not editMode %}
                     <div class="mb-3">
                         <label class="form-label"><strong>Certification:</strong></label>
-                        <a href="{{ guide.chemin_certif }}" target="_blank" class="link-primary">Voir ma certification</a>
+                        <a href="?controleur=guide&methode=voirCertification&id={{ guide.id }}" target="_blank" class="link-primary">Voir ma certification</a>
                     </div>
                 {% endif %}
             </div>

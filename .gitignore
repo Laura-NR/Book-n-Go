@@ -1,7 +1,10 @@
 /vendor
 /node_modules
-/config
+/config/config.yaml
+/config/constantes.php
 .codiumai
 /docs.qodo
 /.qodo/
 .idea/
+package-lock.json
+composer.lock

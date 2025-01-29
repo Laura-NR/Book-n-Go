@@ -69,13 +69,17 @@ class ControllerGuide extends ControllerVoyageur
         if ($this->validator->valider($data)) {
             $nomFichierCertif = basename($data['chemin_certif']['name']);
             try {
+                if (isset($data['chemin_certif']['name']) && $data['chemin_certif']['error'] === UPLOAD_ERR_OK) {
+                    $nomImage = $data["mail"] . '_' . 'certification' . '.pdf';
+                    $cheminCertif = 'certifications/' . $nomImage;
+                }
                 $guide = new Guide();
                 $guide->setNom($data['nom']);
                 $guide->setPrenom($data['prenom']);
                 $guide->setNumeroTel($data['numero_tel']);
                 $guide->setMail($data['mail']);
                 $guide->setMdp(password_hash($data['mdp'], PASSWORD_DEFAULT));
-                $guide->setCheminCertification($nomFichierCertif);  // Utiliser le nom du fichier, pas le chemin complet
+                $guide->setCheminCertification($nomImage);  // Utiliser le nom du fichier, pas le chemin complet
                 $guide->setDerniereCo(new DateTime());
 
                 // *** Initialisation des nouveaux champs lors de la création ***
@@ -86,6 +90,8 @@ class ControllerGuide extends ControllerVoyageur
                 $guideDao = new GuideDao($this->getPdo());
                 if ($guideDao->creer($guide)) {
                     echo "Guide créé";
+                    // Gestion de l'upload d'image
+                    move_uploaded_file($data['chemin_certif']['tmp_name'], $cheminCertif);
                     return true;
                 } else {
                     echo "Guide non créé -> erreur liée à la bd";
@@ -226,8 +232,9 @@ class ControllerGuide extends ControllerVoyageur
     // Voir le certificat du guide (accessible uniquement aux administrateurs)
     public function voirCertification(int $id): void
     {
-        if (!$this->isAdmin()) {
-            echo "Accès non autorisé. Vous devez être administrateur pour voir le certificat.";
+        // Vérifie si l'utilisateur est un administrateur ou le guide lui-même
+        if (!$this->isAdmin() && (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== $id)) {
+            echo "Accès non autorisé. Vous devez être administrateur ou le guide lui-même pour voir le certificat.";
             return;
         }
 
@@ -236,11 +243,14 @@ class ControllerGuide extends ControllerVoyageur
             $guide = $guideDao->find($id);
 
             if ($guide) {
+                // Récupère le chemin du certificat en fonction de l'ID
                 $cheminCertificat = $guideDao->getCheminCertificatParId($id);
-                if ($cheminCertificat && file_exists($cheminCertificat)) {
-                    header('Content-Type: bookngo/pdf');
-                    header('Content-Disposition: attachment; filename="' . basename($cheminCertificat) . '"');
-                    readfile($cheminCertificat);
+                $cheminCertificatComplet = "certifications/".$cheminCertificat;
+
+                if ($cheminCertificat && file_exists($cheminCertificatComplet)) {
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: inline; filename="' . basename($cheminCertificatComplet) . '"');
+                    readfile($cheminCertificatComplet);
                     exit;
                 } else {
                     echo "Le certificat pour ce guide est introuvable.";
@@ -252,6 +262,9 @@ class ControllerGuide extends ControllerVoyageur
             echo "Erreur lors de la consultation du certificat : " . $e->getMessage();
         }
     }
+
+
+
 
     /**
      * Afficher le planning du guide (accessible uniquement au guide connecté)
@@ -288,6 +301,7 @@ class ControllerGuide extends ControllerVoyageur
          } catch (Exception $e) {
              echo "Erreur lors de l'affichage du guide : " . $e->getMessage();
          }
-     } 
+     }
+
 }
 ?>
