@@ -35,41 +35,56 @@
 {% endblock %}
 
 {# Ajouter les assets JS et CSS nécessaires pour FullCalendar #}
-{% block javascripts %}
+{% block script %}
     {{ parent() }}
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.15/main.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/main.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/main.min.css" rel="stylesheet">
-{% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.js"></script>
 
-{# Ajouter un script pour initialiser FullCalendar #}
-{% block footer_javascripts %}
-    {{ parent() }}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("Vérification après chargement :", typeof FullCalendar);
+
+            if (typeof FullCalendar === "undefined") {
+                console.error("ERREUR: FullCalendar n'est pas chargé !");
+                return;
+            }
+
             const calendarEl = document.getElementById('calendar');
+            if (!calendarEl) {
+                console.error("L'élément #calendar est introuvable !");
+                return;
+            }
+
             const calendar = new FullCalendar.Calendar(calendarEl, {
-                plugins: ['dayGrid', 'interaction'],
                 initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                },
                 events: [
                     {% for reservation in reservations %}
                     {
-                        title: '{{ reservation.titre_excursion }}',
-                        start: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ engagement.heure_debut|date("H:i:s") }}',
-                        end: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ engagement.heure_fin|date("H:i:s") }}',
-                        description: '{{ reservation.description_excursion }}',
+                        title: '{{ reservation.titre_excursion|e('js') }}',
+                        start: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ reservation.heure_debut|date("H:i:s") }}',
+                        end: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ reservation.heure_fin|date("H:i:s") }}',
+                        description: '{{ reservation.description_excursion|e('js') }}',
                         extendedProps: {
-                            guide: '{{ reservation.nom_guide }} {{ reservation.prenom_guide }}'
+                            guide: '{{ reservation.nom_guide|e('js') }} {{ reservation.prenom_guide|e('js') }}'
                         }
                     },
-                    {% endfor %}
-                ],
-                editable: true,
-                droppable: true
-            });
+                    {% else %}
+                    console.log("Aucune réservation trouvée !");
+            {% endfor %}
+        ],
+            editable: true,
+                droppable: true,
+                eventClick: function(info) {
+                alert("Excursion : " + info.event.title + "\nGuide : " + info.event.extendedProps.guide + "\nDescription : " + info.event.extendedProps.description);
+            }
+        });
+
             calendar.render();
+            console.log("✅ FullCalendar initialisé avec succès !");
         });
     </script>
 {% endblock %}
