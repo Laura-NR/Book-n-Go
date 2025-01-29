@@ -1,7 +1,21 @@
+# Packages
 /vendor
 /node_modules
-/config
+
+# Configuration personnelle
+/config/config.yaml
+
+# IDE
+.vscode/
+.idea/
 .codiumai
 /docs.qodo
 /.qodo/
-.idea/
+
+#CSS
+/css/bootstrap.css
+/css/bootstrap.css.map
+
+# Fichiers lock
+package-lock.json
+composer.lock

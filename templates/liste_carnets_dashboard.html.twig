@@ -31,7 +31,7 @@
             {% for carnet in carnets %}
                 <div class="col">
                     <div class="card h-100">
-                        <img src="{{ carnet.chemin_img }}" class="card-img-top" alt="Image du carnet {{ carnet.titre }}">
+                        <img src="{{ carnet.chemin_img }}" class="card-img-top" style="object-fit: cover; height: 200px" alt="Image du carnet {{ carnet.titre }}">
                         <div class="card-body">
                             <h5 class="card-title text-center">{{ carnet.titre }}</h5>
                             <p class="card-text">{{ carnet.description }}</p>

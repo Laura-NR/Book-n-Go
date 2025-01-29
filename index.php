@@ -1,4 +1,7 @@
 <?php
+// pas sur que ce soit nécessaire mais au cas où : A VOIR
+set_include_path('.;C:/wamp64/www/Book-n-Go;C:/wamp64/backupscripts');
+//echo get_include_path();
 ob_start();
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -54,4 +57,23 @@ try {
 } catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
 }
+
+
+try {
+    // Vérifier si le backup peut être lancé
+    require_once '../../backupscripts/backup_trigger.php';
+    // Déclenchement de backup
+    AutoBackup::lancer_backup();
+} catch (Exception $e) {
+    error_log("Backup trigger failed: " . $e->getMessage());
+}
+
+
+//$last_backup = filemtime('/tmp/backup.lock');
+//// si pas de backup, ou alors temps d'intervalle écoulé -> on déclenche le backup
+//if (!$last_backup || time() - $last_backup > 86400) { // 24 heures
+//    require_once '../../backupscripts/backup_trigger.php';
+//    AutoBackup::lancer_backup();
+//}
+
 ?>
