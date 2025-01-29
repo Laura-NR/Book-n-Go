@@ -4,10 +4,12 @@
 
 # Configuration personnelle
 /config/config.yaml
+/config/constantes.php
 
 # IDE
 .vscode/
 .idea/
+
 .codiumai
 /docs.qodo
 /.qodo/

@@ -58,15 +58,22 @@ Guide Dashboard
                     {% endif %}
                     {% if session.role == "guide" %}
                         <li class="w-100">
-                            <a href="index.php?controleur=guide&methode=afficher&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
+                            <a href="index.php?controleur=guide&methode=afficherInformation&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
                                 <img src="images/icons/infos.svg" class="me-2" title="Mes Informations"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Mes Informations</span> </a>
+                        </li>
+                        <li class="w-100">
+                            <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span" data-bs-toggle="modal" data-bs-target="#fenetreModale">Supprimer </span>
                         </li>
                     {% elseif session.role == "voyageur" %}
                         <li class="w-100">
                             <a href="index.php?controleur=voyageur&methode=afficher&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
                                 <img src="images/icons/infos.svg" class="me-2" title="Mes Informations"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Mes Informations</span> </a>
                         </li>
+                        <li class="w-100">
+                            <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span" data-bs-toggle="modal" data-bs-target="#fenetreModale">Supprimer </span>
+                        </li>
                     {% endif %}
+
                 </ul>
             </div>
         </div>
@@ -76,4 +83,30 @@ Guide Dashboard
         </div>
     </div>
 </div>
+    <!-- Modale de confirmation de suppression -->
+    <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes vos excursions et commentaires.</p>
+                </div>
+                <div class="modal-footer">
+                    <!-- Formulaire pour confirmer la suppression -->
+                    {% if session.role == "guide" %}
+                    <form method="POST" action="?controleur=guide&methode=supprimerGuide&id={{ session.user_id }}">
+                        {% elseif session.role == "voyageur" %}
+                        <form method="POST" action="?controleur=guide&methode=supprimerVoyageur&id={{ session.user_id }}">
+                            {% endif %}
+                        <input type="hidden" name="action" value="supprimer">
+                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
