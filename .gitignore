@@ -12,6 +12,10 @@
 /docs.qodo
 /.qodo/
 
+#CSS
+/css/bootstrap.css
+/css/bootstrap.css.map
+
 # Fichiers lock
 package-lock.json
 composer.lock
