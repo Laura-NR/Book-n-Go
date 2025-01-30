@@ -26,19 +26,13 @@
  
  {% block dashboard_content %}
      <div class="container my-5">
-        {% if success_engagements is not empty %}
-            {% for message in success_engagements %}
+        {% if messages is not empty %}
+            {% for message in messages %}
                 <div class="alert alert-{{ message.type }} text-center alert-dismissible fade show" role="alert">
                     <p>{{ message.message }}</p>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
-        {% endif %}
-        {% if success_excursion is not empty %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ success_excursion }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
         {% endif %}
          <div class="d-flex flex-rox justify-content-between align-items-center mb-5">
              <h1 class="text-center mb-4">Liste des Excursions</h1>

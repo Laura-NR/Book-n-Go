@@ -180,7 +180,7 @@ class ControllerExcursion extends BaseController
             $this->handleVisits($nouvelleExcursion->getId(), $_POST);
 
             if ($isAjax) {
-                $_SESSION['success_excursion'] = 'Excursion créée avec succès!';
+                $_SESSION['success_excursion'] = ['type' => 'success', 'message' => 'Excursion créée avec succès!'];
 
                 echo json_encode([
                     'success' => true,
@@ -451,26 +451,26 @@ class ControllerExcursion extends BaseController
         // session_start();
 
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'guide') {
-            echo "Vous n'êtes pas autorisé à effectuer cette action.";
+            $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Vous n\'êtes pas autorisé à effectuer cette action.'];
             return;
         }
 
         $excursionDao = new ExcursionDao($this->getPdo());
         $excursion = $excursionDao->findAssoc($id);
         if (!$excursion) {
-            echo "Erreur : Excursion introuvable.";
+            $_SESSION['messages_exc'][] = ['type' => 'danger', 'message' => 'Erreur : Excursion introuvable.'];
             exit;
         }
 
         if ($excursion->getId_guide() !== $_SESSION['user_id']) {
-            echo "Erreur : Vous n'êtes pas autorisé à supprimer cette excursion.";
+            $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Erreur : Vous n\'êtes pas autorisé à supprimer cette excursion.'];
             exit;
         }
 
         if ($excursionDao->supprimer($id)) {
             $this->redirect('excursion', 'listerByGuide', ['id' => $_SESSION['user_id']]);
         } else {
-            echo "Erreur lors de la suppression de l'excursion.";
+            $_SESSION['messages_exc'][] = ['type' => 'danger', 'message' => 'Erreur lors de la suppression de l\'excursion.'];
         }
     }
 
@@ -598,6 +598,14 @@ class ControllerExcursion extends BaseController
         $successExcursion = $_SESSION['success_excursion'] ?? [];
         unset($_SESSION['success_excursion']);
 
+        $successEngagement = $_SESSION['success_engagements'] ?? [];
+        unset($_SESSION['success_engagements']);
+
+        $allMessages = array_merge(
+            is_array($successExcursion) ? $successExcursion : [$successExcursion],
+            is_array($successEngagement) ? $successEngagement : [$successEngagement]
+        );
+
         $excursionDao = new ExcursionDao($this->getPdo());
 
         $public = isset($_GET['public']) && $_GET['public'] == 1;
@@ -608,14 +616,10 @@ class ControllerExcursion extends BaseController
             $excursions = $excursionDao->findByGuide($id);
         }
 
-        $messages = $_SESSION['success_engagements'] ?? [];
-        unset($_SESSION['success_engagements']);
-
         echo $this->getTwig()->render('guide_excursions.html.twig', [
-            'success_excursion' => $successExcursion,
+            'messages' => $allMessages,
             'excursionsByGuide' => $excursions,
-            'public' => $public,
-            'success_engagements' => $messages
+            'public' => $public
         ]);
     }
 }
