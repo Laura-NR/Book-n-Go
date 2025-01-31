@@ -174,16 +174,29 @@ class ControllerUtilisateur extends BaseController
         $utilisateurExistant = $utilisateurDao->findByEmail($email);
 
         //si l'utilisateur exise déjà dans la bd avec ce mail (qu'il soit guide ou voyageur) ...
+        var_dump($role);
+        var_dump($utilisateurExistant);
+
+
         if ($utilisateurExistant) {
             // on recupère son role apres l'avoir trouvé
             $roleExistant = $utilisateurExistant instanceof Guide ? 'guide' : 'voyageur';
+            var_dump($roleExistant);
+            //exit();
             if ($roleExistant !== $role) {
                 // s'il est différent de celui demandé à l'inscription alors il a déjà un compte de l'autre role -> refus et redirection
                 $_SESSION['erreurs_inscription'][] = 'Un compte avec cette adresse e-mail existe déjà avec un rôle différent';
+                var_dump($_SESSION);
+//                exit();
                 $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
-                ob_end_flush();
-                return false;
             }
+            else{
+                // s'ils sont identiques alors on redirige vers la page de connexion et on informe que l'utilisateur est deja inscrit avec ce role
+                $_SESSION['erreurs_connexion'][] = 'Vous avez déjà un compte '. $role .' avec cette adresse e-mail. Veuillez vous connecter';
+                $this->redirect('utilisateur', 'afficherConnexion', ['inscription' => false]);
+            }
+            ob_end_flush();
+            return false;
         }
 
         $_SESSION['messages_alertes'][] = ['type' => 'success', 'message' => 'Votre compte a bien été créé, vous pouvez vous connecter à la page.'];
