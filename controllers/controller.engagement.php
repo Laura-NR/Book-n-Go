@@ -27,8 +27,12 @@ class ControllerEngagement extends BaseController
         $ExcursionDao = new ExcursionDao();
         $excursion = $ExcursionDao->findAssoc($id);
 
+        $messages = $_SESSION['messages_engagements'] ?? [];
+        unset($_SESSION['messages_engagements']);
+
         echo $this->getTwig()->render('creer_engagement.html.twig', [
-            'excursion' => $excursion
+            'excursion' => $excursion,
+            'messages_engagements' => $messages
         ]);
     }
 
@@ -55,14 +59,35 @@ class ControllerEngagement extends BaseController
 
             // Si les données sont invalides, on lance une exception
             if (empty($data['date_debut_dispo']) || empty($data['date_fin_dispo']) || empty($data['heure_debut']) || empty($data['id_excursion']) || empty($data['id_guide'])) {
-                throw new InvalidArgumentException("Tous les chemps sont obligatoires.");
+                // throw new InvalidArgumentException("Tous les chemps sont obligatoires.");
+                $_SESSION['messages_engagements'][] = ['type' => 'danger', 'message' => 'Tous les chemps sont obligatoires.'];
+                $this->redirect('engagement', 'afficherCreer', ['id' => $data['id_excursion']]);
+                return;
             }
 
-            // si la date de fin est avant la date de debut, on lance une exception
-            $dateDebut = new DateTime($data['date_debut_dispo']);
-            $dateFin = new DateTime($data['date_fin_dispo']);
-            if ($dateDebut > $dateFin) {
-                throw new InvalidArgumentException("La date de début de l'engagement ne peut pas être après la date de fin de l'engagement.");
+            if (!empty($data['date_debut_dispo']) && !empty($data['date_fin_dispo'])) {
+                $dateDebut = new DateTime($data['date_debut_dispo']);
+                $dateFin = new DateTime($data['date_fin_dispo']);
+            
+                if ($dateDebut > $dateFin) {
+                    $_SESSION['messages_engagements'][] = ['type' => 'danger', 'message' => 'La date de début ne peut pas être après la date de fin.'];
+                    $this->redirect('engagement', 'afficherCreer', ['id' => $data['id_excursion']]);
+                    return;
+                }
+            } else {
+                $dateDebut = null;
+                $dateFin = null;
+            }
+            
+
+            // Vérifier si le guide a déjà un engagement pour pour une autre excursion à la même date 
+            $engagementDao = new EngagementDao();
+            if ($dateDebut && $dateFin && $engagementDao->conflitsEngagements($data['id_guide'], $dateDebut, $dateFin)) {
+
+                $_SESSION['messages_engagements'][] = ['type' => 'danger', 'message' => 'Vous avez déjà un engagement qui chevauche cette période.'];
+
+                $this->redirect('engagement', 'afficherCreer', ['id' => $data['id_excursion']]);
+                return;
             }
 
             // Création de l'engagement
@@ -84,12 +109,13 @@ class ControllerEngagement extends BaseController
                 $success = $engagementDao->creer($engagement);
 
                 if ($success) {
-                    echo "Nouveau engagement créé avec succès.";
+                    // echo "Nouveau engagement créé avec succès.";
+                    $_SESSION['success_engagements'][] = ['type' => 'success', 'message' => 'Nouveau engagement créé avec succès.'];
                     $this->redirect('excursion', 'listerByGuide', ['id' => $data['id_guide']]);
                 } else {
                     throw new Exception("Erreur lors de la création de l'engagement.");
                 }
-            // Si une erreur se produit, on affiche un message d'erreur
+                // Si une erreur se produit, on affiche un message d'erreur
             } catch (Exception $e) {
                 error_log($e->getMessage());
                 echo "Erreur: " . $e->getMessage();

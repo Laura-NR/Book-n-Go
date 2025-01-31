@@ -1,12 +1,10 @@
 {% extends "base_template.html.twig" %}
 
-{% block title %}
-Inscription
-{% endblock %}
+{% block title %}{{ parent() }} - Inscription{% endblock %}
 
 {% block content %}
-<main class="container mt-5 mb-5">
     <h1 class="text-center mb-4">Inscription</h1>
+
     <div class="row justify-content-center">
         <div class="col-md-8">
             {% if erreurs|default %}
@@ -61,29 +59,17 @@ Inscription
                         <button type="submit" class="btn btn-primary">S'inscrire</button>
                     </div>
                 </form>
+                
                 <!-- Lien vers la connexion -->
-                <div class="text-center mt-3">
-                    <p>Dejà inscrit ? <a href="index.php?controleur=utilisateur&methode=afficherConnexion" class="btn btn-link">Se connecter</a></p>
+                <div class="text-center mt-3 d-flex justify-content-center align-items-center">
+                    <p class="mb-0">Déjà inscrit ?</p>
+                    <a href="index.php?controleur=utilisateur&methode=afficherConnexion" class="btn btn-link ms-2">Se connecter</a>
                 </div>
             </div>
         </div>
     </div>
-</main>
+{% endblock %}
 
-<script>
-    // Fonction pour afficher/masquer le champ de certification
-    function toggleCertificationField() {
-        const profil = document.getElementById('profil').value;
-        const certificationField = document.getElementById('certification-field');
-        if (profil === 'guide') {
-            certificationField.classList.remove('d-none');
-        } else {
-            certificationField.classList.add('d-none');
-        }
-    }
-    //faire en sorte que le champ de certification soit visible quand le profil est guide récupéré des données
-    document.addEventListener('DOMContentLoaded', function() {
-        toggleCertificationField();
-    });
-</script>
+{% block script %}
+    <script src="js/inscription.js"></script>
 {% endblock %}

@@ -1,7 +1,10 @@
 {% extends "base_template.html.twig" %}
 
-{% block title %}
-{{ website.title }} Page d'accueil
+{% block title %}{{ parent() }} - Page d'accueil{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="./css/page_accueil.css">
 {% endblock %}
 
 {% block content %}
@@ -18,24 +21,18 @@
     {# image de paysage d'arrivé sur le site A COMPLETER #}
     <div class="text-center">
         <div id="carouselAccueil" class="carousel slide mb-5" data-bs-ride="carousel" data-interval="2000">
-{#            <div class="carousel-indicators">#}
-{#                <button type="button" data-bs-target="#carouselAccueil" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>#}
-{#                <button type="button" data-bs-target="#carouselAccueil" data-bs-slide-to="1" aria-label="Slide 2"></button>#}
-{#            </div>#}
-            <div class="carousel-inner">
+            <div class="carousel-inner vignette">
                 <div class="carousel-item active">
                     <img src="./images/accueil/louvres.png" class="img-fluid" alt="1">
-                    <div class="carousel-caption position-absolute top-50 start-50 translate-middle text-center">
-                        <h1 class="text-white text-bg-dark bg-opacity-50 rounded-pill" style="text-shadow: 1px 1px 2px black;">Découvrir n'a jamais été aussi facile</h1>
-                    </div>
-                    <button class="position-absolute top-50 start-50 translate-middle text-center btn btn-primary rounded-pill">Réserver maintenant</button>
                 </div>
                 <div class="carousel-item">
                     <img src="./images/accueil/carcassonne.jpg" class="img-fluid" alt="2">
-                    <div class="carousel-caption position-absolute top-50 start-50 translate-middle text-center">
-                        <h1 class="text-white" style="text-shadow: 1px 1px 2px black;">Découvrir n'a jamais été aussi facile</h1>
-                    </div>
-                    <button class="position-absolute top-50 start-50 translate-middle text-center btn btn-primary rounded-pill">Réserver maintenant</button>
+                </div>
+            </div>
+            <div class="carousel-caption position-absolute top-50 start-50 translate-middle text-center">
+                <div class="rounded-pill px-5 py-4 bg-body-tertiary">
+                    <h1 id="carouselTitre" class="text-white">Découvrir n'a jamais été aussi facile</h1>
+                    <button id="carouselBouton" class="btn btn-primary rounded-pill">Réserver maintenant</button>
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselAccueil" data-bs-slide="prev">
@@ -48,7 +45,7 @@
             </button>
 
             <button id="scrollDownButton" class="btn btn-link position-absolute bottom-0 start-50 translate-middle-x mb-3">
-                <i data-feather="arrow-down-circle" color="#803D5C" width="128" height="128" stroke-width="1" class="feather-icon"></i>
+                <i id="scrollDownIcon" data-feather="arrow-down-circle" color="#803D5C" width="128" height="128" stroke-width="1" class="feather-icon"></i>
             </button>
 
         </div>
@@ -73,7 +70,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="row mb-5 align-items-center">
+                <div class="row align-items-center">
                     <div class="col-7">
                         <p>
                             Profitez de nos visites gratuites, ouvertes à tous, avec un large choix adapté à tous les goûts.
@@ -89,30 +86,9 @@
                     </div>
                 </div>
             </div>
-
-
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-12 col-md-6">
-                <div class="carnet de voyage"></div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="visites"></div>
-            </div>
-        </div>
-    </div>
 </main>
 {% endblock %}
 
 {% block script %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const scrollDownButton = document.getElementById('scrollDownButton');
-        const targetSection = document.querySelector('.container.text-center');
-
-        scrollDownButton.addEventListener('click', function() {
-            targetSection.scrollIntoView({ behavior: 'smooth' });
-        });
-    });
-</script>
+    <script src="js/pageAccueil.js"></script>
 {% endblock %}

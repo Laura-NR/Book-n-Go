@@ -1,13 +1,18 @@
 {% extends "dashboard.html.twig" %}
 
 {% block title %}
-	{{ parent() }}{{ isEdit ? 'Modifier Visite' : 'Créer Visite' }}
+	{{ parent() }} - {{ isEdit ? 'Modifier Visite' : 'Créer Visite' }}
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="css/formulaire_visite.css">
 {% endblock %}
 
 {% block dashboard_content %}
 
 	<main class="container">
-		<h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
+		<h1 id="titrePage" class="text-center">
 			{{ isEdit ? 'Modifier la visite' : 'Informations de la visite' }}
 		</h1>
 
@@ -21,14 +26,8 @@
 			</div>
 		{% endif %}
 
-		<form class="mx-auto p-5" id="form" style="width: 80%" method="post">
-			<div style="
-										        background-color: #b2708f;
-										        color: #000;
-										        border-radius: 30px;
-										        padding: 40px;
-										      ">
-
+		<form id="form" class="mx-auto p-5" id="form" method="post">
+			<div id="formDiv">
 				<div class="row mb-4">
 					<div class="col">
 						<label for="titre" class="form-label">Titre :</label>
@@ -42,11 +41,11 @@
 				<div class="row mb-4">
 					<div class="col">
 						<label for="ville" class="form-label">Ville :</label>
-						<input type="text" id="ville" name="ville" class="form-control" value="{{ visite.ville|default('') }}"minlength="1" maxlength="255" required/>
+						<input type="text" id="ville" name="ville" class="form-control" value="{{ visite.ville|default('') }}" minlength="1" maxlength="255" required/>
 					</div>
 					<div class="col">
 						<label for="codePostal" class="form-label">Code postal :</label>
-						<input type="text" id="codePostal" name="codePostal" class="form-control" value="{{ visite.codePostal|default('') }}"minlength="5" maxlength="5" required/>
+						<input type="text" id="codePostal" name="codePostal" class="form-control" value="{{ visite.codePostal|default('') }}" minlength="5" maxlength="5" required/>
 					</div>
 				</div>
 				<div class="row mb-4">
@@ -60,58 +59,13 @@
 				{% endif %}
 			</div>
 			<div class="text-center mt-4">
-				<input type="submit" value="{{ isEdit ? 'Modifier' : 'Créer' }}" class="btn" style="
-										          background-color: #b2708f;
-										          color: #fff;
-										          border-radius: 30px;
-										          padding: 10px 40px;
-										        " formaction="index.php?controleur=visite&methode={{ isEdit ? 'modifier' : 'creer' }}{% if isEdit %}&id={{ visite.id }}{% else %}&isExcursion={{ isExcursion }}{% endif %}"/>
+				<input id="formBtn" type="submit" value="{{ isEdit ? 'Modifier' : 'Créer' }}" class="btn" formaction="index.php?controleur=visite&methode={{ isEdit ? 'modifier' : 'creer' }}{% if isEdit %}&id={{ visite.id }}{% else %}&isExcursion={{ isExcursion }}{% endif %}"/>
 			</div>
 		</form>
 	</main>
 {% endblock %}
 
 {% block script %}
-
-<script>
-document.querySelector("#form").addEventListener("submit", (e) => {
-  let errors = []; 
-
-  // Validation du titre
-  const titreInput = document.querySelector("#titre");
-  const titreRegex = /^[a-zA-ZÀ-ÿ'\s-]+$/;
-  if (!titreRegex.test(titreInput.value)) {
-    errors.push("Le titre contient des caractères invalides.");
-  }
-
-  // Validation de l'adresse
-  const adresseInput = document.querySelector("#adresse");
-  const adresseRegex = /^[0-9]{1,3}\s[a-zA-ZÀ-ÿ'\s-]+$/;
-  if (!adresseRegex.test(adresseInput.value)) {
-    errors.push("L'adresse contient des caractères invalides.");
-  }
-
-  // Validation de la ville
-  const villeInput = document.querySelector("#ville");
-  const villeRegex = /^[a-zA-ZÀ-ÿ'\s-]+$/;
-  if (!villeRegex.test(villeInput.value)) {
-    errors.push("La ville contient des caractères invalides.");
-  }
-
-  // Validation du code postal
-  const codePostalInput = document.querySelector("#codePostal");
-  const codePostalRegex = /^[0-9]{5}$/;
-  if (!codePostalRegex.test(codePostalInput.value)) {
-    errors.push("Le code postal doit comporter exactement 5 chiffres.");
-  }
-
-  // Affichage des erreurs
-  if (errors.length > 0) {
-    e.preventDefault(); // Empêche la soumission
-    alert(errors.join("\n")); // Affiche toutes les erreurs dans une alerte
-  }
-});
-
-</script>
-
+	{{ parent() }}
+	<script src="js/formulaire_visite.js"></script>
 {% endblock %}

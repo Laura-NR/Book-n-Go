@@ -5,5 +5,8 @@
     "feather-icons": "^4.29.2",
     "fullcalendar": "^6.1.15",
     "tarteaucitronjs": "^1.19.0"
+  },
+  "devDependencies": {
+    "sass": "^1.83.4"
   }
 }

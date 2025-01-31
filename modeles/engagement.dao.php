@@ -163,6 +163,31 @@ class EngagementDao {
         }
         return $engagements;
     }
+
+    /**
+ * @brief Vérifier si le guide a créé un engagement pour une excursion à une date et une heure données
+ *
+ * @param int $guideId L'identifiant du guide.
+ * @param DateTime $dateDebut La date de début de l'engagement.
+ * @param DateTime $dateFin La date de fin de l'engagement.
+ * @return bool Retourne vrai si le guide a déjà un engagement pour l'excursion à la date et l'heure données, faux sinon.
+ */
+public function conflitsEngagements(int $guideId, DateTime $dateDebut, DateTime $dateFin): bool
+{
+    $sql = "SELECT COUNT(*) FROM engagement 
+            WHERE id_guide = :id_guide 
+            AND (
+                (date_debut_dispo <= :date_fin AND date_fin_dispo >= :date_debut))";
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([
+        ':id_guide' => $guideId,
+        ':date_debut' => $dateDebut->format('Y-m-d'),
+        ':date_fin' => $dateFin->format('Y-m-d')
+    ]);
+
+    return $stmt->fetchColumn() > 0;
+}
     public function getEngagementById(int $id): array
     {
         $sql = "SELECT * FROM engagement WHERE id_guide = :id";

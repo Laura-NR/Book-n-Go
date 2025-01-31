@@ -8,20 +8,23 @@ require_once 'validation/connexion.php';
  * @class ControllerUtilisateur
  * @brief Classe du contrôleur pour la gestion des utilisateurs
  */
-class ControllerUtilisateur extends BaseController {
+class ControllerUtilisateur extends BaseController
+{
 
     /**
      * @var Validator
      */
     private Validator $validator; // Instance de la classe Validator
-    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
+    {
         parent::__construct($twig, $loader);
         global $reglesValidationConnexion;
         $this->validator = new Validator($reglesValidationConnexion);
     }
 
     // Affichage de la page de connexion
-    public function afficherConnexion(): void {
+    public function afficherConnexion(): void
+    {
         // Récupérer les erreurs et les données de la session (si présentes)
         $erreursInscription = $_SESSION['erreurs_connexion'] ?? [];
         $donneesInscription = $_SESSION['donnees_connexion'] ?? [];
@@ -33,13 +36,14 @@ class ControllerUtilisateur extends BaseController {
 
         // Affichage du template
         echo $template->render([
-                'erreurs' => $erreursInscription,
-                'donnees' => $donneesInscription
-            ]);
+            'erreurs' => $erreursInscription,
+            'donnees' => $donneesInscription
+        ]);
     }
 
     // Affichage de la page d'inscription
-    public function afficherInscription(): void {
+    public function afficherInscription(): void
+    {
         // Récupérer les erreurs et les données de la session (si présentes)
         $erreursInscription = $_SESSION['erreurs_inscription'] ?? [];
         $donneesInscription = $_SESSION['donnees_inscription'] ?? [];
@@ -56,11 +60,11 @@ class ControllerUtilisateur extends BaseController {
         ]);
     }
 
-        /**
-         * Vérifie si la connexion est possible en fonction des données de l'utilisateur
-         *
-         * @return bool true si la connexion est possible, false sinon
-         */
+    /**
+     * Vérifie si la connexion est possible en fonction des données de l'utilisateur
+     *
+     * @return bool true si la connexion est possible, false sinon
+     */
     /**
      * Vérifie si la connexion est possible en fonction des données de l'utilisateur
      *
@@ -198,7 +202,7 @@ class ControllerUtilisateur extends BaseController {
                 return false;
             }
 
-        // SI ON SOUHAITE INSCRIRE UN GUIDE
+            // SI ON SOUHAITE INSCRIRE UN GUIDE
         } else if ($role == "guide") {
             $controller = new ControllerGuide($this->getTwig(), $this->getLoader());
             // appeler la methode creer de guide qui elle ensuite effectue la validation
@@ -211,21 +215,28 @@ class ControllerUtilisateur extends BaseController {
                 ob_end_flush();
                 return false;
             }
-
         }
         //Sinon
         $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
         ob_end_flush();
         return false;
-
     }
 
     // Déconnexion de l'utilisateur
-    public function deconnexion(): void {
+    public function deconnexion(): void
+    {
+        //Variable de session temporaire pour passer le message
+        $logout_message = ['type' => 'success', 'message' => 'Vous êtes maintenant déconnecté de votre compte.'];
 
         session_unset();
         session_destroy();
 
+        //Nouvelle session pour faire passer le message
+        session_start();
+        $_SESSION['messages_alertes'][] = $logout_message;
+        unset($_SESSION['logout_message']);
+
+        // Redirection vers la page d'accueil
         $this->redirect('', '');
     }
 
@@ -243,4 +254,3 @@ class ControllerUtilisateur extends BaseController {
         echo $this->getTwig()->render('dashboard.html.twig');
     }
 }
-?>
