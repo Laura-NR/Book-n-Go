@@ -48,6 +48,18 @@
             ];
             {% elseif session.role is defined and session.role == "guide" %}
             console.log("Condition session guide vérifiée");
+
+            console.log("Engagements :", [
+                {% for engagement in engagements %}
+                {
+                    title: '{{ engagement.titre_excursion|e('js') }}',
+                    start: '{{ engagement.date_debut_dispo|date("Y-m-d") }}T{{ engagement.heure_debut|date("H:i:s") }}',
+                    end: '{{ engagement.date_fin_dispo|date("Y-m-d") }}T{{ engagement.heure_fin|date("H:i:s") }}',
+                    description: 'ID Excursion : {{ engagement.id_excursion|e('js') }}'
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]);
+
             events = [
                 {% for engagement in engagements %}
                 {
