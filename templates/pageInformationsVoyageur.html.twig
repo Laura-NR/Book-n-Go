@@ -14,7 +14,7 @@
             <div class="card">
                 <div class="card-body">
 
-                    <!-- Nom -->guide
+                    <!-- Nom -->
                     <div class="mb-3">
                         <label for="nom-utilisateur" class="form-label"><strong>Nom:</strong></label>
                         {% if editMode %}
@@ -72,7 +72,7 @@
                         </button>
 
                         <!-- Annuler : Redirection vers la page d'informations du guide -->
-                        <a href="?controleur=voyageur&methode=affiche&id={{ voyageur.id }}" class="btn btn-outline-secondary ms-2 span hover-span">Annuler</a>
+                        <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}" class="btn btn-outline-secondary ms-2 span hover-span">Annuler</a>
                     </div>
                 {% else %}
                     <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}&editMode=true" class="btn btn-outline-secondary span hover-span">Modifier</a>
