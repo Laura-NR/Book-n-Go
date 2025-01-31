@@ -68,35 +68,10 @@
                 <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}&editMode=true" class="btn btn-outline-secondary">Modifier</a>
             {% endif %}
 
-            <!-- Supprimer toujours à droite -->
-            <div class="ms-auto">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#fenetreModale"> Supprimer mon compte</button>
-            </div>
         </div>
     </form>
 
-    <!-- Modale de confirmation de suppression -->
-    <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmer la suppression</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera tous vos carnets de voyage, posts et commentaires.</p>
-                </div>
-                <div class="modal-footer">
-                    <!-- Formulaire pour confirmer la suppression -->
-                    <form method="POST" action="?controleur=voyageur&methode=supprimervoyageur&id={{ voyageur.id }}">
-                        <input type="hidden" name="action" value="supprimer">
-                        <button type="submit" class="btn btn-danger">Confirmer</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     
 
 </div>
