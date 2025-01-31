@@ -1,39 +1,13 @@
 {% extends "base_template.html.twig" %}
 
 {% block css %}
-<style>
-    .span {
-        color: #b2708f;
-        border: 2px solid #b2708f;
-    }
-    .hover-span:hover, .hover-span:focus {
-        background: #b2708f;
-        color: #ffffff;
-    }
-    /* Bouton Enregistrer (Confirmer) avec couleur plus prononcée */
-    .btn-custom-enregistrer {
-        background-color: #b2708f;  /* Rose foncé */
-        color: #ffffff;
-        border: none;
-    }
-
-    .btn-custom-enregistrer:hover,
-    .btn-custom-enregistrer:focus {
-        background-color: #9c5c7a;  /* Rose plus clair au survol */
-        color: #ffffff;
-    }
-
-
-
-</style>
+    <link rel="stylesheet" href="css/dashboard.css">
 {% endblock %}
 
-{% block title %}
-Guide Dashboard
-{% endblock %}
+{% block title %}{{ parent() }} - Dashboard{% endblock %}
 
 {% block content %}
-<div class="container-fluid my-5">
+<div class="container-fluid">
     <div class="row flex-nowrap">
         <div class="col-auto col-md-1 col-xl-2 px-sm-2 px-0" style="border-right: 3px solid #b2708f;">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
@@ -92,7 +66,7 @@ Guide Dashboard
                 </ul>
             </div>
         </div>
-        <div class="col py-3">
+        <div class="col">
         {% block dashboard_content %}
         {% endblock %}
         </div>

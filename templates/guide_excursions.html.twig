@@ -20,17 +20,17 @@
 
  {% extends "dashboard.html.twig" %}
 
- {% block title %}
-     Mes Excursions
- {% endblock %}
+{% block title %}{{ parent() }} - Excursions{% endblock %}
  
  {% block dashboard_content %}
-     <div class="container my-5">
-        {% if success_excursion is not empty %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ success_excursion }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+     <div class="container">
+        {% if success_engagements is not empty %}
+            {% for message in success_engagements %}
+                <div class="alert alert-{{ message.type }} text-center alert-dismissible fade show" role="alert">
+                    <p>{{ message.message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
         {% endif %}
          <div class="d-flex flex-rox justify-content-between align-items-center mb-5">
              <h1 class="text-center mb-4">Liste des Excursions</h1>
@@ -91,3 +91,17 @@
  {% endblock %}
  
  
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Les notifications vont disparaitre après 5 secondes si l'utilisateur ne les ferme pas
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            setTimeout(() => {
+                bsAlert.close();
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}

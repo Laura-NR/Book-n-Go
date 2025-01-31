@@ -15,6 +15,10 @@ class Composer {
     /**
      * @var int|null
      */
+    private ?int $ordre;
+    /**
+     * @var int|null
+     */
     private ?int $id_excursion;
     /**
      * @var int|null
@@ -25,15 +29,18 @@ class Composer {
 
     /**
      * @param DateTime|null $temps_sur_place
+     * @param int|null $ordre
      * @param int|null $id_excursion
      * @param int|null $id_visite
      */
     public function __construct(
         ?DateTime  $temps_sur_place = null,
+        ?int $ordre = null,
         ?int $id_excursion = null,
         ?int    $id_visite = null)
         {
             $this->temps_sur_place = $temps_sur_place;
+            $this->ordre = $ordre;
             $this->id_excursion = $id_excursion;
             $this->id_visite = $id_visite;
         }
@@ -48,7 +55,6 @@ class Composer {
         return $this->temps_sur_place;
     }
 
-
     /**
      * @brief Set la valeur de temps_sur_place
      * @param DateTime|null $tempsSurPlace
@@ -59,6 +65,23 @@ class Composer {
         $this->temps_sur_place = $tempsSurPlace;
     }
 
+    /**
+     * @brief Récupère la valeur de ordre
+     * @return int|null
+     */
+    public function getOrdre(){
+        return $this->ordre;
+    }
+
+    /**
+     * @brief Set la valeur de ordre
+     * @param int|null $ordre
+     * @return void
+     */
+    public function setOrdre(?int $ordre): void
+    {
+        $this->ordre = $ordre;
+    }
 
     /**
      * @brief Récupère l'id de l'excursion

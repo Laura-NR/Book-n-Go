@@ -1,14 +1,13 @@
 {% extends "dashboard.html.twig" %}
 
-{% block title %}
-    {{ website.title }} - Mon compte
-{% endblock %}
+{% block title %}{{ parent() }} - Mon compte{% endblock %}
+
 
 {% block dashboard_content %}
-    <div class="container my-5">
-        <h2>Mes informations:</h2>
-        <!-- Formulaire principal pour Modifier et Enregistrer -->
-        <form method="POST" action="index.php?controleur=guide&methode=modifierGuide&id={{ guide.id }}" id="form-modification">
+<div class="container">
+    <h2>Mes informations:</h2>
+    <!-- Formulaire principal pour Modifier et Enregistrer -->
+    <form method="POST" action="index.php?controleur=guide&methode=modifierGuide&id={{ guide.id }}" id="form-modification">
 
             <div class="card">
                 <div class="card-body">
