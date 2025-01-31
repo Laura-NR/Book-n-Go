@@ -59,6 +59,9 @@ class ControllerPost extends BaseController
         $carnetDao = new CarnetVoyageDAO($this->getPdo());
         $carnet = $carnetDao->find($id);
 
+        $message = $_SESSION["message"] ?? null;
+        unset($_SESSION["message"]); // Supprimer le message de $_SESSION
+
         // Chargement du template pour lister les posts du carnet
         $template = $this->getTwig()->load('liste-posts.html.twig');
 
@@ -67,6 +70,7 @@ class ControllerPost extends BaseController
             'posts' => $posts,
             'idCarnet' => $id,
             'idVoyageurCarnet' => $carnet->getIdVoyageur(), // A REMPLACER PAR UN GETTER APRES MDOIFICATION DE LA CLASSE CARNET
+            'message' => $message,
         ));
     }
 
@@ -199,9 +203,14 @@ class ControllerPost extends BaseController
             $postDao = new PostDAO($this->getPdo());
             $idPost = $_POST["id_post"];
             $idCarnet = $_POST['id_carnet']; // Retrieve id_carnet
-            $postDao->retirer($idPost);
-            header("Location: index.php?controleur=post&methode=listerParCarnet&id=" . $idCarnet); // Redirect with id_carnet
-            exit();
+            if ($postDao->retirer($idPost)) {
+                $_SESSION["message"][] = [ "type" => "succes", "contenu" => "Le post a bien été supprimé." ];
+                header("Location: index.php?controleur=post&methode=listerParCarnet&id=" . $idCarnet);
+                exit();
+            } else {
+                $_SESSION["message"][] = [ "type" => "erreur", "contenu" => "Erreur de suppression." ];
+                header("Location: index.php?controleur=post&methode=listerParCarnet&id=" . $idCarnet); // Redirect with id_carnet
+            }
         } else {
             throw new Exception("");
         }
