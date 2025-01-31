@@ -187,16 +187,14 @@ class GuideDao
         $requetePrepared = $this->pdo->prepare($sql);
         $requetePrepared->bindParam(':id', $id, PDO::PARAM_INT);
         $requetePrepared->execute();
-
         if ($guide = $requetePrepared->fetch(PDO::FETCH_ASSOC)) {
             $cheminCertificat = $guide['chemin_certif'];
             // Vérifier si le fichier existe
-            if (file_exists($cheminCertificat)) {
-                return $cheminCertificat;
-            }
+            return $cheminCertificat;
         }
-
-        return null;
+        else{
+            return null;
+        }
     }
 
     /**
@@ -243,6 +241,7 @@ class GuideDao
          }
          return $result ?: null;
      }
+
 
 }
 ?>
