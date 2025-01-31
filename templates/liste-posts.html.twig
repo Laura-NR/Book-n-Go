@@ -4,7 +4,6 @@
 
 {% block content %}
     <div class="container">
-
         {% if session["message"] is defined %}
 {#            {{ dump(session['message']) }}#}
             {% if session['message'][0]['type'] == 'succes' %}
@@ -21,7 +20,6 @@
         {% endif %}
 
         <h2 class="text-center my-4">Posts</h2>
-
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="
                 {% if session.role == "voyageur" %}
@@ -75,9 +73,6 @@
     </div>
 {% endblock %}
 
-
 {% block script %}
-    <script>
-        feather.replace();
-    </script>
+    <script src="js/liste-posts.js"></script>
 {% endblock %}

@@ -1,8 +1,8 @@
 {% extends "base_template.html.twig" %}
+
 {% block title %}{{ parent() }} - Connexion{% endblock %}
 
 {% block content %}
-<main class="container mt-5">
     <h1 class="text-center mb-4">Connexion</h1>
 
     <div class="row justify-content-center">
@@ -35,11 +35,11 @@
                 </form>
 
                 <!-- Lien vers l'inscription -->
-                <div class="text-center mt-3">
-                    <p>Pas encore inscrit ? <a href="index.php?controleur=utilisateur&methode=afficherInscription" class="btn btn-link">S'inscrire</a></p>
+                <div class="text-center mt-3 d-flex justify-content-center align-items-center">
+                    <p class="mb-0">Pas encore inscrit ?</p>
+                    <a href="index.php?controleur=utilisateur&methode=afficherInscription" class="btn btn-link ms-2">S'inscrire</a>
                 </div>
             </div>
         </div>
     </div>
-</main>
 {% endblock %}

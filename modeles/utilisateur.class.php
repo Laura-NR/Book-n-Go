@@ -37,6 +37,7 @@ class Utilisateur {
      * @var string|null
      */
     private ?string $role;
+    private ?string $statut;
 
     /**
      * @param int|null $id

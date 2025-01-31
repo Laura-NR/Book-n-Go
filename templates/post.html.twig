@@ -1,9 +1,9 @@
 {% extends "base_template.html.twig" %}
 
-{% block title %}{{ website.title }} - {{ post.titre }}{% endblock %}
+{% block title %}{{ parent() }} - Post{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
+    <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <a href="index.php?controleur=post&methode=listerParCarnet&id={{ post.idCarnet }}" class="btn btn-rose text-white"><i data-feather="arrow-left-circle"></i> Retour aux posts</a>
             {% if session.role == "voyageur" %}
@@ -111,16 +111,5 @@
 {% endblock %}
 
 {% block script %}
-    <script>
-        const editButton = document.getElementById('editButton');
-        const editForm = document.getElementById('editForm');
-
-        if (editButton) {
-            editButton.addEventListener('click', () => {
-                editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
-            });
-        }
-
-        feather.replace();
-    </script>
+    <script src="js/post.js"></script>
 {% endblock %}

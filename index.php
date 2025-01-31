@@ -66,7 +66,7 @@ try {
     AutoBackup::lancer_backup();
 } catch (Exception $e) {
     error_log("Backup trigger failed: " . $e->getMessage());
-}
+} 
 
 
 //$last_backup = filemtime('/tmp/backup.lock');
