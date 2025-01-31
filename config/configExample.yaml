@@ -1,11 +1,11 @@
-database: # Informations de connexion à la BDD
-  host: "" #addresse hote de la base de données
-  name: "" #nom de la base de données à utiliser
-  user: "" #login de la base de données
-  pass: "" #mdp de la base de données
+database: # Paramètres de connexion à la base de données
+  host: "" # Adresse de l’hôte (ex : localhost ou une IP)
+  name: "" # Nom de la base de données à utiliser
+  user: "" # Identifiant de connexion à la base de données
+  pass: "" # Mot de passe associé à l’identifiant
 
-website: # Informations sur le site
-  title: "" #nom du site
-  version: "" #version du site
-  description: "" #description du site web
-  lang: "" #langue du site (fr / en / ...)
+website: # Informations générales sur le site web
+  title: "BookNGo" # Nom de l’application
+  version: "1.1" # Version actuelle du site
+  description: "Application web dédiée à l'organisation et la gestion de visites touristiques." # Brève présentation du site
+  lang: "fr" # Langue principale du site (ex : fr, en, es, etc.)

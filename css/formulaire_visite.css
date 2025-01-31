@@ -1,0 +1,22 @@
+#titrePage {
+    margin-top: 50px; 
+    margin-bottom: 40px;
+ }
+
+#form {
+    width: 80%;
+}
+
+#formDiv {
+    background-color: #b2708f;
+	color: #000;
+    border-radius: 30px;
+	padding: 40px;
+}
+
+#formBtn {
+    background-color: #b2708f;
+	color: #fff;
+	border-radius: 30px;
+	padding: 10px 40px;
+}
