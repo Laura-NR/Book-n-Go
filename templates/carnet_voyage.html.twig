@@ -3,7 +3,7 @@
 {% block title %}{{ parent() }} - Carnets de voyage{% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
+    <div class="container">
         <h1 class="text-center mb-4">Carnets de voyages</h1>
 
         {% if session.role == "voyageur" %}
@@ -14,6 +14,8 @@
             </div>
         {% endif %}
 
+
+        {# Grille des carnets #}
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for carnet in carnets %}
                 <div class="col">
@@ -40,7 +42,5 @@
 {% endblock %}
 
 {% block script %}
-    <script>
-        feather.replace();
-    </script>
+  <script src="js/carnet_voyage.js"></script>
 {% endblock %}

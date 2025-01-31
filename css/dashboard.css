@@ -1,0 +1,8 @@
+.span {
+    color: var(--bs-violet); 
+    border: 2px solid var(--bs-rose);
+}
+.hover-span:hover, .hover-span:focus {
+    background: var(--bs-rose);
+    color: #ffffff;
+}

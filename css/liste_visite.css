@@ -1,0 +1,5 @@
+#tableVisite td:nth-child(5) {
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 600px;
+}

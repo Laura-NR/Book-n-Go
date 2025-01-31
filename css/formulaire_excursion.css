@@ -1,0 +1,35 @@
+#titrePage {
+    margin-top: 50px; 
+    margin-bottom: 40px;
+ }
+
+#excursionForm {
+    width: 80%;
+}
+
+#formDiv {
+    background-color: #b2708f;
+	color: #000;
+    border-radius: 30px;
+	padding: 40px;
+}
+
+#formBtn {
+    background-color: #b2708f;
+	color: #fff;
+	border-radius: 30px;
+	padding: 10px 40px;
+}
+
+#btn_maj {
+    background-color: #b2708f;
+    color: #fff;
+    border-radius: 30px;
+    padding: 10px 40px;
+}
+
+#btn_annuler {
+    color: #fff;
+    border-radius: 30px;
+    padding: 10px 40px
+}
