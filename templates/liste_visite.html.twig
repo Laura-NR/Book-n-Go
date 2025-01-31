@@ -1,24 +1,13 @@
 {% extends "dashboard.html.twig" %}
 
-{% block link %} <link rel="stylesheet" type="text/css" href="./node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css"> {% endblock %}
-
 {% block css %}
     {{ parent() }}
-    <style>
-        #tableVisite td:nth-child(5) {
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 600px;
-        }
-    </style>
-{% endblock %}
-
-{% block title %}
-    Liste des Visites
+    <link rel="stylesheet" type="text/css" href="css/liste_visite.css">
+    <link rel="stylesheet" type="text/css" href="./node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css">
 {% endblock %}
 
 {% block dashboard_content %}
-    <div class="container my-5">
+    <div class="container">
         <div class="d-flex flex-rox justify-content-between align-items-center mb-5">
              <h1 class="text-center mb-4">Liste des Visites</h1>
              <a href="index.php?controleur=visite&methode=redirectCreer&isExcursion=0" class="btn btn-success">Créer une nouvelle visite</a>
@@ -73,18 +62,9 @@
 {% endblock %}
 
 {% block script %}
+    {{ parent() }}
     <script src="./node_modules/jquery/dist/jquery.js"></script>
     <script src="./node_modules/datatables.net/js/dataTables.js"></script>
     <script src="./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.js"></script>
-    <script>
-        new DataTable('#tableVisite');
-    </script>
-
-    <script>
-        // Fonction qui recharge la page lorsque l'état de la checkbox change
-        function rechargePage() {
-            document.getElementById('checkboxForm').submit(); // Soumettre le formulaire
-        }
-    </script>
+    <script src="js/liste_visite.js"></script>
 {% endblock %}
-

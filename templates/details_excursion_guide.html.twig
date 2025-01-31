@@ -2,9 +2,7 @@
 
 {% extends "dashboard.html.twig" %}
 
-{% block title %}
-Détails de l'Excursion
-{% endblock %}
+{% block title %}{{ parent() }} - Details d'excursion{% endblock %}
 
 {% block dashboard_content %}
     {% if session.role == "guide" %}
