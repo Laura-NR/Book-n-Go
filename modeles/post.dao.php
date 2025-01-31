@@ -158,7 +158,7 @@ class PostDAO
      * @param mixed $idPost
      * @return bool
      */
-    public function retirer(mixed $idPost)
+    public function retirer(mixed $idPost): bool
     {
         $sql = "DELETE FROM post WHERE id = :idPost";
         $pdoStatement = $this->pdo->prepare($sql);
