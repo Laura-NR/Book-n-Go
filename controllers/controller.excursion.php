@@ -180,7 +180,7 @@ class ControllerExcursion extends BaseController
             $this->handleVisits($nouvelleExcursion->getId(), $_POST);
 
             if ($isAjax) {
-                $_SESSION['success_excursion'] = ['type' => 'success', 'message' => 'Excursion créée avec succès!'];
+                $_SESSION['success_excursion'] = [['type' => 'success', 'message' => 'Excursion créée avec succès!']];
 
                 echo json_encode([
                     'success' => true,
@@ -468,6 +468,7 @@ class ControllerExcursion extends BaseController
         }
 
         if ($excursionDao->supprimer($id)) {
+            $_SESSION['messages_exc'][] = ['type' => 'success', 'message' => 'Excursion supprimée avec succès.'];
             $this->redirect('excursion', 'listerByGuide', ['id' => $_SESSION['user_id']]);
         } else {
             $_SESSION['messages_exc'][] = ['type' => 'danger', 'message' => 'Erreur lors de la suppression de l\'excursion.'];
@@ -601,10 +602,15 @@ class ControllerExcursion extends BaseController
         $successEngagement = $_SESSION['success_engagements'] ?? [];
         unset($_SESSION['success_engagements']);
 
+        $messagesExc = $_SESSION['messages_exc'] ?? [];
+        unset($_SESSION['messages_exc']);
+
         $allMessages = array_merge(
             is_array($successExcursion) ? $successExcursion : [$successExcursion],
-            is_array($successEngagement) ? $successEngagement : [$successEngagement]
+            is_array($successEngagement) ? $successEngagement : [$successEngagement],
+            is_array($messagesExc) ? $messagesExc : [$messagesExc]
         );
+        // var_dump($allMessages);
 
         $excursionDao = new ExcursionDao($this->getPdo());
 
