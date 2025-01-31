@@ -51,13 +51,14 @@ class ComposerDao
     public function creer(Composer $composer): bool
     {
         $sql = "INSERT INTO composer (temps_sur_place, id_excursion, id_visite)
-                VALUES (:temps_sur_place, :id_excursion, :id_visite)";
+                VALUES (:temps_sur_place, :ordre, :id_excursion, :id_visite)";
         $stmt = $this->pdo->prepare($sql);
 
         $tempsSurPlace = $composer->getTempsSurPlace() ? $composer->getTempsSurPlace()->format('Y-m-d H:i:s') : null;
 
         return $stmt->execute([
             ':temps_sur_place' => $tempsSurPlace,
+            ':ordre' => $ordre,
             ':id_excursion' => $composer->getExcursion(),
             ':id_visite' => $composer->getVisite()
         ]);
@@ -172,7 +173,7 @@ class ComposerDao
     public function findByExcursion(int $idExcursion): ?array
     {
         $sql = "
-        SELECT v.id AS visite_id, v.titre, v.ville, c.temps_sur_place
+        SELECT v.id AS visite_id, v.titre, v.ville, c.temps_sur_place, c.ordre
         FROM visite v
         INNER JOIN composer c ON v.id = c.id_visite
         WHERE c.id_excursion = :id_excursion
@@ -194,7 +195,7 @@ class ComposerDao
     public function modifier(Composer $composer): bool
     {
         $sql = "UPDATE composer 
-            SET temps_sur_place = :temps_sur_place 
+            SET temps_sur_place = :temps_sur_place, ordre = :ordre
             WHERE id_excursion = :id_excursion AND id_visite = :id_visite";
         $stmt = $this->pdo->prepare($sql);
 
@@ -202,6 +203,7 @@ class ComposerDao
 
         return $stmt->execute([
             ':temps_sur_place' => $tempsSurPlace,
+            ':ordre' => $ordre,
             ':id_excursion' => $composer->getExcursion(),
             ':id_visite' => $composer->getVisite()
         ]);

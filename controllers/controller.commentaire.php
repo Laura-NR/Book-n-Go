@@ -16,7 +16,7 @@ class ControllerCommentaire extends BaseController
     
     //Contructeur du contrôleur de commentaire, initialise les objets Twig indispensables pour la gestion des templates
     // et instancie la classe de validation
-    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader,)
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     {
         parent::__construct($twig, $loader);
         global $reglesValidation;
