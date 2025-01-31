@@ -1,51 +1,31 @@
-{% extends "dashboard.html.twig" %} {% block title %}
-{{ excursion ? "Modification de l'Excursion" : "Création d'une Excursion" }}
-{% endblock %} {% block dashboard_content %}
+{% extends "dashboard.html.twig" %}
+
+{% block title %}
+  {{ parent() }} - {{ excursion ? "Modification d'excursion" : "Création d'excursion" }}
+{% endblock %}
+
+{% block css %}
+  {{ parent() }}
+  <link rel="stylesheet" type="text/css" href="css/formulaire_excursion.css">
+{% endblock %}
+
+{% block dashboard_content %}
 <main class="container">
   <div id="errorContainer"></div>
 
-  <h1 style="margin-top: 50px; margin-bottom: 40px" class="text-center">
-    {{
-      excursion
-        ? "Modifier les informations de l'excursion :"
-        : "Informations de l'excursion :"
-    }}
+  <h1 id="titrePage" class="text-center">
+    {{ excursion ? "Modifier les informations de l'excursion :" : "Informations de l'excursion :" }}
   </h1>
-  <form
-    enctype="multipart/form-data"
-    id="excursionForm"
-    class="mx-auto p-5"
-    style="width: 80%"
-    method="post"
-  >
-    <div
-      style="
-        background-color: #b2708f;
-        color: #000;
-        border-radius: 30px;
-        padding: 40px;
-      "
-    >
+  <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" method="post">
+    <div id="formDiv">
       <div class="row mb-4">
         <div class="col">
           <label for="nom" class="form-label">Titre :</label>
-          <input
-            type="text"
-            id="nom"
-            name="nom"
-            class="form-control"
-            value="{{ excursion.nom | default('') }}"
-          />
+          <input type="text" id="nom" name="nom" class="form-control" value="{{ excursion.nom | default('') }}" />
         </div>
         <div class="col">
           <label for="capacite" class="form-label">Capacite :</label>
-          <input
-            type="number"
-            id="capacite"
-            name="capacite"
-            class="form-control"
-            value="{{ excursion.capacite | default('') }}"
-          />
+          <input type="number" id="capacite" name="capacite" class="form-control" value="{{ excursion.capacite | default('') }}" />
         </div>
       </div>
       <div class="row mb-4">
@@ -53,366 +33,73 @@
           <label for="itineraire" class="form-label">Itineraire :</label>
           <div class="input-group">
             <select name="itineraire" id="itineraire" class="form-select">
-              <option value="" selected disabled>
-                Composez l'itineraire de votre excursion
-              </option>
-              <option href="" value="add-new" class="bg-primary text-white">
-                Ajouter une nouvelle visite dans l'itineraire
-              </option>
+              <option value="" selected disabled>Composez l'itineraire de votre excursion</option>
+              <option href="" value="add-new" class="bg-primary text-white">Ajouter une nouvelle visite dans l'itineraire</option>
             </select>
-            <button type="button" id="addVisit" class="btn btn-light">
-              Ajouter
-            </button>
+            <button type="button" id="addVisit" class="btn btn-light">Ajouter</button>
           </div>
         </div>
         <div class="col">
           <label for="chemin_image" class="form-label">Image :</label>
-          <input type="file" id="chemin_image" name="chemin_image"
-          class="form-control"
-          {{ excursion.chemin_image | split('/') | last }}/> {% if excursion and
-          excursion.chemin_image %}
-          <p class="mt-3 ms-3">
-            Fichier actuel :
-            {{ excursion.chemin_image | split('/') | last }}
-          </p>
+          <input type="file" id="chemin_image" name="chemin_image" class="form-control" />
+          {% if excursion and excursion.chemin_image %}
+            <p class="mt-3 ms-3">Fichier actuel : {{ excursion.chemin_image | split('/') | last }}</p>
           {% endif %}
         </div>
       </div>
       <div class="col">
         <div class="mb-4">
-          <h5 id="selectedVisitsTitle" {% if visitesSelectionnees|length>
-            0 %} style="display: block;" {% else %} style="display: none;" {%
-            endif %}>Visites sélectionnées :
-          </h5>
-          <ul id="selectedVisits" {% if visitesSelectionnees|length>
-            0 %} style="display: block;" {% else %} style="display: none;" {%
-            endif %}> {% for visite in visitesSelectionnees %}
-            <li id="visit-{{ visite.visite_id }}" class="mb-2">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <strong
-                    >{{ visite.titre }}
-                    -
-                    {{ visite.ville }}</strong
-                  >
-                </div>
-                <div class="d-flex gap-3">
+          <h5 id="selectedVisitsTitle" {% if visitesSelectionnees|length > 0 %} class="d-block;" {% else %} class="d-none;"  {% endif %}>Visites sélectionnées :</h5>
+          <ul id="selectedVisits" {% if visitesSelectionnees|length > 0 %} class="d-block;" {% else %} class="d-none;" {% endif %}>
+            {% for visite in visitesSelectionnees %}
+              <li id="visit-{{ visite.visite_id }}" class="mb-2">
+                <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <label
-                      for="temps_sur_place_{{ visite.visite_id }}"
-                      class="form-label mb-0"
-                      >Temps sur place :</label
-                    >
-                    <input
-                      type="time"
-                      id="temps_sur_place_{{ visite.visite_id }}"
-                      name="temps_sur_place_{{ visite.visite_id }}"
-                      class="form-control form-control-sm"
-                      value="{{ visite.temps_sur_place }}"
-                    />
+                    <strong>{{ visite.titre }} - {{ visite.ville }}</strong>
                   </div>
-                  <button type="button" class="btn btn-danger remove-visit">
-                    Supprimer
-                  </button>
+                  <div class="d-flex gap-3">
+                    <div>
+                      <label for="temps_sur_place_{{ visite.visite_id }}" class="form-label mb-0">Temps sur place :</label>
+                      <input type="time" id="temps_sur_place_{{ visite.visite_id }}" name="temps_sur_place_{{ visite.visite_id }}" class="form-control form-control-sm" value="{{ visite.temps_sur_place }}" />
+                    </div>
+                    <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
+                  </div>
                 </div>
-              </div>
-            </li>
+              </li>
             {% endfor %}
           </ul>
         </div>
       </div>
-
       <div class="row mb-4">
         <div class="col">
           <label for="description" class="form-label">Description :</label>
-          <textarea
-            name="description"
-            id="description"
-            class="form-control"
-            rows="5"
-            >{{ excursion.description | default('') }}</textarea
-          >
+          <textarea name="description" id="description" class="form-control" rows="5">{{ excursion.description | default('') }}</textarea>
         </div>
       </div>
       <div class="row mb-4">
         <div class="col d-flex align-items-center">
-          <input type="checkbox" name="public" id="public"
-          class="form-check-input me-2"
-          {{ excursion and excursion.public ? 'checked' : '' }}/>
-          <label for="public" class="form-check-label">
-            Je veux que d’autres guides puissent participer dans cette excursion
-          </label>
+          <input type="checkbox" name="public" id="public" class="form-check-input me-2" {{ excursion and excursion.public ? 'checked' : '' }} />
+          <label for="public" class="form-check-label">Je veux que d’autres guides puissent participer dans cette excursion</label>
         </div>
       </div>
     </div>
     {% if excursion %}
-    <div class="d-flex flex-row mt-4 justify-content-center gap-3">
-      <div class="text-center">
-        <input
-          type="submit"
-          data-excursion-id="{{ excursion.id }}"
-          id="btn_maj"
-          value="Modifier"
-          class="btn"
-          style="
-            background-color: #b2708f;
-            color: #fff;
-            border-radius: 30px;
-            padding: 10px 40px;
-          "
-        />
+      <div class="d-flex flex-row mt-4 justify-content-center gap-3">
+        <div class="text-center">
+          <input type="submit" data-excursion-id="{{ excursion.id }}" id="btn_maj" value="Modifier" class="btn" />
+        </div>
+        <a type="button" id="btn_annuler" class="btn btn-secondary" href="index.php?controleur=excursion&methode=afficher&id={{ excursion.id }}">Annuler</a>
       </div>
-      <a
-        type="button"
-        class="btn btn-secondary"
-        href="index.php?controleur=excursion&methode=afficher&id={{
-          excursion.id
-        }}"
-        style="color: #fff; border-radius: 30px; padding: 10px 40px"
-        >Annuler</a
-      >
-    </div>
     {% else %}
-    <div class="text-center mt-4">
-      <input
-        type="submit"
-        value="Créer"
-        class="btn"
-        style="
-          background-color: #b2708f;
-          color: #fff;
-          border-radius: 30px;
-          padding: 10px 40px;
-        "
-      />
-    </div>
+      <div class="text-center mt-4">
+        <input id="formBtn" type="submit" value="Créer" class="btn"/>
+      </div>
     {% endif %}
   </form>
 </main>
-{% endblock %} {% block script %}
-<script>
-  //Affichage des erreurs
-  function showErrors(errors) {
-    const errorContainer = document.getElementById('errorContainer');
-    errorContainer.innerHTML = "";
-    if (errors.length > 0) {
-      errors.forEach((error) => {
-        const errorElement = document.createElement("div");
-        errorElement.classList.add("alert", "alert-danger", "alert-dismissible", "fade", "show");
-        errorElement.textContent = error;
-        const closeButton = document.createElement("button");
-        closeButton.type = "button";
-        closeButton.classList.add("btn-close");
-        closeButton.setAttribute("data-bs-dismiss", "alert");
-        closeButton.setAttribute("aria-label", "Close");
-        errorElement.appendChild(closeButton);
-        errorContainer.appendChild(errorElement);
+{% endblock %}
 
-        // Les messages d'erreur vont disparaitre après 8 secondes si l'utilisateur ne les ferme pas
-        const bsAlert = new bootstrap.Alert(errorElement);
-            setTimeout(() => {
-                bsAlert.close(); 
-            }, 8000);
-      });
-      errorContainer.style.display = "block";
-    } else {
-      errorContainer.style.display = "none";
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const itineraireSelect = document.getElementById("itineraire");
-
-    itineraireSelect.addEventListener("focus", () => {
-      if (itineraireSelect.querySelector("[data-fetched]")) {
-        return;
-      }
-
-      fetch("index.php?controleur=excursion&methode=afficherCreer", {
-        method: "GET",
-        headers: {
-          "X-Requested-With": "XMLHttpRequest",
-        },
-      })
-        .then((response) => {
-          console.log("Response status:", response.status);
-          console.log(
-            "Response content-type:",
-            response.headers.get("Content-Type")
-          );
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          // return response.json();
-          console.log("Response: ", response);
-          return response.text();
-        })
-        .then((responseText) => {
-          console.log("Response Text:", responseText);
-
-          try {
-            const data = JSON.parse(responseText);
-            console.log("Fetched visits:", data);
-
-            const addNewOption = itineraireSelect.querySelector(
-              'option[value="add-new"]'
-            );
-
-            data.forEach((visit) => {
-              const option = document.createElement("option");
-              option.value = visit.id;
-              option.textContent = `${visit.titre} - ${visit.ville}`;
-              option.setAttribute("data-fetched", true);
-              addNewOption.insertAdjacentElement("afterend", option);
-            });
-          } catch (error) {
-            console.error("Failed to parse JSON:", error);
-          }
-        })
-        .catch((error) => {
-          console.error("Erreur à l'heure de récupérer les visites:", error);
-          showErrors(["Pas possible de récupérer les visites, ressayez plus tard"]);
-        });
-    });
-  });
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const itineraireSelect = document.getElementById("itineraire");
-    const addVisitButton = document.getElementById("addVisit");
-    const selectedVisits = document.getElementById("selectedVisits");
-    const selectedVisitsTitle = document.getElementById("selectedVisitsTitle");
-
-    // Fonction pour ajouter les visites selectionées à la liste
-    function addVisitToList(visitId, visitTitle, tempsSurPlace = "") {
-      if (document.querySelector(`#visit-${visitId}`)) {
-        showErrors(["Cette visite est déjà sélectionnée"]);
-        return;
-      }
-
-      const listItem = document.createElement("li");
-      listItem.id = `visit-${visitId}`;
-      listItem.classList.add("mb-2");
-      listItem.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>${visitTitle}</strong>
-                </div>
-                <div class="d-flex gap-3">
-                    <div>
-                        <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
-                        <input
-                            type="time"
-                            id="temps_sur_place_${visitId}"
-                            name="temps_sur_place_${visitId}"
-                            class="form-control form-control-sm"
-                            value="${tempsSurPlace}"
-                        />
-                    </div>
-                    <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
-                </div>
-            </div>
-        `;
-
-      selectedVisits.appendChild(listItem);
-
-      selectedVisits.style.display = "block";
-      selectedVisitsTitle.style.display = "block";
-
-      listItem.querySelector(".remove-visit").addEventListener("click", () => {
-        listItem.remove();
-        if (selectedVisits.children.length === 0) {
-          selectedVisits.style.display = "none";
-          selectedVisitsTitle.style.display = "none";
-        }
-      });
-    }
-
-    addVisitButton.addEventListener("click", () => {
-      const selectedVisit =
-        itineraireSelect.options[itineraireSelect.selectedIndex];
-      if (selectedVisit.value === "add-new") {
-        window.location.href =
-          "index.php?controleur=visite&methode=redirectCreer&isExcursion=1";
-        return;
-      }
-      if (!selectedVisit || selectedVisit.value === "") {
-        showErrors(["Veuillez sélectionner une visite valide."]);
-        return;
-      }
-
-      const visitId = selectedVisit.value;
-      const visitTitle = selectedVisit.textContent;
-
-      addVisitToList(visitId, visitTitle);
-    });
-
-    document.querySelectorAll(".remove-visit").forEach((button) => {
-      button.addEventListener("click", function () {
-        const listItem = this.closest("li");
-        listItem.remove();
-        if (selectedVisits.children.length === 0) {
-          selectedVisits.style.display = "none";
-          selectedVisitsTitle.style.display = "none";
-        }
-      });
-    });
-  });
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("excursionForm");
-    const submitButton = document.getElementById("btn_maj");
-    const excursionId = submitButton
-      ? parseInt(submitButton.getAttribute("data-excursion-id"), 10)
-      : null;
-    console.log("Excursion ID:", excursionId);
-    const errorContainer = document.getElementById("errorContainer");
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const formData = new FormData(form);
-      if (excursionId) {
-        formData.append("id", excursionId);
-      }
-
-      const endpoint = excursionId
-        ? "index.php?controleur=excursion&methode=modifier&id=" + excursionId
-        : "index.php?controleur=excursion&methode=creer";
-
-      fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "X-Requested-With": "XMLHttpRequest",
-        },
-        body: formData,
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("Server response:", data);
-
-          if (data.success) {
-            if (data.redirect) {
-              window.location.href = data.redirect;
-            }
-          } else {
-            showErrors(
-              data.errors || [data.message || "Une erreur est survenue."]
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Erreur lors de la soumission du formulaire:", error);
-          showErrors([
-            "Une erreur est survenue lors de la soumission du formulaire. Veuillez réessayer.",
-          ]);
-        });
-    });
-  });
-</script>
+{% block script %}
+  {{ parent() }}
+  <script src="js/formulaire_excursion.js"></script>
 {% endblock %}
