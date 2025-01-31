@@ -18,18 +18,40 @@ class ControllerReservation extends BaseController {
      */
     public function afficherPlanning(): void
     {
-        $id_voyageur = $_GET['id'] ?? null;
-
-        if (!$id_voyageur) {
-            throw new Exception("Paramètre manquant : id_voyageur");
+        // Vérification si l'utilisateur est connecté et a un rôle défini
+        if (!isset($_SESSION['role'])) {
+            throw new Exception("Accès refusé : rôle utilisateur inconnu");
         }
 
-        $reservationDAO = new ReservationDAO($this->getPdo());
-        $reservations = $reservationDAO->getReservationsByVoyageur((int)$id_voyageur);
+        if ($_SESSION['role'] === "voyageur") {
+            $id_voyageur = $_GET['id'] ?? null;
+            if (!$id_voyageur) {
+                throw new Exception("Paramètre manquant : id_voyageur");
+            }
 
-        echo $this->getTwig()->render('planning_template.html.twig', [
-            'reservations' => $reservations,
-        ]);
+            $reservationDAO = new ReservationDAO($this->getPdo());
+            $reservations = $reservationDAO->getReservationsByVoyageur((int)$id_voyageur);
+
+            echo $this->getTwig()->render('planning_template.html.twig', [
+                'reservations' => $reservations,
+            ]);
+        }
+        elseif ($_SESSION['role'] === "guide") {
+            $id_guide = $_GET['id'] ?? null;
+            if (!$id_guide) {
+                throw new Exception("Paramètre manquant : id_guide");
+            }
+
+            $engagementDAO = new EngagementDAO($this->getPdo());
+            $engagements = $engagementDAO->getEngagementById((int)$id_guide);
+
+            echo $this->getTwig()->render('planning_template.html.twig', [
+                'engagements' => $engagements, // Correction des guillemets
+            ]);
+        }
+        else {
+            throw new Exception("Accès refusé : rôle inconnu");
+        }
     }
 
     /**
