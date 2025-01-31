@@ -10,6 +10,21 @@
         background: #b2708f;
         color: #ffffff;
     }
+    /* Bouton Enregistrer (Confirmer) avec couleur plus prononcée */
+    .btn-custom-enregistrer {
+        background-color: #b2708f;  /* Rose foncé */
+        color: #ffffff;
+        border: none;
+    }
+
+    .btn-custom-enregistrer:hover,
+    .btn-custom-enregistrer:focus {
+        background-color: #9c5c7a;  /* Rose plus clair au survol */
+        color: #ffffff;
+    }
+
+
+
 </style>
 {% endblock %}
 
@@ -102,11 +117,12 @@ Guide Dashboard
                         <form method="POST" action="?controleur=guide&methode=supprimerVoyageur&id={{ session.user_id }}">
                             {% endif %}
                         <input type="hidden" name="action" value="supprimer">
-                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                        <button type="submit" class="btn btn-secondary">Confirmer</button>
                     </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
                 </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
