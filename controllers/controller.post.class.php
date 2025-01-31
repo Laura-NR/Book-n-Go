@@ -93,18 +93,25 @@ class ControllerPost extends BaseController
 
         $postDao = new PostDAO($this->getPdo());
         $commentaireDao = new CommentaireDao($this->getPdo());
+        $excursionDao = new ExcursionDao($this->getPdo());
 
         // On récupère un post par son ID
         $post = $postDao->find($id);
-        $commentaires = $commentaireDao->findAllWithIdPost($id);
+
         if ($post) {
+
+            $commentaires = $commentaireDao->findAllWithIdPost($id);
+            $excursions = $excursionDao->findByVisite($post->getIdVisite());
+//            $excursions = $excursionDao->findByVisite(35);
+
             // Chargement du template pour afficher un post
             $template = $this->getTwig()->load('post.html.twig');
             echo $template->render(array(
                 'post' => $post,
                 'commentaires' => $commentaires,
                 'erreursCommentaire' => $erreursCommentaire, // Passer les erreurs à la vue
-                'donneesCommentaire' => $donneesCommentaire // Passer les données pour pré-remplir le formulaire
+                'donneesCommentaire' => $donneesCommentaire, // Passer les données pour pré-remplir le formulaire
+                'excursions' => $excursions
             ));
         } else {
             // Si le post n'existe pas, afficher une erreur ou rediriger
