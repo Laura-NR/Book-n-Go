@@ -5,7 +5,7 @@
 {% block title %}{{ parent() }} - Details d'excursion{% endblock %}
 
 {% block dashboard_content %}
-    {% if session.role == "guide" %}
+{% if session.role == "guide" %}
 <main class="container">
     <h1 class="text-center mt-5">{{ excursion.nom }}</h1>
     <div class="text-center my-4">
@@ -56,12 +56,34 @@
             <a href="index.php?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-secondary">
                 Modifier
             </a>
-            <a href="index.php?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
+            <a href="index.php?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger delete-link" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ excursion.id }}">
                 Supprimer
             </a>
         {% endif %}
         <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}" class="btn btn-secondary">Retour à la liste</a>
     </div>
 </main>
+<!-- Modal de Bootstrap pour confirmer la suppression d'une excursion -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer cette excursion ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <a href="#" id="confirmDeleteButton" class="btn btn-danger">Supprimer</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endif %}
+{% endblock %}
+
+{% block script %}
+<script src="js/guide_excursions.js"></script>
 {% endblock %}

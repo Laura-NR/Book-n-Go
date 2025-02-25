@@ -49,8 +49,8 @@
       </div>
       <div class="col">
         <div class="mb-4">
-          <h5 id="selectedVisitsTitle" {% if visitesSelectionnees|length > 0 %} class="d-block;" {% else %} class="d-none;"  {% endif %}>Visites sélectionnées :</h5>
-          <ul id="selectedVisits" {% if visitesSelectionnees|length > 0 %} class="d-block;" {% else %} class="d-none;" {% endif %}>
+          <h5 id="selectedVisitsTitle" {% if visitesSelectionnees is empty %} style="display: none;" {% endif %}>Visites sélectionnées :</h5>
+          <ul id="selectedVisits" {% if visitesSelectionnees is empty %} style="display: none;" {% endif %}>
             {% for visite in visitesSelectionnees %}
               <li id="visit-{{ visite.visite_id }}" class="mb-2">
                 <div class="d-flex justify-content-between align-items-center">
