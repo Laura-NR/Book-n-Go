@@ -551,6 +551,7 @@ class ControllerExcursion extends BaseController
                 'visites' => $visites,
             ]);
         } else if ($excursion and $_SESSION['role'] == "voyageur") {
+            //var_dump($visites);
             echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,

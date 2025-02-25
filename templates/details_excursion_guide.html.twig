@@ -1,67 +1,119 @@
-{#PAGE POUR LES GUIDES#}
-
 {% extends "dashboard.html.twig" %}
 
-{% block title %}{{ parent() }} - Details d'excursion{% endblock %}
+{% block title %}{{ parent() }} - Détails d'excursion{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="./css/detail_excursion_guide.css">
+{% endblock %}
 
 {% block dashboard_content %}
     {% if session.role == "guide" %}
-<main class="container">
-    <h1 class="text-center mt-5">{{ excursion.nom }}</h1>
-    <div class="text-center my-4">
-        <img src="{{ excursion.chemin_image }}" alt="{{ excursion.nom }}" style="max-width: 100%; border-radius: 10px;">
-    </div>
-    <p><strong>Capacité :</strong> {{ excursion.capacite }}</p>
-    <p><strong>Description :</strong> {{ excursion.description }}</p>
-    <p><strong>Posts associés :</strong></p>
-    
-    {% if posts is not empty %}
-    <ul>
-        {% for post in posts %}
-        <li>
-            <strong>{{ post.titre }}</strong> - {{ post.date_publication }}
-            <a href="?controleur=post&methode=afficher&id={{ post.id }}" class="btn btn-sm btn-primary">Consulter</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>Aucun post disponible pour cette excursion.</p>
-    {% endif %}
+        <main class="container mt-5">
+            <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}" class="btn btn-secondary mb-3"><i class="feather-icons" data-feather="arrow-left-circle"></i> Retour à la liste</a>
 
-    <div>
-        <p><strong>Itineraire :</strong></p>
-        {% if visites is not empty %}
-            {% for visite in visites %}
-                <div class="position-relative">
-                    <span class="position-absolute top-50 bg-primary rounded-circle" style="width: 10px; height: 10px; transform: translate(-50%, -50%); left: 2px;"></span>
-                    <div class="border-start border-3 border-primary ps-3 pt-2 pb-2">
-                        {{ visite.titre }} - {{ visite.temps_sur_place }}
+            <section class="py-3 text-center">
+                <h1 class="display-4 mb-3 text-primary">{{ excursion.nom }}</h1>
+                <img src="{{ excursion.chemin_image }}" alt="{{ excursion.nom }}" class="img-fluid rounded">
+            </section>
+
+            <section class="py-3">
+                <div class="d-flex justify-content-center">
+                    {% if excursion.id_guide == session.user_id %}
+                        <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-primary me-2">
+                            Créer un engagement
+                        </a>
+                    {% else %}
+                        <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-primary me-2">
+                            Rejoindre l'excursion
+                        </a>
+                    {% endif %}
+                    {% if excursion.id_guide == session.user_id %}
+                        <a href="index.php?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-secondary me-2">
+                            Modifier
+                        </a>
+                        <a href="index.php?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
+                            Supprimer
+                        </a>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="py-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold">Description</h5>
+                        <p class="card-text">{{ excursion.description }}</p>
                     </div>
                 </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-    
-    <div class="mt-4">
-        {% if excursion.id_guide == session.user_id %}
-            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-primary">
-                Créer un engagement
-            </a>
-        {% else %}
-            <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-primary">
-                Rejoindre l'excursion
-            </a>
-        {% endif %}
-        {% if excursion.id_guide == session.user_id %}
-            <a href="index.php?controleur=excursion&methode=afficherModifier&id={{ excursion.id }}" class="btn btn-secondary">
-                Modifier
-            </a>
-            <a href="index.php?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette excursion ?');">
-                Supprimer
-            </a>
-        {% endif %}
-        <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}" class="btn btn-secondary">Retour à la liste</a>
-    </div>
-</main>
-{% endif %}
+            </section>
+
+            <section class="py-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold">Capacité</h5>
+                        <p class="card-text">{{ excursion.capacite }} personnes</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold">Itinéraire</h5>
+                        {% if visites is not empty %}
+                            {% set totalDuree = 0 %}
+                            {% for visite in visites %}
+                                {% set parts = visite.temps_sur_place|split(':') %}
+                                {% if parts|length == 3 %}
+                                    {% set heures = parts[0]|number_format(0, '', '') %}
+                                    {% set minutes = parts[1]|number_format(0, '', '') %}
+                                    {% set totalDuree = totalDuree + (heures * 60) + minutes %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <p class="card-text">
+                            Durée : {{ totalDuree // 60 }} heures et {{ totalDuree % 60 }} minutes
+                        </p>
+
+                        {% if visites is not empty %}
+                            {% for visite in visites %}
+                                <div class="position-relative">
+                                    <span class="position-absolute top-50 bg-primary rounded-circle" style="width: 10px; height: 10px; transform: translate(-50%, -50%); left: 2px;"></span>
+                                    <div class="border-start border-3 border-primary ps-3 pt-2 pb-2">
+                                        {{ visite.titre }} - {{ visite.temps_sur_place }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="card-text">Aucune visite associée à cette excursion.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary fw-bold">Posts Associés</h5>
+                        {% if posts is not empty %}
+                            <ul class="list-unstyled">
+                                {% for post in posts %}
+                                    <li class="media align-items-center py-2 border-bottom">
+                                        <div class="media-body">
+                                            <h6 class="mt-0 mb-1">{{ post.titre }}</h6>
+                                            <p class="mb-0 small text-muted">Publié le: {{ post.date_publication }}</p>
+                                        </div>
+                                        <a href="?controleur=post&methode=afficher&id={{ post.id }}" class="btn btn-sm bg-primary" style="background-color: #803d5c; color: white;">Consulter</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="card-text">Aucun post disponible pour cette excursion.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </main>
+    {% endif %}
 {% endblock %}

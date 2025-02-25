@@ -172,7 +172,7 @@ class ComposerDao
     public function findByExcursion(int $idExcursion): ?array
     {
         $sql = "
-        SELECT v.id AS visite_id, v.titre, v.ville, c.temps_sur_place
+        SELECT v.id AS visite_id, v.titre, v.ville, c.temps_sur_place, v.adresse, v.codePostal
         FROM visite v
         INNER JOIN composer c ON v.id = c.id_visite
         WHERE c.id_excursion = :id_excursion

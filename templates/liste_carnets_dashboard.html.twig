@@ -2,7 +2,7 @@
 
 {% block dashboard_content %}
     <div class="container">
-        <h1 class="mb-4 text-center">Mes Carnets de voyages :</h1>
+
 
 {#        <!-- Recherche - PAS ENCORE IMPLEMENTE -->#}
 {#        <form class="d-flex mb-4 justify-content-center">#}
@@ -14,7 +14,8 @@
 {#{{ dump(carnets) }}#}
 
         {% if session.role == "voyageur" %}
-            <div class="text-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Mes Carnets de voyages :</h1>
                 <a href="index.php?controleur=carnetVoyage&methode=creer" class="btn btn-primary" title="Créer un carnet de voyage">
                     Créer un carnet de voyage
                 </a>
@@ -22,6 +23,15 @@
                     Voir tous les carnets publics
                 </a>
             </div>
+{#            #}
+{#            <div class="text-center mb-4">#}
+{#                <a href="index.php?controleur=carnetVoyage&methode=creer" class="btn btn-primary" title="Créer un carnet de voyage">#}
+{#                    Créer un carnet de voyage#}
+{#                </a>#}
+{#                <a href="index.php?controleur=carnetVoyage&methode=lister" class="btn btn-primary" title="Créer un carnet de voyage">#}
+{#                    Voir tous les carnets publics#}
+{#                </a>#}
+{#            </div>#}
         {% endif %}
 
         <!-- Grille des carnets -->
