@@ -4,7 +4,6 @@
     "datatables.net-bs5": "^2.1.8",
     "feather-icons": "^4.29.2",
     "fullcalendar": "^6.1.15",
-    "leaflet": "^1.9.4",
     "tarteaucitronjs": "^1.19.0"
   },
   "devDependencies": {
