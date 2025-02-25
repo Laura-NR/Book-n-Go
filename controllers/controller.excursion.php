@@ -241,6 +241,7 @@ class ControllerExcursion extends BaseController
 
             $composer = new Composer(
                 $tempsSurPlaceObj,
+                $ordre,
                 $excursionId,
                 $visiteId
             );
@@ -261,6 +262,7 @@ class ControllerExcursion extends BaseController
             if ($currentTempsSurPlace != $tempsSurPlaceObj) {
                 $composer = new Composer(
                     $tempsSurPlaceObj,
+                    $ordre,
                     $excursionId,
                     $visiteId
                 );
