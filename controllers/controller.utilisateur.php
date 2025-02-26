@@ -84,8 +84,6 @@ class ControllerUtilisateur extends BaseController
         if ($this->validator->valider($_POST)) {
             $utilisateurDao = new UtilisateurDao($this->getPdo());
             $utilisateur = $utilisateurDao->findByEmail($email);
-            //var_dump($utilisateur);
-
             if ($utilisateur) {
                 // Gestion des tentatives de connexion et du statut du compte
                 if ($utilisateur->getStatutCompte() === Voyageur::STATUT_DESACTIVE) {
@@ -131,9 +129,7 @@ class ControllerUtilisateur extends BaseController
                     return true;
                 } else {
                     // Mot de passe incorrect
-                    //var_dump($utilisateur);
                     $utilisateur->gererEchecConnexion();
-                    //var_dump($utilisateur);
                     // Mettre à jour le statut du compte (actif/désactivé et tentatives)
                     $utilisateurDao->majStatutCompte($utilisateur);
 
@@ -174,20 +170,15 @@ class ControllerUtilisateur extends BaseController
         $utilisateurExistant = $utilisateurDao->findByEmail($email);
 
         //si l'utilisateur exise déjà dans la bd avec ce mail (qu'il soit guide ou voyageur) ...
-        var_dump($role);
-        var_dump($utilisateurExistant);
 
 
         if ($utilisateurExistant) {
             // on recupère son role apres l'avoir trouvé
             $roleExistant = $utilisateurExistant instanceof Guide ? 'guide' : 'voyageur';
-            var_dump($roleExistant);
             //exit();
             if ($roleExistant !== $role) {
                 // s'il est différent de celui demandé à l'inscription alors il a déjà un compte de l'autre role -> refus et redirection
                 $_SESSION['erreurs_inscription'][] = 'Un compte avec cette adresse e-mail existe déjà avec un rôle différent';
-                var_dump($_SESSION);
-//                exit();
                 $this->redirect('utilisateur', 'afficherInscription', ['inscription' => false]);
             }
             else{

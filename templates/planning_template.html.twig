@@ -74,13 +74,14 @@
                     {% else %}
                     console.log("Aucune réservation trouvée !");
             {% endfor %}
-        ],
-            editable: true,
-                droppable: true,
-                eventClick: function(info) {
-                alert("Excursion : " + info.event.title + "\nGuide : " + info.event.extendedProps.guide + "\nDescription : " + info.event.extendedProps.description);
-            }
-        });
+                ],
+                editable: true,
+                    droppable: true,
+                    eventClick: function(info) {
+                    alert("Excursion : " + info.event.title + "\nGuide : " + info.event.extendedProps.guide + "\nDescription : " + info.event.extendedProps.description);
+                },
+                locale: 'fr'
+            });
 
             calendar.render();
             console.log("✅ FullCalendar initialisé avec succès !");
