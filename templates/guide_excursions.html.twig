@@ -32,17 +32,46 @@
                 </div>
             {% endfor %}
         {% endif %}
-         <div class="d-flex flex-rox justify-content-between align-items-center mb-5">
-             <h1 class="text-center mb-4">Liste des Excursions</h1>
-             <a href="index.php?controleur=excursion&methode=afficherCreer" class="btn btn-success">Créer une nouvelle excursion</a>
-         </div>
-         <form method="get" action="index.php" class="form-check form-check-inline mb-3">
-            <input type="hidden" name="controleur" value="excursion">
-            <input type="hidden" name="methode" value="listerByGuide">
-            <input type="hidden" name="id" value="{{ session.user_id }}">
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="public" value="1" {% if public is defined and public %}checked{% endif %} onchange="this.form.submit()">
-            <label class="form-check-label" for="inlineCheckbox1">Montrer les excursions publiques</label>
-          </form>
+        <div class="d-flex flex-rox justify-content-between align-items-center mb-5">
+            <h1 class="text-center mb-4">Liste des Excursions</h1>
+            <a href="index.php?controleur=excursion&methode=afficherCreer" class="btn btn-success">Créer une nouvelle excursion</a>
+        </div>
+
+        <form method="get" action="index.php" class="form-check form-check-inline mb-3">
+        <input type="hidden" name="controleur" value="excursion">
+        <input type="hidden" name="methode" value="listerByGuide">
+        <input type="hidden" name="id" value="{{ session.user_id }}">
+        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="public" value="1" {% if public is defined and public %}checked{% endif %} onchange="this.form.submit()">
+        <label class="form-check-label" for="inlineCheckbox1">Montrer les excursions publiques</label>
+        </form>
+
+        <!-- Montrer les excursions publiques -->
+        {% if publicExcursions is defined and publicExcursions is not empty %}
+        <h2 class="text-center mt-4 mb-3">Excursions Publiques</h2>
+        <hr class="mb-4">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for excursion in publicExcursions %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if excursion.chemin_image %}
+                            <img src="{{ excursion.chemin_image }}" class="card-img-top img-fluid w-100" style="height: 200px;" alt="{{ excursion.nom }}">
+                        {% else %}
+                            <img src="./images/default-placeholder.png" class="card-img-top img-fluid" alt="Image par défaut">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ excursion.nom }}</h5>
+                            <p class="card-text"><strong>Date de création :</strong> {{ excursion.date_creation | date("d/m/Y") }}</p>
+                            {% if excursion.description %}
+                                <p class="card-text text-truncate">{{ excursion.description }}</p>
+                            {% endif %}
+                            <a href="index.php?controleur=excursion&methode=afficher&id={{ excursion.id }}" class="btn btn-primary w-100">Consulter</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+      {% endif %}
+      <!-- Montrer les excursions du Guide connecté -->
          {% if excursionsByGuide is defined and excursionsByGuide is not empty %}
              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                  {% for excursion in excursionsByGuide %}

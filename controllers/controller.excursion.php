@@ -618,15 +618,13 @@ class ControllerExcursion extends BaseController
 
         $public = isset($_GET['public']) && $_GET['public'] == 1;
 
-        if ($public) {
-            $excursions = $excursionDao->findPublic($id);
-        } else {
-            $excursions = $excursionDao->findByGuide($id);
-        }
+        $excursionsPublic = $excursionDao->findPublic($id);
+        $excursionsByGuide = $excursionDao->findByGuide($id);
 
         echo $this->getTwig()->render('guide_excursions.html.twig', [
             'messages' => $allMessages,
-            'excursionsByGuide' => $excursions,
+            'excursionsByGuide' => $excursionsByGuide,
+            'excursionsPublic' => $excursionsPublic,
             'public' => $public
         ]);
     }

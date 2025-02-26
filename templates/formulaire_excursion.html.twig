@@ -17,7 +17,6 @@
     {{ excursion ? "Modifier les informations de l'excursion" : "Informations de l'excursion" }}
   </h1>
     <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" method="post">
-    <p class="text-sm-end text-secondary me-4 p-0 m-0">* Tous les champs sont requis</p>
     <div id="formDiv">
       <div class="row mb-4">
         <div class="col">
@@ -76,6 +75,7 @@
         <div class="col">
           <label for="description" class="form-label">Description</label>
           <textarea name="description" id="description" class="form-control" rows="5">{{ excursion.description | default('') }}</textarea>
+          <p class="mb-0 pb-0">* Tous les champs sont requis</p>
         </div>
       </div>
       <div class="row mb-4">
