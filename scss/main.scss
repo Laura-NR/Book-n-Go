@@ -18,13 +18,38 @@ $primary: map-get($custom-colors, "violet");
 
 // Merge custom colors with the default theme-colors
 $theme-colors: map-merge(
-                $theme-colors, // Start with the default theme colors
-                (
-                        "primary": $primary // Replace the primary color
-                )
+        $theme-colors, // Start with the default theme colors
+        (
+                "primary": $primary // Replace the primary color
+        )
 );
 
 // Add additional custom colors to the theme
 $theme-colors: map-merge($theme-colors, $custom-colors);
+
+// CSS Commun
+.link {
+        color: var(--bs-body-color); // Couleur du texte du body, automatiquement changé par Bootstrap en fonction du mode
+        text-decoration: none;
+}
+
+// Changement fluide des couleurs lors du changement de thème
+* {
+        transition : background-color 0.20s ease-in-out;
+}
+
+// Light mode overrides
+@include color-mode(light) {
+        .link:hover {
+                color: rgb(121, 121, 121);
+        }
+}      
+
+// Dark mode overrides
+@include color-mode(dark) {
+        .link:hover {
+                color: rgb(172, 172, 172);
+        }
+}      
 
 @import "../node_modules/bootstrap/scss/bootstrap";
