@@ -27,7 +27,9 @@ $theme-colors: map-merge(
 // Add additional custom colors to the theme
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
-// CSS Commun
+// Overwrite bootstrap color
+$nav-link-color: var(--bs-body-color);
+
 .link {
         color: var(--bs-body-color); // Couleur du texte du body, automatiquement changé par Bootstrap en fonction du mode
         text-decoration: none;
@@ -50,6 +52,6 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
         .link:hover {
                 color: rgb(172, 172, 172);
         }
-}      
+}
 
 @import "../node_modules/bootstrap/scss/bootstrap";

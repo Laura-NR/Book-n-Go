@@ -20,7 +20,6 @@
 
 .sidebar .nav-link {
     padding: 10px 15px;
-    color: #f8f9fa;
 }
 
 .sidebar .nav-link:hover {
@@ -29,10 +28,6 @@
 
 .sidebar .nav-link i {
     margin-right: 5px;
-}
-
-body {
-    overflow: hidden;
 }
 
 /* Style pour petits écrans */
