@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
               </div>
           </div>
-      `;
+        `;
 
     selectedVisits.appendChild(listItem);
 

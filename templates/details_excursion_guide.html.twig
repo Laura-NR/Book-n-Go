@@ -43,6 +43,7 @@
     </div>
     
     <div class="mt-4">
+        <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}" class="btn btn-secondary">Retour à la liste</a>
         {% if excursion.id_guide == session.user_id %}
             <a href="index.php?controleur=engagement&methode=afficherCreer&id={{ excursion.id }}" class="btn btn-primary">
                 Créer un engagement
@@ -60,7 +61,6 @@
                 Supprimer
             </a>
         {% endif %}
-        <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}" class="btn btn-secondary">Retour à la liste</a>
     </div>
 </main>
 <!-- Modal de Bootstrap pour confirmer la suppression d'une excursion -->

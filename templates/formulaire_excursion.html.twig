@@ -14,23 +14,24 @@
   <div id="errorContainer"></div>
 
   <h1 id="titrePage" class="text-center">
-    {{ excursion ? "Modifier les informations de l'excursion :" : "Informations de l'excursion :" }}
+    {{ excursion ? "Modifier les informations de l'excursion" : "Informations de l'excursion" }}
   </h1>
-  <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" method="post">
+    <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" method="post">
+    <p class="text-sm-end text-secondary me-4 p-0 m-0">* Tous les champs sont requis</p>
     <div id="formDiv">
       <div class="row mb-4">
         <div class="col">
-          <label for="nom" class="form-label">Titre :</label>
+          <label for="nom" class="form-label">Titre</label>
           <input type="text" id="nom" name="nom" class="form-control" value="{{ excursion.nom | default('') }}" />
         </div>
         <div class="col">
-          <label for="capacite" class="form-label">Capacite :</label>
+          <label for="capacite" class="form-label">Capacite</label>
           <input type="number" id="capacite" name="capacite" class="form-control" value="{{ excursion.capacite | default('') }}" />
         </div>
       </div>
       <div class="row mb-4">
         <div class="col">
-          <label for="itineraire" class="form-label">Itineraire :</label>
+          <label for="itineraire" class="form-label">Itineraire</label>
           <div class="input-group">
             <select name="itineraire" id="itineraire" class="form-select">
               <option value="" selected disabled>Composez l'itineraire de votre excursion</option>
@@ -40,8 +41,9 @@
           </div>
         </div>
         <div class="col">
-          <label for="chemin_image" class="form-label">Image :</label>
+          <label for="chemin_image" class="form-label">Image</label>
           <input type="file" id="chemin_image" name="chemin_image" class="form-control" />
+          <p class="mt-1 ms-2">* Formats attendus : jpg / jpeg / png</p>
           {% if excursion and excursion.chemin_image %}
             <p class="mt-3 ms-3">Fichier actuel : {{ excursion.chemin_image | split('/') | last }}</p>
           {% endif %}
@@ -49,7 +51,7 @@
       </div>
       <div class="col">
         <div class="mb-4">
-          <h5 id="selectedVisitsTitle" {% if visitesSelectionnees is empty %} style="display: none;" {% endif %}>Visites sélectionnées :</h5>
+          <h5 id="selectedVisitsTitle" {% if visitesSelectionnees is empty %} style="display: none;" {% endif %}>Visites sélectionnées</h5>
           <ul id="selectedVisits" {% if visitesSelectionnees is empty %} style="display: none;" {% endif %}>
             {% for visite in visitesSelectionnees %}
               <li id="visit-{{ visite.visite_id }}" class="mb-2">
@@ -59,7 +61,7 @@
                   </div>
                   <div class="d-flex gap-3">
                     <div>
-                      <label for="temps_sur_place_{{ visite.visite_id }}" class="form-label mb-0">Temps sur place :</label>
+                      <label for="temps_sur_place_{{ visite.visite_id }}" class="form-label mb-0">Temps sur place</label>
                       <input type="time" id="temps_sur_place_{{ visite.visite_id }}" name="temps_sur_place_{{ visite.visite_id }}" class="form-control form-control-sm" value="{{ visite.temps_sur_place }}" />
                     </div>
                     <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
@@ -72,7 +74,7 @@
       </div>
       <div class="row mb-4">
         <div class="col">
-          <label for="description" class="form-label">Description :</label>
+          <label for="description" class="form-label">Description</label>
           <textarea name="description" id="description" class="form-control" rows="5">{{ excursion.description | default('') }}</textarea>
         </div>
       </div>
