@@ -46,11 +46,10 @@
         </form>
 
         <!-- Montrer les excursions publiques -->
-        {% if publicExcursions is defined and publicExcursions is not empty %}
+        {% if public is defined and public and excursionsPublic is defined and excursionsPublic is not empty %}
         <h2 class="text-center mt-4 mb-3">Excursions Publiques</h2>
-        <hr class="mb-4">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-            {% for excursion in publicExcursions %}
+            {% for excursion in excursionsPublic %}
                 <div class="col">
                     <div class="card h-100">
                         {% if excursion.chemin_image %}
@@ -70,6 +69,7 @@
                 </div>
             {% endfor %}
         </div>
+        <hr class="mb-4">
       {% endif %}
       <!-- Montrer les excursions du Guide connecté -->
          {% if excursionsByGuide is defined and excursionsByGuide is not empty %}
