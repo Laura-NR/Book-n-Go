@@ -1,102 +1,123 @@
 {% extends "base_template.html.twig" %}
 
-{% block css %}  
+{% block css %}
     <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+
+    </style>
 {% endblock %}
 
 {% block title %}{{ parent() }} - Dashboard{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-            <div class="d-flex flex-column align-items-center align-items-sm-start pr-3 pt-2 text-white min-vh-100">
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky">
 
-               <ul class="navbar-nav nav-pills flex-column mb-sm-auto mb-0 mt-5 align-items-center align-items-sm-start" id="menu">
+                    {# SIDEBAR #}
+                    <ul class="nav flex-column">
+                        {% if session.role == "guide" %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=guide&methode=afficherPlanning">
+                                    <i data-feather="calendar"></i>
+                                    Planning
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}">
+                                    <i data-feather="map-pin"></i>
+                                    Excursions
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=visite&methode=lister">
+                                    <i data-feather="eye"></i>
+                                    Visites
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=guide&methode=afficherInformation&id={{ session.user_id }}">
+                                    <i data-feather="user"></i>
+                                    Mes Informations
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#fenetreModale">
+                                    <i data-feather="trash-2"></i>
+                                    Supprimer Compte
+                                </a>
+                            </li>
+                        {% elseif session.role == "voyageur" %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}">
+                                    <i data-feather="calendar"></i>
+                                    Planning
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}">
+                                    <i data-feather="book-open"></i>
+                                    Carnets de Voyages
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i data-feather="image"></i>
+                                    Posts
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=voyageur&methode=afficher&id={{ session.user_id }}">
+                                    <i data-feather="user"></i>
+                                    Mes Informations
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#fenetreModale">
+                                    <i data-feather="trash-2"></i>
+                                    Supprimer Compte
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
 
-                    {% if session.role == "guide" %}
+                    {# DROPDOWN #}
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i data-feather="menu"></i> Menu
+                        </button>
+                        <ul class="dropdown-menu mb-1 position-relative" aria-labelledby="dropdownMenuButton"  id="dropdowncool">
+                            {% if session.role == "guide" %}
+                                <li><a class="dropdown-item" href="index.php?controleur=guide&methode=afficherPlanning"><i data-feather="calendar"></i> Planning</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}"><i data-feather="map-pin"></i> Excursions</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=visite&methode=lister"><i data-feather="eye"></i> Visites</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=guide&methode=afficherInformation&id={{ session.user_id }}"><i data-feather="user"></i> Mes Informations</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#fenetreModale"><i data-feather="trash-2"></i> Supprimer Compte</a></li>
+                            {% elseif session.role == "voyageur" %}
+                                <li><a class="dropdown-item" href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}"><i data-feather="calendar"></i> Planning</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}"><i data-feather="book-open"></i> Carnets de Voyages</a></li>
+                                <li><a class="dropdown-item" href="#"><i data-feather="image"></i> Posts</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=voyageur&methode=afficher&id={{ session.user_id }}"><i data-feather="user"></i> Mes Informations</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#fenetreModale"><i data-feather="trash-2"></i> Supprimer Compte</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
 
-                    <li class="nav-item">
-                        <a class="text-white btn btn-primary rounded-pill btnNavbar d-flex align-items-center" href="index.php?controleur=guide&methode=afficherPlanning">
-                            <img src="images/icons/planning.svg" class="me-2"></img>
-                            <span>Planning</span>
-                        </a>
-                    </li>
-                    <li class="nav-item pt-1">
-                        <a class="text-white btn btn-primary rounded-pill btnNavbar d-flex align-items-center" href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}">
-                            <img src="images/icons/excursion.svg" class="me-2" title="Excursions"></img>
-                            <span>Excursions</span>
-                        </a>
-                    </li>
-                    <li class="nav-item pt-1">
-                        <a class="text-white btn btn-primary rounded-pill btnNavbar d-flex align-items-center" href="index.php?controleur=visite&methode=lister">
-                            <img src="images/icons/visite.svg" class="me-2" title="Visites"></img>
-                            <span>Visites</span>
-                        </a>
-                    </li>
-                    <li class="nav-item pt-1">
-                        <a class="text-white btn btn-primary rounded-pill btnNavbar d-flex align-items-center" href="index.php?controleur=guide&methode=afficherInformation&id={{ session.user_id }}">
-                            <img src="images/icons/infos.svg" class="me-2" title="Mes Informations"></img>
-                            <span>Mes Informations</span>
-                        </a>
-                    </li>
-                    <li class="nav-item pt-3">
-                        <span class="text-white btn btn-danger rounded-pill btnNavbar d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#fenetreModale">
-                            <span>Supprimer</span>
-                        </span>
-                    </li>
+                </div>
+            </nav>
 
-                    {% elseif session.role == "voyageur" %}
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content" id="main-dashboard">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                </div>
 
-                    <li class="nav-item">
-                        <main class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
-                            <ul class="nav nav-pills flex-column mb-auto">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link active" aria-current="page">
-                                        <img src="images/icons/planning.svg" class="me-2" title="Mon Planning"></img>
-                                        Planning                        
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="nav-link text-white">
-                                        <img src="images/icons/excursion.svg" class="me-2" title="Excursions"></img>
-                                        Carnet de voyages
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="nav-link text-white">
-                                        <img src="images/icons/visite.svg" class="me-2" title="Visites"></img>
-                                        Posts
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="nav-link text-white">
-                                        <img src="images/icons/infos.svg" class="me-2" title="Mes Informations"></img>
-                                        Mes Informations
-                                    </a>
-                                </li>
-                            </ul>
-                        </main>
-                    </li>
-                    <li class="nav-item pt-3">
-                        <span class="text-white btn btn-danger rounded-pill btnNavbar d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#fenetreModale">
-                            <span>Supprimer</span>
-                        </span>
-                    </li>
-
-                    {% endif %}
-
-                </ul>
-            </div>
-        </div>
-
-        {# Contenu du dashboard #}
-        <div class="col py-3">
-        {% block dashboard_content %}
-        {% endblock %}
+                {% block dashboard_content %}
+                {% endblock %}
+            </main>
         </div>
     </div>
-</div>
+
     <!-- Modale de confirmation de suppression -->
     <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -115,12 +136,17 @@
                         {% elseif session.role == "voyageur" %}
                         <form method="POST" action="?controleur=guide&methode=supprimerVoyageur&id={{ session.user_id }}">
                             {% endif %}
-                        <input type="hidden" name="action" value="supprimer">
-                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                            <input type="hidden" name="action" value="supprimer">
+                            <button type="submit" class="btn btn-danger">Confirmer</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        feather.replace();
+    </script>
 {% endblock %}
