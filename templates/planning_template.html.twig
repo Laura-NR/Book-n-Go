@@ -36,8 +36,8 @@
                 {% for reservation in reservations %}
                 {
                     title: '{{ reservation.titre_excursion|e('js') }}',
-                    start: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ reservation.heure_debut|date("H:i:s") }}',
-                    end: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ reservation.heure_fin|date("H:i:s") }}',
+                    start: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ engagements[loop.index0].heure_debut|date("H:i:s") }}',
+                    end: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ engagements[loop.index0].heure_debut|date("H:i:s") }}',
                     description: '{{ reservation.description_excursion|e('js') }}',
                     extendedProps: {
                         guide: '{{ reservation.nom_guide|e('js') }} {{ reservation.prenom_guide|e('js') }}'

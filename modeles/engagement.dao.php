@@ -200,6 +200,18 @@ public function conflitsEngagements(int $guideId, DateTime $dateDebut, DateTime 
         return $engagements; // Retourne un tableau vide si aucun engagement n'est trouvé
     }
 
+    public function getEngagementById2(int $idEngagement): ?array
+    {
+        $sql = "SELECT * FROM engagement WHERE id = :idEngagement";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':idEngagement', $idEngagement, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $engagement = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $engagement ?: null; // Retourne null si aucun engagement trouvé
+    }
+
 
 
 }
