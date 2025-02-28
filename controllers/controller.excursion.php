@@ -217,63 +217,75 @@ class ControllerExcursion extends BaseController
         $currentVisits = $composerDao->findByExcursion($excursionId);
         $currentVisitIds = array_column($currentVisits, 'visite_id');
 
-        $submittedVisits = [];
-        foreach ($postData as $key => $value) {
-            if (strpos($key, 'temps_sur_place_') === 0) {
-                $visiteId = str_replace('temps_sur_place_', '', $key);
-                $tempsSurPlaceKey = 'temps_sur_place_' . $visiteId;
-                if (isset($postData[$tempsSurPlaceKey])) {
-                    $submittedVisits[$visiteId] = $postData[$tempsSurPlaceKey];
-                }
-            }
+        // Décoder les visites envoyées sous format JSON
+        $submittedVisits = json_decode($postData['visites'], true);
+        
+        if (!$submittedVisits) {
+            echo "Erreur : Aucune visite valide reçue.";
+            return;
         }
 
-        $submittedVisitIds = array_keys($submittedVisits);
+        // Transformer les visites en un format exploitable
+        // On extrait uniquement les IDs des visites soumises dans le formulaire
+        $submittedVisitIds = array_column($submittedVisits, 'id');
+
+        // Déterminer les visites à ajouter : celles qui sont dans le formulaire mais pas encore en base de données
         $visitsToAdd = array_diff($submittedVisitIds, $currentVisitIds);
+
+        // Déterminer les visites à supprimer : celles qui sont en base de données mais absentes du formulaire
         $visitsToRemove = array_diff($currentVisitIds, $submittedVisitIds);
+
+        // Déterminer les visites à mettre à jour : celles qui sont à la fois dans la base et dans le formulaire
         $visitsToUpdate = array_intersect($currentVisitIds, $submittedVisitIds);
 
-        // Boucle sur les visites envoyées via le formulaire
+        // Ajouter les nouvelles visites
         foreach ($visitsToAdd as $visiteId) {
-            $tempsSurPlace = $submittedVisits[$visiteId];
-            $dateToday = (new DateTime())->format('Y-m-d');
-            $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
+            foreach ($submittedVisits as $visit) {
+                if ($visit['id'] == $visiteId) {
+                    $dateToday = (new DateTime())->format('Y-m-d');
+                    $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $visit['tempsSurPlace']);
+                    $ordre = $visit['ordre'];
 
-            $composer = new Composer(
-                $tempsSurPlaceObj,
-                $ordre,
-                $excursionId,
-                $visiteId
-            );
+                    $composer = new Composer(
+                        $tempsSurPlaceObj,
+                        $ordre,
+                        $excursionId,
+                        $visiteId
+                    );
 
-            if (!$composerDao->creer($composer)) {
-                echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
-            }
-        }
-
-        // Mettre à jour les visites existantes pour l'excursion
-        foreach ($visitsToUpdate as $visiteId) {
-            $tempsSurPlace = $submittedVisits[$visiteId];
-            $dateToday = (new DateTime())->format('Y-m-d');
-            $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
-
-            // Vérifier si la valeur actuelle de temps_sur_place est différente à la valeur qui à étée soumis dans le formulaire
-            $currentTempsSurPlace = $composerDao->find($excursionId, $visiteId)->getTempsSurPlace();
-            if ($currentTempsSurPlace != $tempsSurPlaceObj) {
-                $composer = new Composer(
-                    $tempsSurPlaceObj,
-                    $ordre,
-                    $excursionId,
-                    $visiteId
-                );
-
-                if (!$composerDao->modifier($composer)) {
-                    echo "Erreur: Échec de la mise à jour de la visite ID " . $visiteId;
+                    if (!$composerDao->creer($composer)) {
+                        echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
+                    }
                 }
             }
         }
 
-        // Enlever les visites qui ne sont plus incluses dans l'itinéraire l'excursion
+        // Mettre à jour les visites existantes
+        foreach ($visitsToUpdate as $visiteId) {
+            foreach ($submittedVisits as $visit) {
+                if ($visit['id'] == $visiteId) {
+                    $dateToday = (new DateTime())->format('Y-m-d');
+                    $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $visit['tempsSurPlace']);
+                    $ordre = $visit['ordre'];
+
+                    $currentTempsSurPlace = $composerDao->find($excursionId, $visiteId)->getTempsSurPlace();
+                    if ($currentTempsSurPlace != $tempsSurPlaceObj) {
+                        $composer = new Composer(
+                            $tempsSurPlaceObj,
+                            $ordre,
+                            $excursionId,
+                            $visiteId
+                        );
+
+                        if (!$composerDao->modifier($composer)) {
+                            echo "Erreur: Échec de la mise à jour de la visite ID " . $visiteId;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Supprimer les visites qui ne sont plus dans le formulaire
         foreach ($visitsToRemove as $visiteId) {
             if (!$composerDao->supprimer($excursionId, $visiteId)) {
                 echo "Erreur: Échec de la suppression de la visite ID " . $visiteId;
@@ -281,20 +293,6 @@ class ControllerExcursion extends BaseController
         }
     }
 
-
-    /**
-     * @brief Affiche le formulaire de modification pour une excursion spécifique.
-     *
-     * Vérifie si l'utilisateur est connecté et a le rôle de guide avant de procéder.
-     * Récupère l'excursion à modifier ainsi que les visites associées via leur ID respectif.
-     * Si l'ID est invalide ou si l'excursion n'est pas trouvée, affiche un message d'erreur.
-     * Utilise le template `formulaire_excursion.html.twig` pour afficher le formulaire
-     * avec les données de l'excursion et les visites sélectionnées.
-     *
-     * @param int $id L'ID de l'excursion à modifier.
-     *
-     * @return void
-     */
     public function afficherModifier(int $id): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
@@ -330,7 +328,6 @@ class ControllerExcursion extends BaseController
             'excursion' => $excursionAmodifier,
         ]);
     }
-
 
     /**
      * @brief Modifier les informations d'une excursion existante.
@@ -627,7 +624,7 @@ class ControllerExcursion extends BaseController
         echo $this->getTwig()->render('guide_excursions.html.twig', [
             'messages' => $allMessages,
             'excursionsByGuide' => $excursions,
-            'public' => $public
+            'public' => $public,
         ]);
     }
 }

@@ -1,3 +1,5 @@
+import Sortable from '/node_modules/sortablejs/modular/sortable.complete.esm.js';
+
 //Affichage des erreurs
 function showErrors(errors) {
   const errorContainer = document.getElementById('errorContainer');
@@ -26,6 +28,13 @@ function showErrors(errors) {
     errorContainer.style.display = "none";
   }
 }
+
+function updateOrder() {
+  var items = selectedVisits.getElementsTagName("li");
+  items.forEach((item, index) => {
+    item.setAttribute("data-order", index + 1);
+  });
+};
 
 document.addEventListener("DOMContentLoaded", function () {
   const itineraireSelect = document.getElementById("itineraire");
@@ -56,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.text();
       })
       .then((responseText) => {
+        responseText = responseText.trim();
         console.log("Response Text:", responseText);
 
         try {
@@ -97,28 +107,35 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    //d-flex justify-content-between align-items
     const listItem = document.createElement("li");
     listItem.id = `visit-${visitId}`;
     listItem.classList.add("mb-2");
+    listItem.setAttribute("data-order", selectedVisits.children.length + 1);
+
     listItem.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center">
-              <div>
-                  <strong>${visitTitle}</strong>
-              </div>
-              <div class="d-flex gap-3">
-                  <div>
-                      <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
-                      <input
-                          type="time"
-                          id="temps_sur_place_${visitId}"
-                          name="temps_sur_place_${visitId}"
-                          class="form-control form-control-sm"
-                          value="${tempsSurPlace}"
-                      />
-                  </div>
-                  <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
-              </div>
-          </div>
+      <div class="d-flex align-items-center justify-content-between gap-2">
+      <div class='d-flex justify-content-start gap-3'>
+        <div class="handle" style="cursor: grab;">☰</div>
+        <div>
+        <strong> ${visitTitle}</strong>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end gap-3">
+        <div>
+          <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
+          <input
+          type="time"
+          id="temps_sur_place_${visitId}"
+          name="temps_sur_place_${visitId}"
+          class="form-control form-control-sm"
+          value="${tempsSurPlace}"
+          />
+          <input type="hidden" id="ordre${listItem.getAttribute("data-order")}" value="${(listItem.getAttribute("data-order"))}" />
+        </div>
+        <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
+      </div>
+      </div>
       `;
 
     selectedVisits.appendChild(listItem);
@@ -128,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     listItem.querySelector(".remove-visit").addEventListener("click", () => {
       listItem.remove();
+      updateOrder();
       if (selectedVisits.children.length === 0) {
         selectedVisits.style.display = "none";
         selectedVisitsTitle.style.display = "none";
@@ -178,9 +196,39 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const formData = new FormData(form);
+    const formData = new FormData();
+    formData.append("nom", document.getElementById("nom").value);
+    formData.append("capacite", document.getElementById("capacite").value);
+    formData.append("description", document.getElementById("description").value);
+    
+    // Ajouter l'image si elle est sélectionnée
+    const fichierImage = document.getElementById("chemin_image").files[0];
+    if (fichierImage) {
+      formData.append("chemin_image", fichierImage);
+    }
+
+    // Regrouper les visites dans un tableau
+    const visites = [];
+    const visits = document.querySelectorAll("#selectedVisits li");
+    visits.forEach((visit, index) => {
+      const visitId = visit.id.replace("visit-", "");
+      const tempsSurPlace = visit.querySelector(`#temps_sur_place_${visitId}`).value;
+      const ordre = visit.getAttribute("data-order") || index; // Utiliser index si pas d'ordre
+
+      visites.push({
+        id: visitId,
+        tempsSurPlace: tempsSurPlace,
+        ordre: ordre
+      });
+    });
+
+    // Ajouter les visites sous forme de JSON
+    formData.append("visites", JSON.stringify(visites));
+
+    console.log("Form data:", formData);
+    // Ajouter l'ID de l'excursion si c'est une modification
     if (excursionId) {
-      formData.append("id", excursionId);
+      formData.append("excursionId", excursionId);
     }
 
     const endpoint = excursionId
@@ -197,8 +245,10 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
+          
         }
         return response.json();
+        
       })
       .then((data) => {
         console.log("Server response:", data);
@@ -208,6 +258,8 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = data.redirect;
           }
         } else {
+          console.log("Errors:", data.errors || [data.message]);
+          console.log(data);
           showErrors(
             data.errors || [data.message || "Une erreur est survenue."]
           );
@@ -220,4 +272,19 @@ document.addEventListener("DOMContentLoaded", function () {
         ]);
       });
   });
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  if (selectedVisits) {
+    new Sortable(selectedVisits, {
+      handle: '.handle', // Drag uniquement via le handle ☰
+      animation: 150,
+      ghostClass: "sortable-ghost",
+
+      onUpdate: function (evt) {
+        updateOrder();
+      },
+    });
+  }
 });

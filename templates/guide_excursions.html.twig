@@ -23,6 +23,9 @@
 {% block title %}{{ parent() }} - Excursions{% endblock %}
  
  {% block dashboard_content %}
+    <pre>
+        {{ dump(data) }}
+    </pre>
      <div class="container">
         {% if success_engagements is not empty %}
             {% for message in success_engagements %}
