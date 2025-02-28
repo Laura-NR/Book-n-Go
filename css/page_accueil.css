@@ -3,7 +3,48 @@
 }
 
 #carouselTitre {
-    text-shadow: 1px 1px 2px black;
+    /*text-shadow: 1px 1px 2px black;*/
+    font-size: 3rem;
+}
+/*Pour gérer les plus petits écrans*/
+@media (max-width: 768px) {
+    #carouselTitre {
+        font-size: 2rem;
+    }
+    .reserveButton {
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+    }
+    #scrollDownButton::before {
+        width: 90px;  /* Adjust shadow size */
+        height: 90px; /* Adjust shadow size */
+    }
+}
+@media (max-width: 650px) {
+    #carouselTitre {
+        font-size: 1.5rem;
+    }
+    .reserveButton {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+    #scrollDownButton::before {
+        width: 70px;  /* Adjust shadow size */
+        height: 70px; /* Adjust shadow size */
+    }
+}
+@media (max-width: 500px) {
+    #carouselTitre {
+        font-size: 1.2rem;
+    }
+    .reserveButton {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+    #scrollDownButton::before {
+        width: 60px;  /* Adjust shadow size */
+        height: 60px; /* Adjust shadow size */
+    }
 }
 
 #scrollDownIcon {
@@ -19,8 +60,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 120px;  /* Adjust shadow size */
-    height: 120px; /* Adjust shadow size */
+    width: 64px;  /* Adjust shadow size */
+    height: 64px; /* Adjust shadow size */
     background: rgba(0, 0, 0, 0.3); /* Dark shadow */
     border-radius: 50%;
     transform: translate(-50%, -50%);
