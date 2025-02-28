@@ -1,0 +1,40 @@
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+    .col-auto {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .col {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+}
+
+
+@media (max-width: 576px) {
+    .col-auto {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .col {
+        width: 100%;
+    }
+
+    .nav-pills .nav-link {
+        text-align: center;
+    }
+}
