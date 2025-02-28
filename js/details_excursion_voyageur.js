@@ -1,27 +1,3 @@
-const filterDateInput = document.getElementById('filter-date');
-const dateSelect = document.getElementById('date-select');
-const idEngagementInput = document.getElementById('id_engagement_input');
-
-filterDateInput.addEventListener('change', () => {
-    const filterDate = filterDateInput.value;
-    dateSelect.querySelectorAll('option').forEach(option => {
-        if (option.value !== "") {
-            if (!filterDate || option.value === filterDate) { // on vérifie si filterDate est vide
-                option.style.display = 'block';
-            } else {
-                option.style.display = 'none';
-            }
-        }
-    });
-    dateSelect.selectedIndex = 0;
-    idEngagementInput.value = '';
-});
-
-dateSelect.addEventListener('change', () => {
-    const selectedOption = dateSelect.selectedOptions[0];
-    idEngagementInput.value = selectedOption.dataset.engagementId;
-});
-
 function initMap() {
     const map = L.map('map').setView([47, 10], 5);
 
@@ -32,6 +8,7 @@ function initMap() {
     const waypoints = [];
     const markers = [];
     let geocodingPromises = [];
+    console.log("passed")
 
     // Si les visites existent
     if (typeof visites !== 'undefined' && visites.length > 0) {
@@ -181,11 +158,53 @@ function geocodeAddress(address) {
         });
 }
 
+function initFlatpickr() {
+    // Vérifier que datesExistantes est reconnu et pas vide
+    if (typeof datesExistantes === 'undefined' || !Array.isArray(datesExistantes) || datesExistantes.length === 0) {
+        console.error("datesExistantes n'est pas définie ou est vide");
+        return;
+    }
+
+    // Initialiser flatpickr avec "enable" pour n'afficher que les dates disponibles à la réservation
+    flatpickr("#datepicker", {
+        dateFormat: "Y-m-d",
+        enable: datesExistantes,
+        minDate: datesExistantes[0],
+        maxDate: datesExistantes[datesExistantes.length - 1]
+    });
+
+    console.log("Flatpickr initialized with allowed dates:", datesExistantes);
+}
+
+
 // Initialize the map when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     initMap();
+    initFlatpickr();
+    // console.log(datesExistantes);
 });
 
-// document.addEventListener('DOMContentLoaded', function() {
-//     initMap();
-// });
+
+const datePicker = document.getElementById('datepicker');
+const dateSelect = document.getElementById('date-select');
+const idEngagementInput = document.getElementById('id_engagement_input');
+
+datePicker.addEventListener('change', () => {
+    const filterDate = datePicker.value;
+    dateSelect.querySelectorAll('option').forEach(option => {
+        if (option.value !== "") {
+            if (!filterDate || option.value === filterDate) { // on vérifie si filterDate est vide
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        }
+    });
+    dateSelect.selectedIndex = 0;
+    idEngagementInput.value = '';
+});
+
+dateSelect.addEventListener('change', () => {
+    const selectedOption = dateSelect.selectedOptions[0];
+    idEngagementInput.value = selectedOption.dataset.engagementId;
+});

@@ -3,6 +3,9 @@
 {% block css %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="./css/detail_excursion_voyageur.css">
+{#    <link rel="stylesheet" href="./node_modules/js-datepicker/dist/datepicker.min.css">#}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{#    <link rel="stylesheet" href="https://unpkg.com/js-datepicker/dist/datepicker.min.css">#}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin=""/><style>
@@ -114,27 +117,30 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="filter-date" class="form-label">Filtrer par date :</label>
-                            <input type="date" class="form-control" id="filter-date">
+                            <input type="text" class="form-control" id="datepicker" readonly>
                         </div>
 
                         <form action="index.php?controleur=reservation&methode=creer" method="post" id="reservation-form">
                             <div class="mb-3">
-                                <label for="date-select" class="form-label">Sélectionner une date :</label>
+                                <label for="date-select" class="form-label">Sélectionner une heure de départ :</label>
                                 <select class="form-select" id="date-select" name="date_reservation" required>
-                                    <option value="" disabled selected>-- Sélectionner une date --</option>
+                                    <option value="" disabled selected>-- Sélectionner une heure de départ --</option>
+                                    {% set datesExistantes = [] %}
                                     {% for engagement in engagements %}
                                         {% set currentDate = engagement.dateDebutDispo %}
                                         {% for i in 0..engagement.dateFinDispo.diff(engagement.dateDebutDispo).days %}
                                             {% set dateString = currentDate|date('Y-m-d') %}
                                             {% if dateString not in datesReservees %}
+                                                {% set datesExistantes = datesExistantes|merge([dateString]) %}
                                                 <option value="{{ dateString }}" data-engagement-id="{{ engagement.id }}" data-guide="{{ engagement.guide.prenom }} {{ engagement.guide.nom }}">
-                                                    {{ currentDate|date('d/m/Y') }} - {{ engagement.guide.prenom }} {{ engagement.guide.nom }} - Départ : {{ engagement.heureDebut|date('H:i')|default('Non spécifié') }}
+                                                    Départ : {#[DEBUG {{ currentDate|date('Y-m-d') }}]#} {{ engagement.heureDebut|date('H:i')|default('Non spécifié') }} -- {{ engagement.guide.prenom }} {{ engagement.guide.nom }}
                                                 </option>
                                             {% endif %}
                                             {% set currentDate = currentDate|date_modify('+1 day') %}
                                         {% endfor %}
                                     {% endfor %}
                                 </select>
+{#                                {{ dump(datesExistantes) }}#}
                             </div>
                             <input type="hidden" name="id_excursion" value="{{ excursion.id }}">
                             <input type="hidden" name="id_voyageur" value="{{ session.user_id }}">
@@ -151,13 +157,23 @@
 
 {% block script %}
     {{ parent() }}
-    <script>
-        var visites = {{ visites|json_encode()|raw }};
-
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>var visites = {{ visites|json_encode()|raw }};</script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+            crossorigin="">
+    </script>
+    {% set datesExistantes = [] %}
+    {% for engagement in engagements %}
+        {% set currentDate = engagement.dateDebutDispo %}
+        {% for i in 0..engagement.dateFinDispo.diff(engagement.dateDebutDispo).days %}
+            {% set dateString = currentDate|date('Y-m-d') %}
+            {% if dateString not in datesReservees %}
+                {% set datesExistantes = datesExistantes|merge([dateString]) %}
+            {% endif %}
+            {% set currentDate = currentDate|date_modify('+1 day') %}
+        {% endfor %}
+    {% endfor %}
+    <script>var datesExistantes = {{ datesExistantes|json_encode|raw }};</script>
     <script src="./js/details_excursion_voyageur.js"></script>
 {% endblock %}
