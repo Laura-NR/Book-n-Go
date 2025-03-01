@@ -1,130 +1,163 @@
 {% extends 'base_template.html.twig' %}
 
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="./css/detail_excursion_voyageur.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/><style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+
+{% endblock %}
+
 {% block content %}
-    <div class="container">
-    {% if session.role == "visiteur" %}
-        <div class="alert alert-danger" role="alert">
-            Veuillez vous connecter pour réserver des excursions
-        </div>
-    {% endif %}
-    
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h1 class="card-title">{{ excursion.nom }}</h1>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <dl class="row">
-                            <dt class="col-sm-4">Date de visite:</dt>
-                            <dd class="col-sm-8">{{ excursion.date_visite|date('d/m/Y') }}</dd>
+    <main class="container">
+        <a href="index.php?controleur=excursion&methode=lister" class="btn btn-secondary mb-3">
+            <i class="feather-icons" data-feather="arrow-left-circle"></i> Retour à la liste
+        </a>
 
-                            <dt class="col-sm-4">Capacité:</dt>
-                            <dd class="col-sm-8">{{ excursion.capacite }} personnes</dd>
+        <section class="py-3 text-center">
+            <h1 class="display-4 mb-3 text-primary">{{ excursion.nom }}</h1>
+            <img src="{{ excursion.chemin_image }}" alt="{{ excursion.nom }}" class="img-fluid rounded">
+        </section>
 
-                            <dt class="col-sm-4">Durée:</dt>
-                            {% set dureeTotale = 0 %}
-                            {% if visites is not empty %}
-                                {% for visite in visites %}
-                                    {% set dureeTotale = dureeTotale + visite.temps_sur_place|date('G') %} {# pour formater la date en heure (0 à 24) et l'additionner#}
-                                {% endfor %}
-                            {% endif %}
-                            <dd class="col-sm-8">{{ dureeTotale }} heures</dd>
-
-
-
-                        </dl>
+        <section class="py-3">
+            <div class="d-flex justify-content-center">
+                {% if session.role == "voyageur" %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reservationModal">
+                        Réserver
+                    </button>
+                {% elseif session.role == "visiteur" %}
+                    <div class="alert alert-danger" role="alert">
+                        Veuillez vous connecter pour réserver des excursions
                     </div>
-                    <div class="col-md-6">
-                        <h3>Itinéraire :</h3>
-                        <div>
-                            {% if visites is not empty %}
-                                {% for visite in visites %}
-                                    <div class="position-relative">
-                                        <span class="position-absolute top-50 bg-primary rounded-circle" style="width: 10px; height: 10px; transform: translate(-50%, -50%); left: 2px;"></span>
-                                        <div class="border-start border-3 border-primary ps-3 pt-2 pb-2">
-                                            {{ visite.titre }} - <span class="text-secondary">Heure d'Arrivée atendue :</span> {{ heuresArrivees[visite.visite_id] }} - {{ visite.temps_sur_place|date('H') != '00' ? visite.temps_sur_place|date('H') ~ ' h ' : '' }}{{ visite.temps_sur_place|date('i') != '00' ? visite.temps_sur_place|date('i') ~ ' min' : '' }}
-                                        </div>
-                                    </div>
-                                {% endfor %}
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="py-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary fw-bold">Description</h5>
+                    <p class="card-text">{{ excursion.description }}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary fw-bold">Capacité</h5>
+                    <p class="card-text">{{ excursion.capacite }} personnes</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary fw-bold">Itinéraire</h5>
+                    {% if visites is not empty %}
+                        {% set totalDuree = 0 %}
+                        {% for visite in visites %}
+                            {% set parts = visite.temps_sur_place|split(':') %}
+                            {% if parts|length == 3 %}
+                                {% set heures = parts[0]|number_format(0, '', '') %}
+                                {% set minutes = parts[1]|number_format(0, '', '') %}
+                                {% set totalDuree = totalDuree + (heures * 60) + minutes %}
                             {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <p class="card-text">
+                        Durée : {{ totalDuree // 60 }} heures et {{ totalDuree % 60 }} minutes
+                    </p>
+
+                    {% if visites is not empty %}
+                        {% for visite in visites %}
+                            <div class="position-relative">
+                                <span class="position-absolute top-50 bg-primary rounded-circle" style="width: 10px; height: 10px; transform: translate(-50%, -50%); left: 2px;"></span>
+                                <div class="border-start border-3 border-primary ps-3 pt-2 pb-2">
+                                    {{ visite.titre }} - {{ visite.temps_sur_place }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="card-text">Aucune visite associée à cette excursion.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section class="py-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary fw-bold">Carte de l'itinéraire</h5>
+                    <div id="map">
+{#                        Map via leaflet#}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Modal #}
+        <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reservationModalLabel">Réserver une place pour {{ excursion.nom }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="filter-date" class="form-label">Filtrer par date :</label>
+                            <input type="date" class="form-control" id="filter-date">
                         </div>
+
+                        <form action="index.php?controleur=reservation&methode=creer" method="post" id="reservation-form">
+                            <div class="mb-3">
+                                <label for="date-select" class="form-label">Sélectionner une date :</label>
+                                <select class="form-select" id="date-select" name="date_reservation" required>
+                                    <option value="" disabled selected>-- Sélectionner une date --</option>
+                                    {% for engagement in engagements %}
+                                        {% set currentDate = engagement.dateDebutDispo %}
+                                        {% for i in 0..engagement.dateFinDispo.diff(engagement.dateDebutDispo).days %}
+                                            {% set dateString = currentDate|date('Y-m-d') %}
+                                            {% if dateString not in datesReservees %}
+                                                <option value="{{ dateString }}" data-engagement-id="{{ engagement.id }}" data-guide="{{ engagement.guide.prenom }} {{ engagement.guide.nom }}">
+                                                    {{ currentDate|date('d/m/Y') }} - {{ engagement.guide.prenom }} {{ engagement.guide.nom }} - Départ : {{ engagement.heureDebut|date('H:i')|default('Non spécifié') }}
+                                                </option>
+                                            {% endif %}
+                                            {% set currentDate = currentDate|date_modify('+1 day') %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="hidden" name="id_excursion" value="{{ excursion.id }}">
+                            <input type="hidden" name="id_voyageur" value="{{ session.user_id }}">
+                            <input type="hidden" name="id_engagement" id="id_engagement_input">
+                            <button type="submit" class="btn btn-primary">Réserver</button>
+                        </form>
                     </div>
-                </div>
-                <dt class="col-sm-4">Description:</dt>
-                <dd class="col-sm-8">{{ excursion.description }}</dd>
-            </div>
-        </div>
-    
-    <div class="mt-3">
-        <a href="index.php?controleur=excursion&methode=lister" class="btn btn-secondary">Retour à la liste des excursions</a>
-        {% if session.role == "voyageur" %}
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reservationModal">Réserver</button>
-    </div>
-
-{#        <p>DEBUG LES ENGAGEMENTS</p>#}
-{#        {{ dump(engagements) }}#}
-{#        {{ dump(datesReservees) }}#}
-
-{#        <p>DEBUG BOUCLE ENGAGEMENT</p>#}
-{#        {{ dump(dateTime) }}#}
-{#        {% for engagement in engagements %}#}
-{#            {{ dump(engagement) }}#}
-{#            {% set currentDate = engagement.dateDebutDispo %}#}
-
-{#            {% for i in 0 .. engagement.dateFinDispo.diff(engagement.dateDebutDispo).days %}#}
-{#                <p> value={{ currentDate|date('Y-m-d') }}" data-engagement-id="{{ engagement.id }}" data-guide="{{ engagement.guide.prenom }} {{ engagement.guide.nom }}">#}
-{#                    {{ currentDate|date('d/m/Y') }} - {{ engagement.guide.prenom }} {{ engagement.guide.nom }}#}
-{#                </p>#}
-{#                {% set currentDate = currentDate|date_modify('+1 day') %}#}
-{#            {% endfor %}#}
-{#        {% endfor %}#}
-
-
-    <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reservationModalLabel">Réserver une place pour {{ excursion.nom }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="filter-date" class="form-label">Filtrer par date :</label>
-                        <input type="date" class="form-control" id="filter-date">
-                    </div>
-
-                    <form action="index.php?controleur=reservation&methode=creer" method="post" id="reservation-form">
-                    <div class="mb-3">
-                        <label for="date-select" class="form-label">Sélectionner une date :</label>
-                        <select class="form-select" id="date-select" name="date_reservation" required>
-                            <option value="" disabled selected>-- Sélectionner une date --</option>
-                            {% for engagement in engagements %}
-                                {% set currentDate = engagement.dateDebutDispo %}
-                                {% for i in 0..engagement.dateFinDispo.diff(engagement.dateDebutDispo).days %}
-                                    {% set dateString = currentDate|date('Y-m-d') %}
-                                    {% if dateString not in datesReservees %}
-                                        <option value="{{ dateString }}" data-engagement-id="{{ engagement.id }}" data-guide="{{ engagement.guide.prenom }} {{ engagement.guide.nom }}">
-                                            {{ currentDate|date('d/m/Y') }} - {{ engagement.guide.prenom }} {{ engagement.guide.nom }} - Départ : {{ engagement.heureDebut|date('H:i')|default('Non spécifié') }}
-                                        </option>
-                                    {% endif %}
-                                    {% set currentDate = currentDate|date_modify('+1 day') %}
-                                {% endfor %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                        <input type="hidden" name="id_excursion" value="{{ excursion.id }}">
-                        <input type="hidden" name="id_voyageur" value="{{ session.user_id }}">
-                        <input type="hidden" name="id_engagement" id="id_engagement_input">
-                        <button type="submit" class="btn btn-primary">Réserver</button>
-                    </form>
                 </div>
             </div>
         </div>
-    </div>
-    {% endif %}
+    </main>
+
 {% endblock %}
 
 {% block script %}
-    <script src="js/details_excursion_voyageur.js"></script>
+    {{ parent() }}
+    <script>
+        var visites = {{ visites|json_encode()|raw }};
+
+    </script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script src="./js/details_excursion_voyageur.js"></script>
 {% endblock %}

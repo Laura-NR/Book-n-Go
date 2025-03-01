@@ -7,71 +7,114 @@
 {% block title %}{{ parent() }} - Dashboard{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div class="col-auto col-md-1 col-xl-2 px-sm-2 px-0" style="border-right: 3px solid #b2708f;">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 mt-5 align-items-center align-items-sm-start" id="menu">
-                    {% if session.role == "guide" %}
-                    <li class="w-100">
-                        <a href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}" class="nav-link align-middle px-0 mb-4 d-flex flex-row">
-                            <img src="images/icons/planning.svg" class="me-2" title="Mon Planning"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Planning</span>
-                        </a>
-                    </li>
-                    {% elseif session.role == "voyageur" %}
-                    <li class="w-100">
-                        <a href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}" class="nav-link align-middle px-0 mb-4 d-flex flex-row">
-                            <img src="images/icons/planning.svg" class="me-2" title="Mon Planning"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Planning</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if session.role == "guide" %}
-                        <li class="w-100">
-                            <a href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}"class="nav-link px-0 align-middle mb-4 d-flex flex-row">
-                                <img src="images/icons/excursion.svg" class="me-2" title="Excursions"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Excursions</span> </a>
-                        </li>
-                        <li class="w-100">
-                            <a href="index.php?controleur=visite&methode=lister" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
-                                <img src="images/icons/visite.svg" class="me-2" title="Visites"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Visites</span></a>
-                        </li>
-                    {% elseif session.role == "voyageur" %}
-                        <li class="w-100">
-                            {#/!\ A changer pour que ça affiche uniquement mes carnets de voyage -> probablement revoir le template d'affichage des carnets#}
-                            <a href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
-                                <img src="images/icons/excursion.svg" class="me-2" title="Excursions"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Carnets de Voyages</span> </a>
-                        </li>
-                        <li class="w-100">
-                            <a href="#" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
-                                <img src="images/icons/visite.svg" class="me-2" title="Visites"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Posts</span></a>
-                        </li>
-                    {% endif %}
-                    {% if session.role == "guide" %}
-                        <li class="w-100">
-                            <a href="index.php?controleur=guide&methode=afficherInformation&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
-                                <img src="images/icons/infos.svg" class="me-2" title="Mes Informations"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Mes Informations</span> </a>
-                        </li>
-                        <li class="w-100">
-                            <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span" data-bs-toggle="modal" data-bs-target="#fenetreModale">Supprimer </span>
-                        </li>
-                    {% elseif session.role == "voyageur" %}
-                        <li class="w-100">
-                            <a href="index.php?controleur=voyageur&methode=afficher&id={{ session.user_id }}" class="nav-link px-0 align-middle mb-4 d-flex flex-row">
-                                <img src="images/icons/infos.svg" class="me-2" title="Mes Informations"></img> <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span">Mes Informations</span> </a>
-                        </li>
-                        <li class="w-100">
-                            <span class="ms-1 d-none d-xl-inline-block rounded-pill px-4 py-1 w-100 text-center span hover-span" data-bs-toggle="modal" data-bs-target="#fenetreModale">Supprimer </span>
-                        </li>
-                    {% endif %}
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky">
 
-                </ul>
-            </div>
-        </div>
-        <div class="col">
-        {% block dashboard_content %}
-        {% endblock %}
+                    {# SIDEBAR #}
+                    <ul class="nav flex-column">
+                        {% if session.role == "guide" %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}">
+                                    <i data-feather="calendar"></i>
+                                    Planning
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}">
+                                    <i data-feather="map-pin"></i>
+                                    Excursions
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=visite&methode=lister">
+                                    <i data-feather="eye"></i>
+                                    Visites
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=guide&methode=afficherInformation&id={{ session.user_id }}">
+                                    <i data-feather="user"></i>
+                                    Mes Informations
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#fenetreModale">
+                                    <i data-feather="trash-2"></i>
+                                    Supprimer Compte
+                                </a>
+                            </li>
+                        {% elseif session.role == "voyageur" %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}">
+                                    <i data-feather="calendar"></i>
+                                    Planning
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}">
+                                    <i data-feather="book-open"></i>
+                                    Carnets de Voyages
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i data-feather="image"></i>
+                                    Posts
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?controleur=voyageur&methode=afficher&id={{ session.user_id }}">
+                                    <i data-feather="user"></i>
+                                    Mes Informations
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#fenetreModale">
+                                    <i data-feather="trash-2"></i>
+                                    Supprimer Compte
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+
+                    {# DROPDOWN #}
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i data-feather="menu"></i> Menu
+                        </button>
+                        <ul class="dropdown-menu mb-1 position-relative" aria-labelledby="dropdownMenuButton"  id="dropdowncool">
+                            {% if session.role == "guide" %}
+                                <li><a class="dropdown-item" href="index.php?controleur=guide&methode=afficherPlanning"><i data-feather="calendar"></i> Planning</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}"><i data-feather="map-pin"></i> Excursions</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=visite&methode=lister"><i data-feather="eye"></i> Visites</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=guide&methode=afficherInformation&id={{ session.user_id }}"><i data-feather="user"></i> Mes Informations</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#fenetreModale"><i data-feather="trash-2"></i> Supprimer Compte</a></li>
+                            {% elseif session.role == "voyageur" %}
+                                <li><a class="dropdown-item" href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}"><i data-feather="calendar"></i> Planning</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}"><i data-feather="book-open"></i> Carnets de Voyages</a></li>
+                                <li><a class="dropdown-item" href="#"><i data-feather="image"></i> Posts</a></li>
+                                <li><a class="dropdown-item" href="index.php?controleur=voyageur&methode=afficher&id={{ session.user_id }}"><i data-feather="user"></i> Mes Informations</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#fenetreModale"><i data-feather="trash-2"></i> Supprimer Compte</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content" id="main-dashboard">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                </div>
+
+                {% block dashboard_content %}
+                {% endblock %}
+            </main>
         </div>
     </div>
-</div>
+
     <!-- Modale de confirmation de suppression -->
     <div class="modal fade" id="fenetreModale" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -91,11 +134,15 @@
                         <form method="POST" action="?controleur=guide&methode=supprimerVoyageur&id={{ session.user_id }}">
                             {% endif %}
                         <input type="hidden" name="action" value="supprimer">
-                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                        <button type="submit" class="btn btn-secondary">Confirmer</button>
                     </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        feather.replace();
+    </script>
 {% endblock %}
