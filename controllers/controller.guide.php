@@ -256,15 +256,6 @@ class ControllerGuide extends ControllerVoyageur
     }
 
 
-
-
-    /**
-     * Afficher le planning du guide (accessible uniquement au guide connecté)
-     */
-    public function afficherPlanning(): void
-    {
-        echo $this->getTwig()->render('planning_guide.html.twig');
-    }
      // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
      public function afficherInformation(int $id = null): void
      {

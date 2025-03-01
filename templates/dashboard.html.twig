@@ -16,7 +16,7 @@
                     <ul class="nav flex-column">
                         {% if session.role == "guide" %}
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?controleur=guide&methode=afficherPlanning">
+                                <a class="nav-link" href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}">
                                     <i data-feather="calendar"></i>
                                     Planning
                                 </a>
