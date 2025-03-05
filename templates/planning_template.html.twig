@@ -10,7 +10,8 @@
 {% endblock %}
 
 {% block script %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales-all.global.min.js'></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -73,6 +74,15 @@
             {% endif %}
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'fr',
+                buttonText: {
+                    today: "Aujourd'hui",
+                    month: "Mois",
+                    week: "Semaine",
+                    day: "Jour",
+                    list: "Liste"
+                },
+                themeSystem: 'bootstrap5',
                 initialView: 'dayGridMonth',
                 headerToolbar: {
                     left: 'prev,next today',

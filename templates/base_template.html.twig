@@ -41,7 +41,7 @@
                     <ul class="navbar-nav ms-auto">
                         {% if session.user_id %}
                         <li class="nav-item me-2">
-                            <a class="text-white btn btn-primary rounded-pill btnNavbar" href="index.php?controleur=utilisateur&methode=afficherDashboard">Dashboard</a>
+                            <a class="text-white btn btn-primary rounded-pill btnNavbar" href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}">Dashboard</a>
                         </li>
                         <li class="nav-item me-2">
                             <a class="text-white btn btn-primary rounded-pill btnNavbar" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
