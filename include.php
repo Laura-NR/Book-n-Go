@@ -61,3 +61,9 @@ require_once 'controllers/controller.post.class.php';
 require_once 'controllers/controller.commentaire.php';
 require_once 'controllers/controller.reservation.php';
 require_once 'controllers/controller.engagement.php';
+
+//Ajout des services
+require_once 'services/BreadcrumbService.php';
+
+//Ajout des routes
+require_once 'config/breadcrumb_routes.php';

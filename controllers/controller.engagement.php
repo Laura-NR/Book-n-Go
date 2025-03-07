@@ -24,6 +24,8 @@ class ControllerEngagement extends BaseController
      */
     public function afficherCreer(int $id): void
     {
+        $this->breadcrumbService->buildFromRoute('engagement', 'afficherCreer');
+
         $ExcursionDao = new ExcursionDao();
         $excursion = $ExcursionDao->findAssoc($id);
 
@@ -32,7 +34,8 @@ class ControllerEngagement extends BaseController
 
         echo $this->getTwig()->render('creer_engagement.html.twig', [
             'excursion' => $excursion,
-            'messages_engagements' => $messages
+            'messages_engagements' => $messages,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ]);
     }
 
@@ -123,5 +126,19 @@ class ControllerEngagement extends BaseController
         } else {
             echo "Aucune donnée n'a été soumise.";
         }
+    }
+
+
+    public function afficherModifier() {
+
+    }
+
+
+    public function modifier() {
+
+    }
+
+    public function supprimer() {
+
     }
 }

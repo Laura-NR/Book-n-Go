@@ -30,36 +30,40 @@
 			<div id="formDiv">
 				<div class="row mb-4">
 					<div class="col">
-						<label for="titre" class="form-label">Titre :</label>
+						<label for="titre" class="form-label">Titre</label>
 						<input type="text" id="titre" name="titre" class="form-control" value="{{ visite.titre|default('') }}" minlength="1" maxlength="255" required/>
 					</div>
 					<div class="col">
-						<label for="adresse" class="form-label">Adresse :</label>
+						<label for="adresse" class="form-label">Adresse</label>
 						<input type="text" id="adresse" name="adresse" class="form-control" value="{{ visite.adresse|default('') }}" minlength="1" maxlength="255" required/>
 					</div>
 				</div>
 				<div class="row mb-4">
 					<div class="col">
-						<label for="ville" class="form-label">Ville :</label>
+						<label for="ville" class="form-label">Ville</label>
 						<input type="text" id="ville" name="ville" class="form-control" value="{{ visite.ville|default('') }}" minlength="1" maxlength="255" required/>
 					</div>
 					<div class="col">
-						<label for="codePostal" class="form-label">Code postal :</label>
-						<input type="text" id="codePostal" name="codePostal" class="form-control" value="{{ visite.codePostal|default('') }}" minlength="5" maxlength="5" required/>
+						<label for="codePostal" class="form-label">Code postal</label>
+						<input type="text" id="codePostal" name="codePostal" class="form-control" value="{{ visite.codePostal|default('') }}" minlength="5" maxlength="5" required placeholder="Ex : 64100"/>
 					</div>
 				</div>
 				<div class="row mb-4">
 					<div class="col">
-						<label for="description" class="form-label">Description :</label>
+						<label for="description" class="form-label">Description</label>
 						<textarea name="description" id="description" class="form-control" rows="5" maxlength="2000">{{ visite.description|default('') }}</textarea>
+						<p class="mb-0 pb-0">* Tous les champs sont requis</p>
 					</div>
 				</div>
 				{% if isEdit %}
 					<input type="hidden" name="id" value="{{ visite.id }}"/>
 				{% endif %}
 			</div>
-			<div class="text-center mt-4">
-				<input id="formBtn" type="submit" value="{{ isEdit ? 'Modifier' : 'Créer' }}" class="btn" formaction="index.php?controleur=visite&methode={{ isEdit ? 'modifier' : 'creer' }}{% if isEdit %}&id={{ visite.id }}{% else %}&isExcursion={{ isExcursion }}{% endif %}"/>
+			<div class="d-flex flex-row mt-4 justify-content-center gap-3">
+				<div class="text-center">
+					<input id="formBtn" type="submit" value="{{ isEdit ? 'Modifier' : 'Créer' }}" class="btn" formaction="index.php?controleur=visite&methode={{ isEdit ? 'modifier' : 'creer' }}{% if isEdit %}&id={{ visite.id }}{% else %}&isExcursion={{ isExcursion }}{% endif %}"/>
+				</div>
+				<a type="button" id="btn_annuler" class="btn btn-secondary rounded-pill" style="width: 12%;" href="index.php?controleur=visite&methode=lister">Annuler</a>
 			</div>
 		</form>
 	</main>
