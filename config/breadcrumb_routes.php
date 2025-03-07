@@ -93,4 +93,10 @@ return [
             'parent' => 'post.listerParCarnet'
         ]
     ],
+    'reservation' => [
+        'afficherPlanning' => [
+            'label' => 'Mon Planning',
+            'parent' => 'utilisateur.afficherDashboard'
+        ]
+    ],
 ];

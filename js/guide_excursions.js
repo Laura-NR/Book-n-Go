@@ -25,4 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmDeleteButton.href = `index.php?controleur=excursion&methode=supprimer&id=${excursionId}`;
         });
     });
+
+    // Initialize Feather Icons
+    feather.replace();
 });
