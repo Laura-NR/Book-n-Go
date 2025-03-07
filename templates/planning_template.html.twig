@@ -5,38 +5,13 @@
 
 {% block dashboard_content %}
     <div class="container">
-        <h1>Planning des réservations</h1>
-
-        <!-- Zone pour afficher le calendrier -->
         <div id="calendar"></div>
     </div>
-
-<!-- {% if reservations is not empty %}
-        <ul>
-            {% for reservation in reservations %}
-                <li>
-                    <h3>{{ reservation.titre_excursion }}</h3>
-                    <p><strong>Description :</strong> {{ reservation.description_excursion }}</p>
-                    <p><strong>Guide :</strong> {{ reservation.nom_guide }} {{ reservation.prenom_guide }}</p>
-                    <p><strong>Date de réservation :</strong> {{ reservation.date_reservation }}</p>
-                    <p><strong>Heure de l'excusrion:</strong>{{ engagement.heure_debut }}</p>
-                </li>
-                <a href="index.php?controleur=reservation&methode=afficherFormulaireModification&id={{ reservation.id }}">Modifier</a>
-                <a href="index.php?controleur=reservation&methode=supprimerReservation&id={{ reservation.id }}" onclick="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
-                    Supprimer
-                </a>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Aucune réservation trouvée.</p>
-    {% endif %}-->
-
 {% endblock %}
 
-{# Ajouter les assets JS et CSS nécessaires pour FullCalendar #}
 {% block script %}
-    {{ parent() }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales-all.global.min.js'></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -53,34 +28,89 @@
                 return;
             }
 
+            let events = [];
+
+            {% if session.role is defined and session.role == "voyageur" %}
+            console.log("Condition session voyageur vérifiée");
+            events = [
+                {% for reservation in reservations %}
+                {
+                    title: '{{ reservation.titre_excursion|e('js') }}',
+                    start: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ engagements[loop.index0].heure_debut|date("H:i:s") }}',
+                    end: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ engagements[loop.index0].heure_debut|date("H:i:s") }}',
+                    description: '{{ reservation.description_excursion|e('js') }}',
+                    extendedProps: {
+                        guide: '{{ reservation.nom_guide|e('js') }} {{ reservation.prenom_guide|e('js') }}'
+                    }
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ];
+            {% elseif session.role is defined and session.role == "guide" %}
+            console.log("Condition session guide vérifiée");
+
+            console.log("Engagements :", [
+                {% for engagement in engagements %}
+                {
+                    title: '{{ engagement.titre_excursion|e('js') }}',
+                    start: '{{ engagement.date_debut_dispo|date("Y-m-d") }}T{{ engagement.heure_debut|date("H:i:s") }}',
+                    end: '{{ engagement.date_fin_dispo|date("Y-m-d") }}T{{ engagement.heure_fin|date("H:i:s") }}',
+                    description: 'ID Excursion : {{ engagement.id_excursion|e('js') }}'
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]);
+
+            events = [
+                {% for engagement in engagements %}
+                {
+                    title: '{{ engagement.titre_excursion|e('js') }}',
+                    start: '{{ engagement.date_debut_dispo|date("Y-m-d") }}T{{ engagement.heure_debut|date("H:i:s") }}',
+                    end: '{{ engagement.date_fin_dispo|date("Y-m-d") }}T{{ engagement.heure_fin|date("H:i:s") }}',
+                    description: 'ID Excursion : {{ engagement.id_excursion|e('js') }}'
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ];
+            {% else %}
+            console.warn("Aucun rôle valide détecté !");
+            {% endif %}
+
             const calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'fr',
+                buttonText: {
+                    today: "Aujourd'hui",
+                    month: "Mois",
+                    week: "Semaine",
+                    day: "Jour",
+                    list: "Liste"
+                },
+                themeSystem: 'bootstrap5',
                 initialView: 'dayGridMonth',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
                 },
-                events: [
-                    {% for reservation in reservations %}
-                    {
-                        title: '{{ reservation.titre_excursion|e('js') }}',
-                        start: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ reservation.heure_debut|date("H:i:s") }}',
-                        end: '{{ reservation.date_reservation|date("Y-m-d") }}T{{ reservation.heure_fin|date("H:i:s") }}',
-                        description: '{{ reservation.description_excursion|e('js') }}',
-                        extendedProps: {
-                            guide: '{{ reservation.nom_guide|e('js') }} {{ reservation.prenom_guide|e('js') }}'
-                        }
-                    },
-                    {% else %}
-                    console.log("Aucune réservation trouvée !");
-            {% endfor %}
-        ],
-            editable: true,
-                droppable: true,
+                events: events,
+                editable: false, // Désactivé pour éviter les modifications non désirées
                 eventClick: function(info) {
-                alert("Excursion : " + info.event.title + "\nGuide : " + info.event.extendedProps.guide + "\nDescription : " + info.event.extendedProps.description);
-            }
-        });
+                    let details = `
+                        <strong>Excursion :</strong> ${info.event.title}<br>
+                        <strong>Guide :</strong> ${info.event.extendedProps.guide || "N/A"}<br>
+                        <strong>Description :</strong> ${info.event.extendedProps.description || "N/A"}
+                    `;
+                    let popup = document.createElement("div");
+                    popup.innerHTML = `<div style="padding:15px; background:white; border-radius:5px; box-shadow:0px 0px 10px rgba(0,0,0,0.1);">
+                        ${details}
+                        <br><br>
+                        <button onclick="this.parentElement.remove()">Fermer</button>
+                    </div>`;
+                    popup.style.position = "fixed";
+                    popup.style.top = "50%";
+                    popup.style.left = "50%";
+                    popup.style.transform = "translate(-50%, -50%)";
+                    popup.style.zIndex = "1000";
+                    document.body.appendChild(popup);
+                }
+            });
 
             calendar.render();
             console.log("✅ FullCalendar initialisé avec succès !");
@@ -88,13 +118,11 @@
     </script>
 {% endblock %}
 
-{# Ajout d'un style CSS pour garantir que le calendrier soit visible #}
 {% block stylesheets %}
-    {{ parent() }}
     <style>
         #calendar {
             width: 100%;
-            height: 600px;  /* Assure-toi que le calendrier a une hauteur suffisante */
+            height: 600px;
             margin-top: 20px;
         }
     </style>

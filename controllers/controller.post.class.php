@@ -74,7 +74,9 @@ class ControllerPost extends BaseController
         echo $template->render(array(
             'posts' => $posts,
             'idCarnet' => $id,
-            'idVoyageurCarnet' => $carnet->getIdVoyageur(), // A REMPLACER PAR UN GETTER APRES MDOIFICATION DE LA CLASSE CARNET
+            'carnet' => $carnet,
+//            'idVoyageurCarnet' => $carnet->getIdVoyageur(), // A REMPLACER PAR UN GETTER APRES MDOIFICATION DE LA CLASSE CARNET
+//            'titreCarnet' => $carnet->getTitre(), // Add this line
             'message' => $message,
             'breadcrumb' => $this->breadcrumbService->getItems()
         ));

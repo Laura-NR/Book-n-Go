@@ -1,0 +1,37 @@
+/* Définir la couleur de base et la bordure pour les autres boutons */
+.span {
+    color: #b2708f;
+    border: 2px solid #b2708f;
+}
+
+/* Définir l'effet de survol et de focus pour les autres boutons */
+.hover-span:hover, .hover-span:focus {
+    background: #b2708f;
+    color: #ffffff;
+}
+
+/* Bouton Enregistrer avec couleur rose foncé */
+.btn-custom-enregistrer {
+    background-color: #b2708f;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-custom-enregistrer:hover,
+.btn-custom-enregistrer:focus {
+    background-color: #9c5c7a;
+    color: #ffffff;
+}
+
+/* Bouton Confirmer dans la modale */
+.modal-footer .btn-custom-enregistrer {
+    background-color: #b2708f;
+    color: #ffffff;
+    border: none;
+}
+
+.modal-footer .btn-custom-enregistrer:hover,
+.modal-footer .btn-custom-enregistrer:focus {
+    background-color: #9c5c7a;
+    color: #ffffff;
+}

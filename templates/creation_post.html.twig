@@ -6,6 +6,10 @@
     <div class="container">
         <h1>Créer un nouveau post dans le carnet {{ idCarnet }}</h1>
 
+        <div class="my-3">
+            <a href="index.php?controleur=post&methode=listerParCarnet&id={{ idCarnet }}" class="btn btn-secondary"><i data-feather="arrow-left-circle"></i> Retour à la liste des carnets</a>
+        </div>
+
         <form action="index.php?controleur=post&methode=creer" method="post" enctype="multipart/form-data">
             <input type="hidden" name="id_carnet" value="{{ idCarnet }}">
             <div class="mb-3">
@@ -43,7 +47,5 @@
 
             <button type="submit" class="btn btn-primary">Créer le post</button>
         </form>
-
-        <a href="index.php?controleur=post&methode=listerParCarnet&id={{ idCarnet }}" class="btn btn-secondary mt-3">Retour à la liste des posts</a>
     </div>
 {% endblock %}
