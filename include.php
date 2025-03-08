@@ -63,7 +63,7 @@ require_once 'controllers/controller.reservation.php';
 require_once 'controllers/controller.engagement.php';
 
 //Ajout des services
-require_once 'services/BreadcrumbService.php';
+require_once 'Services/BreadcrumbService.php';
 
 //Ajout des routes
 require_once 'config/breadcrumb_routes.php';
