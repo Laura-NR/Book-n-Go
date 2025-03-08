@@ -18,6 +18,8 @@ class ControllerReservation extends BaseController {
      */
     public function afficherPlanning(): void
     {
+        $this->breadcrumbService->buildFromRoute('reservation', 'afficherPlanning');
+
         // Vérification si l'utilisateur est connecté et a un rôle défini
         if (!isset($_SESSION['role'])) {
             throw new Exception("Accès refusé : rôle utilisateur inconnu");
@@ -52,6 +54,8 @@ class ControllerReservation extends BaseController {
             echo $this->getTwig()->render('planning_template.html.twig', [
                 'reservations' => $reservations,
                 'engagements' => $engagements,
+                'breadcrumb' => $this->breadcrumbService->getItems()
+                
             ]);
         }
         elseif ($_SESSION['role'] === "guide") {
@@ -65,6 +69,7 @@ class ControllerReservation extends BaseController {
 
             echo $this->getTwig()->render('planning_template.html.twig', [
                 'engagements' => $engagements,
+                'breadcrumb' => $this->breadcrumbService->getItems()
             ]);
         }
         else {

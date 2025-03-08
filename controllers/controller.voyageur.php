@@ -227,6 +227,8 @@ class ControllerVoyageur extends BaseController {
      */
     public function afficher(int $id): void
     {
+        $this->breadcrumbService->buildFromRoute('voyageur', 'afficher', ['id' => $id]);
+
         try {
             $voyageurDao = new VoyageurDao($this->getPdo());
             $voyageur = $voyageurDao->findAssoc($id);
@@ -242,6 +244,7 @@ class ControllerVoyageur extends BaseController {
                 'voyageur' => $voyageur,
                 'menu' => "voyageur_detail",
                 'editMode' => $editMode, // Mode d'édition
+                'breadcrumb' => $this->breadcrumbService->getItems()
             ]);
         } catch (Exception $e) {
             echo "Erreur lors de l'affichage du voyageur : " . $e->getMessage();

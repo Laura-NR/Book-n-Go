@@ -255,6 +255,10 @@ class ControllerUtilisateur extends BaseController
      */
     public function afficherDashboard(): void
     {
-        echo $this->getTwig()->render('dashboard.html.twig');
+        $this->breadcrumbService->addItem('Tableau de bord');
+
+        echo $this->getTwig()->render('dashboard.html.twig', [
+            'breadcrumb' => $this->breadcrumbService->getItems(),
+        ]);
     }
 }

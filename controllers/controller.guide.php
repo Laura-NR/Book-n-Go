@@ -256,9 +256,24 @@ class ControllerGuide extends ControllerVoyageur
     }
 
 
+
+
+    /**
+     * Afficher le planning du guide (accessible uniquement au guide connecté)
+     */
+    public function afficherPlanning(): void
+    {
+        $this->breadcrumbService->buildFromRoute('guide', 'afficherPlanning');
+
+        echo $this->getTwig()->render('planning_guide.html.twig', [
+            'breadcrumb' => $this->breadcrumbService->getItems(),
+        ]);
+    }
      // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
      public function afficherInformation(int $id = null): void
      {
+        $this->breadcrumbService->buildFromRoute('guide', 'afficherInformation', ['id' => $id]);
+
          try {
              $id = $id ?? (isset($_GET['id']) ? (int) $_GET['id'] : null);
  
@@ -280,6 +295,7 @@ class ControllerGuide extends ControllerVoyageur
                  'guide' => $guide,
                  'menu' => "guide_detail",
                  'editMode' => $editMode, // Mode d'édition
+                 'breadcrumb' => $this->breadcrumbService->getItems(),
              ]);
          } catch (Exception $e) {
              echo "Erreur lors de l'affichage du guide : " . $e->getMessage();
