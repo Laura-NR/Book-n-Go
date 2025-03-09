@@ -38,6 +38,8 @@ class ControllerCarnetVoyage extends BaseController
      */
     public function lister(): void
     {
+        $this->breadcrumbService->buildFromRoute('carnetVoyage', 'lister'); 
+
         $carnetDao = new CarnetVoyageDAO($this->getPdo());
         $carnets = $carnetDao->findAll();
 
@@ -47,6 +49,7 @@ class ControllerCarnetVoyage extends BaseController
 // Affichage du template avec carnets de voyage
         echo $template->render(array(
             'carnets' => $carnets,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ));
     }
 
@@ -63,6 +66,8 @@ class ControllerCarnetVoyage extends BaseController
      */
     public function creer(): void
     {
+        $this->breadcrumbService->buildFromRoute('carnetVoyage', 'creer');
+
         if (!empty($_POST)) {
             $data = [
                 'titre' => $_POST['titre'],
@@ -92,7 +97,9 @@ class ControllerCarnetVoyage extends BaseController
         } else {
             // Afficher le formulaire de création de carnet. Retour d'erreurs à ajouter
             $template = $this->getTwig()->load('creation_carnet_dashboard.html.twig');
-            echo $template->render();
+            echo $template->render([
+                'breadcrumb' => $this->breadcrumbService->getItems()
+            ]);
         }
     }
 
@@ -108,6 +115,8 @@ class ControllerCarnetVoyage extends BaseController
      */
     public function listerParVoyageur(int $idVoyageur): void
     {
+        $this->breadcrumbService->buildFromRoute('carnetVoyage', 'listerParVoyageur', ['id' => $idVoyageur]); 
+
         $carnetDao = new CarnetVoyageDAO($this->getPdo());
         $carnets = $carnetDao->findAllByIdVoyageur($idVoyageur);
 
@@ -117,6 +126,7 @@ class ControllerCarnetVoyage extends BaseController
 // Affichage du template avec carnets de voyage
         echo $template->render(array(
             'carnets' => $carnets,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ));
     }
 }

@@ -90,6 +90,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const selectedVisits = document.getElementById("selectedVisits");
   const selectedVisitsTitle = document.getElementById("selectedVisitsTitle");
 
+  // Cacher la liste des visites selectionées si elle est vide
+  if (!selectedVisits || selectedVisits.children.length === 0) {
+    selectedVisitsTitle.classList.add("d-none");
+    selectedVisits.classList.add("d-none");
+  }
+
   // Fonction pour ajouter les visites selectionées à la liste
   function addVisitToList(visitId, visitTitle, tempsSurPlace = "") {
     if (document.querySelector(`#visit-${visitId}`)) {
@@ -119,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
               </div>
           </div>
-      `;
+        `;
 
     selectedVisits.appendChild(listItem);
 

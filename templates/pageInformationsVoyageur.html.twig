@@ -9,70 +9,183 @@
     <!-- Formulaire principal pour Modifier et Enregistrer -->
     <form method="POST" action="?controleur=voyageur&methode=modifiervoyageur&id={{ voyageur.id }}" id="form-modification">
 
-        <div class="card">
-            <div class="card-body">
+            <div class="card">
+                <div class="card-body">
 
-                <!-- Nom -->
-                <div class="mb-3">
-                    <label for="nom-utilisateur" class="form-label"><strong>Nom:</strong></label>
-                    {% if editMode %}
-                        <input type="text" name="nom" id="nom-utilisateur" value="{{ voyageur.nom }}" class="form-control">
-                    {% else %}
-                        <p>{{ voyageur.nom }}</p>
-                    {% endif %}
+                    <!-- Nom -->
+                    <div class="mb-3">
+                        <label for="nom-utilisateur" class="form-label"><strong>Nom:</strong></label>
+                        {% if editMode %}
+                            <input type="text" name="nom" id="nom-utilisateur" value="{{ voyageur.nom }}" class="form-control">
+                        {% else %}
+                            <p>{{ voyageur.nom }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Prénom -->
+                    <div class="mb-3">
+                        <label for="prenom-utilisateur" class="form-label"><strong>Prénom:</strong></label>
+                        {% if editMode %}
+                            <input type="text" name="prenom" id="prenom-utilisateur" value="{{ voyageur.prenom }}" class="form-control">
+                        {% else %}
+                            <p>{{ voyageur.prenom }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email-utilisateur" class="form-label"><strong>Mail:</strong></label>
+                        {% if editMode %}
+                            <input type="email" name="mail" id="email-utilisateur" value="{{ voyageur.mail }}" class="form-control">
+                        {% else %}
+                            <p>{{ voyageur.mail }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Numéro de téléphone -->
+                    <div class="mb-3">
+                        <label for="telephone-utilisateur" class="form-label"><strong>Numéro de téléphone:</strong></label>
+                        {% if editMode %}
+                            <input type="text" name="numero_tel" id="telephone-utilisateur" value="{{ voyageur.numero_tel }}" class="form-control">
+                        {% else %}
+                            <p>{{ voyageur.numero_tel }}</p>
+                        {% endif %}
+                    </div>
+
                 </div>
+            </div>
 
-                <!-- Prénom -->
-                <div class="mb-3">
-                    <label for="prenom-utilisateur" class="form-label"><strong>Prénom:</strong></label>
-                    {% if editMode %}
-                        <input type="text" name="prenom" id="prenom-utilisateur" value="{{ voyageur.prenom }}" class="form-control">
-                    {% else %}
-                        <p>{{ voyageur.prenom }}</p>
-                    {% endif %}
+            <div class="mt-4 d-flex justify-content-between">
+                {% if editMode %}
+                    <div class="d-flex">
+                        <!-- Bouton Enregistrer déclenche la modale -->
+                        <button type="button" class="btn btn-custom-enregistrer span hover-span"
+                                data-bs-toggle="modal" data-bs-target="#confirmationModal"
+                                data-nom="{{ voyageur.nom }}" data-prenom="{{ voyageur.prenom }}"
+                                data-mail="{{ voyageur.mail }}" data-numero_tel="{{ voyageur.numero_tel }}"
+                                data-tentatives_echouees="{{ voyageur.tentatives_echouees }}"
+                                data-statut_compte="{{ voyageur.statut_compte }}"
+                                data-date_dernier_echec="{{ voyageur.date_dernier_echec }}">
+                            Enregistrer
+                        </button>
+
+                        <!-- Annuler : Redirection vers la page d'informations du guide -->
+                        <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}" class="btn btn-outline-secondary ms-2 span hover-span">Annuler</a>
+                    </div>
+                {% else %}
+                    <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}&editMode=true" class="btn btn-outline-secondary span hover-span">Modifier</a>
+                {% endif %}
+            </div>
+        </form>
+
+        <!-- Modale de confirmation de modification -->
+        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmationModalLabel">Confirmer la modification</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Êtes-vous sûr de vouloir modifier vos informations ? Attention, les données modifiées seront irrécupérables.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Formulaire pour soumettre la confirmation -->
+                        <form method="POST" action="?controleur=voyageur&methode=modifiervoyageur&id={{ voyageur.id }}">
+                            <!-- Champs cachés pour envoyer les données actuelles -->
+                            <input type="hidden" name="nom" id="nom" value="{{ voyageur.nom }}">
+                            <input type="hidden" name="prenom" id="prenom" value="{{ voyageur.prenom }}">
+                            <input type="hidden" name="mail" id="mail" value="{{ voyageur.mail }}">
+                            <input type="hidden" name="numero_tel" id="numero_tel" value="{{ voyageur.numero_tel }}">
+
+                            <!-- Champs supplémentaires pour la mise à jour (si besoin) -->
+                            <input type="hidden" name="tentatives_echouees" id="tentatives_echouees" value="{{ voyageur.tentatives_echouees }}">
+                            <input type="hidden" name="statut_compte" id="statut_compte" value="{{ voyageur.statut_compte }}">
+                            <input type="hidden" name="date_dernier_echec" id="date_dernier_echec" value="{{ voyageur.date_dernier_echec ? voyageur.date_dernier_echec|date("Y-m-d") : '' }}">
+
+                            <!-- Action pour la mise à jour -->
+                            <input type="hidden" name="action" value="modifier">
+                            <button type="submit" class="btn btn-custom-enregistrer">Confirmer</button>
+                        </form>
+                        <button type="button" class="btn btn-outline-secondary span hover-span" data-bs-dismiss="modal">Annuler</button>
+                    </div>
                 </div>
-
-                <!-- Email -->
-                <div class="mb-3">
-                    <label for="email-utilisateur" class="form-label"><strong>Mail:</strong></label>
-                    {% if editMode %}
-                        <input type="email" name="mail" id="email-utilisateur" value="{{ voyageur.mail }}" class="form-control">
-                    {% else %}
-                        <p>{{ voyageur.mail }}</p>
-                    {% endif %}
-                </div>
-
-                <!-- Numéro de téléphone -->
-                <div class="mb-3">
-                    <label for="telephone-utilisateur" class="form-label"><strong>Numéro de téléphone:</strong></label>
-                    {% if editMode %}
-                        <input type="text" name="numero_tel" id="telephone-utilisateur" value="{{ voyageur.numero_tel }}" class="form-control">
-                    {% else %}
-                        <p>{{ voyageur.numero_tel }}</p>
-                    {% endif %}
-                </div>
-
             </div>
         </div>
+    </div>
 
-        <!-- Boutons Modifier / Enregistrer / Annuler -->
-        <div class="mt-4 d-flex justify-content-between">
-            {% if editMode %}
-                <div class="d-flex">
-                    <!-- Bouton Enregistrer déclenche la modale -->
-                    <button type="submit" class="btn btn-success" name="action" value="modifier">Enregistrer</button>
-                    <!-- Annuler : Redirection vers la page d'informations du voyageur -->
-                    <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}" class="btn btn-outline-secondary ms-2">Annuler</a>
-                </div>
-            {% else %}
-                <a href="?controleur=voyageur&methode=afficher&id={{ voyageur.id }}&editMode=true" class="btn btn-outline-secondary">Modifier</a>
-            {% endif %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('confirmationModal');
+            modal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // Le bouton qui a ouvert la modale
+                const nom = button.getAttribute('data-nom');
+                const prenom = button.getAttribute('data-prenom');
+                const mail = button.getAttribute('data-mail');
+                const numero_tel = button.getAttribute('data-numero_tel');
+                const tentatives_echouees = button.getAttribute('data-tentatives_echouees');
+                const statut_compte = button.getAttribute('data-statut_compte');
+                const date_dernier_echec = button.getAttribute('data-date_dernier_echec');
 
-        </div>
-    </form>
+                // Insérer les valeurs dans les champs cachés
+                document.getElementById('nom').value = nom;
+                document.getElementById('prenom').value = prenom;
+                document.getElementById('mail').value = mail;
+                document.getElementById('numero_tel').value = numero_tel;
+                document.getElementById('tentatives_echouees').value = tentatives_echouees;
+                document.getElementById('statut_compte').value = statut_compte;
+                document.getElementById('date_dernier_echec').value = date_dernier_echec;
 
+                // Ajouter une écoute pour la soumission
+                document.querySelector('#confirmationModal form').addEventListener('submit', function () {
+                    // Mettre à jour les valeurs des champs cachés avec les données des inputs du formulaire
+                    document.getElementById('nom').value = document.getElementById('nom-utilisateur').value;
+                    document.getElementById('prenom').value = document.getElementById('prenom-utilisateur').value;
+                    document.getElementById('mail').value = document.getElementById('email-utilisateur').value;
+                    document.getElementById('numero_tel').value = document.getElementById('telephone-utilisateur').value;
+                });
+            });
+        });
+    </script>
 
-    
+    <style>
+        /* Définir la couleur de base et la bordure pour les autres boutons */
+        .span {
+            color: #b2708f;
+            border: 2px solid #b2708f;
+        }
 
-</div>
+        /* Définir l'effet de survol et de focus pour les autres boutons */
+        .hover-span:hover, .hover-span:focus {
+            background: #b2708f;
+            color: #ffffff;
+        }
+
+        /* Bouton Enregistrer avec couleur rose foncé */
+        .btn-custom-enregistrer {
+            background-color: #b2708f;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-custom-enregistrer:hover,
+        .btn-custom-enregistrer:focus {
+            background-color: #9c5c7a;
+            color: #ffffff;
+        }
+
+        /* Bouton Confirmer dans la modale */
+        .modal-footer .btn-custom-enregistrer {
+            background-color: #b2708f;
+            color: #ffffff;
+            border: none;
+        }
+
+        .modal-footer .btn-custom-enregistrer:hover,
+        .modal-footer .btn-custom-enregistrer:focus {
+            background-color: #9c5c7a;
+            color: #ffffff;
+        }
+    </style>
+
 {% endblock %}

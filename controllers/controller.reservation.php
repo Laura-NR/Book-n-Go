@@ -18,20 +18,64 @@ class ControllerReservation extends BaseController {
      */
     public function afficherPlanning(): void
     {
-        $id_voyageur = $_GET['id'] ?? null;
+        $this->breadcrumbService->buildFromRoute('reservation', 'afficherPlanning');
 
-        if (!$id_voyageur) {
-            throw new Exception("Paramètre manquant : id_voyageur");
+        // Vérification si l'utilisateur est connecté et a un rôle défini
+        if (!isset($_SESSION['role'])) {
+            throw new Exception("Accès refusé : rôle utilisateur inconnu");
         }
 
-        $reservationDAO = new ReservationDAO($this->getPdo());
-        $reservations = $reservationDAO->getReservationsByVoyageur((int)$id_voyageur);
 
-        echo $this->getTwig()->render('planning_template.html.twig', [
-            'reservations' => $reservations,
-        ]);
+        if ($_SESSION['role'] === "voyageur") {
+            $id_voyageur = $_GET['id'] ?? null;
+            if (!$id_voyageur) {
+                throw new Exception("Paramètre manquant : id_voyageur");
+            }
+
+            $reservationDAO = new ReservationDAO($this->getPdo());
+            $reservations = $reservationDAO->getReservationsByVoyageur((int)$id_voyageur);
+
+
+            // Récupérer les engagements associés aux réservations
+            $engagementDAO = new EngagementDAO($this->getPdo());
+            $engagements = [];
+            foreach ($reservations as $reservation) {
+
+                if (isset($reservation['id_engagement'])) {
+                    $engagement = $engagementDAO->getEngagementById2($reservation['id_engagement']);
+                    if ($engagement) {
+                        $engagements[] = $engagement;
+                    } else {
+                    }
+                } else {
+                }
+            }
+
+            echo $this->getTwig()->render('planning_template.html.twig', [
+                'reservations' => $reservations,
+                'engagements' => $engagements,
+                'breadcrumb' => $this->breadcrumbService->getItems()
+                
+            ]);
+        }
+        elseif ($_SESSION['role'] === "guide") {
+            $id_guide = $_GET['id'] ?? null;
+            if (!$id_guide) {
+                throw new Exception("Paramètre manquant : id_guide");
+            }
+
+            $engagementDAO = new EngagementDAO($this->getPdo());
+            $engagements = $engagementDAO->getEngagementById((int)$id_guide);
+
+            echo $this->getTwig()->render('planning_template.html.twig', [
+                'engagements' => $engagements,
+                'breadcrumb' => $this->breadcrumbService->getItems()
+            ]);
+        }
+        else {
+            throw new Exception("Accès refusé : rôle inconnu");
+        }
     }
-
     /**
      * @brief Crée une nouvelle réservation pour un voyageur
      *

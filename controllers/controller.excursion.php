@@ -75,6 +75,8 @@ class ControllerExcursion extends BaseController
      */
     public function afficherCreer(): void
     {
+        $this->breadcrumbService->buildFromRoute('excursion', 'afficherCreer');
+
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
 
             if (!isset($_SESSION['messages_alertes']['auth']) || is_array($_SESSION['messages_alertes']['auth'])) {
@@ -88,6 +90,7 @@ class ControllerExcursion extends BaseController
 
         echo $this->getTwig()->render('formulaire_excursion.html.twig', [
             'visites' => $visites,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ]);
     }
 
@@ -297,6 +300,8 @@ class ControllerExcursion extends BaseController
      */
     public function afficherModifier(int $id): void
     {
+        $this->breadcrumbService->buildFromRoute('excursion', 'afficherModifier');
+
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'guide') {
             if (!isset($_SESSION['erreurs_excursion']['auth']) || is_array($_SESSION['erreurs_excursion']['auth'])) {
                 $_SESSION['erreurs_excursion']['auth'] = "Vous n'êtes pas autorisé à effectuer cette action.";
@@ -328,6 +333,7 @@ class ControllerExcursion extends BaseController
             'visites' => $visites,
             'visitesSelectionnees' => $visitesSelectionnees,
             'excursion' => $excursionAmodifier,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ]);
     }
 
@@ -489,6 +495,8 @@ class ControllerExcursion extends BaseController
      */
     public function afficher(int $id): void
     {
+        $this->breadcrumbService->buildFromRoute('excursion', 'afficher');
+
         $excursionDao = new ExcursionDao($this->getPdo());
         $excursion = $excursionDao->findAssoc($id);
 
@@ -545,12 +553,14 @@ class ControllerExcursion extends BaseController
                 'excursion' => $excursion,
                 'visites' => $visites,
                 'engagements' => $engagements, // les engagements modifiés par l'array_map
-                'datesReservees' => $datesReservees
+                'datesReservees' => $datesReservees,
+                'breadcrumb' => $this->breadcrumbService->getItems()
             ]);
         } else if ($excursion and $_SESSION['role'] == "guide") {
             echo $this->getTwig()->render('details_excursion_guide.html.twig', [
                 'excursion' => $excursion,
                 'visites' => $visites,
+                'breadcrumb' => $this->breadcrumbService->getItems()
             ]);
         } else if ($excursion and $_SESSION['role'] == "voyageur") {
             echo $this->getTwig()->render('details_excursion_voyageur.html.twig', [
@@ -559,6 +569,7 @@ class ControllerExcursion extends BaseController
                 'engagements' => $engagements, // les engagements modifiés par l'array_map
                 'datesReservees' => $datesReservees,
                 'heuresArrivees' => $heuresArrivees,
+                'breadcrumb' => $this->breadcrumbService->getItems()
             ]);
         } else {
             echo "Excursion non trouvée.";
@@ -574,11 +585,14 @@ class ControllerExcursion extends BaseController
      */
     public function lister(): void
     {
+        $this->breadcrumbService->buildFromRoute('excursion', 'lister');
+
         $excursionDao = new ExcursionDao($this->getPdo());
         $excursions = $excursionDao->findAllWithExistingEngagement();
 
         echo $this->getTwig()->render('liste_excursions.html.twig', [
             'excursions' => $excursions,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ]);
     }
 
@@ -598,6 +612,8 @@ class ControllerExcursion extends BaseController
      */
     public function listerByGuide(int $id): void
     {
+        $this->breadcrumbService->buildFromRoute('excursion', 'listerByGuide', ['id' => $id]);
+
         $successExcursion = $_SESSION['success_excursion'] ?? [];
         unset($_SESSION['success_excursion']);
 
@@ -618,16 +634,15 @@ class ControllerExcursion extends BaseController
 
         $public = isset($_GET['public']) && $_GET['public'] == 1;
 
-        if ($public) {
-            $excursions = $excursionDao->findPublic($id);
-        } else {
-            $excursions = $excursionDao->findByGuide($id);
-        }
+        $excursionsPublic = $excursionDao->findPublic($id);
+        $excursionsByGuide = $excursionDao->findByGuide($id);
 
         echo $this->getTwig()->render('guide_excursions.html.twig', [
             'messages' => $allMessages,
-            'excursionsByGuide' => $excursions,
-            'public' => $public
+            'excursionsByGuide' => $excursionsByGuide,
+            'excursionsPublic' => $excursionsPublic,
+            'public' => $public,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ]);
     }
 }

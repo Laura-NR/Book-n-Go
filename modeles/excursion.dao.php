@@ -159,19 +159,13 @@ class ExcursionDao
 
     public function findByGuide(?int $id): ?array
     {
-        $sql = "SELECT * FROM excursion WHERE id_guide = :id_guide";
+        $sql = "SELECT * FROM excursion WHERE id_guide = :id_guide ORDER BY date_creation DESC";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute([':id_guide' => $id]);
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $results = $pdoStatement->fetchAll();
         return $results ? $this->hydrateAll($results) : [];
     }
-
-
-
-
-
-
 
     /**
      * @brief Récupère toutes les excursions publiques ou associées au guide dont l'ID est fourni.
@@ -181,7 +175,7 @@ class ExcursionDao
 
     public function findPublic(?int $id): ?array
     {
-        $sql = "SELECT * FROM excursion WHERE public = 1 OR id_guide = :id_guide";
+        $sql = "SELECT * FROM excursion WHERE public = 1 OR id_guide = :id_guide ORDER BY date_creation DESC";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute([':id_guide' => $id]);
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
