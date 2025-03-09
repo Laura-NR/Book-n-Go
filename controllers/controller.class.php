@@ -104,6 +104,28 @@ abstract class BaseController
         exit;
     }
 
+    /**
+     * Redirige vers une autre page en construisant l'URL d'après les paramètres, on peut également envoyé des paramètre en POST.
+     *
+     * @param string $controller Le contrôleur vers lequel rediriger.
+     * @param string $method La méthode du contrôleur vers laquelle rediriger.
+     * @param array $params Les paramètres à passer en POST.
+     *
+     * @return void
+     */
+    function redirectPost(string $controller, string $method, array $params = []): void
+    {
+        // Construction de l'URL de base
+        $url = 'index.php?controleur=' . urlencode($controller) . '&methode=' . urlencode($method);
+        // Ajout des paramètres
+        if (!empty($params)) {
+            
+        }
+        // Redirection à l'URL qui a étéée contruite
+        header("Location: $url");
+        exit;
+    }
+
 
     public function getPdo(): ?PDO
     {

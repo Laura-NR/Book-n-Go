@@ -30,7 +30,7 @@ function showErrors(errors) {
 }
 
 function updateOrder() {
-  var items = selectedVisits.getElementsTagName("li");
+  const items = selectedVisits.getElementsTagName("li");
   items.forEach((item, index) => {
     item.setAttribute("data-order", index + 1);
   });
@@ -133,7 +133,9 @@ document.addEventListener("DOMContentLoaded", function () {
           />
           <input type="hidden" id="ordre${listItem.getAttribute("data-order")}" value="${(listItem.getAttribute("data-order"))}" />
         </div>
-        <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
+        <button type="button" class="remove-visit-style remove-visit">
+        <i id="deleteIcon" data-feather="x-circle"></i>
+        </button>
       </div>
       </div>
       `;
@@ -170,6 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const visitTitle = selectedVisit.textContent;
 
     addVisitToList(visitId, visitTitle);
+    feather.replace();
   });
 
   document.querySelectorAll(".remove-visit").forEach((button) => {
