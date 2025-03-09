@@ -93,8 +93,8 @@
                                          </a>
                                      </div>
                                      {% if session.role == "guide" and excursion.id_guide == session.user_id %}
-                                         <a href="#" class="delete-link" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ excursion.id }}" class="btn btn-danger" title="Supprimer">
-                                             <i class="feather-icons" data-feather="trash-2"></i> Supprimer
+                                         <a href="#" class="btn btn-danger delete-link" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ excursion.id }}" title="Supprimer">
+                                             <i class="feather-icons" data-feather="trash-2" ></i> Supprimer
                                          </a>
                                      {% endif %}
                                  </div>
@@ -131,8 +131,5 @@
  {% endblock %}
  
 {% block script %}
-    <script>
-        feather.replace();
-    </script>
     <script src="js/guide_excursions.js"></script>
 {% endblock %}
