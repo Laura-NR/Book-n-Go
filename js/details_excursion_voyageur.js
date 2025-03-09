@@ -8,22 +8,18 @@ function initMap() {
     const waypoints = [];
     const markers = [];
     let geocodingPromises = [];
-    console.log("passed")
 
     // Si les visites existent
     if (typeof visites !== 'undefined' && visites.length > 0) {
-        console.log("Total visites to process:", visites.length);
 
         // Pour chaque visite Essayer de récup les coordonnées
         visites.forEach((visite, index) => {
-            console.log(visite, index);
             if (visite.adresse) {
                 // ajouter la villa à l'adresse
                 let fullAddress = visite.adresse;
                 if (visite.codePostal) {
                     fullAddress += `, ${visite.codePostal}`;
                 }
-                console.log(`Geocoding address ${index + 1}:`, fullAddress);
 
                 // Delai pour éviter le rate limiting
                 const delay = index * 1500;
@@ -33,7 +29,6 @@ function initMap() {
                         geocodeAddress(fullAddress)
                             .then(coordinates => {
                                 if (coordinates) {
-                                    console.log(`Received coordinates for ${fullAddress}:`, coordinates);
 
                                     // stocker les coordonnées avec l'index
                                     waypoints.push({
@@ -41,10 +36,9 @@ function initMap() {
                                         coords: coordinates
                                     });
 
-                                    // Create a marker for this location
+                                    // creer un marqueur
                                     const marker = L.marker(coordinates).addTo(map);
 
-                                    // Add popup with visite information
                                     let popupContent = `<b>${visite.titre || 'Visite ' + (index + 1)}</b><br>${visite.adresse}`;
                                     if (visite.ville) {
                                         popupContent += `<br>${visite.ville}`;
@@ -56,12 +50,10 @@ function initMap() {
                                         coords: coordinates
                                     });
                                 } else {
-                                    console.warn(`No coordinates found for ${fullAddress}`);
                                     resolve(null);
                                 }
                             })
                             .catch(error => {
-                                console.error(`Error geocoding address: ${fullAddress}`, error);
                                 resolve(null);
                             });
                     }, delay);
@@ -76,63 +68,48 @@ function initMap() {
 
         Promise.all(geocodingPromises)
             .then(results => {
-                // Filter out any null results
+                // filtrer les résultats nuls et trier
                 const validResults = results.filter(result => result !== null);
-                console.log("Valid geocoding results:", validResults);
 
                 if (validResults.length > 0) {
-                    // Sort waypoints by their original index to maintain the correct order
+
                     validResults.sort((a, b) => a.index - b.index);
 
-                    // Extract just the coordinates for the polyline
+                    // recuperer les coordonnées
                     const polylineCoords = validResults.map(result => result.coords);
 
-                    // Create a polyline connecting all waypoints
+                    // creer la polyline
                     L.polyline(polylineCoords, {color: 'blue'}).addTo(map);
 
-                    // Adjust map view to fit all markers
+                    // ajuster la vue
                     if (polylineCoords.length > 1) {
                         const bounds = L.latLngBounds(polylineCoords);
                         map.fitBounds(bounds, {padding: [50, 50]});
                     } else if (polylineCoords.length === 1) {
-                        map.setView(polylineCoords[0], 13); // Zoom level 13 for a single point
+                        map.setView(polylineCoords[0], 13);
                     }
-
-                    // Log the number of markers created
-                    console.log(`Created ${markers.length} markers on the map`);
                 } else {
-                    console.log("No valid waypoints available after geocoding.");
-                    // Default view if no valid waypoints
                     map.setView([47, 10], 5);
                 }
             })
             .catch(error => {
                 console.error("Error processing geocoding results:", error);
-                // Default view if error occurs
                 map.setView([47, 10], 5);
             });
     } else {
         console.log("No visites data available.");
-        // Default view if no visites data
         map.setView([47, 10], 5);
     }
 }
 
-/**
- * Geocode an address to get coordinates using OpenStreetMap Nominatim API
- * @param {string} address - The address to geocode
- * @returns {Promise} - A promise that resolves to [latitude, longitude] or null if geocoding fails
- */
-function geocodeAddress(address) {
-    // Encode the address for URL
-    const encodedAddress = encodeURIComponent(address);
 
-    // Use OpenStreetMap Nominatim API for geocoding
+function geocodeAddress(address) {
+
+    const encodedAddress = encodeURIComponent(address);
     const nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}&limit=1`;
 
     return fetch(nominatimUrl, {
         headers: {
-            // Add a user agent as required by Nominatim usage policy
             'User-Agent': 'BookNGoApp/1.0'
         }
     })
@@ -177,11 +154,10 @@ function initFlatpickr() {
 }
 
 
-// Initialize the map when the DOM is fully loaded
+// initialisation
 document.addEventListener('DOMContentLoaded', function() {
     initMap();
     initFlatpickr();
-    // console.log(datesExistantes);
 });
 
 
