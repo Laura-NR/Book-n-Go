@@ -175,9 +175,9 @@ class ExcursionDao
 
     public function findPublic(?int $id): ?array
     {
-        $sql = "SELECT * FROM excursion WHERE public = 1 OR id_guide = :id_guide ORDER BY date_creation DESC";
+        $sql = "SELECT * FROM excursion WHERE public = 1 ORDER BY date_creation DESC";
         $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute([':id_guide' => $id]);
+        $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $results = $pdoStatement->fetchAll();
         return $results ? $this->hydrateAll($results) : [];
