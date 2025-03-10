@@ -23,13 +23,8 @@ abstract class BaseController
         $this->loader = $loader;
         $this->twig = $twig;
 
-        if (isset($_GET) && !empty($_GET)) {
-            $this->get = $_GET;
-        }
-
-        if (isset($_POST) && !empty($_POST)) {
-            $this->post = $_POST;
-        }
+        $this->get = $_GET ?? []; 
+        $this->post = $_POST ?? [];
 
         $this->breadcrumbService = new BreadcrumbService(
             require 'config/breadcrumb_routes.php',
@@ -165,7 +160,7 @@ abstract class BaseController
 
     public function getPost(): array
     {
-        return $this->post;
+        return $this->post ?? [];
     }
 
     public function setPost(array $post): void

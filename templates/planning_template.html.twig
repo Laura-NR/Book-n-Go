@@ -5,13 +5,69 @@
 
 {% block dashboard_content %}
     <div class="container">
+        {% if session.messages_eng is not empty %}
+            {% for message in session.messages_eng %}
+                <div class="alert alert-{{ message.type }} text-center alert-dismissible fade show" role="alert">
+                    <p>{{ message.message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
         <div id="calendar"></div>
+        <div class="modal fade" id="modificationModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Modifier l'engagement</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <form action="index.php?controleur=engagement&methode=modifier" method="POST" class="form-check form-check-inline mt-5">
+                                <input type="hidden" name="controleur" value="engagement">
+                                <input type="hidden" name="methode" value="modifier">
+                                <input type="hidden" name="id_engagement">
+                                <input type="hidden" name="id_guide" value="{{ session.user_id }}">
+                                <div class="d-flex flex-column align-items-center justify-content-center mb-3">
+                                    <div class="w-100">
+                                        <label for="date_debut_dispo">Choisir date de début d'engagement:</label>
+                                        <input type="date" name="date_debut_dispo" id="date_debut_dispo" class="form-control mb-3">
+                                    </div>
+                                    <div class="w-100">
+                                        <label for="date_fin_dispo">Choisir date de fin d'engagement:</label>
+                                        <input type="date" name="date_fin_dispo" id="date_fin_dispo" class="form-control mb-3">
+                                    </div>
+                                    <div class="w-100">
+                                        <label for="heure_debut">Choisir heure de début dans la journée:</label>
+                                        <input type="time" name="heure_debut" id="heure_debut" class="form-control mb-3">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block script %}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales-all.global.min.js'></script>
+
+    <script>
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            setTimeout(() => {
+                bsAlert.close();
+            }, 5000);
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -51,10 +107,11 @@
             console.log("Engagements :", [
                 {% for engagement in engagements %}
                 {
-                    title: '{{ engagement.titre_excursion|e('js') }}',
+                    id: '{{ engagement.id_eng }}',
+                    title: '{{ engagement.nom|e('js') }}',
                     start: '{{ engagement.date_debut_dispo|date("Y-m-d") }}T{{ engagement.heure_debut|date("H:i:s") }}',
                     end: '{{ engagement.date_fin_dispo|date("Y-m-d") }}T{{ engagement.heure_fin|date("H:i:s") }}',
-                    description: 'ID Excursion : {{ engagement.id_excursion|e('js') }}'
+                    description: '{{ engagement.description|e('js') }}'
                 }{% if not loop.last %},{% endif %}
                 {% endfor %}
             ]);
@@ -62,10 +119,11 @@
             events = [
                 {% for engagement in engagements %}
                 {
-                    title: '{{ engagement.titre_excursion|e('js') }}',
+                    id: '{{ engagement.id_eng }}',
+                    title: '{{ engagement.nom|e('js') }}',
                     start: '{{ engagement.date_debut_dispo|date("Y-m-d") }}T{{ engagement.heure_debut|date("H:i:s") }}',
                     end: '{{ engagement.date_fin_dispo|date("Y-m-d") }}T{{ engagement.heure_fin|date("H:i:s") }}',
-                    description: 'ID Excursion : {{ engagement.id_excursion|e('js') }}'
+                    description: '{{ engagement.description|e('js') }}'
                 }{% if not loop.last %},{% endif %}
                 {% endfor %}
             ];
@@ -98,10 +156,15 @@
                         <strong>Description :</strong> ${info.event.extendedProps.description || "N/A"}
                     `;
                     let popup = document.createElement("div");
+                    let engagementId = parseInt(info.event.id, 10); 
+                    console.log("ID de l'engagement :", engagementId);
+                    console.log("Type de l'ID de l'engagement :", typeof engagementId);
                     popup.innerHTML = `<div style="padding:15px; background:white; border-radius:5px; box-shadow:0px 0px 10px rgba(0,0,0,0.1);">
                         ${details}
                         <br><br>
-                        <button onclick="this.parentElement.remove()">Fermer</button>
+                        <button onclick="this.parentElement.remove()" class="btn btn-secondary">Fermer</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modificationModal" data-id="${engagementId}">Modifier</button>
+                        <a href="index.php?controleur=engagement&methode=supprimer&id=${engagementId}" class="btn btn-danger">Supprimer</a>
                     </div>`;
                     popup.style.position = "fixed";
                     popup.style.top = "50%";
@@ -109,6 +172,20 @@
                     popup.style.transform = "translate(-50%, -50%)";
                     popup.style.zIndex = "1000";
                     document.body.appendChild(popup);
+
+                    let startDate = info.event.start ? info.event.start.toISOString().split("T")[0] : "";
+                    let endDate = info.event.end ? info.event.end.toISOString().split("T")[0] : "";
+                    let startTime = info.event.start ? info.event.start.toISOString().split("T")[1].substring(0, 5) : "";
+
+                    document.getElementById("date_debut_dispo").value = startDate;
+                    document.getElementById("date_fin_dispo").value = endDate;
+                    document.getElementById("heure_debut").value = startTime;
+
+                    document.querySelector("input[name='id_engagement']").value = engagementId;
+
+                    document.querySelector("button[type='submit']").addEventListener('click', function() {
+                        document.querySelector("form").submit();
+                    });
                 }
             });
 
