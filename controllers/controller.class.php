@@ -165,7 +165,7 @@ abstract class BaseController
 
     public function getPost(): array
     {
-        return $this->post;
+        return $this->post ?? [];
     }
 
     public function setPost(array $post): void

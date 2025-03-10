@@ -71,7 +71,7 @@ class ControllerEngagement extends BaseController
             if (!empty($data['date_debut_dispo']) && !empty($data['date_fin_dispo'])) {
                 $dateDebut = new DateTime($data['date_debut_dispo']);
                 $dateFin = new DateTime($data['date_fin_dispo']);
-            
+
                 if ($dateDebut > $dateFin) {
                     $_SESSION['messages_engagements'][] = ['type' => 'danger', 'message' => 'La date de début ne peut pas être après la date de fin.'];
                     $this->redirect('engagement', 'afficherCreer', ['id' => $data['id_excursion']]);
@@ -81,7 +81,7 @@ class ControllerEngagement extends BaseController
                 $dateDebut = null;
                 $dateFin = null;
             }
-            
+
 
             // Vérifier si le guide a déjà un engagement pour pour une autre excursion à la même date 
             $engagementDao = new EngagementDao();
@@ -120,7 +120,6 @@ class ControllerEngagement extends BaseController
                 }
                 // Si une erreur se produit, on affiche un message d'erreur
             } catch (Exception $e) {
-                error_log($e->getMessage());
                 echo "Erreur: " . $e->getMessage();
             }
         } else {
@@ -129,16 +128,87 @@ class ControllerEngagement extends BaseController
     }
 
 
-    public function afficherModifier() {
+    public function modifier(): void
+    {
+        var_dump($_POST);
 
+        if (!empty($this->getPost())) {
+            $data = [
+                'id' => $this->getPost()['id_engagement'] ?? '',
+                'date_debut_dispo' => $this->getPost()['date_debut_dispo'] ?? '',
+                'date_fin_dispo' => $this->getPost()['date_fin_dispo'] ?? '',
+                'heure_debut' => $this->getPost()['heure_debut'] ?? ''
+            ];
+
+            if (empty($data['id']) || empty($data['date_debut_dispo']) || empty($data['date_fin_dispo']) || empty($data['heure_debut'])) {
+                $_SESSION['messages_eng'][] = ['type' => 'danger', 'message' => 'Tous les champs sont obligatoires.'];
+                $this->redirect('reservation', 'afficherPlanning', ['id' => $_SESSION['user_id']]);
+                return;
+            }
+
+            $dateDebut = new DateTime($data['date_debut_dispo']);
+            $dateFin = new DateTime($data['date_fin_dispo']);
+
+            if ($dateDebut > $dateFin) {
+                $_SESSION['messages_eng'][] = ['type' => 'danger', 'message' => 'La date de début ne peut pas être après la date de fin.'];
+                $this->redirect('reservation', 'afficherPlanning', ['id' => $_SESSION['user_id']]);
+                return;
+            }
+
+            $engagementDao = new EngagementDao();
+            $engagement = $engagementDao->find($data['id']);
+            if (!$engagement) {
+                $_SESSION['messages_eng'][] = ['type' => 'danger', 'message' => 'Engagement introuvable.'];
+                $this->redirect('reservation', 'afficherPlanning', ['id' => $_SESSION['user_id']]);
+                return;
+            }
+
+            $engagement->setDateDebutDispo($dateDebut);
+            $engagement->setDateFinDispo($dateFin);
+            $engagement->setHeureDebut(new DateTime($data['heure_debut']));
+
+            if ($engagementDao->modifier($engagement)) {
+                $_SESSION['messages_eng'][] = ['type' => 'success', 'message' => 'Engagement modifié avec succès.'];
+            } else {
+                $_SESSION['messages_eng'][] = ['type' => 'danger', 'message' => 'Erreur lors de la modification de l\'engagement.'];
+            }
+
+            $this->redirect('reservation', 'afficherPlanning', ['id' => $_SESSION['user_id']]);
+        }
     }
 
 
-    public function modifier() {
+    public function supprimer(int $id): void
+    {
 
-    }
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'guide') {
+            $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Vous n\'êtes pas autorisé à effectuer cette action.'];
+            $this->redirect('reservation', 'afficherPlanning', ['id' => $_SESSION['user_id']]);
+            return;
+        }
 
-    public function supprimer() {
+        $engagementDao = new EngagementDao($this->getPdo());
+        $engagement = $engagementDao->findAssoc($id);
+        if (!$engagement) {
+            $_SESSION['messages_eng'][] = ['type' => 'danger', 'message' => 'Erreur : Engagement introuvable.'];
+            $this->redirect('reservation', 'afficherPlanning', ['id' => $_SESSION['user_id']]);
+            exit;
+        }
 
+        if ($engagement->getIdGuide() !== $_SESSION['user_id']) {
+            $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Erreur : Vous n\'êtes pas autorisé à supprimer cette excursion.'];
+            $this->redirect('reservation', 'afficherPlanning', ['id' => $_SESSION['user_id']]);
+            exit;
+        }
+
+        if ($engagementDao->supprimer($id)) {
+            $_SESSION['messages_eng'][] = ['type' => 'success', 'message' => 'Engagement supprimé avec succès.'];
+        } else {
+            $_SESSION['messages_eng'][] = ['type' => 'danger', 'message' => 'Erreur lors de la suppression de l\'engagement.'];
+        }
+
+        $this->redirect('reservation', 'afficherPlanning', [
+            'id' => $_SESSION['user_id']
+        ]);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file engagement.dao.php
  * @brief Classe d'accès aux données pour les Engagements
@@ -7,7 +8,8 @@
  * Cette classe fournit des méthodes pour accéder et modifier les Engagements dans la base de données.
  * Elle permet de créer, lire, mettre à jour et supprimer des engagements.
  */
-class EngagementDao {
+class EngagementDao
+{
     /**
      * @var PDO
      */
@@ -16,7 +18,7 @@ class EngagementDao {
     /**
      * @param PDO|null $pdo
      */
-    public function __construct(PDO $pdo=null)
+    public function __construct(PDO $pdo = null)
     {
         $this->pdo = bd::getInstance()->getPdo();
     }
@@ -59,14 +61,15 @@ class EngagementDao {
      * @param int|null $id
      * @return array|null -> tableau associatif contenant les informations de l'engagement
      */
-    public function findAssoc(?int $id): ?array
+    public function findAssoc(?int $id): ?Engagement
     {
         $sql = "SELECT * FROM engagement WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array(':id' => $id));
+        $pdoStatement->execute([':id' => $id]);
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $engagement = $pdoStatement->fetch();
-        return $engagement;
+
+        return $engagement ? $this->hydrate($engagement) : null;
     }
 
     /**
@@ -78,11 +81,13 @@ class EngagementDao {
     {
         $sql = "SELECT * FROM engagement WHERE id = :id";
         $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array(':id' => $id));
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Engagement');
-        $engagement = $pdoStatement->fetch();
-        return $engagement;
+        $pdoStatement->execute([':id' => $id]);
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $engagementData = $pdoStatement->fetch();
+
+        return $engagementData ? $this->hydrate($engagementData) : null;
     }
+
 
     /**
      * @brief Hydrate un engagement
@@ -94,8 +99,12 @@ class EngagementDao {
     {
         $engagement = new Engagement();
         $engagement->setId($tableauAssoc['id']);
-        $engagement->setDateDebutDispo(new DateTime($tableauAssoc['date_debut_dispo']));
-        $engagement->setDateFinDispo(new DateTime($tableauAssoc['date_fin_dispo']));
+        $engagement->setDateDebutDispo(!empty($tableauAssoc['date_debut_dispo'])
+            ? new DateTime($tableauAssoc['date_debut_dispo'])
+            : null);
+        $engagement->setDateFinDispo(!empty($tableauAssoc['date_fin_dispo'])
+            ? new DateTime($tableauAssoc['date_fin_dispo'])
+            : null);
         $engagement->setExcursion($tableauAssoc['id_excursion']);
         $engagement->setGuide($tableauAssoc['id_guide']);
         $engagement->setHeureDebut(new DateTime($tableauAssoc['heure_debut']));
@@ -165,32 +174,36 @@ class EngagementDao {
     }
 
     /**
- * @brief Vérifier si le guide a créé un engagement pour une excursion à une date et une heure données
- *
- * @param int $guideId L'identifiant du guide.
- * @param DateTime $dateDebut La date de début de l'engagement.
- * @param DateTime $dateFin La date de fin de l'engagement.
- * @return bool Retourne vrai si le guide a déjà un engagement pour l'excursion à la date et l'heure données, faux sinon.
- */
-public function conflitsEngagements(int $guideId, DateTime $dateDebut, DateTime $dateFin): bool
-{
-    $sql = "SELECT COUNT(*) FROM engagement 
+     * @brief Vérifier si le guide a créé un engagement pour une excursion à une date et une heure données
+     *
+     * @param int $guideId L'identifiant du guide.
+     * @param DateTime $dateDebut La date de début de l'engagement.
+     * @param DateTime $dateFin La date de fin de l'engagement.
+     * @return bool Retourne vrai si le guide a déjà un engagement pour l'excursion à la date et l'heure données, faux sinon.
+     */
+    public function conflitsEngagements(int $guideId, DateTime $dateDebut, DateTime $dateFin): bool
+    {
+        $sql = "SELECT COUNT(*) FROM engagement 
             WHERE id_guide = :id_guide 
             AND (
                 (date_debut_dispo <= :date_fin AND date_fin_dispo >= :date_debut))";
 
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([
-        ':id_guide' => $guideId,
-        ':date_debut' => $dateDebut->format('Y-m-d'),
-        ':date_fin' => $dateFin->format('Y-m-d')
-    ]);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':id_guide' => $guideId,
+            ':date_debut' => $dateDebut->format('Y-m-d'),
+            ':date_fin' => $dateFin->format('Y-m-d')
+        ]);
 
-    return $stmt->fetchColumn() > 0;
-}
+        return $stmt->fetchColumn() > 0;
+    }
     public function getEngagementById(int $id): array
     {
-        $sql = "SELECT * FROM engagement WHERE id_guide = :id";
+        $sql = "SELECT e.id AS id_eng, e.date_debut_dispo, e.date_fin_dispo, e.id_excursion, e.id_guide, e.heure_debut,
+                    ex.id AS id_exc, ex.nom, ex.description FROM engagement e
+                JOIN excursion ex
+                ON e.id_excursion = ex.id 
+                WHERE e.id_guide = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -213,5 +226,27 @@ public function conflitsEngagements(int $guideId, DateTime $dateDebut, DateTime 
     }
 
 
+    public function supprimer(int $id): bool
+    {
+        $sql = "DELETE FROM engagement WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([':id' => $id]);
+    }
 
+    public function modifier(Engagement $engagement): bool
+    {
+        $query = "UPDATE engagement 
+              SET date_debut_dispo = :date_debut_dispo, 
+                  date_fin_dispo = :date_fin_dispo, 
+                  heure_debut = :heure_debut 
+              WHERE id = :id";
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindValue(':date_debut_dispo', $engagement->getDateDebutDispo()->format('Y-m-d'), PDO::PARAM_STR);
+        $stmt->bindValue(':date_fin_dispo', $engagement->getDateFinDispo()->format('Y-m-d'), PDO::PARAM_STR);
+        $stmt->bindValue(':heure_debut', $engagement->getDateDebutDispo()->format('Y-m-d') . ' ' . $engagement->getHeureDebut()->format('H:i:s'), PDO::PARAM_STR);
+        $stmt->bindValue(':id', $engagement->getId(), PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
 }
