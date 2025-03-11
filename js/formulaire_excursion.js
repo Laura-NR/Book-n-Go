@@ -24,13 +24,14 @@ function showErrors(errors) {
           }, 8000);
     });
     errorContainer.style.display = "block";
+    window.scrollTo(0, 0);
   } else {
     errorContainer.style.display = "none";
   }
 }
 
 function updateOrder() {
-  const items = selectedVisits.getElementsTagName("li");
+  const items = Array.from(selectedVisits.getElementsByTagName("li"));
   items.forEach((item, index) => {
     item.setAttribute("data-order", index + 1);
   });
@@ -116,13 +117,13 @@ document.addEventListener("DOMContentLoaded", function () {
     listItem.innerHTML = `
       <div class="d-flex align-items-center justify-content-between gap-2">
       <div class='d-flex justify-content-start gap-3'>
-        <div class="handle" style="cursor: grab;">☰</div>
+        <div class="handle" style="cursor: grab;"><h5>☰</h5></div>
         <div>
-        <strong> ${visitTitle}</strong>
+        <p>${visitTitle}</p>
         </div>
       </div>
       <div class="d-flex justify-content-end gap-3">
-        <div>
+        <div class="mb-4">
           <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
           <input
           type="time"
@@ -131,7 +132,6 @@ document.addEventListener("DOMContentLoaded", function () {
           class="form-control form-control-sm"
           value="${tempsSurPlace}"
           />
-          <input type="hidden" id="ordre${listItem.getAttribute("data-order")}" value="${(listItem.getAttribute("data-order"))}" />
         </div>
         <button type="button" class="remove-visit-style remove-visit">
         <i id="deleteIcon" data-feather="x-circle"></i>
