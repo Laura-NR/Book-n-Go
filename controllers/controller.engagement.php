@@ -195,7 +195,7 @@ class ControllerEngagement extends BaseController
             exit;
         }
 
-        if ($engagement->getIdGuide() !== $_SESSION['user_id']) {
+        if ($engagement['id_guide'] !== $_SESSION['user_id']) {
             $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Erreur : Vous n\'êtes pas autorisé à supprimer cette excursion.'];
             $this->redirect('reservation', 'afficherPlanning', ['id' => $_SESSION['user_id']]);
             exit;

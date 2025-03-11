@@ -645,4 +645,21 @@ class ControllerExcursion extends BaseController
             'breadcrumb' => $this->breadcrumbService->getItems()
         ]);
     }
+
+    public function search(string $ville)
+    {
+
+        $villeToSearch = htmlentities($ville, ENT_QUOTES, 'UTF-8');
+        $villeToSearch = trim($villeToSearch);
+
+        // Mettre la valeur en minuscule
+        $ville = strtolower($villeToSearch);
+
+        $excursionDao = new ExcursionDao($this->getPdo());
+        $excursions = $excursionDao->findByVille($ville);
+
+        echo $this->getTwig()->render('liste_excursions.html.twig', [
+            'excursions' => $excursions,
+        ]);
+    }
 }
