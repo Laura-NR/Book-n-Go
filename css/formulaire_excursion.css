@@ -56,3 +56,12 @@
 li {
     list-style-type: none;
 }
+
+.remove-visit-style {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, opacity 0.2s;
+} 

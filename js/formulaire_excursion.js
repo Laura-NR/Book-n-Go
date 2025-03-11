@@ -54,27 +54,30 @@ function addVisitToList(visitId, visitTitle, tempsSurPlace = "") {
   listItem.classList.add("mb-2");
 
   listItem.innerHTML = `
-    <div class="d-flex align-items-center justify-content-between gap-2">
-    <div class='d-flex justify-content-start gap-3'>
-      <div class="handle" style="cursor: grab;">☰</div>
-      <div>
-      <strong> ${visitTitle}</strong>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end gap-3">
-      <div>
-        <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
-        <input
-        type="time"
-        id="temps_sur_place_${visitId}"
-        class="form-control form-control-sm"
-        value="${tempsSurPlace}"
-        />
+      <div class="d-flex align-items-center justify-content-between gap-2">
+      <div class='d-flex justify-content-start gap-3'>
+        <div class="handle" style="cursor: grab;"><h5>☰</h5></div>
+        <div>
+        <p>${visitTitle}</p>
         </div>
-      <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
-    </div>
-    </div>
-    `;
+      </div>
+      <div class="d-flex justify-content-end gap-3">
+        <div class="mb-4">
+          <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
+          <input
+          type="time"
+          id="temps_sur_place_${visitId}"
+          name="temps_sur_place_${visitId}"
+          class="form-control form-control-sm"
+          value="${tempsSurPlace}"
+          />
+        </div>
+        <button type="button" class="remove-visit-style remove-visit">
+          <i id="deleteIcon" data-feather="x-circle"></i>
+        </button>
+      </div>
+      </div>
+      `;
 
   selectedVisits.appendChild(listItem);
 
@@ -175,6 +178,7 @@ function registerAddVisitEvent()
     const visitTitle = selectedVisit.textContent;
 
     addVisitToList(visitId, visitTitle);
+    feather.replace();
   });
 
   document.querySelectorAll(".remove-visit").forEach((button) => {
@@ -302,6 +306,11 @@ function handleSubmitBtn()
 
 // Initialisation et enregistrement des gestionnaires d'événements
 document.addEventListener("DOMContentLoaded", function () {
+  if (!selectedVisits || selectedVisits.children.length === 0) {
+    selectedVisits.style.display = "none";
+    selectedVisitsTitle.style.display = "none";
+  }
+  
   initSortable();
 
   registerSelectEvent();
