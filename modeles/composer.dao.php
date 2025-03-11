@@ -64,6 +64,17 @@ class ComposerDao
         ]);
     }
 
+    public function creerPlusieurs(array $composers): bool
+    {
+        $success = true;
+        foreach ($composers as $composer) {
+            if (!$this->creer($composer)) {
+                $success = false;
+            }
+        }
+        return $success;
+    }
+
     /**
      * @brief Recherche un Composer dans la base de données possédant un id_excursion et un id_visite spécifique
      * @param int|null $id_excursion
@@ -226,4 +237,15 @@ class ComposerDao
             ':id_visite' => $id_visite
         ]);
     }
+
+    public function supprimerParIdExcursion (int $id_excursion): bool
+    {
+        $sql = "DELETE FROM composer WHERE id_excursion = :id_excursion";
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute([
+            ':id_excursion' => $id_excursion
+        ]);
+    }
+
 }

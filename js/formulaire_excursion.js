@@ -1,6 +1,6 @@
 import Sortable from '/node_modules/sortablejs/modular/sortable.complete.esm.js';
 
-//Affichage des erreurs
+// Affichage des erreurs
 function showErrors(errors) {
   const errorContainer = document.getElementById('errorContainer');
   errorContainer.innerHTML = "";
@@ -27,16 +27,72 @@ function showErrors(errors) {
   } else {
     errorContainer.style.display = "none";
   }
+} 
+
+// Initialisation de la liste des visites
+function initSortable()
+{
+  if (selectedVisits) {
+    new Sortable(selectedVisits, {
+      handle: '.handle', // Drag uniquement via le handle ☰
+      animation: 150,
+      ghostClass: "sortable-ghost"   
+    });
+  }
 }
 
-function updateOrder() {
-  var items = selectedVisits.getElementsTagName("li");
-  items.forEach((item, index) => {
-    item.setAttribute("data-order", index + 1);
-  });
-};
+// Ajout d'une visite à la liste des visites
+function addVisitToList(visitId, visitTitle, tempsSurPlace = "") {
+  if (document.querySelector(`#visit-${visitId}`)) {
+    showErrors(["Cette visite est déjà sélectionnée"]);
+    return;
+  }
 
-document.addEventListener("DOMContentLoaded", function () {
+  //d-flex justify-content-between align-items
+  const listItem = document.createElement("li");
+  listItem.id = `visit-${visitId}`;
+  listItem.classList.add("mb-2");
+
+  listItem.innerHTML = `
+    <div class="d-flex align-items-center justify-content-between gap-2">
+    <div class='d-flex justify-content-start gap-3'>
+      <div class="handle" style="cursor: grab;">☰</div>
+      <div>
+      <strong> ${visitTitle}</strong>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end gap-3">
+      <div>
+        <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
+        <input
+        type="time"
+        id="temps_sur_place_${visitId}"
+        class="form-control form-control-sm"
+        value="${tempsSurPlace}"
+        />
+        </div>
+      <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
+    </div>
+    </div>
+    `;
+
+  selectedVisits.appendChild(listItem);
+
+  selectedVisits.style.display = "block";
+  selectedVisitsTitle.style.display = "block";
+
+  listItem.querySelector(".remove-visit").addEventListener("click", () => {
+    listItem.remove();
+    if (selectedVisits.children.length === 0) {
+      selectedVisits.style.display = "none";
+      selectedVisitsTitle.style.display = "none";
+    }
+  });
+}
+
+// Enregistrement du gestionnaire d'événement pour le bouton d'affichage de la liste des visites
+function registerSelectEvent()
+{
   const itineraireSelect = document.getElementById("itineraire");
 
   itineraireSelect.addEventListener("focus", () => {
@@ -92,66 +148,15 @@ document.addEventListener("DOMContentLoaded", function () {
         showErrors(["Pas possible de récupérer les visites, ressayez plus tard"]);
       });
   });
-});
+}
 
-document.addEventListener("DOMContentLoaded", function () {
+// Enregistrement du gestionnaire d'événement pour le bouton d'ajout de visite
+function registerAddVisitEvent()
+{
   const itineraireSelect = document.getElementById("itineraire");
   const addVisitButton = document.getElementById("addVisit");
   const selectedVisits = document.getElementById("selectedVisits");
   const selectedVisitsTitle = document.getElementById("selectedVisitsTitle");
-
-  // Fonction pour ajouter les visites selectionées à la liste
-  function addVisitToList(visitId, visitTitle, tempsSurPlace = "") {
-    if (document.querySelector(`#visit-${visitId}`)) {
-      showErrors(["Cette visite est déjà sélectionnée"]);
-      return;
-    }
-
-    //d-flex justify-content-between align-items
-    const listItem = document.createElement("li");
-    listItem.id = `visit-${visitId}`;
-    listItem.classList.add("mb-2");
-    listItem.setAttribute("data-order", selectedVisits.children.length + 1);
-
-    listItem.innerHTML = `
-      <div class="d-flex align-items-center justify-content-between gap-2">
-      <div class='d-flex justify-content-start gap-3'>
-        <div class="handle" style="cursor: grab;">☰</div>
-        <div>
-        <strong> ${visitTitle}</strong>
-        </div>
-      </div>
-      <div class="d-flex justify-content-end gap-3">
-        <div>
-          <label for="temps_sur_place_${visitId}" class="form-label mb-0">Temps sur place :</label>
-          <input
-          type="time"
-          id="temps_sur_place_${visitId}"
-          name="temps_sur_place_${visitId}"
-          class="form-control form-control-sm"
-          value="${tempsSurPlace}"
-          />
-          <input type="hidden" id="ordre${listItem.getAttribute("data-order")}" value="${(listItem.getAttribute("data-order"))}" />
-        </div>
-        <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
-      </div>
-      </div>
-      `;
-
-    selectedVisits.appendChild(listItem);
-
-    selectedVisits.style.display = "block";
-    selectedVisitsTitle.style.display = "block";
-
-    listItem.querySelector(".remove-visit").addEventListener("click", () => {
-      listItem.remove();
-      updateOrder();
-      if (selectedVisits.children.length === 0) {
-        selectedVisits.style.display = "none";
-        selectedVisitsTitle.style.display = "none";
-      }
-    });
-  }
 
   addVisitButton.addEventListener("click", () => {
     const selectedVisit =
@@ -182,45 +187,46 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-});
+}
 
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("excursionForm");
-  const submitButton = document.getElementById("btn_maj");
-  const excursionId = submitButton
+// Enregistrement du gestionnaire d'événement pour le bouton d'envoi / de submit
+function handleSubmitBtn() 
+{
+  var form = document.getElementById("excursionForm");
+  var submitButton = document.getElementById("btn_maj");
+  var excursionId = submitButton
     ? parseInt(submitButton.getAttribute("data-excursion-id"), 10)
     : null;
   console.log("Excursion ID:", excursionId);
-  const errorContainer = document.getElementById("errorContainer");
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const formData = new FormData();
+  function makeFormData()
+  {
+    var formData = new FormData();
     formData.append("nom", document.getElementById("nom").value);
     formData.append("capacite", document.getElementById("capacite").value);
     formData.append("description", document.getElementById("description").value);
     
     // Ajouter l'image si elle est sélectionnée
-    const fichierImage = document.getElementById("chemin_image").files[0];
+    var fichierImage = document.getElementById("chemin_image").files[0];
     if (fichierImage) {
       formData.append("chemin_image", fichierImage);
     }
 
+    var visitesElems = document.querySelectorAll("#selectedVisits li");
+    
     // Regrouper les visites dans un tableau
-    const visites = [];
-    const visits = document.querySelectorAll("#selectedVisits li");
-    visits.forEach((visit, index) => {
-      const visitId = visit.id.replace("visit-", "");
-      const tempsSurPlace = visit.querySelector(`#temps_sur_place_${visitId}`).value;
-      const ordre = visit.getAttribute("data-order") || index; // Utiliser index si pas d'ordre
+    var visites = [];
+    
+    for (let i=0; i<visitesElems.length; i++) {
+      let visitId = visitesElems[i].id.replace("visit-", "");
+      let tempsSurPlace = visitesElems[i].querySelector(`#temps_sur_place_${visitId}`).value;
 
       visites.push({
         id: visitId,
         tempsSurPlace: tempsSurPlace,
-        ordre: ordre
+        ordre: i
       });
-    });
+    };
 
     // Ajouter les visites sous forme de JSON
     formData.append("visites", JSON.stringify(visites));
@@ -231,10 +237,21 @@ document.addEventListener("DOMContentLoaded", function () {
       formData.append("excursionId", excursionId);
     }
 
-    const endpoint = excursionId
+    return formData;
+  }
+
+  function registerSubmitEvent()
+  {
+    // Gestionnaire d'événement du bouton submit
+    form.addEventListener("submit", function (e) {
+    e.preventDefault(); // Gérer la soumission manuellement
+    
+    var endpoint = excursionId
       ? "index.php?controleur=excursion&methode=modifier&id=" + excursionId
       : "index.php?controleur=excursion&methode=creer";
 
+    var formData = makeFormData();
+    
     fetch(endpoint, {
       method: "POST",
       headers: {
@@ -242,26 +259,32 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       body: formData,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-          
-        }
-        return response.json();
-        
-      })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then((text) => {
+      /* Json_encode de PHP ajoute des retours à la ligne inutiles. 
+         Tout caractère hors specs du format JSON fera échouer le JSON.parse()
+         On trim à la main.*/
+      const responseText = text.trim();
+      console.log(responseText);
+      return JSON.parse(responseText);
+    })
       .then((data) => {
         console.log("Server response:", data);
 
         if (data.success) {
           if (data.redirect) {
-            window.location.href = data.redirect;
+           window.location.href = data.redirect;
           }
         } else {
-          console.log("Errors:", data.errors || [data.message]);
+          console.log("Errors:", data.errors);
           console.log(data);
           showErrors(
-            data.errors || [data.message || "Une erreur est survenue."]
+            data.errors
           );
         }
       })
@@ -272,19 +295,16 @@ document.addEventListener("DOMContentLoaded", function () {
         ]);
       });
   });
-});
-
-
-document.addEventListener("DOMContentLoaded", function () {
-  if (selectedVisits) {
-    new Sortable(selectedVisits, {
-      handle: '.handle', // Drag uniquement via le handle ☰
-      animation: 150,
-      ghostClass: "sortable-ghost",
-
-      onUpdate: function (evt) {
-        updateOrder();
-      },
-    });
   }
+
+  registerSubmitEvent();
+}
+
+// Initialisation et enregistrement des gestionnaires d'événements
+document.addEventListener("DOMContentLoaded", function () {
+  initSortable();
+
+  registerSelectEvent();
+  registerAddVisitEvent();
+  handleSubmitBtn();
 });
