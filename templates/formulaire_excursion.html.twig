@@ -53,21 +53,31 @@
           <h5 id="selectedVisitsTitle" {% if visitesSelectionnees|length > 0 %} class="text-custom d-block; " {% else %} class="text-custom d-none;"  {% endif %}>Visites sélectionnées :</h5>
           <ul id="selectedVisits" {% if visitesSelectionnees|length > 0 %} class=" text-custom d-block;" {% else %} class="text-custom d-none;" {% endif %}>
             {% for visite in visitesSelectionnees %}
-              <li id="visit-{{ visite.visite_id }}" class="mb-2">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="handle" style="cursor: grab;">☰</div>
+                <li id="visit-{{ visite.visite_id }}" class="mb-2">
+                <div class="d-flex align-items-center justify-content-between gap-2">
+                  <div class='d-flex justify-content-start gap-3'>
+                  <div class="handle" style="cursor: grab;"><h5>☰</h5></div>
                   <div>
-                    <strong>{{ visite.titre }} - {{ visite.ville }}</strong>
+                    <p>{{ visite.titre }} - {{ visite.ville }}</p>
                   </div>
-                  <div class="d-flex gap-3">
-                    <div>
-                      <label for="temps_sur_place_{{ visite.visite_id }}" class="form-label mb-0">Temps sur place</label>
-                      <input type="time" id="temps_sur_place_{{ visite.visite_id }}" name="temps_sur_place_{{ visite.visite_id }}" class="form-control form-control-sm" value="{{ visite.temps_sur_place }}" />
-                    </div>
-                    <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
+                  </div>
+                  <div class="d-flex justify-content-end gap-3">
+                  <div class="mb-4">
+                    <label for="temps_sur_place_{{ visite.visite_id }}" class="form-label mb-0">Temps sur place :</label>
+                    <input
+                    type="time"
+                    id="temps_sur_place_{{ visite.visite_id }}"
+                    name="temps_sur_place_{{ visite.visite_id }}"
+                    class="form-control form-control-sm"
+                    value="{{ visite.temps_sur_place }}"
+                    />
+                  </div>
+                  <button type="button" class="remove-visit-style remove-visit">
+                    <i id="deleteIcon" data-feather="x-circle"></i>
+                  </button>
                   </div>
                 </div>
-              </li>
+                </li>
             {% endfor %}
           </ul>
         </div>
