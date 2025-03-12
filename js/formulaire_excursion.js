@@ -1,5 +1,3 @@
-import Sortable from '/node_modules/sortablejs/modular/sortable.complete.esm.js';
-
 // Affichage des erreurs
 function showErrors(errors) {
   const errorContainer = document.getElementById('errorContainer');
@@ -110,26 +108,18 @@ function registerSelectEvent()
       },
     })
       .then((response) => {
-        console.log("Response status:", response.status);
-        console.log(
-          "Response content-type:",
-          response.headers.get("Content-Type")
-        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         // return response.json();
-        console.log("Response: ", response);
         return response.text();
       })
       .then((responseText) => {
         responseText = responseText.trim();
-        console.log("Response Text:", responseText);
 
         try {
           const data = JSON.parse(responseText);
-          console.log("Fetched visits:", data);
 
           const addNewOption = itineraireSelect.querySelector(
             'option[value="add-new"]'
@@ -201,7 +191,6 @@ function handleSubmitBtn()
   var excursionId = submitButton
     ? parseInt(submitButton.getAttribute("data-excursion-id"), 10)
     : null;
-  console.log("Excursion ID:", excursionId);
 
   function makeFormData()
   {
@@ -235,7 +224,6 @@ function handleSubmitBtn()
     // Ajouter les visites sous forme de JSON
     formData.append("visites", JSON.stringify(visites));
 
-    console.log("Form data:", formData);
     // Ajouter l'ID de l'excursion si c'est une modification
     if (excursionId) {
       formData.append("excursionId", excursionId);
@@ -274,19 +262,15 @@ function handleSubmitBtn()
          Tout caractère hors specs du format JSON fera échouer le JSON.parse()
          On trim à la main.*/
       const responseText = text.trim();
-      console.log(responseText);
       return JSON.parse(responseText);
     })
       .then((data) => {
-        console.log("Server response:", data);
 
         if (data.success) {
           if (data.redirect) {
            window.location.href = data.redirect;
           }
         } else {
-          console.log("Errors:", data.errors);
-          console.log(data);
           showErrors(
             data.errors
           );
@@ -310,7 +294,7 @@ document.addEventListener("DOMContentLoaded", function () {
     selectedVisits.style.display = "none";
     selectedVisitsTitle.style.display = "none";
   }
-  
+
   initSortable();
 
   registerSelectEvent();
