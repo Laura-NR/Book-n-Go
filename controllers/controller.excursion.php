@@ -205,99 +205,55 @@ class ControllerExcursion extends BaseController
      * @brief Gère les visites associées à une excursion.
      * 
      * Cette méthode permet d'associer des visites à une excursion via la table `Composer`.
-     * Elle prend en charge les données envoyées via un formulaire dynamique et ajoute les visites correspondantes.
+     * Elle supprime d'abord les associations existantes puis ajoute les nouvelles.
      * 
-     * @param int $excursionId L'ID de l'excursion à laquelle les visites seront associées.
-     * @param array $postData Les données du formulaire envoyées.
-     * 
-     * @return void
+     * @param int $excursionId L'ID de l'excursion
+     * @param array $postData Les données du formulaire
+     * @return array Les messages d'erreur éventuels
      */
-    public function handleVisits(int $excursionId, array $postData): void
+    private function handleVisits(int $excursionId, array $postData): array
     {
-        $composerDao = new ComposerDao($this->getPdo());
-        $visiteDao = new VisiteDao($this->getPdo());
+        $erreurs = [];
 
-        $currentVisits = $composerDao->findByExcursion($excursionId);
-        $currentVisitIds = array_column($currentVisits, 'visite_id');
-
-        $submittedVisits = [];
-        foreach ($postData as $key => $value) {
-            if (strpos($key, 'temps_sur_place_') === 0) {
-                $visiteId = str_replace('temps_sur_place_', '', $key);
-                $tempsSurPlaceKey = 'temps_sur_place_' . $visiteId;
-                if (isset($postData[$tempsSurPlaceKey])) {
-                    $submittedVisits[$visiteId] = $postData[$tempsSurPlaceKey];
-                }
-            }
+        // Valider les données d'entrée
+        if (!isset($postData['visites'])) {
+            return ['Erreur: Données de visites manquantes'];
         }
 
-        $submittedVisitIds = array_keys($submittedVisits);
-        $visitsToAdd = array_diff($submittedVisitIds, $currentVisitIds);
-        $visitsToRemove = array_diff($currentVisitIds, $submittedVisitIds);
-        $visitsToUpdate = array_intersect($currentVisitIds, $submittedVisitIds);
-
-        // Boucle sur les visites envoyées via le formulaire
-        foreach ($visitsToAdd as $visiteId) {
-            $tempsSurPlace = $submittedVisits[$visiteId];
-            $dateToday = (new DateTime())->format('Y-m-d');
-            $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
-
-            $composer = new Composer(
-                $tempsSurPlaceObj,
-                $ordre,
-                $excursionId,
-                $visiteId
-            );
-
-            if (!$composerDao->creer($composer)) {
-                echo "Erreur: Échec de l'ajout de la visite ID " . $visiteId;
-            }
+        $submittedVisits = json_decode($postData['visites'], true);
+        if (!is_array($submittedVisits)) {
+            return ['Erreur: Format de données invalide'];
         }
 
-        // Mettre à jour les visites existantes pour l'excursion
-        foreach ($visitsToUpdate as $visiteId) {
-            $tempsSurPlace = $submittedVisits[$visiteId];
-            $dateToday = (new DateTime())->format('Y-m-d');
-            $tempsSurPlaceObj = new DateTime($dateToday . ' ' . $tempsSurPlace);
+        try {
+            $composerDao = new ComposerDao($this->getPdo());
 
-            // Vérifier si la valeur actuelle de temps_sur_place est différente à la valeur qui à étée soumis dans le formulaire
-            $currentTempsSurPlace = $composerDao->find($excursionId, $visiteId)->getTempsSurPlace();
-            if ($currentTempsSurPlace != $tempsSurPlaceObj) {
-                $composer = new Composer(
-                    $tempsSurPlaceObj,
-                    $ordre,
+            // Supprimer les associations existantes
+            $composerDao->supprimerParIdExcursion($excursionId);
+
+            // Préparer les nouvelles associations
+            $visitsToAdd = array_map(function($visit) use ($excursionId) {
+                $dateToday = (new DateTime())->format('Y-m-d');
+                return new Composer(
+                    new DateTime($dateToday . ' ' . $visit['tempsSurPlace']),
+                    (int)$visit['ordre'],
                     $excursionId,
-                    $visiteId
+                    (int)$visit['id']
                 );
+            }, $submittedVisits);
 
-                if (!$composerDao->modifier($composer)) {
-                    echo "Erreur: Échec de la mise à jour de la visite ID " . $visiteId;
-                }
+            // Créer les nouvelles associations
+            if (!empty($visitsToAdd)) {
+                $composerDao->creerPlusieurs($visitsToAdd);
             }
+
+        } catch (Exception $e) {
+            $erreurs[] = 'Erreur lors de la mise à jour des visites: ' . $e->getMessage();
         }
 
-        // Enlever les visites qui ne sont plus incluses dans l'itinéraire l'excursion
-        foreach ($visitsToRemove as $visiteId) {
-            if (!$composerDao->supprimer($excursionId, $visiteId)) {
-                echo "Erreur: Échec de la suppression de la visite ID " . $visiteId;
-            }
-        }
+        return $erreurs;
     }
 
-
-    /**
-     * @brief Affiche le formulaire de modification pour une excursion spécifique.
-     *
-     * Vérifie si l'utilisateur est connecté et a le rôle de guide avant de procéder.
-     * Récupère l'excursion à modifier ainsi que les visites associées via leur ID respectif.
-     * Si l'ID est invalide ou si l'excursion n'est pas trouvée, affiche un message d'erreur.
-     * Utilise le template `formulaire_excursion.html.twig` pour afficher le formulaire
-     * avec les données de l'excursion et les visites sélectionnées.
-     *
-     * @param int $id L'ID de l'excursion à modifier.
-     *
-     * @return void
-     */
     public function afficherModifier(int $id): void
     {
         $this->breadcrumbService->buildFromRoute('excursion', 'afficherModifier');
@@ -336,7 +292,6 @@ class ControllerExcursion extends BaseController
             'breadcrumb' => $this->breadcrumbService->getItems()
         ]);
     }
-
 
     /**
      * @brief Modifier les informations d'une excursion existante.
@@ -395,7 +350,7 @@ class ControllerExcursion extends BaseController
                     $data['chemin_image'] = $targetPath;
                 } else {
                     if ($isAjax) {
-                        echo json_encode(['success' => false, 'message' => 'Image upload failed']);
+                        echo json_encode(['success' => false, 'errors' => 'Image upload failed']);
                         exit;
                     }
                     echo "Erreur: Échec du téléchargement de l'image.";
@@ -410,35 +365,51 @@ class ControllerExcursion extends BaseController
             $updated = $excursionDao->modifier($data);
 
             if ($updated) {
-                $this->handleVisits($id, $_POST);
+                $erreurs = $this->handleVisits($id, $_POST);
 
                 if ($isAjax) {
-                    echo json_encode([
-                        'success' => true,
-                        'message' => 'Excursion modifiée avec succès',
-                        'redirect' => 'index.php?controleur=excursion&methode=afficher&id=' . $id,
-                    ]);
+                    if ($erreurs)
+                    {
+                        echo json_encode([
+                            'success' => false,
+                            'errors' => $erreurs,
+                        ]);
+                    }
+                    else
+                    {
+                        echo json_encode([
+                            'success' => true,
+                            'message' => 'Excursion modifiée avec succès',
+                            'redirect' => 'index.php?controleur=excursion&methode=afficher&id=' . $id,
+                        ]);
+                    }
                     exit;
                 }
             } else {
                 if ($isAjax) {
                     echo json_encode([
                         'success' => false,
-                        'message' => 'Erreur lors de la modification de l\'excursion',
+                        'errors' => 'Erreur lors de la modification de l\'excursion',
                     ]);
                     exit;
                 }
-                echo "Erreur : Impossible de modifier l'excursion.";
+                else
+                {
+                    echo "Erreur : Impossible de modifier l'excursion.";
+                }
             }
         } else {
             if ($isAjax) {
                 echo json_encode([
                     'success' => false,
-                    'message' => 'Données du formulaire manquantes',
+                    'errors' => 'Données du formulaire manquantes',
                 ]);
                 exit;
             }
-            echo "Erreur : Formulaire vide.";
+            else
+            {
+                echo "Erreur : Formulaire vide.";
+            }
         }
     }
 
