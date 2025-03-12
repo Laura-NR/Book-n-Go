@@ -53,6 +53,7 @@
       {% endif %}
       <!-- Montrer les excursions du Guide connecté -->
          {% if excursionsByGuide is defined and excursionsByGuide is not empty %}
+            <h2 class="text-center mt-4 mb-3">Mes Excursions</h2>
              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                  {% for excursion in excursionsByGuide %}
                      <div class="col">
