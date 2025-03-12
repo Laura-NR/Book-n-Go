@@ -12,6 +12,13 @@
              <h1 class="text-center mb-4">Liste des Visites</h1>
              <a href="index.php?controleur=visite&methode=redirectCreer&isExcursion=0" class="btn btn-success">Créer une nouvelle visite</a>
          </div>
+
+         <!-- Formulaire avec checkbox pour recharger la page -->
+        <form id="checkboxForm" method="POST">
+            <label for="checkbox">Voir toute les visites :</label>
+            <input type="checkbox" id="checkbox" name="checkbox" onclick="rechargePage()"
+                {% if etatCheck == true %} checked="checked" {% endif %}>
+        </form>
         
         {% if visites is defined and visites is not empty %}
             <table id="tableVisite" class="table table-striped">
@@ -45,13 +52,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-
-            <!-- Formulaire avec checkbox pour recharger la page -->
-            <form id="checkboxForm" method="POST">
-                <label for="checkbox">Voir toute les visites :</label>
-                <input type="checkbox" id="checkbox" name="checkbox" onclick="rechargePage()"
-                    {% if etatCheck == true %} checked="checked" {% endif %}>
-            </form>
 
         {% else %}
             <div class="alert alert-warning text-center">

@@ -50,7 +50,7 @@ class ComposerDao
      */
     public function creer(Composer $composer): bool
     {
-        $sql = "INSERT INTO composer (temps_sur_place, id_excursion, id_visite)
+        $sql = "INSERT INTO composer (temps_sur_place, ordre, id_excursion, id_visite)
                 VALUES (:temps_sur_place, :ordre, :id_excursion, :id_visite)";
         $stmt = $this->pdo->prepare($sql);
 
@@ -58,10 +58,21 @@ class ComposerDao
 
         return $stmt->execute([
             ':temps_sur_place' => $tempsSurPlace,
-            ':ordre' => $ordre,
+            ':ordre' => $composer->getOrdre(),
             ':id_excursion' => $composer->getExcursion(),
             ':id_visite' => $composer->getVisite()
         ]);
+    }
+
+    public function creerPlusieurs(array $composers): bool
+    {
+        $success = true;
+        foreach ($composers as $composer) {
+            if (!$this->creer($composer)) {
+                $success = false;
+            }
+        }
+        return $success;
     }
 
     /**
@@ -177,6 +188,7 @@ class ComposerDao
         FROM visite v
         INNER JOIN composer c ON v.id = c.id_visite
         WHERE c.id_excursion = :id_excursion
+        ORDER BY c.ordre ASC
         ";
 
         $pdoStatement = $this->pdo->prepare($sql);
@@ -225,4 +237,15 @@ class ComposerDao
             ':id_visite' => $id_visite
         ]);
     }
+
+    public function supprimerParIdExcursion (int $id_excursion): bool
+    {
+        $sql = "DELETE FROM composer WHERE id_excursion = :id_excursion";
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute([
+            ':id_excursion' => $id_excursion
+        ]);
+    }
+
 }

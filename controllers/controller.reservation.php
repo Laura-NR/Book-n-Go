@@ -25,6 +25,8 @@ class ControllerReservation extends BaseController {
             throw new Exception("Accès refusé : rôle utilisateur inconnu");
         }
 
+        $messages_eng = $_SESSION['messages_eng'] ?? [];
+        unset($_SESSION['messages_eng']);
 
         if ($_SESSION['role'] === "voyageur") {
             $id_voyageur = $_GET['id'] ?? null;
@@ -69,7 +71,8 @@ class ControllerReservation extends BaseController {
 
             echo $this->getTwig()->render('planning_template.html.twig', [
                 'engagements' => $engagements,
-                'breadcrumb' => $this->breadcrumbService->getItems()
+                'breadcrumb' => $this->breadcrumbService->getItems(),
+                'messages_eng' => $messages_eng
             ]);
         }
         else {

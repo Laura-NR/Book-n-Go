@@ -314,4 +314,16 @@ class ExcursionDao
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function findByVille(string $ville) : array
+    {
+        $query = "SELECT DISTINCT e.* FROM excursion e
+        JOIN composer c ON e.id = c.id_excursion
+        JOIN visite v ON c.id_visite = v.id
+        WHERE v.ville = :ville";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([':ville' => $ville]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }

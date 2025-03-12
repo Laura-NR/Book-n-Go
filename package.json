@@ -5,6 +5,7 @@
     "feather-icons": "^4.29.2",
     "fullcalendar": "^6.1.15",
     "js-datepicker": "^5.18.4",
+    "sortablejs": "^1.15.6",
     "tarteaucitronjs": "^1.19.0"
   },
   "devDependencies": {
