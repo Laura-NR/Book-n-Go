@@ -34,6 +34,8 @@ class ControllerPost extends BaseController
 // Liste tous les posts
     public function lister(): void
     {
+        $this->breadcrumbService->buildFromRoute('post', 'lister');
+
         $postDao = new PostDAO($this->getPdo());
         $posts = $postDao->findAllAssoc();
 
@@ -43,6 +45,7 @@ class ControllerPost extends BaseController
 // Affichage du template avec posts de voyage
         echo $template->render(array(
             'posts' => $posts,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ));
     }
 
@@ -53,6 +56,8 @@ class ControllerPost extends BaseController
      */
     public function listerParCarnet(int $id): void
     {
+        $this->breadcrumbService->buildFromRoute('post', 'listerParCarnet');
+
         $postDao = new PostDAO($this->getPdo());
         $posts = $postDao->findAllByCarnetId($id);
 
@@ -69,8 +74,11 @@ class ControllerPost extends BaseController
         echo $template->render(array(
             'posts' => $posts,
             'idCarnet' => $id,
-            'idVoyageurCarnet' => $carnet->getIdVoyageur(), // A REMPLACER PAR UN GETTER APRES MDOIFICATION DE LA CLASSE CARNET
+            'carnet' => $carnet,
+//            'idVoyageurCarnet' => $carnet->getIdVoyageur(), // A REMPLACER PAR UN GETTER APRES MDOIFICATION DE LA CLASSE CARNET
+//            'titreCarnet' => $carnet->getTitre(), // Add this line
             'message' => $message,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ));
     }
 
@@ -87,6 +95,8 @@ class ControllerPost extends BaseController
  */
     public function afficher($id): void
     {
+        $this->breadcrumbService->buildFromRoute('post', 'afficher');
+
         // Récupérer les erreurs et les données de la session (si présentes)
         $erreursCommentaire = $_SESSION['erreurs_commentaire'] ?? [];
         $donneesCommentaire = $_SESSION['donnees_commentaire'] ?? [];
@@ -115,7 +125,9 @@ class ControllerPost extends BaseController
                 'commentaires' => $commentaires,
                 'erreursCommentaire' => $erreursCommentaire, // Passer les erreurs à la vue
                 'donneesCommentaire' => $donneesCommentaire, // Passer les données pour pré-remplir le formulaire
-                'excursions' => $excursions
+                'excursions' => $excursions,
+                'breadcrumb' => $this->breadcrumbService->getItems()
+                
             ));
         } else {
             // Si le post n'existe pas, afficher une erreur ou rediriger

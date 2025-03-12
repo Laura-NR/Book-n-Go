@@ -6,6 +6,10 @@
     <div class="container">
         <h1 class="mb-4 text-center">Créer un carnet de voyage</h1>
 
+        <div class="my-3">
+            <a href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}" class="btn btn-secondary"><i data-feather="arrow-left-circle"></i> Retour à la liste des carnets</a>
+        </div>
+
         <form method="post" action="index.php?controleur=carnetVoyage&methode=creer" class="row g-3 needs-validation" enctype="multipart/form-data" novalidate >
             <div class="col-md-12">
                 <label for="titre" class="form-label">Titre</label>
@@ -34,8 +38,6 @@
             </div>
         </form>
 
-        <div class="mt-3 text-center">
-            <a href="index.php?controleur=carnetVoyage&methode=listerParVoyageur&id={{ session.user_id }}" class="btn btn-default">Retour à la liste des carnets</a>
-        </div>
+
     </div>
 {% endblock %}

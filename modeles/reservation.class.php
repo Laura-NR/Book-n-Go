@@ -134,6 +134,4 @@ class Reservation
         echo "ID de l'engagement: " . $this->getIdEngagement() . "<br>";
     }
 }
-
-
 ?>

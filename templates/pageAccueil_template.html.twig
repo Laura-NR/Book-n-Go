@@ -29,10 +29,10 @@
                     <img src="./images/accueil/carcassonne.jpg" class="img-fluid" alt="2">
                 </div>
             </div>
-            <div class="carousel-caption position-absolute top-50 start-50 translate-middle text-center">
+            <div class="carousel-caption-overlay position-absolute top-50 start-50 translate-middle text-center">
                 <div class="rounded-pill px-5 py-4 bg-body-tertiary">
-                    <h1 id="carouselTitre" class="text-white">Découvrir n'a jamais été aussi facile</h1>
-                    <button id="carouselBouton" class="btn btn-primary rounded-pill">Réserver maintenant</button>
+                    <h1 id="carouselTitre" class="text-center">Découvrir n'a jamais été aussi facile</h1>
+                    <a href="index.php?controleur=excursion&methode=lister" id="carouselBouton" class="btn btn-primary rounded-pill reserveButton">Réserver maintenant</a>
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselAccueil" data-bs-slide="prev">
@@ -45,7 +45,7 @@
             </button>
 
             <button id="scrollDownButton" class="btn btn-link position-absolute bottom-0 start-50 translate-middle-x mb-3">
-                <i id="scrollDownIcon" data-feather="arrow-down-circle" color="#803D5C" width="128" height="128" stroke-width="1" class="feather-icon"></i>
+                <i id="scrollDownIcon" data-feather="arrow-down-circle" color="#803D5C" width="64" height="64" stroke-width="1" class="feather-icon"></i>
             </button>
 
         </div>
@@ -53,39 +53,39 @@
     </div>
 
         {# texte descriptif d'un carnet de voyage  #}
-            <div class="container text-center">
-                <div class="row mb-5 align-items-center">
-                    <div class="col m-auto ">
-                        <img src="./images/ChateauLourdes.png" class="img-fluid border border-2 border-primary rounded" alt="Image1">
-                    </div>
-                    <div class="col-7">
-                        <p class="text-center px-auto">
-                            Grâce à votre carnet de voyage, voyagez sans perdre vos souvenirs.
-                            En publiant dans votre carnet, vous aurez la possibilité de partager vos meilleurs moments avec vos proches, les passionnés de voyages comme vous,
-                            et même de devenir une source d'inspiration. Alors n'attendez plus et alimentez-le !
-                        </p>
-                        {# bouton vers le carnet de voyage #}
-                        <a href="index.php?controleur=carnetVoyage&methode=lister" class="btn btn-primary" title="Consulter les carnet de voyage">
-                            <i data-feather="book" class="me-2"></i> Consulter les carnets de voyage
-                        </a>
-                    </div>
-                </div>
-                <div class="row align-items-center">
-                    <div class="col-7">
-                        <p>
-                            Profitez de nos visites gratuites, ouvertes à tous, avec un large choix adapté à tous les goûts.
-                            Inscrivez-vous dès maintenant à la visite de vos rêves en consultant les visites disponibles.
-                        </p>
-                        {# bouton vers les visites disponibles #}
-                        <a href="index.php?controleur=excursion&methode=lister" class="btn btn-primary" title="Consulter les visites disponibles">
-                            <i data-feather="map" class="me-2"></i> Consulter les excursions disponibles
-                        </a>
-                    </div>
-                    <div class="col">
-                        <img src="./images/ChateauLourdes.png" class="img-fluid border border-2 border-primary rounded" alt="Image1">
-                    </div>
-                </div>
+    <div class="container text-center">
+        <div class="row mb-5 align-items-center">
+            <div class="col m-auto ">
+                <img src="./images/accueil/image_carnet_acceuil.jpg" class="img-fluid border border-2 border-primary rounded" alt="Image1">
             </div>
+            <div class="col-7">
+                <p class="text-center px-auto">
+                    Grâce à votre carnet de voyage, voyagez sans perdre vos souvenirs.
+                    En publiant dans votre carnet, vous aurez la possibilité de partager vos meilleurs moments avec vos proches, les passionnés de voyages comme vous,
+                    et même de devenir une source d'inspiration. Alors n'attendez plus et alimentez-le !
+                </p>
+                {# bouton vers le carnet de voyage #}
+                <a href="index.php?controleur=carnetVoyage&methode=lister" class="btn btn-primary" title="Consulter les carnet de voyage">
+                    <i data-feather="book" class="me-2"></i> Consulter les carnets de voyage
+                </a>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-7">
+                <p>
+                    Profitez de nos visites gratuites, ouvertes à tous, avec un large choix adapté à tous les goûts.
+                    Inscrivez-vous dès maintenant à la visite de vos rêves en consultant les visites disponibles.
+                </p>
+                {# bouton vers les visites disponibles #}
+                <a href="index.php?controleur=excursion&methode=lister" class="btn btn-primary" title="Consulter les visites disponibles">
+                    <i data-feather="map" class="me-2"></i> Consulter les excursions disponibles
+                </a>
+            </div>
+            <div class="col">
+                <img src="./images/accueil/chateau_val_de_loire.jpg" class="img-fluid border border-2 border-primary rounded" alt="Image1">
+            </div>
+        </div>
+    </div>
 </main>
 {% endblock %}
 

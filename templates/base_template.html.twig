@@ -12,6 +12,13 @@
 
     {# CSS Base Template #}
     <link rel="stylesheet" type="text/css" href="./css/base_template.css">
+
+    {# JS Theme toggler (1/2) #}
+    <script>
+        // Mettre le thème de la page au thème stocké dans le localStorage ou sinon thème par défaut (light)
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-bs-theme', currentTheme);
+    </script>
      
     {# Bloc CSS définissable #}    
     {% block css %}{% endblock %}
@@ -33,22 +40,28 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         {% if session.user_id %}
-                        <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherDashboard">Dashboard</a>
+                        <li class="nav-item me-2">
+                            <a class="text-white btn btn-primary rounded-pill btnNavbar" href="index.php?controleur=reservation&methode=afficherPlanning&id={{ session.user_id }}">Dashboard</a>
                         </li>
-                        <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
+                        <li class="nav-item me-2">
+                            <a class="text-white btn btn-primary rounded-pill btnNavbar" href="index.php?controleur=utilisateur&methode=deconnexion">Déconnexion</a>
                         </li>
                         {% else %}
-                        <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherInscription">S'inscrire</a>
+                        <li class="nav-item me-2">
+                            <a class="text-white btn btn-primary rounded-pill btnNavbar" href="index.php?controleur=utilisateur&methode=afficherInscription">S'inscrire</a>
                         </li>
-                        <li class="nav-item btn btn-primary rounded-pill me-2">
-                            <a class="nav-link text-white" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
+                        <li class="nav-item rounded-pill me-2">
+                            <a class="text-white btn btn-primary rounded-pill btnNavbar" href="index.php?controleur=utilisateur&methode=afficherConnexion">Connexion</a>
                         </li>
                         {% endif %}
-                        <li id="themeToggleButton" class="nav-item btn btn-outline-primary rounded-pill me-2 align-content-lg-center">
-                            <button data-feather="sun" color="bs-primary">Toggle Dark Mode</button>
+                        <li class="nav-item me-2 align-content-lg-center">
+                            <input type="checkbox" class="checkbox" id="checkbox">
+                                <label for="checkbox" class="checkbox-label">
+                                    <i id="moonIcon" data-feather="moon"></i>
+                                    <i id="sunIcon" data-feather="sun"></i> 
+                                    <span class="ball"></span>
+                                </label>
+                            </input>
                         </li>
                     </ul>
                 </div>
@@ -58,6 +71,23 @@
 
     {# faire en sorte que le contenu du main s'étende sur toute la place disponible #}
     <main id="main" class="flex-grow-1">
+        <!-- Ajout d'un fil d'Ariane -->
+        {% if breadcrumb is defined %}
+        <nav aria-label="breadcrumb" class="container mt-3">
+            <ol class="breadcrumb">
+                {% for item in breadcrumb %}
+                    <li class="breadcrumb-item{% if loop.last %} active{% endif %}">
+                        {% if item.url and not loop.last %}
+                            <a href="{{ item.url }}">{{ item.label }}</a>
+                        {% else %}
+                            {{ item.label }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        </nav>
+        {% endif %}
+        
         {% block content %}
         {% endblock %}
     </main>
@@ -67,10 +97,10 @@
             <div class="row">
                 <div class="col align-items-center justify-content-center">
                     <div class="text-center">
-                        <a class="link-primary fs-5" href="#" style="text-decoration: none;">Mentions légales</a>
+                        <a class="link fs-6" href="#">Mentions légales</a>
                     </div>
                     <div class="text-center">
-                        <a class="link-primary fs-5" href="#" style="text-decoration: none;">Aide</a>
+                        <a class="link fs-6" href="#">Aide</a>
                     </div>
                 </div>
                 <div class="col align-items-center justify-content-center">
@@ -78,29 +108,15 @@
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="text-center">
-                        <a class="link-primary fs-5" href="#" style="text-decoration: none;">Cookie Policy</a>
+                        <a class="link fs-6" href="#">Cookie Policy</a>
                     </div>
                     <div class="text-center">
-                        <a class="link-primary fs-5" href="#" style="text-decoration: none;">Newsletter</a>
+                        <a class="link fs-6" href="#">Newsletter</a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-
-    {# Switcheur de thème (dark mode & light mode) #}
-    <script type="text/javascript"> 
-        const themeToggleButton = document.getElementById('themeToggleButton');
-        const currentTheme = localStorage.getItem('theme') || 'light';
-
-        document.documentElement.setAttribute('data-bs-theme', currentTheme);
-
-        themeToggleButton.addEventListener('click', () => {
-            const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-    </script> 
     
     {# JS TarteAuCitron #}
     <script src="./node_modules/tarteaucitronjs/tarteaucitron.js"></script> {# Package TarteAuCitron #}
@@ -115,6 +131,21 @@
 
     {# JS Bootstrap #}
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+
+    {# JS Theme toggler (2/2) #}
+    <script>
+        const themeToggleCheckbox = document.getElementById("checkbox");   
+
+        // Mettre le toggle dans l'état correspondant au thème actuel
+        themeToggleCheckbox.checked = currentTheme === 'dark';
+
+        // Gérer l'événement de changement de thème (clic sur le toggle)
+        checkbox.addEventListener("change", () => {
+        const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
 
     {# Bloc JS définissable #}
     {% block script %}{% endblock %}

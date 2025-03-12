@@ -174,7 +174,6 @@ class ControllerGuide extends ControllerVoyageur
         try {
             $guideDao = new GuideDao($this->getPdo());
             $guide = $guideDao->find($id);
-            //var_dump($guide);
 
             if (!$guide) {
                 echo "Erreur : guide non trouvé.";
@@ -183,30 +182,22 @@ class ControllerGuide extends ControllerVoyageur
 
             // Vérification de la soumission du formulaire de modification
             if (isset($_POST['action']) && $_POST['action'] === 'modifier') {
-                //var_dump($_POST);
-                $postData = $this->getPost();
+                $postData = $_POST; // Utiliser $_POST directement
 
                 if (!empty($postData)) {
                     // Mise à jour des données du guide
-
                     if (isset($postData['nom'])) $guide->setNom($postData['nom']);
                     if (isset($postData['prenom'])) $guide->setPrenom($postData['prenom']);
                     if (isset($postData['numero_tel'])) $guide->setNumeroTel($postData['numero_tel']);
                     if (isset($postData['mail'])) $guide->setMail($postData['mail']);
 
-                    // *** Modifications pour intégrer les nouveaux champs ***
-
-                    // Mise à jour du nombre de tentatives échouées
+                    // Mise à jour des autres champs
                     if (isset($postData['tentatives_echouees'])) {
                         $guide->setTentativesEchouees((int)$postData['tentatives_echouees']);
                     }
-
-                    // Mise à jour du statut du compte
                     if (isset($postData['statut_compte'])) {
                         $guide->setStatutCompte($postData['statut_compte']);
                     }
-
-                    // Mise à jour de la date du dernier échec
                     if (isset($postData['date_dernier_echec'])) {
                         $guide->setDateDernierEchec(new DateTime($postData['date_dernier_echec']));
                     }
@@ -215,8 +206,8 @@ class ControllerGuide extends ControllerVoyageur
                     if ($guideDao->maj($guide)) {
                         // Stocke une variable de confirmation dans la session
                         $_SESSION['modification_reussie'] = true;
-                        // Redirige vers la page d'affichage normale après la modification
-                        header("Location: ?controleur=guide&methode=afficher&id=$id&modification_reussie=true");
+                        // Redirige vers la page d'affichage avec les nouvelles données
+                        header("Location: ?controleur=guide&methode=afficherInformation&id=$id&modification_reussie=true");
                         exit;
                     } else {
                         echo "Erreur lors de la mise à jour du guide.";
@@ -227,6 +218,7 @@ class ControllerGuide extends ControllerVoyageur
             echo "Erreur lors de la mise à jour : " . $e->getMessage();
         }
     }
+
 
 
     // Voir le certificat du guide (accessible uniquement aux administrateurs)
@@ -271,11 +263,17 @@ class ControllerGuide extends ControllerVoyageur
      */
     public function afficherPlanning(): void
     {
-        echo $this->getTwig()->render('planning_guide.html.twig');
+        $this->breadcrumbService->buildFromRoute('guide', 'afficherPlanning');
+
+        echo $this->getTwig()->render('planning_guide.html.twig', [
+            'breadcrumb' => $this->breadcrumbService->getItems(),
+        ]);
     }
      // Afficher les détails d'un guide spécifique (accessible par tous les utilisateurs)
      public function afficherInformation(int $id = null): void
      {
+        $this->breadcrumbService->buildFromRoute('guide', 'afficherInformation', ['id' => $id]);
+
          try {
              $id = $id ?? (isset($_GET['id']) ? (int) $_GET['id'] : null);
  
@@ -297,6 +295,7 @@ class ControllerGuide extends ControllerVoyageur
                  'guide' => $guide,
                  'menu' => "guide_detail",
                  'editMode' => $editMode, // Mode d'édition
+                 'breadcrumb' => $this->breadcrumbService->getItems(),
              ]);
          } catch (Exception $e) {
              echo "Erreur lors de l'affichage du guide : " . $e->getMessage();

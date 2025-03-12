@@ -214,4 +214,5 @@ class Excursion
     {
         $this->id_guide = $id_guide;
     }
+
 }

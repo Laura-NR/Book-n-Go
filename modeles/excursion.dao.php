@@ -159,19 +159,13 @@ class ExcursionDao
 
     public function findByGuide(?int $id): ?array
     {
-        $sql = "SELECT * FROM excursion WHERE id_guide = :id_guide";
+        $sql = "SELECT * FROM excursion WHERE id_guide = :id_guide ORDER BY date_creation DESC";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute([':id_guide' => $id]);
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $results = $pdoStatement->fetchAll();
         return $results ? $this->hydrateAll($results) : [];
     }
-
-
-
-
-
-
 
     /**
      * @brief Récupère toutes les excursions publiques ou associées au guide dont l'ID est fourni.
@@ -181,7 +175,7 @@ class ExcursionDao
 
     public function findPublic(?int $id): ?array
     {
-        $sql = "SELECT * FROM excursion WHERE public = 1 OR id_guide = :id_guide";
+        $sql = "SELECT * FROM excursion WHERE public = 1 OR id_guide = :id_guide ORDER BY date_creation DESC";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute([':id_guide' => $id]);
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
@@ -319,5 +313,17 @@ class ExcursionDao
         $stmt->bindValue(':idVisite', $idVisite, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function findByVille(string $ville) : array
+    {
+        $query = "SELECT DISTINCT e.* FROM excursion e
+        JOIN composer c ON e.id = c.id_excursion
+        JOIN visite v ON c.id_visite = v.id
+        WHERE v.ville = :ville";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([':ville' => $ville]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
     }
 }

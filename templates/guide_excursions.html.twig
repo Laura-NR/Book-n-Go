@@ -1,48 +1,57 @@
-{# guide_excursions.twig 
-/**
- * @file guide_excursions.twig
- * @brief Template pour afficher la liste des excursions créées par le guide qui est connecté ou toutes les excursions avec un status = public.
- *
- * Ce template affiche une carte pour chaque excursion. Chaque carte contient :
- * - Une image de l'excursion (si disponible) ou une image par défaut.
- * - Le nom et la date de la visite.
- * - Une description courte (si disponible).
- * - Un bouton pour consulter les détails de l'excursion.
- *
- * Si aucune excursion n'est disponible, un message d'alerte est affiché.
- *
- * @section sections Sections du template
- * - **title** : Titre de la page "Liste des Excursions".
- * - **content** : Contenu principal contenant la liste des excursions sous forme de cartes.
- *     - Si les excursions sont disponibles, elles sont affichées dans une grille responsive.
- *     - Si aucune excursion n'est trouvée, un message d'avertissement est affiché.
- */#}
-
- {% extends "dashboard.html.twig" %}
+{% extends "dashboard.html.twig" %}
 
 {% block title %}{{ parent() }} - Excursions{% endblock %}
  
  {% block dashboard_content %}
      <div class="container">
-        {% if success_engagements is not empty %}
-            {% for message in success_engagements %}
+        {% if messages is not empty %}
+            {% for message in messages %}
                 <div class="alert alert-{{ message.type }} text-center alert-dismissible fade show" role="alert">
                     <p>{{ message.message }}</p>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
         {% endif %}
-         <div class="d-flex flex-rox justify-content-between align-items-center mb-5">
-             <h1 class="text-center mb-4">Liste des Excursions</h1>
-             <a href="index.php?controleur=excursion&methode=afficherCreer" class="btn btn-success">Créer une nouvelle excursion</a>
-         </div>
-         <form method="get" action="index.php" class="form-check form-check-inline mb-3">
-            <input type="hidden" name="controleur" value="excursion">
-            <input type="hidden" name="methode" value="listerByGuide">
-            <input type="hidden" name="id" value="{{ session.user_id }}">
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="public" value="1" {% if public is defined and public %}checked{% endif %} onchange="this.form.submit()">
-            <label class="form-check-label" for="inlineCheckbox1">Montrer les excursions publiques</label>
-          </form>
+        <div class="d-flex flex-rox justify-content-between align-items-center mb-5">
+            <h1 class="text-center mb-4">Liste des Excursions</h1>
+            <a href="index.php?controleur=excursion&methode=afficherCreer" class="btn btn-success">Créer une nouvelle excursion</a>
+        </div>
+
+        <form method="get" action="index.php" class="form-check form-check-inline mb-3">
+        <input type="hidden" name="controleur" value="excursion">
+        <input type="hidden" name="methode" value="listerByGuide">
+        <input type="hidden" name="id" value="{{ session.user_id }}">
+        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="public" value="1" {% if public is defined and public %}checked{% endif %} onchange="this.form.submit()">
+        <label class="form-check-label" for="inlineCheckbox1">Montrer les excursions publiques</label>
+        </form>
+
+        <!-- Montrer les excursions publiques -->
+        {% if public is defined and public and excursionsPublic is defined and excursionsPublic is not empty %}
+        <h2 class="text-center mt-4 mb-3">Excursions Publiques</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for excursion in excursionsPublic %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if excursion.chemin_image %}
+                            <img src="{{ excursion.chemin_image }}" class="card-img-top img-fluid w-100" style="height: 200px;" alt="{{ excursion.nom }}">
+                        {% else %}
+                            <img src="./images/default-placeholder.png" class="card-img-top img-fluid" alt="Image par défaut">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ excursion.nom }}</h5>
+                            <p class="card-text"><strong>Date de création :</strong> {{ excursion.date_creation | date("d/m/Y") }}</p>
+                            {% if excursion.description %}
+                                <p class="card-text text-truncate">{{ excursion.description }}</p>
+                            {% endif %}
+                            <a href="index.php?controleur=excursion&methode=afficher&id={{ excursion.id }}" class="btn btn-primary mt-auto w-100">Consulter</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <hr class="mb-4">
+      {% endif %}
+      <!-- Montrer les excursions du Guide connecté -->
          {% if excursionsByGuide is defined and excursionsByGuide is not empty %}
              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                  {% for excursion in excursionsByGuide %}
@@ -58,7 +67,7 @@
                                     <h5 class="card-title">{{ excursion.nom }}</h5>
                                     <!-- Conditionner l'affichage du bouton de supression des excursions au créateur de l'excursion en question -->
                                     {% if session.role == "guide" and excursion.id_guide == session.user_id %}
-                                        <a href="index.php?controleur=excursion&methode=supprimer&id={{ excursion.id }}" class="delete-link" onclick="return confirm('Voulez-vous vraiment supprimer cette excursion ?');">
+                                        <a href="#" class="delete-link" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ excursion.id }}">
                                             <?xml version="1.0" encoding="utf-8"?>
                                             <svg class="delete-icon" data-id="{{ excursion.id }}" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M14 10V17M10 10V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -88,20 +97,27 @@
              </div>
          {% endif %}
      </div>
+     <!-- Modal de Bootstrap pour confirmer la suppression d'une excursion -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Êtes-vous sûr de vouloir supprimer cette excursion ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <a href="#" id="confirmDeleteButton" class="btn btn-danger">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
  {% endblock %}
  
  
 {% block script %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Les notifications vont disparaitre après 5 secondes si l'utilisateur ne les ferme pas
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            const bsAlert = new bootstrap.Alert(alert);
-            setTimeout(() => {
-                bsAlert.close();
-            }, 5000);
-        });
-    });
-</script>
+<script src="js/guide_excursions.js"></script>
 {% endblock %}

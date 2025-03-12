@@ -12,6 +12,7 @@ abstract class BaseController
     private \Twig\Environment $twig;
     private ?array $get;
     private ?array $post;
+    protected BreadcrumbService $breadcrumbService;
 
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
     // Initialise la connexion à la base de données via un singleton ou une autre classe
@@ -29,6 +30,14 @@ abstract class BaseController
         if (isset($_POST) && !empty($_POST)) {
             $this->post = $_POST;
         }
+
+        $this->breadcrumbService = new BreadcrumbService(
+            require 'config/breadcrumb_routes.php',
+            // Injection de la méthode generateUrl
+            function (string $controller, string $method, array $params = []) {
+                return $this->generateUrl($controller, $method, $params);
+            }
+        );
     }
 
 
@@ -105,6 +114,15 @@ abstract class BaseController
     }
 
 
+    protected function generateUrl(string $controller, string $method, array $params = []): string {
+        $url = 'index.php?controleur=' . urlencode($controller) . '&methode=' . urlencode($method);
+        if (!empty($params)) {
+            $url .= '&' . http_build_query($params);
+        }
+        return $url;
+    }
+
+
     public function getPdo(): ?PDO
     {
         return $this->pdo;
@@ -147,7 +165,7 @@ abstract class BaseController
 
     public function getPost(): array
     {
-        return $this->post;
+        return $this->post ?? [];
     }
 
     public function setPost(array $post): void

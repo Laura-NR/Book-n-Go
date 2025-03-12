@@ -2,7 +2,96 @@
     color: var(--bs-violet); 
     border: 2px solid var(--bs-rose);
 }
+
 .hover-span:hover, .hover-span:focus {
     background: var(--bs-rose);
     color: #ffffff;
 }
+
+.sidebar {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+    color: #fff;
+}
+
+.sidebar .nav-link {
+    padding: 10px 15px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #803d5c;
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #803d5c;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.sidebar .nav-link i {
+    margin-right: 5px;
+}
+
+/* Style pour petits écrans */
+@media (max-width: 800px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    #sidebar .position-sticky {
+        position: relative;
+    }
+
+    .content {
+        margin-left: 0 !important;
+    }
+
+    .sidebar .nav {
+        display: none; /* Hide la sidebar */
+    }
+
+    .dropdown-menu {
+        width: auto; /* ajuster width au contenu */
+        min-width: 100%;
+        left: 0;
+        right: 0;
+    }
+
+    .dropdown-item {
+        text-align: center;
+    }
+
+    /* Afficher le bouton Dropdown */
+    .sidebar .dropdown {
+        display: block !important;
+        width: 100%;
+    }
+
+    .sidebar .dropdown .btn {
+        width: 100%;
+        text-align: left;
+    }
+
+    #dropdowncool {
+        /* Bootstrap translate la liste vers le bas par défaut quand déroulée, ce qui laisse un espace blanc. On l'enlève ici */
+        transform: translate3d(0px, 0px, 0px) !important;
+    }
+}
+
+.sidebar .dropdown {
+    display: none; /* Hide the dropdown by default */
+}
+
+main {
+    margin-top: 0 !important;
+}
+

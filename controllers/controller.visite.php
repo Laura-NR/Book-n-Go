@@ -103,7 +103,14 @@ class ControllerVisite extends BaseController
      */
     public function redirectCreer(): void
     {
-        echo $this->getTwig()->render('formulaire_visite.html.twig', ['isEdit' => false, 'visite' => null, 'isExcursion' => $_GET["isExcursion"]]);
+        $this->breadcrumbService->buildFromRoute('visite', 'redirectCreer');
+
+        echo $this->getTwig()->render('formulaire_visite.html.twig', [
+            'isEdit' => false, 
+            'visite' => null, 
+            'isExcursion' => $_GET["isExcursion"],
+            'breadcrumb' => $this->breadcrumbService->getItems()
+        ]);
     }
 
     /**
@@ -119,6 +126,8 @@ class ControllerVisite extends BaseController
      */
     public function redirectModifier(): void
     {
+        $this->breadcrumbService->buildFromRoute('visite', 'redirectModifier');
+
         $id = $_POST['visite_id'];
         $visiteDao = new VisiteDao($this->getPdo());
         $visite = $visiteDao->find($id);
@@ -198,6 +207,8 @@ class ControllerVisite extends BaseController
      */
     public function lister(): void
     {
+        $this->breadcrumbService->buildFromRoute('visite', 'lister');
+
         $checkbox = isset($_POST['checkbox']);
         $visiteDao = new VisiteDao($this->getPdo());
 
@@ -213,6 +224,7 @@ class ControllerVisite extends BaseController
         echo $template->render([
             'etatCheck' => $checkbox,
             "visites" => $listeVisite,
+            'breadcrumb' => $this->breadcrumbService->getItems()
         ]);
     }
 }
