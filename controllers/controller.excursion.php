@@ -134,10 +134,10 @@ class ControllerExcursion extends BaseController
         }
 
         $data = [
-            'capacite' => htmlentities($this->getPost()['capacite'] ?? '', ENT_NOQUOTES, 'UTF-8'),
-            'nom' => htmlentities($this->getPost()['nom'] ?? '', ENT_NOQUOTES, 'UTF-8'),
+            'capacite' => htmlspecialchars($this->getPost()['capacite'] ?? '', ENT_NOQUOTES, 'UTF-8'),
+            'nom' => htmlspecialchars($this->getPost()['nom'] ?? '', ENT_NOQUOTES, 'UTF-8'),
             'date_creation' => new DateTime(),
-            'description' => htmlentities($this->getPost()['description'] ?? '', ENT_NOQUOTES, 'UTF-8'),
+            'description' => htmlspecialchars($this->getPost()['description'] ?? '', ENT_NOQUOTES, 'UTF-8'),
             'public' => $this->getPost()['public'] ?? 0, // 1 pour public, 0 pour privé
             'id_guide' => $idGuide,
         ];
@@ -333,10 +333,10 @@ class ControllerExcursion extends BaseController
         if (!empty($this->getPost())) {
             $data = [
                 'id' => $id,
-                'capacite' => htmlentities($this->getPost()['capacite'] ?? '', ENT_QUOTES, 'UTF-8'),
-                'nom' =>  htmlentities($this->getPost()['nom'] ?? '', ENT_QUOTES, 'UTF-8'),
+                'capacite' => htmlspecialchars($this->getPost()['capacite'] ?? '', ENT_QUOTES, 'UTF-8'),
+                'nom' =>  htmlspecialchars($this->getPost()['nom'] ?? '', ENT_QUOTES, 'UTF-8'),
                 'date_creation' => new DateTime(),
-                'description' => htmlentities($this->getPost()['description'] ?? '', ENT_QUOTES, 'UTF-8'),
+                'description' => htmlspecialchars($this->getPost()['description'] ?? '', ENT_QUOTES, 'UTF-8'),
                 'public' => $this->getPost()['public'] ?? 0,
                 'id_guide' => $idGuide,
             ];
@@ -427,15 +427,13 @@ class ControllerExcursion extends BaseController
 
     public function supprimer(int $id): void
     {
-        // session_start();
-
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'guide') {
             $_SESSION['messages_alertes'][] = ['type' => 'danger', 'message' => 'Vous n\'êtes pas autorisé à effectuer cette action.'];
             return;
         }
-
         $excursionDao = new ExcursionDao($this->getPdo());
         $excursion = $excursionDao->findAssoc($id);
+
         if (!$excursion) {
             $_SESSION['messages_exc'][] = ['type' => 'danger', 'message' => 'Erreur : Excursion introuvable.'];
             exit;
@@ -620,7 +618,7 @@ class ControllerExcursion extends BaseController
     public function search(string $ville)
     {
 
-        $villeToSearch = htmlentities($ville, ENT_QUOTES, 'UTF-8');
+        $villeToSearch = htmlspecialchars($ville, ENT_QUOTES, 'UTF-8');
         $villeToSearch = trim($villeToSearch);
 
         // Mettre la valeur en minuscule
