@@ -17,11 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteLinks.forEach(deleteLink => {
         deleteLink.addEventListener('click', function(event) {
             event.preventDefault();
-            const excursionId = this.getAttribute('data-id');
+            const excursionId = this.dataset.id;
             confirmDeleteButton.href = `index.php?controleur=excursion&methode=supprimer&id=${excursionId}`;
         });
     });
-
     // Initialize Feather Icons
     feather.replace();
 });
