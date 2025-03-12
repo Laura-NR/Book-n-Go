@@ -8,7 +8,6 @@
 }
 
 #formDiv {
-    background-color: #b2708f;
 	color: #000;
     border-radius: 30px;
 	padding: 40px;
@@ -33,3 +32,36 @@
     border-radius: 30px;
     padding: 10px 40px
 }
+
+[data-bs-theme="dark"] .btn-custom {
+    background-color: rgb(42.5, 47.5, 52.5);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+[data-bs-theme="light"] .text-custom {
+    color: black;
+}
+
+[data-bs-theme="dark"] .text-custom {
+    color: white;
+}
+
+[data-bs-theme="light"] .btn-custom {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: black;
+}
+
+li {
+    list-style-type: none;
+}
+
+.remove-visit-style {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, opacity 0.2s;
+} 

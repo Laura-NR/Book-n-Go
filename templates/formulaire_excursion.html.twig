@@ -16,31 +16,31 @@
   <h1 id="titrePage" class="text-center">
     {{ excursion ? "Modifier les informations de l'excursion" : "Informations de l'excursion" }}
   </h1>
-    <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" method="post">
-    <div id="formDiv">
+  <form enctype="multipart/form-data" id="excursionForm" class="mx-auto p-5" method="post">
+    <div id="formDiv" class="bg-primary">
       <div class="row mb-4">
         <div class="col">
-          <label for="nom" class="form-label">Titre</label>
+          <label for="nom" class="form-label text-custom">Titre</label>
           <input type="text" id="nom" name="nom" class="form-control" value="{{ excursion.nom | default('') }}" />
         </div>
         <div class="col">
-          <label for="capacite" class="form-label">Capacité</label>
+          <label for="capacite" class="form-label text-custom">Capacité</label>
           <input type="number" id="capacite" name="capacite" class="form-control" value="{{ excursion.capacite | default('') }}" />
         </div>
       </div>
       <div class="row mb-4">
         <div class="col">
-          <label for="itineraire" class="form-label">Itinéraire</label>
+          <label for="itineraire" class="form-label text-custom">Itinéraire</label>
           <div class="input-group">
             <select name="itineraire" id="itineraire" class="form-select">
               <option value="" selected disabled>Composez l'itineraire de votre excursion</option>
               <option href="" value="add-new" class="bg-primary text-white">Ajouter une nouvelle visite dans l'itineraire</option>
             </select>
-            <button type="button" id="addVisit" class="btn btn-light">Ajouter</button>
+            <button type="button" id="addVisit" class="btn btn-custom">Ajouter</button>
           </div>
         </div>
         <div class="col">
-          <label for="chemin_image" class="form-label">Image</label>
+          <label for="chemin_image" class="form-label text-custom">Image</label>
           <input type="file" id="chemin_image" name="chemin_image" class="form-control" />
           <p class="mt-1 ms-2">* Formats attendus : jpg / jpeg / png</p>
           {% if excursion and excursion.chemin_image %}
@@ -50,30 +50,41 @@
       </div>
       <div class="col">
         <div class="mb-4">
-          <h5 id="selectedVisitsTitle" {% if visitesSelectionnees is empty %} style="display: none;" {% endif %}>Visites sélectionnées</h5>
-          <ul id="selectedVisits" {% if visitesSelectionnees is empty %} style="display: none;" {% endif %}>
+          <h5 id="selectedVisitsTitle" {% if visitesSelectionnees|length > 0 %} class="text-custom d-block; " {% else %} class="text-custom d-none;"  {% endif %}>Visites sélectionnées :</h5>
+          <ul id="selectedVisits" {% if visitesSelectionnees|length > 0 %} class=" text-custom d-block;" {% else %} class="text-custom d-none;" {% endif %}>
             {% for visite in visitesSelectionnees %}
-              <li id="visit-{{ visite.visite_id }}" class="mb-2">
-                <div class="d-flex justify-content-between align-items-center">
+                <li id="visit-{{ visite.visite_id }}" class="mb-2">
+                <div class="d-flex align-items-center justify-content-between gap-2">
+                  <div class='d-flex justify-content-start gap-3'>
+                  <div class="handle" style="cursor: grab;"><h5>☰</h5></div>
                   <div>
-                    <strong>{{ visite.titre }} - {{ visite.ville }}</strong>
+                    <p>{{ visite.titre }} - {{ visite.ville }}</p>
                   </div>
-                  <div class="d-flex gap-3">
-                    <div>
-                      <label for="temps_sur_place_{{ visite.visite_id }}" class="form-label mb-0">Temps sur place</label>
-                      <input type="time" id="temps_sur_place_{{ visite.visite_id }}" name="temps_sur_place_{{ visite.visite_id }}" class="form-control form-control-sm" value="{{ visite.temps_sur_place }}" />
-                    </div>
-                    <button type="button" class="btn btn-danger remove-visit">Supprimer</button>
+                  </div>
+                  <div class="d-flex justify-content-end gap-3">
+                  <div class="mb-4">
+                    <label for="temps_sur_place_{{ visite.visite_id }}" class="form-label mb-0">Temps sur place :</label>
+                    <input
+                    type="time"
+                    id="temps_sur_place_{{ visite.visite_id }}"
+                    name="temps_sur_place_{{ visite.visite_id }}"
+                    class="form-control form-control-sm"
+                    value="{{ visite.temps_sur_place }}"
+                    />
+                  </div>
+                  <button type="button" class="remove-visit-style remove-visit">
+                    <i id="deleteIcon" data-feather="x-circle"></i>
+                  </button>
                   </div>
                 </div>
-              </li>
+                </li>
             {% endfor %}
           </ul>
         </div>
       </div>
       <div class="row mb-4">
         <div class="col">
-          <label for="description" class="form-label">Description</label>
+          <label for="description" class="form-label text-custom">Description</label>
           <textarea name="description" id="description" class="form-control" rows="5">{{ excursion.description | default('') }}</textarea>
           <p class="mb-0 pb-0">* Tous les champs sont requis</p>
         </div>
@@ -81,7 +92,7 @@
       <div class="row mb-4">
         <div class="col d-flex align-items-center">
           <input type="checkbox" name="public" id="public" class="form-check-input me-2" {{ excursion and excursion.public ? 'checked' : '' }} />
-          <label for="public" class="form-check-label">Je veux que d’autres guides puissent participer dans cette excursion</label>
+          <label for="public" class="form-check-label text-custom">Je veux que d’autres guides puissent participer dans cette excursion</label>
         </div>
       </div>
     </div>
@@ -98,12 +109,13 @@
           <input id="formBtn" type="submit" value="Créer" class="btn"/>
         </div>
         <a type="button" id="btn_annuler" class="btn btn-secondary" href="index.php?controleur=excursion&methode=listerByGuide&id={{ session.user_id }}">Annuler</a>
-      <div>
+      </div>
     {% endif %}
   </form>
 </main>
 {% endblock %}
 {% block script %}
   {{ parent() }}
+  <script src=" https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js "></script>
   <script src="js/formulaire_excursion.js"></script>
 {% endblock %}
